@@ -33,7 +33,7 @@ type DocumentReference struct {
 	MasterIdentifier Identifier                            `bson:"masterIdentifier"`
 	Identifier       []Identifier                          `bson:"identifier"`
 	Subject          Reference                             `bson:"subject"`
-	FhirType         CodeableConcept                       `bson:"fhirType"`
+	Type             CodeableConcept                       `bson:"type"`
 	Class            CodeableConcept                       `bson:"class"`
 	Author           []Reference                           `bson:"author"`
 	Custodian        Reference                             `bson:"custodian"`
@@ -48,7 +48,7 @@ type DocumentReference struct {
 	Confidentiality  []CodeableConcept                     `bson:"confidentiality"`
 	PrimaryLanguage  string                                `bson:"primaryLanguage"`
 	MimeType         string                                `bson:"mimeType"`
-	Format           string                                `bson:"format"`
+	Format           []string                              `bson:"format"`
 	Size             float64                               `bson:"size"`
 	Hash             string                                `bson:"hash"`
 	Location         string                                `bson:"location"`
@@ -70,7 +70,7 @@ type DocumentReferenceServiceParameterComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec service
 type DocumentReferenceServiceComponent struct {
-	FhirType  CodeableConcept                              `bson:"fhirType"`
+	Type      CodeableConcept                              `bson:"type"`
 	Address   string                                       `bson:"address"`
 	Parameter []DocumentReferenceServiceParameterComponent `bson:"parameter"`
 }

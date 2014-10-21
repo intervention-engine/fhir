@@ -33,7 +33,7 @@ type Patient struct {
 	Identifier           []Identifier           `bson:"identifier"`
 	Name                 []HumanName            `bson:"name"`
 	Telecom              []ContactPoint         `bson:"telecom"`
-	Gender               string                 `bson:"gender"`
+	Gender               CodeableConcept        `bson:"gender"`
 	BirthDate            time.Time              `bson:"birthDate"`
 	DeceasedBoolean      bool                   `bson:"deceasedBoolean"`
 	DeceasedDateTime     time.Time              `bson:"deceasedDateTime"`
@@ -57,7 +57,7 @@ type ContactComponent struct {
 	Name         HumanName         `bson:"name"`
 	Telecom      []ContactPoint    `bson:"telecom"`
 	Address      Address           `bson:"address"`
-	Gender       string            `bson:"gender"`
+	Gender       CodeableConcept   `bson:"gender"`
 	Organization Reference         `bson:"organization"`
 }
 
@@ -70,6 +70,6 @@ type AnimalComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec link
 type PatientLinkComponent struct {
-	Other    Reference `bson:"other"`
-	FhirType string    `bson:"fhirType"`
+	Other Reference `bson:"other"`
+	Type  string    `bson:"type"`
 }

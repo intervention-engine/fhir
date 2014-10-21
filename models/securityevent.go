@@ -38,7 +38,7 @@ type SecurityEvent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec event
 type SecurityEventEventComponent struct {
-	FhirType    CodeableConcept   `bson:"fhirType"`
+	Type        CodeableConcept   `bson:"type"`
 	Subtype     []CodeableConcept `bson:"subtype"`
 	Action      string            `bson:"action"`
 	DateTime    time.Time         `bson:"dateTime"`
@@ -49,7 +49,7 @@ type SecurityEventEventComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec network
 type SecurityEventParticipantNetworkComponent struct {
 	Identifier string `bson:"identifier"`
-	FhirType   string `bson:"fhirType"`
+	Type       string `bson:"type"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec participant
@@ -68,19 +68,19 @@ type SecurityEventParticipantComponent struct {
 type SecurityEventSourceComponent struct {
 	Site       string   `bson:"site"`
 	Identifier string   `bson:"identifier"`
-	FhirType   []Coding `bson:"fhirType"`
+	Type       []Coding `bson:"type"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec detail
 type SecurityEventObjectDetailComponent struct {
-	FhirType string `bson:"fhirType"`
+	Type string `bson:"type"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec object
 type SecurityEventObjectComponent struct {
 	Identifier  Identifier                           `bson:"identifier"`
 	Reference   Reference                            `bson:"reference"`
-	FhirType    string                               `bson:"fhirType"`
+	Type        string                               `bson:"type"`
 	Role        string                               `bson:"role"`
 	Lifecycle   string                               `bson:"lifecycle"`
 	Sensitivity CodeableConcept                      `bson:"sensitivity"`

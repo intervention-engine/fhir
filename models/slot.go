@@ -31,7 +31,7 @@ import "time"
 type Slot struct {
 	Id           string          `json:"-" bson:"_id"`
 	Identifier   []Identifier    `bson:"identifier"`
-	FhirType     CodeableConcept `bson:"fhirType"`
+	Type         CodeableConcept `bson:"type"`
 	Availability Reference       `bson:"availability"`
 	FreeBusyType string          `bson:"freeBusyType"`
 	Start        time.Time       `bson:"start"`

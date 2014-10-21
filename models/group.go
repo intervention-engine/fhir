@@ -29,7 +29,7 @@ package models
 type Group struct {
 	Id             string                         `json:"-" bson:"_id"`
 	Identifier     Identifier                     `bson:"identifier"`
-	FhirType       string                         `bson:"fhirType"`
+	Type           string                         `bson:"type"`
 	Actual         bool                           `bson:"actual"`
 	Code           CodeableConcept                `bson:"code"`
 	Name           string                         `bson:"name"`

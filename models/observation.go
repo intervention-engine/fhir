@@ -69,6 +69,6 @@ type ObservationReferenceRangeComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec related
 type ObservationRelatedComponent struct {
-	FhirType string    `bson:"fhirType"`
-	Target   Reference `bson:"target"`
+	Type   string    `bson:"type"`
+	Target Reference `bson:"target"`
 }

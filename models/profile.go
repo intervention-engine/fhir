@@ -63,11 +63,11 @@ type ElementSlicingComponent struct {
 	Rules         string `bson:"rules"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec fhirType
+// This is an ugly hack to deal with embedded structures in the spec type
 type TypeRefComponent struct {
-	Code        string `bson:"code"`
-	Profile     string `bson:"profile"`
-	Aggregation string `bson:"aggregation"`
+	Code        string   `bson:"code"`
+	Profile     string   `bson:"profile"`
+	Aggregation []string `bson:"aggregation"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec constraint
@@ -101,13 +101,13 @@ type ElementDefinitionComponent struct {
 	Formal        string                                 `bson:"formal"`
 	Comments      string                                 `bson:"comments"`
 	Requirements  string                                 `bson:"requirements"`
-	Synonym       string                                 `bson:"synonym"`
+	Synonym       []string                               `bson:"synonym"`
 	Min           float64                                `bson:"min"`
 	Max           string                                 `bson:"max"`
-	FhirType      []TypeRefComponent                     `bson:"fhirType"`
+	Type          []TypeRefComponent                     `bson:"type"`
 	NameReference string                                 `bson:"nameReference"`
 	MaxLength     float64                                `bson:"maxLength"`
-	Condition     string                                 `bson:"condition"`
+	Condition     []string                               `bson:"condition"`
 	Constraint    []ElementDefinitionConstraintComponent `bson:"constraint"`
 	MustSupport   bool                                   `bson:"mustSupport"`
 	IsModifier    bool                                   `bson:"isModifier"`
@@ -118,7 +118,7 @@ type ElementDefinitionComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec element
 type ElementComponent struct {
 	Path           string                     `bson:"path"`
-	Representation string                     `bson:"representation"`
+	Representation []string                   `bson:"representation"`
 	Name           string                     `bson:"name"`
 	Slicing        ElementSlicingComponent    `bson:"slicing"`
 	Definition     ElementDefinitionComponent `bson:"definition"`
@@ -131,16 +131,16 @@ type ConstraintComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec searchParam
 type ProfileStructureSearchParamComponent struct {
-	Name          string `bson:"name"`
-	FhirType      string `bson:"fhirType"`
-	Documentation string `bson:"documentation"`
-	Xpath         string `bson:"xpath"`
-	Target        string `bson:"target"`
+	Name          string   `bson:"name"`
+	Type          string   `bson:"type"`
+	Documentation string   `bson:"documentation"`
+	Xpath         string   `bson:"xpath"`
+	Target        []string `bson:"target"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec structure
 type ProfileStructureComponent struct {
-	FhirType     string                                 `bson:"fhirType"`
+	Type         string                                 `bson:"type"`
 	Base         string                                 `bson:"base"`
 	Name         string                                 `bson:"name"`
 	Publish      bool                                   `bson:"publish"`
@@ -155,6 +155,6 @@ type ProfileExtensionDefnComponent struct {
 	Code        string             `bson:"code"`
 	Display     string             `bson:"display"`
 	ContextType string             `bson:"contextType"`
-	Context     string             `bson:"context"`
+	Context     []string           `bson:"context"`
 	Element     []ElementComponent `bson:"element"`
 }

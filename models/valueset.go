@@ -98,7 +98,7 @@ type ConceptSetComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec compose
 type ValueSetComposeComponent struct {
-	Import  string                `bson:"import"`
+	Import  []string              `bson:"import"`
 	Include []ConceptSetComponent `bson:"include"`
 	Exclude []ConceptSetComponent `bson:"exclude"`
 }

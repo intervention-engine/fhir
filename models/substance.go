@@ -30,7 +30,7 @@ import "time"
 
 type Substance struct {
 	Id          string                         `json:"-" bson:"_id"`
-	FhirType    CodeableConcept                `bson:"fhirType"`
+	Type        CodeableConcept                `bson:"type"`
 	Description string                         `bson:"description"`
 	Instance    SubstanceInstanceComponent     `bson:"instance"`
 	Ingredient  []SubstanceIngredientComponent `bson:"ingredient"`

@@ -32,7 +32,7 @@ type ReferralRequest struct {
 	Id                    string            `json:"-" bson:"_id"`
 	Status                string            `bson:"status"`
 	Identifier            []Identifier      `bson:"identifier"`
-	FhirType              CodeableConcept   `bson:"fhirType"`
+	Type                  CodeableConcept   `bson:"type"`
 	Specialty             CodeableConcept   `bson:"specialty"`
 	Priority              CodeableConcept   `bson:"priority"`
 	Subject               Reference         `bson:"subject"`

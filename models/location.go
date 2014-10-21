@@ -31,7 +31,7 @@ type Location struct {
 	Identifier           []Identifier              `bson:"identifier"`
 	Name                 string                    `bson:"name"`
 	Description          string                    `bson:"description"`
-	FhirType             CodeableConcept           `bson:"fhirType"`
+	Type                 CodeableConcept           `bson:"type"`
 	Telecom              []ContactPoint            `bson:"telecom"`
 	Address              Address                   `bson:"address"`
 	PhysicalType         CodeableConcept           `bson:"physicalType"`

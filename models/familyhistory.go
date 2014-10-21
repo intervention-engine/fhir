@@ -39,7 +39,7 @@ type FamilyHistory struct {
 
 // This is an ugly hack to deal with embedded structures in the spec condition
 type FamilyHistoryRelationConditionComponent struct {
-	FhirType    CodeableConcept `bson:"fhirType"`
+	Type        CodeableConcept `bson:"type"`
 	Outcome     CodeableConcept `bson:"outcome"`
 	OnsetAge    Quantity        `bson:"onsetAge"`
 	OnsetRange  Range           `bson:"onsetRange"`

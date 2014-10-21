@@ -30,7 +30,7 @@ import "time"
 
 type Media struct {
 	Id         string          `json:"-" bson:"_id"`
-	FhirType   string          `bson:"fhirType"`
+	Type       string          `bson:"type"`
 	Subtype    CodeableConcept `bson:"subtype"`
 	Identifier []Identifier    `bson:"identifier"`
 	DateTime   time.Time       `bson:"dateTime"`

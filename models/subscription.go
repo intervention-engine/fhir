@@ -42,10 +42,10 @@ type Subscription struct {
 
 // This is an ugly hack to deal with embedded structures in the spec channel
 type SubscriptionChannelComponent struct {
-	FhirType string `bson:"fhirType"`
-	Url      string `bson:"url"`
-	Payload  string `bson:"payload"`
-	Header   string `bson:"header"`
+	Type    string `bson:"type"`
+	Url     string `bson:"url"`
+	Payload string `bson:"payload"`
+	Header  string `bson:"header"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec tag

@@ -36,7 +36,7 @@ type ImagingStudy struct {
 	AccessionNo         Identifier                    `bson:"accessionNo"`
 	Identifier          []Identifier                  `bson:"identifier"`
 	Order               []Reference                   `bson:"order"`
-	Modality            string                        `bson:"modality"`
+	Modality            []string                      `bson:"modality"`
 	Referrer            Reference                     `bson:"referrer"`
 	Availability        string                        `bson:"availability"`
 	Url                 string                        `bson:"url"`
@@ -54,7 +54,7 @@ type ImagingStudySeriesInstanceComponent struct {
 	Number     float64   `bson:"number"`
 	Uid        string    `bson:"uid"`
 	Sopclass   string    `bson:"sopclass"`
-	FhirType   string    `bson:"fhirType"`
+	Type       string    `bson:"type"`
 	Title      string    `bson:"title"`
 	Url        string    `bson:"url"`
 	Attachment Reference `bson:"attachment"`

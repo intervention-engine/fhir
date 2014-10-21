@@ -31,7 +31,7 @@ import "time"
 type Specimen struct {
 	Id                  string                       `json:"-" bson:"_id"`
 	Identifier          []Identifier                 `bson:"identifier"`
-	FhirType            CodeableConcept              `bson:"fhirType"`
+	Type                CodeableConcept              `bson:"type"`
 	Source              []SpecimenSourceComponent    `bson:"source"`
 	Subject             Reference                    `bson:"subject"`
 	AccessionIdentifier Identifier                   `bson:"accessionIdentifier"`
@@ -50,7 +50,7 @@ type SpecimenSourceComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec collection
 type SpecimenCollectionComponent struct {
 	Collector         Reference       `bson:"collector"`
-	Comment           string          `bson:"comment"`
+	Comment           []string        `bson:"comment"`
 	CollectedDateTime time.Time       `bson:"collectedDateTime"`
 	CollectedPeriod   Period          `bson:"collectedPeriod"`
 	Quantity          Quantity        `bson:"quantity"`
@@ -69,7 +69,7 @@ type SpecimenTreatmentComponent struct {
 type SpecimenContainerComponent struct {
 	Identifier       []Identifier    `bson:"identifier"`
 	Description      string          `bson:"description"`
-	FhirType         CodeableConcept `bson:"fhirType"`
+	Type             CodeableConcept `bson:"type"`
 	Capacity         Quantity        `bson:"capacity"`
 	SpecimenQuantity Quantity        `bson:"specimenQuantity"`
 	Additive         Reference       `bson:"additive"`

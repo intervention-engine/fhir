@@ -59,7 +59,7 @@ type MedicationDispenseDispenseDosageComponent struct {
 type MedicationDispenseDispenseComponent struct {
 	Identifier     Identifier                                  `bson:"identifier"`
 	Status         string                                      `bson:"status"`
-	FhirType       CodeableConcept                             `bson:"fhirType"`
+	Type           CodeableConcept                             `bson:"type"`
 	Quantity       Quantity                                    `bson:"quantity"`
 	Medication     Reference                                   `bson:"medication"`
 	WhenPrepared   time.Time                                   `bson:"whenPrepared"`
@@ -71,7 +71,7 @@ type MedicationDispenseDispenseComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec substitution
 type MedicationDispenseSubstitutionComponent struct {
-	FhirType         CodeableConcept   `bson:"fhirType"`
+	Type             CodeableConcept   `bson:"type"`
 	Reason           []CodeableConcept `bson:"reason"`
 	ResponsibleParty []Reference       `bson:"responsibleParty"`
 }

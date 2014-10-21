@@ -27,12 +27,12 @@
 package models
 
 type HumanName struct {
-	Id     string `json:"-" bson:"_id"`
-	Use    string `bson:"use"`
-	Text   string `bson:"text"`
-	Family string `bson:"family"`
-	Given  string `bson:"given"`
-	Prefix string `bson:"prefix"`
-	Suffix string `bson:"suffix"`
-	Period Period `bson:"period"`
+	Id     string   `json:"-" bson:"_id"`
+	Use    string   `bson:"use"`
+	Text   string   `bson:"text"`
+	Family []string `bson:"family"`
+	Given  []string `bson:"given"`
+	Prefix []string `bson:"prefix"`
+	Suffix []string `bson:"suffix"`
+	Period Period   `bson:"period"`
 }

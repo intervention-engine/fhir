@@ -31,7 +31,7 @@ import "time"
 type Device struct {
 	Id           string          `json:"-" bson:"_id"`
 	Identifier   []Identifier    `bson:"identifier"`
-	FhirType     CodeableConcept `bson:"fhirType"`
+	Type         CodeableConcept `bson:"type"`
 	Manufacturer string          `bson:"manufacturer"`
 	Model        string          `bson:"model"`
 	Version      string          `bson:"version"`

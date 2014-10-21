@@ -48,7 +48,7 @@ type AdverseReactionSymptomComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec exposure
 type AdverseReactionExposureComponent struct {
 	Date                 time.Time `bson:"date"`
-	FhirType             string    `bson:"fhirType"`
+	Type                 string    `bson:"type"`
 	CausalityExpectation string    `bson:"causalityExpectation"`
 	Substance            Reference `bson:"substance"`
 }

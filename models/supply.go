@@ -40,7 +40,7 @@ type Supply struct {
 type SupplyDispenseComponent struct {
 	Identifier     Identifier      `bson:"identifier"`
 	Status         string          `bson:"status"`
-	FhirType       CodeableConcept `bson:"fhirType"`
+	Type           CodeableConcept `bson:"type"`
 	Quantity       Quantity        `bson:"quantity"`
 	SuppliedItem   Reference       `bson:"suppliedItem"`
 	Supplier       Reference       `bson:"supplier"`

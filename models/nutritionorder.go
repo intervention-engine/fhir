@@ -56,7 +56,7 @@ type NutritionOrderItemOralDietComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec supplement
 type NutritionOrderItemSupplementComponent struct {
-	FhirType []CodeableConcept `bson:"fhirType"`
+	Type     []CodeableConcept `bson:"type"`
 	Quantity Quantity          `bson:"quantity"`
 	Name     string            `bson:"name"`
 }

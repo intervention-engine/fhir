@@ -43,8 +43,8 @@ type DataElement struct {
 	Definition   string                        `bson:"definition"`
 	Comments     string                        `bson:"comments"`
 	Requirements string                        `bson:"requirements"`
-	Synonym      string                        `bson:"synonym"`
-	FhirType     string                        `bson:"fhirType"`
+	Synonym      []string                      `bson:"synonym"`
+	Type         string                        `bson:"type"`
 	MaxLength    float64                       `bson:"maxLength"`
 	Units        CodeableConcept               `bson:"units"`
 	Binding      DataElementBindingComponent   `bson:"binding"`

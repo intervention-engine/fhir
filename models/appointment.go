@@ -33,7 +33,7 @@ type Appointment struct {
 	Identifier     []Identifier                      `bson:"identifier"`
 	Priority       float64                           `bson:"priority"`
 	Status         string                            `bson:"status"`
-	FhirType       CodeableConcept                   `bson:"fhirType"`
+	Type           CodeableConcept                   `bson:"type"`
 	Reason         CodeableConcept                   `bson:"reason"`
 	Description    string                            `bson:"description"`
 	Start          time.Time                         `bson:"start"`
@@ -49,7 +49,7 @@ type Appointment struct {
 
 // This is an ugly hack to deal with embedded structures in the spec participant
 type AppointmentParticipantComponent struct {
-	FhirType []CodeableConcept `bson:"fhirType"`
+	Type     []CodeableConcept `bson:"type"`
 	Actor    Reference         `bson:"actor"`
 	Required string            `bson:"required"`
 	Status   string            `bson:"status"`

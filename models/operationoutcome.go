@@ -33,8 +33,8 @@ type OperationOutcome struct {
 
 // This is an ugly hack to deal with embedded structures in the spec issue
 type OperationOutcomeIssueComponent struct {
-	Severity string `bson:"severity"`
-	FhirType Coding `bson:"fhirType"`
-	Details  string `bson:"details"`
-	Location string `bson:"location"`
+	Severity string   `bson:"severity"`
+	Type     Coding   `bson:"type"`
+	Details  string   `bson:"details"`
+	Location []string `bson:"location"`
 }

@@ -72,7 +72,7 @@ type ConditionLocationComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec relatedItem
 type ConditionRelatedItemComponent struct {
-	FhirType string          `bson:"fhirType"`
-	Code     CodeableConcept `bson:"code"`
-	Target   Reference       `bson:"target"`
+	Type   string          `bson:"type"`
+	Code   CodeableConcept `bson:"code"`
+	Target Reference       `bson:"target"`
 }

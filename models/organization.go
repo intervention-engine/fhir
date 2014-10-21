@@ -30,7 +30,7 @@ type Organization struct {
 	Id         string                         `json:"-" bson:"_id"`
 	Identifier []Identifier                   `bson:"identifier"`
 	Name       string                         `bson:"name"`
-	FhirType   CodeableConcept                `bson:"fhirType"`
+	Type       CodeableConcept                `bson:"type"`
 	Telecom    []ContactPoint                 `bson:"telecom"`
 	Address    []Address                      `bson:"address"`
 	PartOf     Reference                      `bson:"partOf"`
@@ -45,5 +45,5 @@ type OrganizationContactComponent struct {
 	Name    HumanName       `bson:"name"`
 	Telecom []ContactPoint  `bson:"telecom"`
 	Address Address         `bson:"address"`
-	Gender  string          `bson:"gender"`
+	Gender  CodeableConcept `bson:"gender"`
 }

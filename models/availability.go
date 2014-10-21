@@ -31,7 +31,7 @@ import "time"
 type Availability struct {
 	Id              string            `json:"-" bson:"_id"`
 	Identifier      []Identifier      `bson:"identifier"`
-	FhirType        []CodeableConcept `bson:"fhirType"`
+	Type            []CodeableConcept `bson:"type"`
 	Actor           Reference         `bson:"actor"`
 	PlanningHorizon Period            `bson:"planningHorizon"`
 	Comment         string            `bson:"comment"`

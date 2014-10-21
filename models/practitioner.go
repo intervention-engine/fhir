@@ -34,7 +34,7 @@ type Practitioner struct {
 	Name          HumanName                            `bson:"name"`
 	Telecom       []ContactPoint                       `bson:"telecom"`
 	Address       []Address                            `bson:"address"`
-	Gender        string                               `bson:"gender"`
+	Gender        CodeableConcept                      `bson:"gender"`
 	BirthDate     time.Time                            `bson:"birthDate"`
 	Photo         []Attachment                         `bson:"photo"`
 	Organization  Reference                            `bson:"organization"`

@@ -33,7 +33,7 @@ type RelatedPerson struct {
 	Relationship CodeableConcept `bson:"relationship"`
 	Name         HumanName       `bson:"name"`
 	Telecom      []ContactPoint  `bson:"telecom"`
-	Gender       string          `bson:"gender"`
+	Gender       CodeableConcept `bson:"gender"`
 	Address      Address         `bson:"address"`
 	Photo        []Attachment    `bson:"photo"`
 }

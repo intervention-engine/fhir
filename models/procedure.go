@@ -30,7 +30,7 @@ type Procedure struct {
 	Id           string                          `json:"-" bson:"_id"`
 	Identifier   []Identifier                    `bson:"identifier"`
 	Subject      Reference                       `bson:"subject"`
-	FhirType     CodeableConcept                 `bson:"fhirType"`
+	Type         CodeableConcept                 `bson:"type"`
 	BodySite     []CodeableConcept               `bson:"bodySite"`
 	Indication   []CodeableConcept               `bson:"indication"`
 	Performer    []ProcedurePerformerComponent   `bson:"performer"`
@@ -52,6 +52,6 @@ type ProcedurePerformerComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec relatedItem
 type ProcedureRelatedItemComponent struct {
-	FhirType string    `bson:"fhirType"`
-	Target   Reference `bson:"target"`
+	Type   string    `bson:"type"`
+	Target Reference `bson:"target"`
 }

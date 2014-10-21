@@ -35,7 +35,7 @@ type Provenance struct {
 	Recorded           time.Time                   `bson:"recorded"`
 	Reason             CodeableConcept             `bson:"reason"`
 	Location           Reference                   `bson:"location"`
-	Policy             string                      `bson:"policy"`
+	Policy             []string                    `bson:"policy"`
 	Agent              []ProvenanceAgentComponent  `bson:"agent"`
 	Entity             []ProvenanceEntityComponent `bson:"entity"`
 	IntegritySignature string                      `bson:"integritySignature"`
@@ -44,7 +44,7 @@ type Provenance struct {
 // This is an ugly hack to deal with embedded structures in the spec agent
 type ProvenanceAgentComponent struct {
 	Role      Coding `bson:"role"`
-	FhirType  Coding `bson:"fhirType"`
+	Type      Coding `bson:"type"`
 	Reference string `bson:"reference"`
 	Display   string `bson:"display"`
 }
@@ -52,7 +52,7 @@ type ProvenanceAgentComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec entity
 type ProvenanceEntityComponent struct {
 	Role      string                   `bson:"role"`
-	FhirType  Coding                   `bson:"fhirType"`
+	Type      Coding                   `bson:"type"`
 	Reference string                   `bson:"reference"`
 	Display   string                   `bson:"display"`
 	Agent     ProvenanceAgentComponent `bson:"agent"`

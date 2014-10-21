@@ -72,6 +72,6 @@ type MedicationPrescriptionDispenseComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec substitution
 type MedicationPrescriptionSubstitutionComponent struct {
-	FhirType CodeableConcept `bson:"fhirType"`
-	Reason   CodeableConcept `bson:"reason"`
+	Type   CodeableConcept `bson:"type"`
+	Reason CodeableConcept `bson:"reason"`
 }

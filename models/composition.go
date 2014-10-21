@@ -32,7 +32,7 @@ type Composition struct {
 	Id              string                         `json:"-" bson:"_id"`
 	Identifier      Identifier                     `bson:"identifier"`
 	Date            time.Time                      `bson:"date"`
-	FhirType        CodeableConcept                `bson:"fhirType"`
+	Type            CodeableConcept                `bson:"type"`
 	Class           CodeableConcept                `bson:"class"`
 	Title           string                         `bson:"title"`
 	Status          string                         `bson:"status"`
@@ -48,7 +48,7 @@ type Composition struct {
 
 // This is an ugly hack to deal with embedded structures in the spec attester
 type CompositionAttesterComponent struct {
-	Mode  string    `bson:"mode"`
+	Mode  []string  `bson:"mode"`
 	Time  time.Time `bson:"time"`
 	Party Reference `bson:"party"`
 }

@@ -43,7 +43,7 @@ type Conformance struct {
 	Implementation ConformanceImplementationComponent `bson:"implementation"`
 	FhirVersion    string                             `bson:"fhirVersion"`
 	AcceptUnknown  bool                               `bson:"acceptUnknown"`
-	Format         string                             `bson:"format"`
+	Format         []string                           `bson:"format"`
 	Profile        []Reference                        `bson:"profile"`
 	Rest           []ConformanceRestComponent         `bson:"rest"`
 	Messaging      []ConformanceMessagingComponent    `bson:"messaging"`
@@ -65,7 +65,7 @@ type ConformanceImplementationComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec certificate
 type ConformanceRestSecurityCertificateComponent struct {
-	FhirType string `bson:"fhirType"`
+	Type string `bson:"type"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec security
@@ -84,22 +84,22 @@ type ResourceInteractionComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec searchParam
 type ConformanceRestResourceSearchParamComponent struct {
-	Name          string `bson:"name"`
-	Definition    string `bson:"definition"`
-	FhirType      string `bson:"fhirType"`
-	Documentation string `bson:"documentation"`
-	Target        string `bson:"target"`
-	Chain         string `bson:"chain"`
+	Name          string   `bson:"name"`
+	Definition    string   `bson:"definition"`
+	Type          string   `bson:"type"`
+	Documentation string   `bson:"documentation"`
+	Target        []string `bson:"target"`
+	Chain         []string `bson:"chain"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec resource
 type ConformanceRestResourceComponent struct {
-	FhirType      string                                        `bson:"fhirType"`
+	Type          string                                        `bson:"type"`
 	Profile       Reference                                     `bson:"profile"`
 	Interaction   []ResourceInteractionComponent                `bson:"interaction"`
 	ReadHistory   bool                                          `bson:"readHistory"`
 	UpdateCreate  bool                                          `bson:"updateCreate"`
-	SearchInclude string                                        `bson:"searchInclude"`
+	SearchInclude []string                                      `bson:"searchInclude"`
 	SearchParam   []ConformanceRestResourceSearchParamComponent `bson:"searchParam"`
 }
 
@@ -123,7 +123,7 @@ type ConformanceRestComponent struct {
 	Resource        []ConformanceRestResourceComponent  `bson:"resource"`
 	Interaction     []SystemInteractionComponent        `bson:"interaction"`
 	Operation       []ConformanceRestOperationComponent `bson:"operation"`
-	DocumentMailbox string                              `bson:"documentMailbox"`
+	DocumentMailbox []string                            `bson:"documentMailbox"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec event

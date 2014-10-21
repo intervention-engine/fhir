@@ -31,7 +31,7 @@ type Encounter struct {
 	Identifier      []Identifier                      `bson:"identifier"`
 	Status          string                            `bson:"status"`
 	Class           string                            `bson:"class"`
-	FhirType        []CodeableConcept                 `bson:"fhirType"`
+	Type            []CodeableConcept                 `bson:"type"`
 	Subject         Reference                         `bson:"subject"`
 	Participant     []EncounterParticipantComponent   `bson:"participant"`
 	Fulfills        Reference                         `bson:"fulfills"`
@@ -48,7 +48,7 @@ type Encounter struct {
 
 // This is an ugly hack to deal with embedded structures in the spec participant
 type EncounterParticipantComponent struct {
-	FhirType   []CodeableConcept `bson:"fhirType"`
+	Type       []CodeableConcept `bson:"type"`
 	Individual Reference         `bson:"individual"`
 }
 

@@ -28,7 +28,7 @@ package models
 
 type Namespace struct {
 	Id          string                       `json:"-" bson:"_id"`
-	FhirType    string                       `bson:"fhirType"`
+	Type        string                       `bson:"type"`
 	Name        string                       `bson:"name"`
 	Status      string                       `bson:"status"`
 	Country     string                       `bson:"country"`
@@ -43,7 +43,7 @@ type Namespace struct {
 
 // This is an ugly hack to deal with embedded structures in the spec uniqueId
 type NamespaceUniqueIdComponent struct {
-	FhirType  string `bson:"fhirType"`
+	Type      string `bson:"type"`
 	Value     string `bson:"value"`
 	Preferred bool   `bson:"preferred"`
 	Period    Period `bson:"period"`

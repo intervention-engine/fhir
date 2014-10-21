@@ -45,7 +45,7 @@ type OperationDefinition struct {
 	Notes        string                                  `bson:"notes"`
 	Base         Reference                               `bson:"base"`
 	System       bool                                    `bson:"system"`
-	FhirType     string                                  `bson:"fhirType"`
+	Type         []string                                `bson:"type"`
 	Instance     bool                                    `bson:"instance"`
 	Parameter    []OperationDefinitionParameterComponent `bson:"parameter"`
 }
@@ -57,6 +57,6 @@ type OperationDefinitionParameterComponent struct {
 	Min           float64   `bson:"min"`
 	Max           string    `bson:"max"`
 	Documentation string    `bson:"documentation"`
-	FhirType      Coding    `bson:"fhirType"`
+	Type          Coding    `bson:"type"`
 	Profile       Reference `bson:"profile"`
 }

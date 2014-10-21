@@ -27,13 +27,13 @@
 package models
 
 type Address struct {
-	Id      string `json:"-" bson:"_id"`
-	Use     string `bson:"use"`
-	Text    string `bson:"text"`
-	Line    string `bson:"line"`
-	City    string `bson:"city"`
-	State   string `bson:"state"`
-	Zip     string `bson:"zip"`
-	Country string `bson:"country"`
-	Period  Period `bson:"period"`
+	Id      string   `json:"-" bson:"_id"`
+	Use     string   `bson:"use"`
+	Text    string   `bson:"text"`
+	Line    []string `bson:"line"`
+	City    string   `bson:"city"`
+	State   string   `bson:"state"`
+	Zip     string   `bson:"zip"`
+	Country string   `bson:"country"`
+	Period  Period   `bson:"period"`
 }

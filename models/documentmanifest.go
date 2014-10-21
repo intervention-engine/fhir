@@ -34,7 +34,7 @@ type DocumentManifest struct {
 	Identifier       []Identifier    `bson:"identifier"`
 	Subject          []Reference     `bson:"subject"`
 	Recipient        []Reference     `bson:"recipient"`
-	FhirType         CodeableConcept `bson:"fhirType"`
+	Type             CodeableConcept `bson:"type"`
 	Author           []Reference     `bson:"author"`
 	Created          time.Time       `bson:"created"`
 	Source           string          `bson:"source"`
