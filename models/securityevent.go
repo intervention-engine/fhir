@@ -73,7 +73,8 @@ type SecurityEventSourceComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec detail
 type SecurityEventObjectDetailComponent struct {
-	Type string `bson:"type"`
+	Type  string `bson:"type"`
+	Value string `bson:"value"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec object
@@ -86,5 +87,6 @@ type SecurityEventObjectComponent struct {
 	Sensitivity CodeableConcept                      `bson:"sensitivity"`
 	Name        string                               `bson:"name"`
 	Description string                               `bson:"description"`
+	Query       string                               `bson:"query"`
 	Detail      []SecurityEventObjectDetailComponent `bson:"detail"`
 }

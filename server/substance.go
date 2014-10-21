@@ -1,0 +1,117 @@
+package server
+
+import (
+	"encoding/json"
+	"net/http"
+	"gopkg.in/mgo.v2/bson"
+	"gitlab.mitre.org/fhir/models"
+	"github.com/gorilla/mux"
+	"os"
+)
+
+func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+	var result []models.Substance
+	c := Database.C("substances")
+	iter := c.Find(nil).Limit(100).Iter()
+	err := iter.All(&result)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(rw).Encode(result)
+}
+
+func SubstanceShowHandler(rw http.ResponseWriter, r *http.Request) {
+
+	var id bson.ObjectId
+
+	idString := mux.Vars(r)["id"]
+	if bson.IsObjectIdHex(idString) {
+		id = bson.ObjectIdHex(idString)
+	}	else {
+		http.Error(rw, "Invalid id", http.StatusBadRequest)
+	}
+
+	c := Database.C("substances")
+
+	result := models.Substance{}
+	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(rw).Encode(result)
+}
+
+func SubstanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	substance := &models.Substance{}
+	err := decoder.Decode(substance)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	c := Database.C("substances")
+	i := bson.NewObjectId()
+	substance.Id = i.Hex()
+	err = c.Insert(substance)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	host, err := os.Hostname()
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	rw.Header().Add("Location", "http://" + host + "/substance/" + i.Hex())
+}
+
+func SubstanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+
+	var id bson.ObjectId
+
+	idString := mux.Vars(r)["id"]
+	if bson.IsObjectIdHex(idString) {
+		id = bson.ObjectIdHex(idString)
+	}	else {
+		http.Error(rw, "Invalid id", http.StatusBadRequest)
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	substance := &models.Substance{}
+	err := decoder.Decode(substance)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	c := Database.C("substances")
+	substance.Id = id.Hex()
+	err = c.Update(bson.M{"_id": id.Hex()}, substance)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func SubstanceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+	var id bson.ObjectId
+
+	idString := mux.Vars(r)["id"]
+	if bson.IsObjectIdHex(idString) {
+		id = bson.ObjectIdHex(idString)
+	}	else {
+		http.Error(rw, "Invalid id", http.StatusBadRequest)
+	}
+
+	c := Database.C("substances")
+
+	err := c.Remove(bson.M{"_id": id.Hex()})
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+}

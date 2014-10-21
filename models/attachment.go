@@ -30,7 +30,9 @@ type Attachment struct {
 	Id          string  `json:"-" bson:"_id"`
 	ContentType string  `bson:"contentType"`
 	Language    string  `bson:"language"`
+	Data        string  `bson:"data"`
 	Url         string  `bson:"url"`
 	Size        float64 `bson:"size"`
+	Hash        string  `bson:"hash"`
 	Title       string  `bson:"title"`
 }

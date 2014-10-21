@@ -1,0 +1,117 @@
+package server
+
+import (
+	"encoding/json"
+	"net/http"
+	"gopkg.in/mgo.v2/bson"
+	"gitlab.mitre.org/fhir/models"
+	"github.com/gorilla/mux"
+	"os"
+)
+
+func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+	var result []models.DocumentReference
+	c := Database.C("documentreferences")
+	iter := c.Find(nil).Limit(100).Iter()
+	err := iter.All(&result)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(rw).Encode(result)
+}
+
+func DocumentReferenceShowHandler(rw http.ResponseWriter, r *http.Request) {
+
+	var id bson.ObjectId
+
+	idString := mux.Vars(r)["id"]
+	if bson.IsObjectIdHex(idString) {
+		id = bson.ObjectIdHex(idString)
+	}	else {
+		http.Error(rw, "Invalid id", http.StatusBadRequest)
+	}
+
+	c := Database.C("documentreferences")
+
+	result := models.DocumentReference{}
+	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(rw).Encode(result)
+}
+
+func DocumentReferenceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	documentreference := &models.DocumentReference{}
+	err := decoder.Decode(documentreference)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	c := Database.C("documentreferences")
+	i := bson.NewObjectId()
+	documentreference.Id = i.Hex()
+	err = c.Insert(documentreference)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	host, err := os.Hostname()
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	rw.Header().Add("Location", "http://" + host + "/documentreference/" + i.Hex())
+}
+
+func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+
+	var id bson.ObjectId
+
+	idString := mux.Vars(r)["id"]
+	if bson.IsObjectIdHex(idString) {
+		id = bson.ObjectIdHex(idString)
+	}	else {
+		http.Error(rw, "Invalid id", http.StatusBadRequest)
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	documentreference := &models.DocumentReference{}
+	err := decoder.Decode(documentreference)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	c := Database.C("documentreferences")
+	documentreference.Id = id.Hex()
+	err = c.Update(bson.M{"_id": id.Hex()}, documentreference)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func DocumentReferenceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+	var id bson.ObjectId
+
+	idString := mux.Vars(r)["id"]
+	if bson.IsObjectIdHex(idString) {
+		id = bson.ObjectIdHex(idString)
+	}	else {
+		http.Error(rw, "Invalid id", http.StatusBadRequest)
+	}
+
+	c := Database.C("documentreferences")
+
+	err := c.Remove(bson.M{"_id": id.Hex()})
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+}

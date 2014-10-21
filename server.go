@@ -22,10 +22,13 @@ func main() {
 
   server.Router.HandleFunc("/", HomeHandler)
 
-	patient := server.Router.PathPrefix("/patient/{id}").Subrouter()
+	patientBase := server.Router.Path("/Patient/").Subrouter()
+	patientBase.Methods("GET").HandlerFunc(server.PatientIndexHandler)
+	patientBase.Methods("POST").HandlerFunc(server.PatientCreateHandler)
+
+	patient := server.Router.PathPrefix("/Patient/{id}").Subrouter()
 	patient.Methods("GET").HandlerFunc(server.PatientShowHandler)
-	patient.Methods("PUT").HandlerFunc(server.PatientCreateHandler)
-	patient.Methods("POST").HandlerFunc(server.PatientUpdateHandler)
+	patient.Methods("PUT").HandlerFunc(server.PatientUpdateHandler)
 	patient.Methods("DELETE").HandlerFunc(server.PatientDeleteHandler)
 
 	http.ListenAndServe(":8080", server.Router)

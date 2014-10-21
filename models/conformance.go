@@ -66,6 +66,7 @@ type ConformanceImplementationComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec certificate
 type ConformanceRestSecurityCertificateComponent struct {
 	Type string `bson:"type"`
+	Blob string `bson:"blob"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec security

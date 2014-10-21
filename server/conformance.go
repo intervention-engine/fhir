@@ -9,7 +9,20 @@ import (
 	"os"
 )
 
-func PatientShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ConformanceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+	var result []models.Conformance
+	c := Database.C("conformances")
+	iter := c.Find(nil).Limit(100).Iter()
+	err := iter.All(&result)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	json.NewEncoder(rw).Encode(result)
+}
+
+func ConformanceShowHandler(rw http.ResponseWriter, r *http.Request) {
 
 	var id bson.ObjectId
 
@@ -20,9 +33,9 @@ func PatientShowHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("patients")
+	c := Database.C("conformances")
 
-	result := models.Patient{}
+	result := models.Conformance{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -33,18 +46,18 @@ func PatientShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func PatientCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ConformanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
-	patient := &models.Patient{}
-	err := decoder.Decode(patient)
+	conformance := &models.Conformance{}
+	err := decoder.Decode(conformance)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("patients")
+	c := Database.C("conformances")
 	i := bson.NewObjectId()
-	patient.Id = i.Hex()
-	err = c.Insert(patient)
+	conformance.Id = i.Hex()
+	err = c.Insert(conformance)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
@@ -54,10 +67,10 @@ func PatientCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://" + host + "/patient/" + i.Hex())
+	rw.Header().Add("Location", "http://" + host + "/conformance/" + i.Hex())
 }
 
-func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ConformanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 
 	var id bson.ObjectId
 
@@ -69,21 +82,21 @@ func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	patient := &models.Patient{}
-	err := decoder.Decode(patient)
+	conformance := &models.Conformance{}
+	err := decoder.Decode(conformance)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("patients")
-	patient.Id = id.Hex()
-	err = c.Update(bson.M{"_id": id.Hex()}, patient)
+	c := Database.C("conformances")
+	conformance.Id = id.Hex()
+	err = c.Update(bson.M{"_id": id.Hex()}, conformance)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ConformanceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -93,7 +106,7 @@ func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("patients")
+	c := Database.C("conformances")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
