@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gitlab.mitre.org/fhir/server"
 	"gopkg.in/mgo.v2"
 	"log"
@@ -18,8 +19,10 @@ func main() {
 	defer server.MongoSession.Close()
 
 	server.Database = server.MongoSession.DB("fhir")
+	server.Router.StrictSlash(true)
+	server.Router.HandleFunc("/", HomeHandler)
 
-	conditionBase := server.Router.Path("/Condition/").Subrouter()
+	conditionBase := server.Router.Path("/Condition").Subrouter()
 	conditionBase.Methods("GET").HandlerFunc(server.ConditionIndexHandler)
 	conditionBase.Methods("POST").HandlerFunc(server.ConditionCreateHandler)
 
@@ -28,7 +31,7 @@ func main() {
 	condition.Methods("PUT").HandlerFunc(server.ConditionUpdateHandler)
 	condition.Methods("DELETE").HandlerFunc(server.ConditionDeleteHandler)
 
-	supplyBase := server.Router.Path("/Supply/").Subrouter()
+	supplyBase := server.Router.Path("/Supply").Subrouter()
 	supplyBase.Methods("GET").HandlerFunc(server.SupplyIndexHandler)
 	supplyBase.Methods("POST").HandlerFunc(server.SupplyCreateHandler)
 
@@ -37,7 +40,7 @@ func main() {
 	supply.Methods("PUT").HandlerFunc(server.SupplyUpdateHandler)
 	supply.Methods("DELETE").HandlerFunc(server.SupplyDeleteHandler)
 
-	organizationBase := server.Router.Path("/Organization/").Subrouter()
+	organizationBase := server.Router.Path("/Organization").Subrouter()
 	organizationBase.Methods("GET").HandlerFunc(server.OrganizationIndexHandler)
 	organizationBase.Methods("POST").HandlerFunc(server.OrganizationCreateHandler)
 
@@ -46,7 +49,7 @@ func main() {
 	organization.Methods("PUT").HandlerFunc(server.OrganizationUpdateHandler)
 	organization.Methods("DELETE").HandlerFunc(server.OrganizationDeleteHandler)
 
-	groupBase := server.Router.Path("/Group/").Subrouter()
+	groupBase := server.Router.Path("/Group").Subrouter()
 	groupBase.Methods("GET").HandlerFunc(server.GroupIndexHandler)
 	groupBase.Methods("POST").HandlerFunc(server.GroupCreateHandler)
 
@@ -55,7 +58,7 @@ func main() {
 	group.Methods("PUT").HandlerFunc(server.GroupUpdateHandler)
 	group.Methods("DELETE").HandlerFunc(server.GroupDeleteHandler)
 
-	valuesetBase := server.Router.Path("/ValueSet/").Subrouter()
+	valuesetBase := server.Router.Path("/ValueSet").Subrouter()
 	valuesetBase.Methods("GET").HandlerFunc(server.ValueSetIndexHandler)
 	valuesetBase.Methods("POST").HandlerFunc(server.ValueSetCreateHandler)
 
@@ -64,7 +67,7 @@ func main() {
 	valueset.Methods("PUT").HandlerFunc(server.ValueSetUpdateHandler)
 	valueset.Methods("DELETE").HandlerFunc(server.ValueSetDeleteHandler)
 
-	immunizationrecommendationBase := server.Router.Path("/ImmunizationRecommendation/").Subrouter()
+	immunizationrecommendationBase := server.Router.Path("/ImmunizationRecommendation").Subrouter()
 	immunizationrecommendationBase.Methods("GET").HandlerFunc(server.ImmunizationRecommendationIndexHandler)
 	immunizationrecommendationBase.Methods("POST").HandlerFunc(server.ImmunizationRecommendationCreateHandler)
 
@@ -73,7 +76,7 @@ func main() {
 	immunizationrecommendation.Methods("PUT").HandlerFunc(server.ImmunizationRecommendationUpdateHandler)
 	immunizationrecommendation.Methods("DELETE").HandlerFunc(server.ImmunizationRecommendationDeleteHandler)
 
-	appointmentBase := server.Router.Path("/Appointment/").Subrouter()
+	appointmentBase := server.Router.Path("/Appointment").Subrouter()
 	appointmentBase.Methods("GET").HandlerFunc(server.AppointmentIndexHandler)
 	appointmentBase.Methods("POST").HandlerFunc(server.AppointmentCreateHandler)
 
@@ -82,7 +85,7 @@ func main() {
 	appointment.Methods("PUT").HandlerFunc(server.AppointmentUpdateHandler)
 	appointment.Methods("DELETE").HandlerFunc(server.AppointmentDeleteHandler)
 
-	medicationdispenseBase := server.Router.Path("/MedicationDispense/").Subrouter()
+	medicationdispenseBase := server.Router.Path("/MedicationDispense").Subrouter()
 	medicationdispenseBase.Methods("GET").HandlerFunc(server.MedicationDispenseIndexHandler)
 	medicationdispenseBase.Methods("POST").HandlerFunc(server.MedicationDispenseCreateHandler)
 
@@ -91,7 +94,7 @@ func main() {
 	medicationdispense.Methods("PUT").HandlerFunc(server.MedicationDispenseUpdateHandler)
 	medicationdispense.Methods("DELETE").HandlerFunc(server.MedicationDispenseDeleteHandler)
 
-	medicationprescriptionBase := server.Router.Path("/MedicationPrescription/").Subrouter()
+	medicationprescriptionBase := server.Router.Path("/MedicationPrescription").Subrouter()
 	medicationprescriptionBase.Methods("GET").HandlerFunc(server.MedicationPrescriptionIndexHandler)
 	medicationprescriptionBase.Methods("POST").HandlerFunc(server.MedicationPrescriptionCreateHandler)
 
@@ -100,7 +103,7 @@ func main() {
 	medicationprescription.Methods("PUT").HandlerFunc(server.MedicationPrescriptionUpdateHandler)
 	medicationprescription.Methods("DELETE").HandlerFunc(server.MedicationPrescriptionDeleteHandler)
 
-	slotBase := server.Router.Path("/Slot/").Subrouter()
+	slotBase := server.Router.Path("/Slot").Subrouter()
 	slotBase.Methods("GET").HandlerFunc(server.SlotIndexHandler)
 	slotBase.Methods("POST").HandlerFunc(server.SlotCreateHandler)
 
@@ -109,7 +112,7 @@ func main() {
 	slot.Methods("PUT").HandlerFunc(server.SlotUpdateHandler)
 	slot.Methods("DELETE").HandlerFunc(server.SlotDeleteHandler)
 
-	contraindicationBase := server.Router.Path("/Contraindication/").Subrouter()
+	contraindicationBase := server.Router.Path("/Contraindication").Subrouter()
 	contraindicationBase.Methods("GET").HandlerFunc(server.ContraindicationIndexHandler)
 	contraindicationBase.Methods("POST").HandlerFunc(server.ContraindicationCreateHandler)
 
@@ -118,7 +121,7 @@ func main() {
 	contraindication.Methods("PUT").HandlerFunc(server.ContraindicationUpdateHandler)
 	contraindication.Methods("DELETE").HandlerFunc(server.ContraindicationDeleteHandler)
 
-	appointmentresponseBase := server.Router.Path("/AppointmentResponse/").Subrouter()
+	appointmentresponseBase := server.Router.Path("/AppointmentResponse").Subrouter()
 	appointmentresponseBase.Methods("GET").HandlerFunc(server.AppointmentResponseIndexHandler)
 	appointmentresponseBase.Methods("POST").HandlerFunc(server.AppointmentResponseCreateHandler)
 
@@ -127,7 +130,7 @@ func main() {
 	appointmentresponse.Methods("PUT").HandlerFunc(server.AppointmentResponseUpdateHandler)
 	appointmentresponse.Methods("DELETE").HandlerFunc(server.AppointmentResponseDeleteHandler)
 
-	medicationstatementBase := server.Router.Path("/MedicationStatement/").Subrouter()
+	medicationstatementBase := server.Router.Path("/MedicationStatement").Subrouter()
 	medicationstatementBase.Methods("GET").HandlerFunc(server.MedicationStatementIndexHandler)
 	medicationstatementBase.Methods("POST").HandlerFunc(server.MedicationStatementCreateHandler)
 
@@ -136,7 +139,7 @@ func main() {
 	medicationstatement.Methods("PUT").HandlerFunc(server.MedicationStatementUpdateHandler)
 	medicationstatement.Methods("DELETE").HandlerFunc(server.MedicationStatementDeleteHandler)
 
-	compositionBase := server.Router.Path("/Composition/").Subrouter()
+	compositionBase := server.Router.Path("/Composition").Subrouter()
 	compositionBase.Methods("GET").HandlerFunc(server.CompositionIndexHandler)
 	compositionBase.Methods("POST").HandlerFunc(server.CompositionCreateHandler)
 
@@ -145,7 +148,7 @@ func main() {
 	composition.Methods("PUT").HandlerFunc(server.CompositionUpdateHandler)
 	composition.Methods("DELETE").HandlerFunc(server.CompositionDeleteHandler)
 
-	questionnaireBase := server.Router.Path("/Questionnaire/").Subrouter()
+	questionnaireBase := server.Router.Path("/Questionnaire").Subrouter()
 	questionnaireBase.Methods("GET").HandlerFunc(server.QuestionnaireIndexHandler)
 	questionnaireBase.Methods("POST").HandlerFunc(server.QuestionnaireCreateHandler)
 
@@ -154,7 +157,7 @@ func main() {
 	questionnaire.Methods("PUT").HandlerFunc(server.QuestionnaireUpdateHandler)
 	questionnaire.Methods("DELETE").HandlerFunc(server.QuestionnaireDeleteHandler)
 
-	operationoutcomeBase := server.Router.Path("/OperationOutcome/").Subrouter()
+	operationoutcomeBase := server.Router.Path("/OperationOutcome").Subrouter()
 	operationoutcomeBase.Methods("GET").HandlerFunc(server.OperationOutcomeIndexHandler)
 	operationoutcomeBase.Methods("POST").HandlerFunc(server.OperationOutcomeCreateHandler)
 
@@ -163,7 +166,7 @@ func main() {
 	operationoutcome.Methods("PUT").HandlerFunc(server.OperationOutcomeUpdateHandler)
 	operationoutcome.Methods("DELETE").HandlerFunc(server.OperationOutcomeDeleteHandler)
 
-	conformanceBase := server.Router.Path("/Conformance/").Subrouter()
+	conformanceBase := server.Router.Path("/Conformance").Subrouter()
 	conformanceBase.Methods("GET").HandlerFunc(server.ConformanceIndexHandler)
 	conformanceBase.Methods("POST").HandlerFunc(server.ConformanceCreateHandler)
 
@@ -172,7 +175,7 @@ func main() {
 	conformance.Methods("PUT").HandlerFunc(server.ConformanceUpdateHandler)
 	conformance.Methods("DELETE").HandlerFunc(server.ConformanceDeleteHandler)
 
-	mediaBase := server.Router.Path("/Media/").Subrouter()
+	mediaBase := server.Router.Path("/Media").Subrouter()
 	mediaBase.Methods("GET").HandlerFunc(server.MediaIndexHandler)
 	mediaBase.Methods("POST").HandlerFunc(server.MediaCreateHandler)
 
@@ -181,7 +184,7 @@ func main() {
 	media.Methods("PUT").HandlerFunc(server.MediaUpdateHandler)
 	media.Methods("DELETE").HandlerFunc(server.MediaDeleteHandler)
 
-	otherBase := server.Router.Path("/Other/").Subrouter()
+	otherBase := server.Router.Path("/Other").Subrouter()
 	otherBase.Methods("GET").HandlerFunc(server.OtherIndexHandler)
 	otherBase.Methods("POST").HandlerFunc(server.OtherCreateHandler)
 
@@ -190,7 +193,7 @@ func main() {
 	other.Methods("PUT").HandlerFunc(server.OtherUpdateHandler)
 	other.Methods("DELETE").HandlerFunc(server.OtherDeleteHandler)
 
-	profileBase := server.Router.Path("/Profile/").Subrouter()
+	profileBase := server.Router.Path("/Profile").Subrouter()
 	profileBase.Methods("GET").HandlerFunc(server.ProfileIndexHandler)
 	profileBase.Methods("POST").HandlerFunc(server.ProfileCreateHandler)
 
@@ -199,7 +202,7 @@ func main() {
 	profile.Methods("PUT").HandlerFunc(server.ProfileUpdateHandler)
 	profile.Methods("DELETE").HandlerFunc(server.ProfileDeleteHandler)
 
-	documentreferenceBase := server.Router.Path("/DocumentReference/").Subrouter()
+	documentreferenceBase := server.Router.Path("/DocumentReference").Subrouter()
 	documentreferenceBase.Methods("GET").HandlerFunc(server.DocumentReferenceIndexHandler)
 	documentreferenceBase.Methods("POST").HandlerFunc(server.DocumentReferenceCreateHandler)
 
@@ -208,7 +211,7 @@ func main() {
 	documentreference.Methods("PUT").HandlerFunc(server.DocumentReferenceUpdateHandler)
 	documentreference.Methods("DELETE").HandlerFunc(server.DocumentReferenceDeleteHandler)
 
-	immunizationBase := server.Router.Path("/Immunization/").Subrouter()
+	immunizationBase := server.Router.Path("/Immunization").Subrouter()
 	immunizationBase.Methods("GET").HandlerFunc(server.ImmunizationIndexHandler)
 	immunizationBase.Methods("POST").HandlerFunc(server.ImmunizationCreateHandler)
 
@@ -217,7 +220,7 @@ func main() {
 	immunization.Methods("PUT").HandlerFunc(server.ImmunizationUpdateHandler)
 	immunization.Methods("DELETE").HandlerFunc(server.ImmunizationDeleteHandler)
 
-	subscriptionBase := server.Router.Path("/Subscription/").Subrouter()
+	subscriptionBase := server.Router.Path("/Subscription").Subrouter()
 	subscriptionBase.Methods("GET").HandlerFunc(server.SubscriptionIndexHandler)
 	subscriptionBase.Methods("POST").HandlerFunc(server.SubscriptionCreateHandler)
 
@@ -226,7 +229,7 @@ func main() {
 	subscription.Methods("PUT").HandlerFunc(server.SubscriptionUpdateHandler)
 	subscription.Methods("DELETE").HandlerFunc(server.SubscriptionDeleteHandler)
 
-	orderresponseBase := server.Router.Path("/OrderResponse/").Subrouter()
+	orderresponseBase := server.Router.Path("/OrderResponse").Subrouter()
 	orderresponseBase.Methods("GET").HandlerFunc(server.OrderResponseIndexHandler)
 	orderresponseBase.Methods("POST").HandlerFunc(server.OrderResponseCreateHandler)
 
@@ -235,7 +238,7 @@ func main() {
 	orderresponse.Methods("PUT").HandlerFunc(server.OrderResponseUpdateHandler)
 	orderresponse.Methods("DELETE").HandlerFunc(server.OrderResponseDeleteHandler)
 
-	conceptmapBase := server.Router.Path("/ConceptMap/").Subrouter()
+	conceptmapBase := server.Router.Path("/ConceptMap").Subrouter()
 	conceptmapBase.Methods("GET").HandlerFunc(server.ConceptMapIndexHandler)
 	conceptmapBase.Methods("POST").HandlerFunc(server.ConceptMapCreateHandler)
 
@@ -244,7 +247,7 @@ func main() {
 	conceptmap.Methods("PUT").HandlerFunc(server.ConceptMapUpdateHandler)
 	conceptmap.Methods("DELETE").HandlerFunc(server.ConceptMapDeleteHandler)
 
-	imagingstudyBase := server.Router.Path("/ImagingStudy/").Subrouter()
+	imagingstudyBase := server.Router.Path("/ImagingStudy").Subrouter()
 	imagingstudyBase.Methods("GET").HandlerFunc(server.ImagingStudyIndexHandler)
 	imagingstudyBase.Methods("POST").HandlerFunc(server.ImagingStudyCreateHandler)
 
@@ -253,7 +256,7 @@ func main() {
 	imagingstudy.Methods("PUT").HandlerFunc(server.ImagingStudyUpdateHandler)
 	imagingstudy.Methods("DELETE").HandlerFunc(server.ImagingStudyDeleteHandler)
 
-	practitionerBase := server.Router.Path("/Practitioner/").Subrouter()
+	practitionerBase := server.Router.Path("/Practitioner").Subrouter()
 	practitionerBase.Methods("GET").HandlerFunc(server.PractitionerIndexHandler)
 	practitionerBase.Methods("POST").HandlerFunc(server.PractitionerCreateHandler)
 
@@ -262,7 +265,7 @@ func main() {
 	practitioner.Methods("PUT").HandlerFunc(server.PractitionerUpdateHandler)
 	practitioner.Methods("DELETE").HandlerFunc(server.PractitionerDeleteHandler)
 
-	careplanBase := server.Router.Path("/CarePlan/").Subrouter()
+	careplanBase := server.Router.Path("/CarePlan").Subrouter()
 	careplanBase.Methods("GET").HandlerFunc(server.CarePlanIndexHandler)
 	careplanBase.Methods("POST").HandlerFunc(server.CarePlanCreateHandler)
 
@@ -271,7 +274,7 @@ func main() {
 	careplan.Methods("PUT").HandlerFunc(server.CarePlanUpdateHandler)
 	careplan.Methods("DELETE").HandlerFunc(server.CarePlanDeleteHandler)
 
-	provenanceBase := server.Router.Path("/Provenance/").Subrouter()
+	provenanceBase := server.Router.Path("/Provenance").Subrouter()
 	provenanceBase.Methods("GET").HandlerFunc(server.ProvenanceIndexHandler)
 	provenanceBase.Methods("POST").HandlerFunc(server.ProvenanceCreateHandler)
 
@@ -280,7 +283,7 @@ func main() {
 	provenance.Methods("PUT").HandlerFunc(server.ProvenanceUpdateHandler)
 	provenance.Methods("DELETE").HandlerFunc(server.ProvenanceDeleteHandler)
 
-	deviceBase := server.Router.Path("/Device/").Subrouter()
+	deviceBase := server.Router.Path("/Device").Subrouter()
 	deviceBase.Methods("GET").HandlerFunc(server.DeviceIndexHandler)
 	deviceBase.Methods("POST").HandlerFunc(server.DeviceCreateHandler)
 
@@ -289,7 +292,7 @@ func main() {
 	device.Methods("PUT").HandlerFunc(server.DeviceUpdateHandler)
 	device.Methods("DELETE").HandlerFunc(server.DeviceDeleteHandler)
 
-	queryBase := server.Router.Path("/Query/").Subrouter()
+	queryBase := server.Router.Path("/Query").Subrouter()
 	queryBase.Methods("GET").HandlerFunc(server.QueryIndexHandler)
 	queryBase.Methods("POST").HandlerFunc(server.QueryCreateHandler)
 
@@ -298,7 +301,7 @@ func main() {
 	query.Methods("PUT").HandlerFunc(server.QueryUpdateHandler)
 	query.Methods("DELETE").HandlerFunc(server.QueryDeleteHandler)
 
-	orderBase := server.Router.Path("/Order/").Subrouter()
+	orderBase := server.Router.Path("/Order").Subrouter()
 	orderBase.Methods("GET").HandlerFunc(server.OrderIndexHandler)
 	orderBase.Methods("POST").HandlerFunc(server.OrderCreateHandler)
 
@@ -307,7 +310,7 @@ func main() {
 	order.Methods("PUT").HandlerFunc(server.OrderUpdateHandler)
 	order.Methods("DELETE").HandlerFunc(server.OrderDeleteHandler)
 
-	procedureBase := server.Router.Path("/Procedure/").Subrouter()
+	procedureBase := server.Router.Path("/Procedure").Subrouter()
 	procedureBase.Methods("GET").HandlerFunc(server.ProcedureIndexHandler)
 	procedureBase.Methods("POST").HandlerFunc(server.ProcedureCreateHandler)
 
@@ -316,7 +319,7 @@ func main() {
 	procedure.Methods("PUT").HandlerFunc(server.ProcedureUpdateHandler)
 	procedure.Methods("DELETE").HandlerFunc(server.ProcedureDeleteHandler)
 
-	substanceBase := server.Router.Path("/Substance/").Subrouter()
+	substanceBase := server.Router.Path("/Substance").Subrouter()
 	substanceBase.Methods("GET").HandlerFunc(server.SubstanceIndexHandler)
 	substanceBase.Methods("POST").HandlerFunc(server.SubstanceCreateHandler)
 
@@ -325,7 +328,7 @@ func main() {
 	substance.Methods("PUT").HandlerFunc(server.SubstanceUpdateHandler)
 	substance.Methods("DELETE").HandlerFunc(server.SubstanceDeleteHandler)
 
-	diagnosticreportBase := server.Router.Path("/DiagnosticReport/").Subrouter()
+	diagnosticreportBase := server.Router.Path("/DiagnosticReport").Subrouter()
 	diagnosticreportBase.Methods("GET").HandlerFunc(server.DiagnosticReportIndexHandler)
 	diagnosticreportBase.Methods("POST").HandlerFunc(server.DiagnosticReportCreateHandler)
 
@@ -334,7 +337,7 @@ func main() {
 	diagnosticreport.Methods("PUT").HandlerFunc(server.DiagnosticReportUpdateHandler)
 	diagnosticreport.Methods("DELETE").HandlerFunc(server.DiagnosticReportDeleteHandler)
 
-	medicationBase := server.Router.Path("/Medication/").Subrouter()
+	medicationBase := server.Router.Path("/Medication").Subrouter()
 	medicationBase.Methods("GET").HandlerFunc(server.MedicationIndexHandler)
 	medicationBase.Methods("POST").HandlerFunc(server.MedicationCreateHandler)
 
@@ -343,7 +346,7 @@ func main() {
 	medication.Methods("PUT").HandlerFunc(server.MedicationUpdateHandler)
 	medication.Methods("DELETE").HandlerFunc(server.MedicationDeleteHandler)
 
-	messageheaderBase := server.Router.Path("/MessageHeader/").Subrouter()
+	messageheaderBase := server.Router.Path("/MessageHeader").Subrouter()
 	messageheaderBase.Methods("GET").HandlerFunc(server.MessageHeaderIndexHandler)
 	messageheaderBase.Methods("POST").HandlerFunc(server.MessageHeaderCreateHandler)
 
@@ -352,7 +355,7 @@ func main() {
 	messageheader.Methods("PUT").HandlerFunc(server.MessageHeaderUpdateHandler)
 	messageheader.Methods("DELETE").HandlerFunc(server.MessageHeaderDeleteHandler)
 
-	documentmanifestBase := server.Router.Path("/DocumentManifest/").Subrouter()
+	documentmanifestBase := server.Router.Path("/DocumentManifest").Subrouter()
 	documentmanifestBase.Methods("GET").HandlerFunc(server.DocumentManifestIndexHandler)
 	documentmanifestBase.Methods("POST").HandlerFunc(server.DocumentManifestCreateHandler)
 
@@ -361,7 +364,7 @@ func main() {
 	documentmanifest.Methods("PUT").HandlerFunc(server.DocumentManifestUpdateHandler)
 	documentmanifest.Methods("DELETE").HandlerFunc(server.DocumentManifestDeleteHandler)
 
-	dataelementBase := server.Router.Path("/DataElement/").Subrouter()
+	dataelementBase := server.Router.Path("/DataElement").Subrouter()
 	dataelementBase.Methods("GET").HandlerFunc(server.DataElementIndexHandler)
 	dataelementBase.Methods("POST").HandlerFunc(server.DataElementCreateHandler)
 
@@ -370,7 +373,7 @@ func main() {
 	dataelement.Methods("PUT").HandlerFunc(server.DataElementUpdateHandler)
 	dataelement.Methods("DELETE").HandlerFunc(server.DataElementDeleteHandler)
 
-	availabilityBase := server.Router.Path("/Availability/").Subrouter()
+	availabilityBase := server.Router.Path("/Availability").Subrouter()
 	availabilityBase.Methods("GET").HandlerFunc(server.AvailabilityIndexHandler)
 	availabilityBase.Methods("POST").HandlerFunc(server.AvailabilityCreateHandler)
 
@@ -379,7 +382,7 @@ func main() {
 	availability.Methods("PUT").HandlerFunc(server.AvailabilityUpdateHandler)
 	availability.Methods("DELETE").HandlerFunc(server.AvailabilityDeleteHandler)
 
-	medicationadministrationBase := server.Router.Path("/MedicationAdministration/").Subrouter()
+	medicationadministrationBase := server.Router.Path("/MedicationAdministration").Subrouter()
 	medicationadministrationBase.Methods("GET").HandlerFunc(server.MedicationAdministrationIndexHandler)
 	medicationadministrationBase.Methods("POST").HandlerFunc(server.MedicationAdministrationCreateHandler)
 
@@ -388,7 +391,7 @@ func main() {
 	medicationadministration.Methods("PUT").HandlerFunc(server.MedicationAdministrationUpdateHandler)
 	medicationadministration.Methods("DELETE").HandlerFunc(server.MedicationAdministrationDeleteHandler)
 
-	questionnaireanswersBase := server.Router.Path("/QuestionnaireAnswers/").Subrouter()
+	questionnaireanswersBase := server.Router.Path("/QuestionnaireAnswers").Subrouter()
 	questionnaireanswersBase.Methods("GET").HandlerFunc(server.QuestionnaireAnswersIndexHandler)
 	questionnaireanswersBase.Methods("POST").HandlerFunc(server.QuestionnaireAnswersCreateHandler)
 
@@ -397,7 +400,7 @@ func main() {
 	questionnaireanswers.Methods("PUT").HandlerFunc(server.QuestionnaireAnswersUpdateHandler)
 	questionnaireanswers.Methods("DELETE").HandlerFunc(server.QuestionnaireAnswersDeleteHandler)
 
-	encounterBase := server.Router.Path("/Encounter/").Subrouter()
+	encounterBase := server.Router.Path("/Encounter").Subrouter()
 	encounterBase.Methods("GET").HandlerFunc(server.EncounterIndexHandler)
 	encounterBase.Methods("POST").HandlerFunc(server.EncounterCreateHandler)
 
@@ -406,7 +409,7 @@ func main() {
 	encounter.Methods("PUT").HandlerFunc(server.EncounterUpdateHandler)
 	encounter.Methods("DELETE").HandlerFunc(server.EncounterDeleteHandler)
 
-	securityeventBase := server.Router.Path("/SecurityEvent/").Subrouter()
+	securityeventBase := server.Router.Path("/SecurityEvent").Subrouter()
 	securityeventBase.Methods("GET").HandlerFunc(server.SecurityEventIndexHandler)
 	securityeventBase.Methods("POST").HandlerFunc(server.SecurityEventCreateHandler)
 
@@ -415,7 +418,7 @@ func main() {
 	securityevent.Methods("PUT").HandlerFunc(server.SecurityEventUpdateHandler)
 	securityevent.Methods("DELETE").HandlerFunc(server.SecurityEventDeleteHandler)
 
-	listBase := server.Router.Path("/List/").Subrouter()
+	listBase := server.Router.Path("/List").Subrouter()
 	listBase.Methods("GET").HandlerFunc(server.ListIndexHandler)
 	listBase.Methods("POST").HandlerFunc(server.ListCreateHandler)
 
@@ -424,7 +427,7 @@ func main() {
 	list.Methods("PUT").HandlerFunc(server.ListUpdateHandler)
 	list.Methods("DELETE").HandlerFunc(server.ListDeleteHandler)
 
-	operationdefinitionBase := server.Router.Path("/OperationDefinition/").Subrouter()
+	operationdefinitionBase := server.Router.Path("/OperationDefinition").Subrouter()
 	operationdefinitionBase.Methods("GET").HandlerFunc(server.OperationDefinitionIndexHandler)
 	operationdefinitionBase.Methods("POST").HandlerFunc(server.OperationDefinitionCreateHandler)
 
@@ -433,7 +436,7 @@ func main() {
 	operationdefinition.Methods("PUT").HandlerFunc(server.OperationDefinitionUpdateHandler)
 	operationdefinition.Methods("DELETE").HandlerFunc(server.OperationDefinitionDeleteHandler)
 
-	deviceobservationreportBase := server.Router.Path("/DeviceObservationReport/").Subrouter()
+	deviceobservationreportBase := server.Router.Path("/DeviceObservationReport").Subrouter()
 	deviceobservationreportBase.Methods("GET").HandlerFunc(server.DeviceObservationReportIndexHandler)
 	deviceobservationreportBase.Methods("POST").HandlerFunc(server.DeviceObservationReportCreateHandler)
 
@@ -442,7 +445,7 @@ func main() {
 	deviceobservationreport.Methods("PUT").HandlerFunc(server.DeviceObservationReportUpdateHandler)
 	deviceobservationreport.Methods("DELETE").HandlerFunc(server.DeviceObservationReportDeleteHandler)
 
-	nutritionorderBase := server.Router.Path("/NutritionOrder/").Subrouter()
+	nutritionorderBase := server.Router.Path("/NutritionOrder").Subrouter()
 	nutritionorderBase.Methods("GET").HandlerFunc(server.NutritionOrderIndexHandler)
 	nutritionorderBase.Methods("POST").HandlerFunc(server.NutritionOrderCreateHandler)
 
@@ -451,7 +454,7 @@ func main() {
 	nutritionorder.Methods("PUT").HandlerFunc(server.NutritionOrderUpdateHandler)
 	nutritionorder.Methods("DELETE").HandlerFunc(server.NutritionOrderDeleteHandler)
 
-	referralrequestBase := server.Router.Path("/ReferralRequest/").Subrouter()
+	referralrequestBase := server.Router.Path("/ReferralRequest").Subrouter()
 	referralrequestBase.Methods("GET").HandlerFunc(server.ReferralRequestIndexHandler)
 	referralrequestBase.Methods("POST").HandlerFunc(server.ReferralRequestCreateHandler)
 
@@ -460,7 +463,7 @@ func main() {
 	referralrequest.Methods("PUT").HandlerFunc(server.ReferralRequestUpdateHandler)
 	referralrequest.Methods("DELETE").HandlerFunc(server.ReferralRequestDeleteHandler)
 
-	riskassessmentBase := server.Router.Path("/RiskAssessment/").Subrouter()
+	riskassessmentBase := server.Router.Path("/RiskAssessment").Subrouter()
 	riskassessmentBase.Methods("GET").HandlerFunc(server.RiskAssessmentIndexHandler)
 	riskassessmentBase.Methods("POST").HandlerFunc(server.RiskAssessmentCreateHandler)
 
@@ -469,7 +472,7 @@ func main() {
 	riskassessment.Methods("PUT").HandlerFunc(server.RiskAssessmentUpdateHandler)
 	riskassessment.Methods("DELETE").HandlerFunc(server.RiskAssessmentDeleteHandler)
 
-	familyhistoryBase := server.Router.Path("/FamilyHistory/").Subrouter()
+	familyhistoryBase := server.Router.Path("/FamilyHistory").Subrouter()
 	familyhistoryBase.Methods("GET").HandlerFunc(server.FamilyHistoryIndexHandler)
 	familyhistoryBase.Methods("POST").HandlerFunc(server.FamilyHistoryCreateHandler)
 
@@ -478,7 +481,7 @@ func main() {
 	familyhistory.Methods("PUT").HandlerFunc(server.FamilyHistoryUpdateHandler)
 	familyhistory.Methods("DELETE").HandlerFunc(server.FamilyHistoryDeleteHandler)
 
-	locationBase := server.Router.Path("/Location/").Subrouter()
+	locationBase := server.Router.Path("/Location").Subrouter()
 	locationBase.Methods("GET").HandlerFunc(server.LocationIndexHandler)
 	locationBase.Methods("POST").HandlerFunc(server.LocationCreateHandler)
 
@@ -487,7 +490,7 @@ func main() {
 	location.Methods("PUT").HandlerFunc(server.LocationUpdateHandler)
 	location.Methods("DELETE").HandlerFunc(server.LocationDeleteHandler)
 
-	allergyintoleranceBase := server.Router.Path("/AllergyIntolerance/").Subrouter()
+	allergyintoleranceBase := server.Router.Path("/AllergyIntolerance").Subrouter()
 	allergyintoleranceBase.Methods("GET").HandlerFunc(server.AllergyIntoleranceIndexHandler)
 	allergyintoleranceBase.Methods("POST").HandlerFunc(server.AllergyIntoleranceCreateHandler)
 
@@ -496,7 +499,7 @@ func main() {
 	allergyintolerance.Methods("PUT").HandlerFunc(server.AllergyIntoleranceUpdateHandler)
 	allergyintolerance.Methods("DELETE").HandlerFunc(server.AllergyIntoleranceDeleteHandler)
 
-	observationBase := server.Router.Path("/Observation/").Subrouter()
+	observationBase := server.Router.Path("/Observation").Subrouter()
 	observationBase.Methods("GET").HandlerFunc(server.ObservationIndexHandler)
 	observationBase.Methods("POST").HandlerFunc(server.ObservationCreateHandler)
 
@@ -505,7 +508,7 @@ func main() {
 	observation.Methods("PUT").HandlerFunc(server.ObservationUpdateHandler)
 	observation.Methods("DELETE").HandlerFunc(server.ObservationDeleteHandler)
 
-	relatedpersonBase := server.Router.Path("/RelatedPerson/").Subrouter()
+	relatedpersonBase := server.Router.Path("/RelatedPerson").Subrouter()
 	relatedpersonBase.Methods("GET").HandlerFunc(server.RelatedPersonIndexHandler)
 	relatedpersonBase.Methods("POST").HandlerFunc(server.RelatedPersonCreateHandler)
 
@@ -514,7 +517,7 @@ func main() {
 	relatedperson.Methods("PUT").HandlerFunc(server.RelatedPersonUpdateHandler)
 	relatedperson.Methods("DELETE").HandlerFunc(server.RelatedPersonDeleteHandler)
 
-	specimenBase := server.Router.Path("/Specimen/").Subrouter()
+	specimenBase := server.Router.Path("/Specimen").Subrouter()
 	specimenBase.Methods("GET").HandlerFunc(server.SpecimenIndexHandler)
 	specimenBase.Methods("POST").HandlerFunc(server.SpecimenCreateHandler)
 
@@ -523,7 +526,7 @@ func main() {
 	specimen.Methods("PUT").HandlerFunc(server.SpecimenUpdateHandler)
 	specimen.Methods("DELETE").HandlerFunc(server.SpecimenDeleteHandler)
 
-	alertBase := server.Router.Path("/Alert/").Subrouter()
+	alertBase := server.Router.Path("/Alert").Subrouter()
 	alertBase.Methods("GET").HandlerFunc(server.AlertIndexHandler)
 	alertBase.Methods("POST").HandlerFunc(server.AlertCreateHandler)
 
@@ -532,7 +535,7 @@ func main() {
 	alert.Methods("PUT").HandlerFunc(server.AlertUpdateHandler)
 	alert.Methods("DELETE").HandlerFunc(server.AlertDeleteHandler)
 
-	namespaceBase := server.Router.Path("/Namespace/").Subrouter()
+	namespaceBase := server.Router.Path("/Namespace").Subrouter()
 	namespaceBase.Methods("GET").HandlerFunc(server.NamespaceIndexHandler)
 	namespaceBase.Methods("POST").HandlerFunc(server.NamespaceCreateHandler)
 
@@ -541,7 +544,7 @@ func main() {
 	namespace.Methods("PUT").HandlerFunc(server.NamespaceUpdateHandler)
 	namespace.Methods("DELETE").HandlerFunc(server.NamespaceDeleteHandler)
 
-	patientBase := server.Router.Path("/Patient/").Subrouter()
+	patientBase := server.Router.Path("/Patient").Subrouter()
 	patientBase.Methods("GET").HandlerFunc(server.PatientIndexHandler)
 	patientBase.Methods("POST").HandlerFunc(server.PatientCreateHandler)
 
@@ -550,7 +553,7 @@ func main() {
 	patient.Methods("PUT").HandlerFunc(server.PatientUpdateHandler)
 	patient.Methods("DELETE").HandlerFunc(server.PatientDeleteHandler)
 
-	adversereactionBase := server.Router.Path("/AdverseReaction/").Subrouter()
+	adversereactionBase := server.Router.Path("/AdverseReaction").Subrouter()
 	adversereactionBase.Methods("GET").HandlerFunc(server.AdverseReactionIndexHandler)
 	adversereactionBase.Methods("POST").HandlerFunc(server.AdverseReactionCreateHandler)
 
@@ -559,7 +562,7 @@ func main() {
 	adversereaction.Methods("PUT").HandlerFunc(server.AdverseReactionUpdateHandler)
 	adversereaction.Methods("DELETE").HandlerFunc(server.AdverseReactionDeleteHandler)
 
-	diagnosticorderBase := server.Router.Path("/DiagnosticOrder/").Subrouter()
+	diagnosticorderBase := server.Router.Path("/DiagnosticOrder").Subrouter()
 	diagnosticorderBase.Methods("GET").HandlerFunc(server.DiagnosticOrderIndexHandler)
 	diagnosticorderBase.Methods("POST").HandlerFunc(server.DiagnosticOrderCreateHandler)
 
@@ -569,4 +572,8 @@ func main() {
 	diagnosticorder.Methods("DELETE").HandlerFunc(server.DiagnosticOrderDeleteHandler)
 
 	http.ListenAndServe(":8080", server.Router)
+}
+
+func HomeHandler(rw http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(rw, "FHIR Server Yay! \\o/")
 }
