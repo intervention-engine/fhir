@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Contraindication struct {
 	Id         string                                `json:"-" bson:"_id"`
 	Patient    Reference                             `bson:"patient"`
@@ -35,7 +33,7 @@ type Contraindication struct {
 	Severity   string                                `bson:"severity"`
 	Implicated []Reference                           `bson:"implicated"`
 	Detail     string                                `bson:"detail"`
-	Date       time.Time                             `bson:"date"`
+	Date       FHIRDateTime                          `bson:"date"`
 	Author     Reference                             `bson:"author"`
 	Identifier Identifier                            `bson:"identifier"`
 	Reference  string                                `bson:"reference"`
@@ -45,6 +43,6 @@ type Contraindication struct {
 // This is an ugly hack to deal with embedded structures in the spec mitigation
 type ContraindicationMitigationComponent struct {
 	Action CodeableConcept `bson:"action"`
-	Date   time.Time       `bson:"date"`
+	Date   FHIRDateTime    `bson:"date"`
 	Author Reference       `bson:"author"`
 }

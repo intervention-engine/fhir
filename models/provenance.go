@@ -26,13 +26,11 @@
 
 package models
 
-import "time"
-
 type Provenance struct {
 	Id                 string                      `json:"-" bson:"_id"`
 	Target             []Reference                 `bson:"target"`
 	Period             Period                      `bson:"period"`
-	Recorded           time.Time                   `bson:"recorded"`
+	Recorded           FHIRDateTime                `bson:"recorded"`
 	Reason             CodeableConcept             `bson:"reason"`
 	Location           Reference                   `bson:"location"`
 	Policy             []string                    `bson:"policy"`

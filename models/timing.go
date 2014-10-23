@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Timing struct {
 	Id     string                `json:"-" bson:"_id"`
 	Event  []Period              `bson:"event"`
@@ -36,10 +34,10 @@ type Timing struct {
 
 // This is an ugly hack to deal with embedded structures in the spec repeat
 type TimingRepeatComponent struct {
-	Frequency float64   `bson:"frequency"`
-	When      string    `bson:"when"`
-	Duration  float64   `bson:"duration"`
-	Units     string    `bson:"units"`
-	Count     float64   `bson:"count"`
-	End       time.Time `bson:"end"`
+	Frequency float64      `bson:"frequency"`
+	When      string       `bson:"when"`
+	Duration  float64      `bson:"duration"`
+	Units     string       `bson:"units"`
+	Count     float64      `bson:"count"`
+	End       FHIRDateTime `bson:"end"`
 }

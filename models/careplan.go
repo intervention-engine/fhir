@@ -26,15 +26,13 @@
 
 package models
 
-import "time"
-
 type CarePlan struct {
 	Id          string                         `json:"-" bson:"_id"`
 	Identifier  []Identifier                   `bson:"identifier"`
 	Patient     Reference                      `bson:"patient"`
 	Status      string                         `bson:"status"`
 	Period      Period                         `bson:"period"`
-	Modified    time.Time                      `bson:"modified"`
+	Modified    FHIRDateTime                   `bson:"modified"`
 	Concern     []Reference                    `bson:"concern"`
 	Participant []CarePlanParticipantComponent `bson:"participant"`
 	Goal        []CarePlanGoalComponent        `bson:"goal"`

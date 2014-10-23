@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type OperationDefinition struct {
 	Id           string                                  `json:"-" bson:"_id"`
 	Identifier   string                                  `bson:"identifier"`
@@ -39,7 +37,7 @@ type OperationDefinition struct {
 	Code         []Coding                                `bson:"code"`
 	Status       string                                  `bson:"status"`
 	Experimental bool                                    `bson:"experimental"`
-	Date         time.Time                               `bson:"date"`
+	Date         FHIRDateTime                            `bson:"date"`
 	Kind         string                                  `bson:"kind"`
 	Name         string                                  `bson:"name"`
 	Notes        string                                  `bson:"notes"`

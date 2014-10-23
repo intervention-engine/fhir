@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type DataElement struct {
 	Id           string                        `json:"-" bson:"_id"`
 	Identifier   Identifier                    `bson:"identifier"`
@@ -35,7 +33,7 @@ type DataElement struct {
 	Publisher    string                        `bson:"publisher"`
 	Telecom      []ContactPoint                `bson:"telecom"`
 	Status       string                        `bson:"status"`
-	Date         time.Time                     `bson:"date"`
+	Date         FHIRDateTime                  `bson:"date"`
 	Name         string                        `bson:"name"`
 	Category     []CodeableConcept             `bson:"category"`
 	Code         []Coding                      `bson:"code"`

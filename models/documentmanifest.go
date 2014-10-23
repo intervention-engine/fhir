@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type DocumentManifest struct {
 	Id               string          `json:"-" bson:"_id"`
 	MasterIdentifier Identifier      `bson:"masterIdentifier"`
@@ -36,7 +34,7 @@ type DocumentManifest struct {
 	Recipient        []Reference     `bson:"recipient"`
 	Type             CodeableConcept `bson:"type"`
 	Author           []Reference     `bson:"author"`
-	Created          time.Time       `bson:"created"`
+	Created          FHIRDateTime    `bson:"created"`
 	Source           string          `bson:"source"`
 	Status           string          `bson:"status"`
 	Supercedes       Reference       `bson:"supercedes"`

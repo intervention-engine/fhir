@@ -26,14 +26,12 @@
 
 package models
 
-import "time"
-
 type AllergyIntolerance struct {
 	Id              string       `json:"-" bson:"_id"`
 	Identifier      []Identifier `bson:"identifier"`
 	Criticality     string       `bson:"criticality"`
 	SensitivityType string       `bson:"sensitivityType"`
-	RecordedDate    time.Time    `bson:"recordedDate"`
+	RecordedDate    FHIRDateTime `bson:"recordedDate"`
 	Status          string       `bson:"status"`
 	Subject         Reference    `bson:"subject"`
 	Recorder        Reference    `bson:"recorder"`

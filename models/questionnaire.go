@@ -26,14 +26,12 @@
 
 package models
 
-import "time"
-
 type Questionnaire struct {
 	Id         string         `json:"-" bson:"_id"`
 	Identifier []Identifier   `bson:"identifier"`
 	Version    string         `bson:"version"`
 	Status     string         `bson:"status"`
-	Date       time.Time      `bson:"date"`
+	Date       FHIRDateTime   `bson:"date"`
 	Publisher  string         `bson:"publisher"`
 	Group      GroupComponent `bson:"group"`
 }

@@ -26,13 +26,11 @@
 
 package models
 
-import "time"
-
 type OrderResponse struct {
 	Id                       string          `json:"-" bson:"_id"`
 	Identifier               []Identifier    `bson:"identifier"`
 	Request                  Reference       `bson:"request"`
-	Date                     time.Time       `bson:"date"`
+	Date                     FHIRDateTime    `bson:"date"`
 	Who                      Reference       `bson:"who"`
 	AuthorityCodeableConcept CodeableConcept `bson:"authorityCodeableConcept"`
 	AuthorityReference       Reference       `bson:"authorityReference"`

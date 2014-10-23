@@ -26,12 +26,10 @@
 
 package models
 
-import "time"
-
 type Order struct {
 	Id                    string             `json:"-" bson:"_id"`
 	Identifier            []Identifier       `bson:"identifier"`
-	Date                  time.Time          `bson:"date"`
+	Date                  FHIRDateTime       `bson:"date"`
 	Subject               Reference          `bson:"subject"`
 	Source                Reference          `bson:"source"`
 	Target                Reference          `bson:"target"`

@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type ImmunizationRecommendation struct {
 	Id             string                                              `json:"-" bson:"_id"`
 	Identifier     []Identifier                                        `bson:"identifier"`
@@ -38,7 +36,7 @@ type ImmunizationRecommendation struct {
 // This is an ugly hack to deal with embedded structures in the spec dateCriterion
 type ImmunizationRecommendationRecommendationDateCriterionComponent struct {
 	Code  CodeableConcept `bson:"code"`
-	Value time.Time       `bson:"value"`
+	Value FHIRDateTime    `bson:"value"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec protocol
@@ -51,7 +49,7 @@ type ImmunizationRecommendationRecommendationProtocolComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec recommendation
 type ImmunizationRecommendationRecommendationComponent struct {
-	Date                         time.Time                                                        `bson:"date"`
+	Date                         FHIRDateTime                                                     `bson:"date"`
 	VaccineType                  CodeableConcept                                                  `bson:"vaccineType"`
 	DoseNumber                   float64                                                          `bson:"doseNumber"`
 	ForecastStatus               CodeableConcept                                                  `bson:"forecastStatus"`

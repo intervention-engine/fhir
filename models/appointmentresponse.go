@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type AppointmentResponse struct {
 	Id                string            `json:"-" bson:"_id"`
 	Identifier        []Identifier      `bson:"identifier"`
@@ -36,8 +34,8 @@ type AppointmentResponse struct {
 	Individual        []Reference       `bson:"individual"`
 	ParticipantStatus string            `bson:"participantStatus"`
 	Comment           string            `bson:"comment"`
-	Start             time.Time         `bson:"start"`
-	End               time.Time         `bson:"end"`
+	Start             FHIRDateTime      `bson:"start"`
+	End               FHIRDateTime      `bson:"end"`
 	LastModifiedBy    Reference         `bson:"lastModifiedBy"`
-	LastModified      time.Time         `bson:"lastModified"`
+	LastModified      FHIRDateTime      `bson:"lastModified"`
 }

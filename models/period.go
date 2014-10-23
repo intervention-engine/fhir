@@ -26,10 +26,8 @@
 
 package models
 
-import "time"
-
 type Period struct {
-	Id    string    `json:"-" bson:"_id"`
-	Start time.Time `bson:"start"`
-	End   time.Time `bson:"end"`
+	Id    string       `json:"-" bson:"_id"`
+	Start FHIRDateTime `bson:"start"`
+	End   FHIRDateTime `bson:"end"`
 }

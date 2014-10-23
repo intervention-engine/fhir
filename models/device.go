@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Device struct {
 	Id           string          `json:"-" bson:"_id"`
 	Identifier   []Identifier    `bson:"identifier"`
@@ -35,7 +33,7 @@ type Device struct {
 	Manufacturer string          `bson:"manufacturer"`
 	Model        string          `bson:"model"`
 	Version      string          `bson:"version"`
-	Expiry       time.Time       `bson:"expiry"`
+	Expiry       FHIRDateTime    `bson:"expiry"`
 	Udi          string          `bson:"udi"`
 	LotNumber    string          `bson:"lotNumber"`
 	Owner        Reference       `bson:"owner"`

@@ -26,12 +26,10 @@
 
 package models
 
-import "time"
-
 type Immunization struct {
 	Id                  string                                     `json:"-" bson:"_id"`
 	Identifier          []Identifier                               `bson:"identifier"`
-	Date                time.Time                                  `bson:"date"`
+	Date                FHIRDateTime                               `bson:"date"`
 	VaccineType         CodeableConcept                            `bson:"vaccineType"`
 	Subject             Reference                                  `bson:"subject"`
 	RefusedIndicator    bool                                       `bson:"refusedIndicator"`
@@ -41,7 +39,7 @@ type Immunization struct {
 	Manufacturer        Reference                                  `bson:"manufacturer"`
 	Location            Reference                                  `bson:"location"`
 	LotNumber           string                                     `bson:"lotNumber"`
-	ExpirationDate      time.Time                                  `bson:"expirationDate"`
+	ExpirationDate      FHIRDateTime                               `bson:"expirationDate"`
 	Site                CodeableConcept                            `bson:"site"`
 	Route               CodeableConcept                            `bson:"route"`
 	DoseQuantity        Quantity                                   `bson:"doseQuantity"`
@@ -58,9 +56,9 @@ type ImmunizationExplanationComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec reaction
 type ImmunizationReactionComponent struct {
-	Date     time.Time `bson:"date"`
-	Detail   Reference `bson:"detail"`
-	Reported bool      `bson:"reported"`
+	Date     FHIRDateTime `bson:"date"`
+	Detail   Reference    `bson:"detail"`
+	Reported bool         `bson:"reported"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec vaccinationProtocol

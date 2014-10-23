@@ -26,13 +26,11 @@
 
 package models
 
-import "time"
-
 type FamilyHistory struct {
 	Id         string                           `json:"-" bson:"_id"`
 	Identifier []Identifier                     `bson:"identifier"`
 	Subject    Reference                        `bson:"subject"`
-	Date       time.Time                        `bson:"date"`
+	Date       FHIRDateTime                     `bson:"date"`
 	Note       string                           `bson:"note"`
 	Relation   []FamilyHistoryRelationComponent `bson:"relation"`
 }
@@ -52,7 +50,7 @@ type FamilyHistoryRelationComponent struct {
 	Name            string                                    `bson:"name"`
 	Relationship    CodeableConcept                           `bson:"relationship"`
 	BornPeriod      Period                                    `bson:"bornPeriod"`
-	BornDate        time.Time                                 `bson:"bornDate"`
+	BornDate        FHIRDateTime                              `bson:"bornDate"`
 	BornString      string                                    `bson:"bornString"`
 	AgeAge          Quantity                                  `bson:"ageAge"`
 	AgeRange        Range                                     `bson:"ageRange"`
@@ -60,7 +58,7 @@ type FamilyHistoryRelationComponent struct {
 	DeceasedBoolean bool                                      `bson:"deceasedBoolean"`
 	DeceasedAge     Quantity                                  `bson:"deceasedAge"`
 	DeceasedRange   Range                                     `bson:"deceasedRange"`
-	DeceasedDate    time.Time                                 `bson:"deceasedDate"`
+	DeceasedDate    FHIRDateTime                              `bson:"deceasedDate"`
 	DeceasedString  string                                    `bson:"deceasedString"`
 	Note            string                                    `bson:"note"`
 	Condition       []FamilyHistoryRelationConditionComponent `bson:"condition"`

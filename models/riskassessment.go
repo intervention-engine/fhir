@@ -26,12 +26,10 @@
 
 package models
 
-import "time"
-
 type RiskAssessment struct {
 	Id         string                              `json:"-" bson:"_id"`
 	Subject    Reference                           `bson:"subject"`
-	Date       time.Time                           `bson:"date"`
+	Date       FHIRDateTime                        `bson:"date"`
 	Condition  Reference                           `bson:"condition"`
 	Performer  Reference                           `bson:"performer"`
 	Identifier Identifier                          `bson:"identifier"`

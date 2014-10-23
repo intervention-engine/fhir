@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Subscription struct {
 	Id       string                       `json:"-" bson:"_id"`
 	Criteria string                       `bson:"criteria"`
@@ -36,7 +34,7 @@ type Subscription struct {
 	Status   string                       `bson:"status"`
 	Error    string                       `bson:"error"`
 	Channel  SubscriptionChannelComponent `bson:"channel"`
-	End      time.Time                    `bson:"end"`
+	End      FHIRDateTime                 `bson:"end"`
 	Tag      []SubscriptionTagComponent   `bson:"tag"`
 }
 

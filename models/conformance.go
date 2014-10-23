@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Conformance struct {
 	Id             string                             `json:"-" bson:"_id"`
 	Identifier     string                             `bson:"identifier"`
@@ -38,7 +36,7 @@ type Conformance struct {
 	Description    string                             `bson:"description"`
 	Status         string                             `bson:"status"`
 	Experimental   bool                               `bson:"experimental"`
-	Date           time.Time                          `bson:"date"`
+	Date           FHIRDateTime                       `bson:"date"`
 	Software       ConformanceSoftwareComponent       `bson:"software"`
 	Implementation ConformanceImplementationComponent `bson:"implementation"`
 	FhirVersion    string                             `bson:"fhirVersion"`
@@ -52,9 +50,9 @@ type Conformance struct {
 
 // This is an ugly hack to deal with embedded structures in the spec software
 type ConformanceSoftwareComponent struct {
-	Name        string    `bson:"name"`
-	Version     string    `bson:"version"`
-	ReleaseDate time.Time `bson:"releaseDate"`
+	Name        string       `bson:"name"`
+	Version     string       `bson:"version"`
+	ReleaseDate FHIRDateTime `bson:"releaseDate"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec implementation

@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Appointment struct {
 	Id             string                            `json:"-" bson:"_id"`
 	Identifier     []Identifier                      `bson:"identifier"`
@@ -36,15 +34,15 @@ type Appointment struct {
 	Type           CodeableConcept                   `bson:"type"`
 	Reason         CodeableConcept                   `bson:"reason"`
 	Description    string                            `bson:"description"`
-	Start          time.Time                         `bson:"start"`
-	End            time.Time                         `bson:"end"`
+	Start          FHIRDateTime                      `bson:"start"`
+	End            FHIRDateTime                      `bson:"end"`
 	Slot           []Reference                       `bson:"slot"`
 	Location       Reference                         `bson:"location"`
 	Comment        string                            `bson:"comment"`
 	Order          Reference                         `bson:"order"`
 	Participant    []AppointmentParticipantComponent `bson:"participant"`
 	LastModifiedBy Reference                         `bson:"lastModifiedBy"`
-	LastModified   time.Time                         `bson:"lastModified"`
+	LastModified   FHIRDateTime                      `bson:"lastModified"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec participant

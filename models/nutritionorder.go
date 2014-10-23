@@ -26,15 +26,13 @@
 
 package models
 
-import "time"
-
 type NutritionOrder struct {
 	Id                     string                        `json:"-" bson:"_id"`
 	Subject                Reference                     `bson:"subject"`
 	Orderer                Reference                     `bson:"orderer"`
 	Identifier             []Identifier                  `bson:"identifier"`
 	Encounter              Reference                     `bson:"encounter"`
-	DateTime               time.Time                     `bson:"dateTime"`
+	DateTime               FHIRDateTime                  `bson:"dateTime"`
 	AllergyIntolerance     []Reference                   `bson:"allergyIntolerance"`
 	FoodPreferenceModifier []CodeableConcept             `bson:"foodPreferenceModifier"`
 	ExcludeFoodModifier    []CodeableConcept             `bson:"excludeFoodModifier"`

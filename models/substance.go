@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Substance struct {
 	Id          string                         `json:"-" bson:"_id"`
 	Type        CodeableConcept                `bson:"type"`
@@ -38,9 +36,9 @@ type Substance struct {
 
 // This is an ugly hack to deal with embedded structures in the spec instance
 type SubstanceInstanceComponent struct {
-	Identifier Identifier `bson:"identifier"`
-	Expiry     time.Time  `bson:"expiry"`
-	Quantity   Quantity   `bson:"quantity"`
+	Identifier Identifier   `bson:"identifier"`
+	Expiry     FHIRDateTime `bson:"expiry"`
+	Quantity   Quantity     `bson:"quantity"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec ingredient

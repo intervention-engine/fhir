@@ -26,23 +26,21 @@
 
 package models
 
-import "time"
-
 type Condition struct {
 	Id               string                          `json:"-" bson:"_id"`
 	Identifier       []Identifier                    `bson:"identifier"`
 	Subject          Reference                       `bson:"subject"`
 	Encounter        Reference                       `bson:"encounter"`
 	Asserter         Reference                       `bson:"asserter"`
-	DateAsserted     time.Time                       `bson:"dateAsserted"`
+	DateAsserted     FHIRDateTime                    `bson:"dateAsserted"`
 	Code             CodeableConcept                 `bson:"code"`
 	Category         CodeableConcept                 `bson:"category"`
 	Status           string                          `bson:"status"`
 	Certainty        CodeableConcept                 `bson:"certainty"`
 	Severity         CodeableConcept                 `bson:"severity"`
-	OnsetDate        time.Time                       `bson:"onsetDate"`
+	OnsetDate        FHIRDateTime                    `bson:"onsetDate"`
 	OnsetAge         Quantity                        `bson:"onsetAge"`
-	AbatementDate    time.Time                       `bson:"abatementDate"`
+	AbatementDate    FHIRDateTime                    `bson:"abatementDate"`
 	AbatementAge     Quantity                        `bson:"abatementAge"`
 	AbatementBoolean bool                            `bson:"abatementBoolean"`
 	Stage            ConditionStageComponent         `bson:"stage"`

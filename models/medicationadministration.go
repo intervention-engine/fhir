@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type MedicationAdministration struct {
 	Id                    string                                    `json:"-" bson:"_id"`
 	Identifier            []Identifier                              `bson:"identifier"`
@@ -38,7 +36,7 @@ type MedicationAdministration struct {
 	Prescription          Reference                                 `bson:"prescription"`
 	WasNotGiven           bool                                      `bson:"wasNotGiven"`
 	ReasonNotGiven        []CodeableConcept                         `bson:"reasonNotGiven"`
-	EffectiveTimeDateTime time.Time                                 `bson:"effectiveTimeDateTime"`
+	EffectiveTimeDateTime FHIRDateTime                              `bson:"effectiveTimeDateTime"`
 	EffectiveTimePeriod   Period                                    `bson:"effectiveTimePeriod"`
 	Medication            Reference                                 `bson:"medication"`
 	Device                []Reference                               `bson:"device"`
@@ -47,7 +45,7 @@ type MedicationAdministration struct {
 
 // This is an ugly hack to deal with embedded structures in the spec dosage
 type MedicationAdministrationDosageComponent struct {
-	TimingDateTime          time.Time       `bson:"timingDateTime"`
+	TimingDateTime          FHIRDateTime    `bson:"timingDateTime"`
 	TimingPeriod            Period          `bson:"timingPeriod"`
 	AsNeededBoolean         bool            `bson:"asNeededBoolean"`
 	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept"`

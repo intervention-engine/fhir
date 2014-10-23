@@ -26,12 +26,10 @@
 
 package models
 
-import "time"
-
 type AdverseReaction struct {
 	Id              string                             `json:"-" bson:"_id"`
 	Identifier      []Identifier                       `bson:"identifier"`
-	Date            time.Time                          `bson:"date"`
+	Date            FHIRDateTime                       `bson:"date"`
 	Subject         Reference                          `bson:"subject"`
 	DidNotOccurFlag bool                               `bson:"didNotOccurFlag"`
 	Recorder        Reference                          `bson:"recorder"`
@@ -47,8 +45,8 @@ type AdverseReactionSymptomComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec exposure
 type AdverseReactionExposureComponent struct {
-	Date                 time.Time `bson:"date"`
-	Type                 string    `bson:"type"`
-	CausalityExpectation string    `bson:"causalityExpectation"`
-	Substance            Reference `bson:"substance"`
+	Date                 FHIRDateTime `bson:"date"`
+	Type                 string       `bson:"type"`
+	CausalityExpectation string       `bson:"causalityExpectation"`
+	Substance            Reference    `bson:"substance"`
 }

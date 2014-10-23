@@ -26,13 +26,11 @@
 
 package models
 
-import "time"
-
 type Other struct {
 	Id         string          `json:"-" bson:"_id"`
 	Identifier []Identifier    `bson:"identifier"`
 	Code       CodeableConcept `bson:"code"`
 	Subject    Reference       `bson:"subject"`
 	Author     Reference       `bson:"author"`
-	Created    time.Time       `bson:"created"`
+	Created    FHIRDateTime    `bson:"created"`
 }

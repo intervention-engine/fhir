@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type QuestionnaireAnswers struct {
 	Id            string         `json:"-" bson:"_id"`
 	Identifier    Identifier     `bson:"identifier"`
@@ -35,7 +33,7 @@ type QuestionnaireAnswers struct {
 	Status        string         `bson:"status"`
 	Subject       Reference      `bson:"subject"`
 	Author        Reference      `bson:"author"`
-	Authored      time.Time      `bson:"authored"`
+	Authored      FHIRDateTime   `bson:"authored"`
 	Source        Reference      `bson:"source"`
 	Encounter     Reference      `bson:"encounter"`
 	Group         GroupComponent `bson:"group"`
@@ -43,18 +41,18 @@ type QuestionnaireAnswers struct {
 
 // This is an ugly hack to deal with embedded structures in the spec answer
 type QuestionAnswerComponent struct {
-	ValueBoolean    bool       `bson:"valueBoolean"`
-	ValueDecimal    float64    `bson:"valueDecimal"`
-	ValueInteger    float64    `bson:"valueInteger"`
-	ValueDate       time.Time  `bson:"valueDate"`
-	ValueDateTime   time.Time  `bson:"valueDateTime"`
-	ValueInstant    time.Time  `bson:"valueInstant"`
-	ValueTime       time.Time  `bson:"valueTime"`
-	ValueString     string     `bson:"valueString"`
-	ValueAttachment Attachment `bson:"valueAttachment"`
-	ValueCoding     Coding     `bson:"valueCoding"`
-	ValueQuantity   Quantity   `bson:"valueQuantity"`
-	ValueReference  Reference  `bson:"valueReference"`
+	ValueBoolean    bool         `bson:"valueBoolean"`
+	ValueDecimal    float64      `bson:"valueDecimal"`
+	ValueInteger    float64      `bson:"valueInteger"`
+	ValueDate       FHIRDateTime `bson:"valueDate"`
+	ValueDateTime   FHIRDateTime `bson:"valueDateTime"`
+	ValueInstant    FHIRDateTime `bson:"valueInstant"`
+	ValueTime       FHIRDateTime `bson:"valueTime"`
+	ValueString     string       `bson:"valueString"`
+	ValueAttachment Attachment   `bson:"valueAttachment"`
+	ValueCoding     Coding       `bson:"valueCoding"`
+	ValueQuantity   Quantity     `bson:"valueQuantity"`
+	ValueReference  Reference    `bson:"valueReference"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec question

@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type SecurityEvent struct {
 	Id          string                              `json:"-" bson:"_id"`
 	Event       SecurityEventEventComponent         `bson:"event"`
@@ -41,7 +39,7 @@ type SecurityEventEventComponent struct {
 	Type        CodeableConcept   `bson:"type"`
 	Subtype     []CodeableConcept `bson:"subtype"`
 	Action      string            `bson:"action"`
-	DateTime    time.Time         `bson:"dateTime"`
+	DateTime    FHIRDateTime      `bson:"dateTime"`
 	Outcome     string            `bson:"outcome"`
 	OutcomeDesc string            `bson:"outcomeDesc"`
 }

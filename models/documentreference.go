@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type DocumentReference struct {
 	Id               string                                `json:"-" bson:"_id"`
 	MasterIdentifier Identifier                            `bson:"masterIdentifier"`
@@ -39,8 +37,8 @@ type DocumentReference struct {
 	Custodian        Reference                             `bson:"custodian"`
 	PolicyManager    string                                `bson:"policyManager"`
 	Authenticator    Reference                             `bson:"authenticator"`
-	Created          time.Time                             `bson:"created"`
-	Indexed          time.Time                             `bson:"indexed"`
+	Created          FHIRDateTime                          `bson:"created"`
+	Indexed          FHIRDateTime                          `bson:"indexed"`
 	Status           string                                `bson:"status"`
 	DocStatus        CodeableConcept                       `bson:"docStatus"`
 	RelatesTo        []DocumentReferenceRelatesToComponent `bson:"relatesTo"`

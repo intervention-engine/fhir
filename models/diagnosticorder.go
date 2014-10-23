@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type DiagnosticOrder struct {
 	Id                    string                          `json:"-" bson:"_id"`
 	Subject               Reference                       `bson:"subject"`
@@ -47,7 +45,7 @@ type DiagnosticOrder struct {
 type DiagnosticOrderEventComponent struct {
 	Status      string          `bson:"status"`
 	Description CodeableConcept `bson:"description"`
-	DateTime    time.Time       `bson:"dateTime"`
+	DateTime    FHIRDateTime    `bson:"dateTime"`
 	Actor       Reference       `bson:"actor"`
 }
 

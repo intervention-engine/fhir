@@ -26,19 +26,17 @@
 
 package models
 
-import "time"
-
 type DiagnosticReport struct {
 	Id                 string                           `json:"-" bson:"_id"`
 	Name               CodeableConcept                  `bson:"name"`
 	Status             string                           `bson:"status"`
-	Issued             time.Time                        `bson:"issued"`
+	Issued             FHIRDateTime                     `bson:"issued"`
 	Subject            Reference                        `bson:"subject"`
 	Performer          Reference                        `bson:"performer"`
 	Identifier         Identifier                       `bson:"identifier"`
 	RequestDetail      []Reference                      `bson:"requestDetail"`
 	ServiceCategory    CodeableConcept                  `bson:"serviceCategory"`
-	DiagnosticDateTime time.Time                        `bson:"diagnosticDateTime"`
+	DiagnosticDateTime FHIRDateTime                     `bson:"diagnosticDateTime"`
 	DiagnosticPeriod   Period                           `bson:"diagnosticPeriod"`
 	Specimen           []Reference                      `bson:"specimen"`
 	Result             []Reference                      `bson:"result"`

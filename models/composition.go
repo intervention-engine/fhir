@@ -26,12 +26,10 @@
 
 package models
 
-import "time"
-
 type Composition struct {
 	Id              string                         `json:"-" bson:"_id"`
 	Identifier      Identifier                     `bson:"identifier"`
-	Date            time.Time                      `bson:"date"`
+	Date            FHIRDateTime                   `bson:"date"`
 	Type            CodeableConcept                `bson:"type"`
 	Class           CodeableConcept                `bson:"class"`
 	Title           string                         `bson:"title"`
@@ -48,9 +46,9 @@ type Composition struct {
 
 // This is an ugly hack to deal with embedded structures in the spec attester
 type CompositionAttesterComponent struct {
-	Mode  []string  `bson:"mode"`
-	Time  time.Time `bson:"time"`
-	Party Reference `bson:"party"`
+	Mode  []string     `bson:"mode"`
+	Time  FHIRDateTime `bson:"time"`
+	Party Reference    `bson:"party"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec event

@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Observation struct {
 	Id                   string                               `json:"-" bson:"_id"`
 	Name                 CodeableConcept                      `bson:"name"`
@@ -35,16 +33,16 @@ type Observation struct {
 	ValueCodeableConcept CodeableConcept                      `bson:"valueCodeableConcept"`
 	ValueAttachment      Attachment                           `bson:"valueAttachment"`
 	ValueRatio           Ratio                                `bson:"valueRatio"`
-	ValueDateTime        time.Time                            `bson:"valueDateTime"`
+	ValueDateTime        FHIRDateTime                         `bson:"valueDateTime"`
 	ValuePeriod          Period                               `bson:"valuePeriod"`
 	ValueSampledData     SampledData                          `bson:"valueSampledData"`
 	ValueString          string                               `bson:"valueString"`
-	ValueTime            time.Time                            `bson:"valueTime"`
+	ValueTime            FHIRDateTime                         `bson:"valueTime"`
 	Interpretation       CodeableConcept                      `bson:"interpretation"`
 	Comments             string                               `bson:"comments"`
-	AppliesDateTime      time.Time                            `bson:"appliesDateTime"`
+	AppliesDateTime      FHIRDateTime                         `bson:"appliesDateTime"`
 	AppliesPeriod        Period                               `bson:"appliesPeriod"`
-	Issued               time.Time                            `bson:"issued"`
+	Issued               FHIRDateTime                         `bson:"issued"`
 	Status               string                               `bson:"status"`
 	Reliability          string                               `bson:"reliability"`
 	BodySite             CodeableConcept                      `bson:"bodySite"`

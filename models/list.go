@@ -26,15 +26,13 @@
 
 package models
 
-import "time"
-
 type List struct {
 	Id          string               `json:"-" bson:"_id"`
 	Identifier  []Identifier         `bson:"identifier"`
 	Code        CodeableConcept      `bson:"code"`
 	Subject     Reference            `bson:"subject"`
 	Source      Reference            `bson:"source"`
-	Date        time.Time            `bson:"date"`
+	Date        FHIRDateTime         `bson:"date"`
 	Ordered     bool                 `bson:"ordered"`
 	Mode        string               `bson:"mode"`
 	Entry       []ListEntryComponent `bson:"entry"`
@@ -45,6 +43,6 @@ type List struct {
 type ListEntryComponent struct {
 	Flag    []CodeableConcept `bson:"flag"`
 	Deleted bool              `bson:"deleted"`
-	Date    time.Time         `bson:"date"`
+	Date    FHIRDateTime      `bson:"date"`
 	Item    Reference         `bson:"item"`
 }

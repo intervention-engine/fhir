@@ -26,17 +26,15 @@
 
 package models
 
-import "time"
-
 type Patient struct {
 	Id                   string                 `json:"-" bson:"_id"`
 	Identifier           []Identifier           `bson:"identifier"`
 	Name                 []HumanName            `bson:"name"`
 	Telecom              []ContactPoint         `bson:"telecom"`
 	Gender               CodeableConcept        `bson:"gender"`
-	BirthDate            time.Time              `bson:"birthDate"`
+	BirthDate            FHIRDateTime           `bson:"birthDate"`
 	DeceasedBoolean      bool                   `bson:"deceasedBoolean"`
-	DeceasedDateTime     time.Time              `bson:"deceasedDateTime"`
+	DeceasedDateTime     FHIRDateTime           `bson:"deceasedDateTime"`
 	Address              []Address              `bson:"address"`
 	MaritalStatus        CodeableConcept        `bson:"maritalStatus"`
 	MultipleBirthBoolean bool                   `bson:"multipleBirthBoolean"`

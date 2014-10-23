@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Specimen struct {
 	Id                  string                       `json:"-" bson:"_id"`
 	Identifier          []Identifier                 `bson:"identifier"`
@@ -35,7 +33,7 @@ type Specimen struct {
 	Source              []SpecimenSourceComponent    `bson:"source"`
 	Subject             Reference                    `bson:"subject"`
 	AccessionIdentifier Identifier                   `bson:"accessionIdentifier"`
-	ReceivedTime        time.Time                    `bson:"receivedTime"`
+	ReceivedTime        FHIRDateTime                 `bson:"receivedTime"`
 	Collection          SpecimenCollectionComponent  `bson:"collection"`
 	Treatment           []SpecimenTreatmentComponent `bson:"treatment"`
 	Container           []SpecimenContainerComponent `bson:"container"`
@@ -51,7 +49,7 @@ type SpecimenSourceComponent struct {
 type SpecimenCollectionComponent struct {
 	Collector         Reference       `bson:"collector"`
 	Comment           []string        `bson:"comment"`
-	CollectedDateTime time.Time       `bson:"collectedDateTime"`
+	CollectedDateTime FHIRDateTime    `bson:"collectedDateTime"`
 	CollectedPeriod   Period          `bson:"collectedPeriod"`
 	Quantity          Quantity        `bson:"quantity"`
 	Method            CodeableConcept `bson:"method"`

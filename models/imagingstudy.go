@@ -26,11 +26,9 @@
 
 package models
 
-import "time"
-
 type ImagingStudy struct {
 	Id                  string                        `json:"-" bson:"_id"`
-	DateTime            time.Time                     `bson:"dateTime"`
+	DateTime            FHIRDateTime                  `bson:"dateTime"`
 	Subject             Reference                     `bson:"subject"`
 	Uid                 string                        `bson:"uid"`
 	AccessionNo         Identifier                    `bson:"accessionNo"`
@@ -70,6 +68,6 @@ type ImagingStudySeriesComponent struct {
 	Availability      string                                `bson:"availability"`
 	Url               string                                `bson:"url"`
 	BodySite          Coding                                `bson:"bodySite"`
-	DateTime          time.Time                             `bson:"dateTime"`
+	DateTime          FHIRDateTime                          `bson:"dateTime"`
 	Instance          []ImagingStudySeriesInstanceComponent `bson:"instance"`
 }

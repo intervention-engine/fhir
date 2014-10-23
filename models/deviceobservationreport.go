@@ -26,11 +26,9 @@
 
 package models
 
-import "time"
-
 type DeviceObservationReport struct {
 	Id            string                                          `json:"-" bson:"_id"`
-	Instant       time.Time                                       `bson:"instant"`
+	Instant       FHIRDateTime                                    `bson:"instant"`
 	Identifier    Identifier                                      `bson:"identifier"`
 	Source        Reference                                       `bson:"source"`
 	Subject       Reference                                       `bson:"subject"`

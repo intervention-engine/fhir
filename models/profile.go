@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Profile struct {
 	Id            string                          `json:"-" bson:"_id"`
 	Url           string                          `bson:"url"`
@@ -40,7 +38,7 @@ type Profile struct {
 	Code          []Coding                        `bson:"code"`
 	Status        string                          `bson:"status"`
 	Experimental  bool                            `bson:"experimental"`
-	Date          time.Time                       `bson:"date"`
+	Date          FHIRDateTime                    `bson:"date"`
 	Requirements  string                          `bson:"requirements"`
 	FhirVersion   string                          `bson:"fhirVersion"`
 	Mapping       []ProfileMappingComponent       `bson:"mapping"`

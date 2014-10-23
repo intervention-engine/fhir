@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type ReferralRequest struct {
 	Id                    string            `json:"-" bson:"_id"`
 	Status                string            `bson:"status"`
@@ -39,7 +37,7 @@ type ReferralRequest struct {
 	Requester             Reference         `bson:"requester"`
 	Recipient             []Reference       `bson:"recipient"`
 	Encounter             Reference         `bson:"encounter"`
-	DateSent              time.Time         `bson:"dateSent"`
+	DateSent              FHIRDateTime      `bson:"dateSent"`
 	Reason                CodeableConcept   `bson:"reason"`
 	Description           string            `bson:"description"`
 	ServiceRequested      []CodeableConcept `bson:"serviceRequested"`

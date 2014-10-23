@@ -26,12 +26,10 @@
 
 package models
 
-import "time"
-
 type MessageHeader struct {
 	Id          string                         `json:"-" bson:"_id"`
 	Identifier  string                         `bson:"identifier"`
-	Timestamp   time.Time                      `bson:"timestamp"`
+	Timestamp   FHIRDateTime                   `bson:"timestamp"`
 	Event       Coding                         `bson:"event"`
 	Response    MessageHeaderResponseComponent `bson:"response"`
 	Source      MessageSourceComponent         `bson:"source"`

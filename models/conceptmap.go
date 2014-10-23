@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type ConceptMap struct {
 	Id              string                       `json:"-" bson:"_id"`
 	Identifier      string                       `bson:"identifier"`
@@ -39,7 +37,7 @@ type ConceptMap struct {
 	Copyright       string                       `bson:"copyright"`
 	Status          string                       `bson:"status"`
 	Experimental    bool                         `bson:"experimental"`
-	Date            time.Time                    `bson:"date"`
+	Date            FHIRDateTime                 `bson:"date"`
 	SourceUri       string                       `bson:"sourceUri"`
 	SourceReference Reference                    `bson:"sourceReference"`
 	TargetUri       string                       `bson:"targetUri"`

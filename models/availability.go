@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Availability struct {
 	Id              string            `json:"-" bson:"_id"`
 	Identifier      []Identifier      `bson:"identifier"`
@@ -35,5 +33,5 @@ type Availability struct {
 	Actor           Reference         `bson:"actor"`
 	PlanningHorizon Period            `bson:"planningHorizon"`
 	Comment         string            `bson:"comment"`
-	LastModified    time.Time         `bson:"lastModified"`
+	LastModified    FHIRDateTime      `bson:"lastModified"`
 }

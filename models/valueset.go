@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type ValueSet struct {
 	Id           string                     `json:"-" bson:"_id"`
 	Identifier   string                     `bson:"identifier"`
@@ -42,8 +40,8 @@ type ValueSet struct {
 	Status       string                     `bson:"status"`
 	Experimental bool                       `bson:"experimental"`
 	Extensible   bool                       `bson:"extensible"`
-	Date         time.Time                  `bson:"date"`
-	StableDate   time.Time                  `bson:"stableDate"`
+	Date         FHIRDateTime               `bson:"date"`
+	StableDate   FHIRDateTime               `bson:"stableDate"`
 	Define       ValueSetDefineComponent    `bson:"define"`
 	Compose      ValueSetComposeComponent   `bson:"compose"`
 	Expansion    ValueSetExpansionComponent `bson:"expansion"`
@@ -116,6 +114,6 @@ type ValueSetExpansionContainsComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec expansion
 type ValueSetExpansionComponent struct {
 	Identifier Identifier                           `bson:"identifier"`
-	Timestamp  time.Time                            `bson:"timestamp"`
+	Timestamp  FHIRDateTime                         `bson:"timestamp"`
 	Contains   []ValueSetExpansionContainsComponent `bson:"contains"`
 }

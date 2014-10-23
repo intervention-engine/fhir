@@ -26,8 +26,6 @@
 
 package models
 
-import "time"
-
 type Practitioner struct {
 	Id            string                               `json:"-" bson:"_id"`
 	Identifier    []Identifier                         `bson:"identifier"`
@@ -35,7 +33,7 @@ type Practitioner struct {
 	Telecom       []ContactPoint                       `bson:"telecom"`
 	Address       []Address                            `bson:"address"`
 	Gender        CodeableConcept                      `bson:"gender"`
-	BirthDate     time.Time                            `bson:"birthDate"`
+	BirthDate     FHIRDateTime                         `bson:"birthDate"`
 	Photo         []Attachment                         `bson:"photo"`
 	Organization  Reference                            `bson:"organization"`
 	Role          []CodeableConcept                    `bson:"role"`

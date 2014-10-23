@@ -26,12 +26,10 @@
 
 package models
 
-import "time"
-
 type MedicationPrescription struct {
 	Id                    string                                             `json:"-" bson:"_id"`
 	Identifier            []Identifier                                       `bson:"identifier"`
-	DateWritten           time.Time                                          `bson:"dateWritten"`
+	DateWritten           FHIRDateTime                                       `bson:"dateWritten"`
 	Status                string                                             `bson:"status"`
 	Patient               Reference                                          `bson:"patient"`
 	Prescriber            Reference                                          `bson:"prescriber"`
@@ -48,7 +46,7 @@ type MedicationPrescription struct {
 type MedicationPrescriptionDosageInstructionComponent struct {
 	Text                    string          `bson:"text"`
 	AdditionalInstructions  CodeableConcept `bson:"additionalInstructions"`
-	ScheduledDateTime       time.Time       `bson:"scheduledDateTime"`
+	ScheduledDateTime       FHIRDateTime    `bson:"scheduledDateTime"`
 	ScheduledPeriod         Period          `bson:"scheduledPeriod"`
 	ScheduledTiming         Timing          `bson:"scheduledTiming"`
 	AsNeededBoolean         bool            `bson:"asNeededBoolean"`

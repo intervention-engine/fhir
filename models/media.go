@@ -26,14 +26,12 @@
 
 package models
 
-import "time"
-
 type Media struct {
 	Id         string          `json:"-" bson:"_id"`
 	Type       string          `bson:"type"`
 	Subtype    CodeableConcept `bson:"subtype"`
 	Identifier []Identifier    `bson:"identifier"`
-	DateTime   time.Time       `bson:"dateTime"`
+	DateTime   FHIRDateTime    `bson:"dateTime"`
 	Subject    Reference       `bson:"subject"`
 	Operator   Reference       `bson:"operator"`
 	View       CodeableConcept `bson:"view"`
