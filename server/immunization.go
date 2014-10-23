@@ -3,10 +3,11 @@ package server
 import (
 	"encoding/json"
 	"net/http"
-	"gopkg.in/mgo.v2/bson"
-	"gitlab.mitre.org/fhir/models"
-	"github.com/gorilla/mux"
 	"os"
+
+	"github.com/gorilla/mux"
+	"gitlab.mitre.org/fhir/models"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request) {
@@ -19,6 +20,7 @@ func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(rw).Encode(result)
 }
 
@@ -29,7 +31,7 @@ func ImmunizationShowHandler(rw http.ResponseWriter, r *http.Request) {
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
-	}	else {
+	} else {
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
@@ -43,6 +45,7 @@ func ImmunizationShowHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(rw).Encode(result)
 }
 
@@ -67,7 +70,7 @@ func ImmunizationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://" + host + "/immunization/" + i.Hex())
+	rw.Header().Add("Location", "http://"+host+"/immunization/"+i.Hex())
 }
 
 func ImmunizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
@@ -77,7 +80,7 @@ func ImmunizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
-	}	else {
+	} else {
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
@@ -102,7 +105,7 @@ func ImmunizationDeleteHandler(rw http.ResponseWriter, r *http.Request) {
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
-	}	else {
+	} else {
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 

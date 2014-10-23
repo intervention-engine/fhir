@@ -1,13 +1,13 @@
 package server
 
 import (
-  "gopkg.in/mgo.v2"
-  "github.com/gorilla/mux"
+	"github.com/gorilla/mux"
+	"gopkg.in/mgo.v2"
 )
 
 var (
-  MongoSession *mgo.Session
-  Database     *mgo.Database
+	MongoSession *mgo.Session
+	Database     *mgo.Database
 
-  Router = mux.NewRouter()
+	Router = mux.NewRouter()
 )
