@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"gitlab.mitre.org/fhir/server"
-	"gopkg.in/mgo.v2"
 	"log"
 	"net/http"
+
+	"gitlab.mitre.org/intervention-engine/fhir/server"
+	"gopkg.in/mgo.v2"
 )
 
 func main() {
