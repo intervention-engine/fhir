@@ -28,13 +28,13 @@ package models
 
 type OperationOutcome struct {
 	Id    string                           `json:"-" bson:"_id"`
-	Issue []OperationOutcomeIssueComponent `bson:"issue"`
+	Issue []OperationOutcomeIssueComponent `bson:"issue,omitempty", json:"issue,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec issue
 type OperationOutcomeIssueComponent struct {
-	Severity string   `bson:"severity"`
-	Type     Coding   `bson:"type"`
-	Details  string   `bson:"details"`
-	Location []string `bson:"location"`
+	Severity string   `bson:"severity,omitempty", json:"severity,omitempty"`
+	Type     Coding   `bson:"type,omitempty", json:"type,omitempty"`
+	Details  string   `bson:"details,omitempty", json:"details,omitempty"`
+	Location []string `bson:"location,omitempty", json:"location,omitempty"`
 }

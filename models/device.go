@@ -28,17 +28,17 @@ package models
 
 type Device struct {
 	Id           string          `json:"-" bson:"_id"`
-	Identifier   []Identifier    `bson:"identifier"`
-	Type         CodeableConcept `bson:"type"`
-	Manufacturer string          `bson:"manufacturer"`
-	Model        string          `bson:"model"`
-	Version      string          `bson:"version"`
-	Expiry       FHIRDateTime    `bson:"expiry"`
-	Udi          string          `bson:"udi"`
-	LotNumber    string          `bson:"lotNumber"`
-	Owner        Reference       `bson:"owner"`
-	Location     Reference       `bson:"location"`
-	Patient      Reference       `bson:"patient"`
-	Contact      []ContactPoint  `bson:"contact"`
-	Url          string          `bson:"url"`
+	Identifier   []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Type         CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
+	Manufacturer string          `bson:"manufacturer,omitempty", json:"manufacturer,omitempty"`
+	Model        string          `bson:"model,omitempty", json:"model,omitempty"`
+	Version      string          `bson:"version,omitempty", json:"version,omitempty"`
+	Expiry       FHIRDateTime    `bson:"expiry,omitempty", json:"expiry,omitempty"`
+	Udi          string          `bson:"udi,omitempty", json:"udi,omitempty"`
+	LotNumber    string          `bson:"lotNumber,omitempty", json:"lotNumber,omitempty"`
+	Owner        Reference       `bson:"owner,omitempty", json:"owner,omitempty"`
+	Location     Reference       `bson:"location,omitempty", json:"location,omitempty"`
+	Patient      Reference       `bson:"patient,omitempty", json:"patient,omitempty"`
+	Contact      []ContactPoint  `bson:"contact,omitempty", json:"contact,omitempty"`
+	Url          string          `bson:"url,omitempty", json:"url,omitempty"`
 }

@@ -28,45 +28,45 @@ package models
 
 type Composition struct {
 	Id              string                         `json:"-" bson:"_id"`
-	Identifier      Identifier                     `bson:"identifier"`
-	Date            FHIRDateTime                   `bson:"date"`
-	Type            CodeableConcept                `bson:"type"`
-	Class           CodeableConcept                `bson:"class"`
-	Title           string                         `bson:"title"`
-	Status          string                         `bson:"status"`
-	Confidentiality Coding                         `bson:"confidentiality"`
-	Subject         Reference                      `bson:"subject"`
-	Author          []Reference                    `bson:"author"`
-	Attester        []CompositionAttesterComponent `bson:"attester"`
-	Custodian       Reference                      `bson:"custodian"`
-	Event           []CompositionEventComponent    `bson:"event"`
-	Encounter       Reference                      `bson:"encounter"`
-	Section         []SectionComponent             `bson:"section"`
+	Identifier      Identifier                     `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Date            FHIRDateTime                   `bson:"date,omitempty", json:"date,omitempty"`
+	Type            CodeableConcept                `bson:"type,omitempty", json:"type,omitempty"`
+	Class           CodeableConcept                `bson:"class,omitempty", json:"class,omitempty"`
+	Title           string                         `bson:"title,omitempty", json:"title,omitempty"`
+	Status          string                         `bson:"status,omitempty", json:"status,omitempty"`
+	Confidentiality Coding                         `bson:"confidentiality,omitempty", json:"confidentiality,omitempty"`
+	Subject         Reference                      `bson:"subject,omitempty", json:"subject,omitempty"`
+	Author          []Reference                    `bson:"author,omitempty", json:"author,omitempty"`
+	Attester        []CompositionAttesterComponent `bson:"attester,omitempty", json:"attester,omitempty"`
+	Custodian       Reference                      `bson:"custodian,omitempty", json:"custodian,omitempty"`
+	Event           []CompositionEventComponent    `bson:"event,omitempty", json:"event,omitempty"`
+	Encounter       Reference                      `bson:"encounter,omitempty", json:"encounter,omitempty"`
+	Section         []SectionComponent             `bson:"section,omitempty", json:"section,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec attester
 type CompositionAttesterComponent struct {
-	Mode  []string     `bson:"mode"`
-	Time  FHIRDateTime `bson:"time"`
-	Party Reference    `bson:"party"`
+	Mode  []string     `bson:"mode,omitempty", json:"mode,omitempty"`
+	Time  FHIRDateTime `bson:"time,omitempty", json:"time,omitempty"`
+	Party Reference    `bson:"party,omitempty", json:"party,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec event
 type CompositionEventComponent struct {
-	Code   []CodeableConcept `bson:"code"`
-	Period Period            `bson:"period"`
-	Detail []Reference       `bson:"detail"`
+	Code   []CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
+	Period Period            `bson:"period,omitempty", json:"period,omitempty"`
+	Detail []Reference       `bson:"detail,omitempty", json:"detail,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec section
 type SectionComponent struct {
-	Title       string             `bson:"title"`
-	Identifier  []Identifier       `bson:"identifier"`
-	Code        CodeableConcept    `bson:"code"`
-	Subject     Reference          `bson:"subject"`
-	Text        Narrative          `bson:"text"`
-	EmptyReason CodeableConcept    `bson:"emptyReason"`
-	Order       CodeableConcept    `bson:"order"`
-	Section     []SectionComponent `bson:"section"`
-	Entry       []Reference        `bson:"entry"`
+	Title       string             `bson:"title,omitempty", json:"title,omitempty"`
+	Identifier  []Identifier       `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Code        CodeableConcept    `bson:"code,omitempty", json:"code,omitempty"`
+	Subject     Reference          `bson:"subject,omitempty", json:"subject,omitempty"`
+	Text        Narrative          `bson:"text,omitempty", json:"text,omitempty"`
+	EmptyReason CodeableConcept    `bson:"emptyReason,omitempty", json:"emptyReason,omitempty"`
+	Order       CodeableConcept    `bson:"order,omitempty", json:"order,omitempty"`
+	Section     []SectionComponent `bson:"section,omitempty", json:"section,omitempty"`
+	Entry       []Reference        `bson:"entry,omitempty", json:"entry,omitempty"`
 }

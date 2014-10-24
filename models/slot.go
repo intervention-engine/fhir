@@ -28,13 +28,13 @@ package models
 
 type Slot struct {
 	Id           string          `json:"-" bson:"_id"`
-	Identifier   []Identifier    `bson:"identifier"`
-	Type         CodeableConcept `bson:"type"`
-	Availability Reference       `bson:"availability"`
-	FreeBusyType string          `bson:"freeBusyType"`
-	Start        FHIRDateTime    `bson:"start"`
-	End          FHIRDateTime    `bson:"end"`
-	Overbooked   bool            `bson:"overbooked"`
-	Comment      string          `bson:"comment"`
-	LastModified FHIRDateTime    `bson:"lastModified"`
+	Identifier   []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Type         CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
+	Availability Reference       `bson:"availability,omitempty", json:"availability,omitempty"`
+	FreeBusyType string          `bson:"freeBusyType,omitempty", json:"freeBusyType,omitempty"`
+	Start        FHIRDateTime    `bson:"start,omitempty", json:"start,omitempty"`
+	End          FHIRDateTime    `bson:"end,omitempty", json:"end,omitempty"`
+	Overbooked   bool            `bson:"overbooked,omitempty", json:"overbooked,omitempty"`
+	Comment      string          `bson:"comment,omitempty", json:"comment,omitempty"`
+	LastModified FHIRDateTime    `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
 }

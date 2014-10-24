@@ -28,20 +28,20 @@ package models
 
 type Query struct {
 	Id         string                 `json:"-" bson:"_id"`
-	Identifier string                 `bson:"identifier"`
-	Parameter  []Extension            `bson:"parameter"`
-	Response   QueryResponseComponent `bson:"response"`
+	Identifier string                 `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Parameter  []Extension            `bson:"parameter,omitempty", json:"parameter,omitempty"`
+	Response   QueryResponseComponent `bson:"response,omitempty", json:"response,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec response
 type QueryResponseComponent struct {
-	Identifier string      `bson:"identifier"`
-	Outcome    string      `bson:"outcome"`
-	Total      float64     `bson:"total"`
-	Parameter  []Extension `bson:"parameter"`
-	First      []Extension `bson:"first"`
-	Previous   []Extension `bson:"previous"`
-	Next       []Extension `bson:"next"`
-	Last       []Extension `bson:"last"`
-	Reference  []Reference `bson:"reference"`
+	Identifier string      `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Outcome    string      `bson:"outcome,omitempty", json:"outcome,omitempty"`
+	Total      float64     `bson:"total,omitempty", json:"total,omitempty"`
+	Parameter  []Extension `bson:"parameter,omitempty", json:"parameter,omitempty"`
+	First      []Extension `bson:"first,omitempty", json:"first,omitempty"`
+	Previous   []Extension `bson:"previous,omitempty", json:"previous,omitempty"`
+	Next       []Extension `bson:"next,omitempty", json:"next,omitempty"`
+	Last       []Extension `bson:"last,omitempty", json:"last,omitempty"`
+	Reference  []Reference `bson:"reference,omitempty", json:"reference,omitempty"`
 }

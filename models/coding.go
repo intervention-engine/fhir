@@ -28,10 +28,10 @@ package models
 
 type Coding struct {
 	Id       string    `json:"-" bson:"_id"`
-	System   string    `bson:"system"`
-	Version  string    `bson:"version"`
-	Code     string    `bson:"code"`
-	Display  string    `bson:"display"`
-	Primary  bool      `bson:"primary"`
-	ValueSet Reference `bson:"valueSet"`
+	System   string    `bson:"system,omitempty", json:"system,omitempty"`
+	Version  string    `bson:"version,omitempty", json:"version,omitempty"`
+	Code     string    `bson:"code,omitempty", json:"code,omitempty"`
+	Display  string    `bson:"display,omitempty", json:"display,omitempty"`
+	Primary  bool      `bson:"primary,omitempty", json:"primary,omitempty"`
+	ValueSet Reference `bson:"valueSet,omitempty", json:"valueSet,omitempty"`
 }

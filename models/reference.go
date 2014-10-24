@@ -28,6 +28,6 @@ package models
 
 type Reference struct {
 	Id        string `json:"-" bson:"_id"`
-	Reference string `bson:"reference"`
-	Display   string `bson:"display"`
+	Reference string `bson:"reference,omitempty", json:"reference,omitempty"`
+	Display   string `bson:"display,omitempty", json:"display,omitempty"`
 }

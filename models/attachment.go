@@ -28,11 +28,11 @@ package models
 
 type Attachment struct {
 	Id          string  `json:"-" bson:"_id"`
-	ContentType string  `bson:"contentType"`
-	Language    string  `bson:"language"`
-	Data        string  `bson:"data"`
-	Url         string  `bson:"url"`
-	Size        float64 `bson:"size"`
-	Hash        string  `bson:"hash"`
-	Title       string  `bson:"title"`
+	ContentType string  `bson:"contentType,omitempty", json:"contentType,omitempty"`
+	Language    string  `bson:"language,omitempty", json:"language,omitempty"`
+	Data        string  `bson:"data,omitempty", json:"data,omitempty"`
+	Url         string  `bson:"url,omitempty", json:"url,omitempty"`
+	Size        float64 `bson:"size,omitempty", json:"size,omitempty"`
+	Hash        string  `bson:"hash,omitempty", json:"hash,omitempty"`
+	Title       string  `bson:"title,omitempty", json:"title,omitempty"`
 }

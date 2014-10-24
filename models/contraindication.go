@@ -28,21 +28,21 @@ package models
 
 type Contraindication struct {
 	Id         string                                `json:"-" bson:"_id"`
-	Patient    Reference                             `bson:"patient"`
-	Category   CodeableConcept                       `bson:"category"`
-	Severity   string                                `bson:"severity"`
-	Implicated []Reference                           `bson:"implicated"`
-	Detail     string                                `bson:"detail"`
-	Date       FHIRDateTime                          `bson:"date"`
-	Author     Reference                             `bson:"author"`
-	Identifier Identifier                            `bson:"identifier"`
-	Reference  string                                `bson:"reference"`
-	Mitigation []ContraindicationMitigationComponent `bson:"mitigation"`
+	Patient    Reference                             `bson:"patient,omitempty", json:"patient,omitempty"`
+	Category   CodeableConcept                       `bson:"category,omitempty", json:"category,omitempty"`
+	Severity   string                                `bson:"severity,omitempty", json:"severity,omitempty"`
+	Implicated []Reference                           `bson:"implicated,omitempty", json:"implicated,omitempty"`
+	Detail     string                                `bson:"detail,omitempty", json:"detail,omitempty"`
+	Date       FHIRDateTime                          `bson:"date,omitempty", json:"date,omitempty"`
+	Author     Reference                             `bson:"author,omitempty", json:"author,omitempty"`
+	Identifier Identifier                            `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Reference  string                                `bson:"reference,omitempty", json:"reference,omitempty"`
+	Mitigation []ContraindicationMitigationComponent `bson:"mitigation,omitempty", json:"mitigation,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec mitigation
 type ContraindicationMitigationComponent struct {
-	Action CodeableConcept `bson:"action"`
-	Date   FHIRDateTime    `bson:"date"`
-	Author Reference       `bson:"author"`
+	Action CodeableConcept `bson:"action,omitempty", json:"action,omitempty"`
+	Date   FHIRDateTime    `bson:"date,omitempty", json:"date,omitempty"`
+	Author Reference       `bson:"author,omitempty", json:"author,omitempty"`
 }

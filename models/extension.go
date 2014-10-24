@@ -28,5 +28,5 @@ package models
 
 type Extension struct {
 	Id  string `json:"-" bson:"_id"`
-	Url string `bson:"url"`
+	Url string `bson:"url,omitempty", json:"url,omitempty"`
 }

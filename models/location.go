@@ -28,23 +28,23 @@ package models
 
 type Location struct {
 	Id                   string                    `json:"-" bson:"_id"`
-	Identifier           []Identifier              `bson:"identifier"`
-	Name                 string                    `bson:"name"`
-	Description          string                    `bson:"description"`
-	Type                 CodeableConcept           `bson:"type"`
-	Telecom              []ContactPoint            `bson:"telecom"`
-	Address              Address                   `bson:"address"`
-	PhysicalType         CodeableConcept           `bson:"physicalType"`
-	Position             LocationPositionComponent `bson:"position"`
-	ManagingOrganization Reference                 `bson:"managingOrganization"`
-	Status               string                    `bson:"status"`
-	PartOf               Reference                 `bson:"partOf"`
-	Mode                 string                    `bson:"mode"`
+	Identifier           []Identifier              `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Name                 string                    `bson:"name,omitempty", json:"name,omitempty"`
+	Description          string                    `bson:"description,omitempty", json:"description,omitempty"`
+	Type                 CodeableConcept           `bson:"type,omitempty", json:"type,omitempty"`
+	Telecom              []ContactPoint            `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Address              Address                   `bson:"address,omitempty", json:"address,omitempty"`
+	PhysicalType         CodeableConcept           `bson:"physicalType,omitempty", json:"physicalType,omitempty"`
+	Position             LocationPositionComponent `bson:"position,omitempty", json:"position,omitempty"`
+	ManagingOrganization Reference                 `bson:"managingOrganization,omitempty", json:"managingOrganization,omitempty"`
+	Status               string                    `bson:"status,omitempty", json:"status,omitempty"`
+	PartOf               Reference                 `bson:"partOf,omitempty", json:"partOf,omitempty"`
+	Mode                 string                    `bson:"mode,omitempty", json:"mode,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec position
 type LocationPositionComponent struct {
-	Longitude float64 `bson:"longitude"`
-	Latitude  float64 `bson:"latitude"`
-	Altitude  float64 `bson:"altitude"`
+	Longitude float64 `bson:"longitude,omitempty", json:"longitude,omitempty"`
+	Latitude  float64 `bson:"latitude,omitempty", json:"latitude,omitempty"`
+	Altitude  float64 `bson:"altitude,omitempty", json:"altitude,omitempty"`
 }

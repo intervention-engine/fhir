@@ -28,54 +28,54 @@ package models
 
 type Encounter struct {
 	Id              string                            `json:"-" bson:"_id"`
-	Identifier      []Identifier                      `bson:"identifier"`
-	Status          string                            `bson:"status"`
-	Class           string                            `bson:"class"`
-	Type            []CodeableConcept                 `bson:"type"`
-	Subject         Reference                         `bson:"subject"`
-	Participant     []EncounterParticipantComponent   `bson:"participant"`
-	Fulfills        Reference                         `bson:"fulfills"`
-	Period          Period                            `bson:"period"`
-	Length          Quantity                          `bson:"length"`
-	Reason          CodeableConcept                   `bson:"reason"`
-	Indication      Reference                         `bson:"indication"`
-	Priority        CodeableConcept                   `bson:"priority"`
-	Hospitalization EncounterHospitalizationComponent `bson:"hospitalization"`
-	Location        []EncounterLocationComponent      `bson:"location"`
-	ServiceProvider Reference                         `bson:"serviceProvider"`
-	PartOf          Reference                         `bson:"partOf"`
+	Identifier      []Identifier                      `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Status          string                            `bson:"status,omitempty", json:"status,omitempty"`
+	Class           string                            `bson:"class,omitempty", json:"class,omitempty"`
+	Type            []CodeableConcept                 `bson:"type,omitempty", json:"type,omitempty"`
+	Subject         Reference                         `bson:"subject,omitempty", json:"subject,omitempty"`
+	Participant     []EncounterParticipantComponent   `bson:"participant,omitempty", json:"participant,omitempty"`
+	Fulfills        Reference                         `bson:"fulfills,omitempty", json:"fulfills,omitempty"`
+	Period          Period                            `bson:"period,omitempty", json:"period,omitempty"`
+	Length          Quantity                          `bson:"length,omitempty", json:"length,omitempty"`
+	Reason          CodeableConcept                   `bson:"reason,omitempty", json:"reason,omitempty"`
+	Indication      Reference                         `bson:"indication,omitempty", json:"indication,omitempty"`
+	Priority        CodeableConcept                   `bson:"priority,omitempty", json:"priority,omitempty"`
+	Hospitalization EncounterHospitalizationComponent `bson:"hospitalization,omitempty", json:"hospitalization,omitempty"`
+	Location        []EncounterLocationComponent      `bson:"location,omitempty", json:"location,omitempty"`
+	ServiceProvider Reference                         `bson:"serviceProvider,omitempty", json:"serviceProvider,omitempty"`
+	PartOf          Reference                         `bson:"partOf,omitempty", json:"partOf,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec participant
 type EncounterParticipantComponent struct {
-	Type       []CodeableConcept `bson:"type"`
-	Individual Reference         `bson:"individual"`
+	Type       []CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
+	Individual Reference         `bson:"individual,omitempty", json:"individual,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec accomodation
 type EncounterHospitalizationAccomodationComponent struct {
-	Bed    Reference `bson:"bed"`
-	Period Period    `bson:"period"`
+	Bed    Reference `bson:"bed,omitempty", json:"bed,omitempty"`
+	Period Period    `bson:"period,omitempty", json:"period,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec hospitalization
 type EncounterHospitalizationComponent struct {
-	PreAdmissionIdentifier Identifier                                      `bson:"preAdmissionIdentifier"`
-	Origin                 Reference                                       `bson:"origin"`
-	AdmitSource            CodeableConcept                                 `bson:"admitSource"`
-	Period                 Period                                          `bson:"period"`
-	Accomodation           []EncounterHospitalizationAccomodationComponent `bson:"accomodation"`
-	Diet                   CodeableConcept                                 `bson:"diet"`
-	SpecialCourtesy        []CodeableConcept                               `bson:"specialCourtesy"`
-	SpecialArrangement     []CodeableConcept                               `bson:"specialArrangement"`
-	Destination            Reference                                       `bson:"destination"`
-	DischargeDisposition   CodeableConcept                                 `bson:"dischargeDisposition"`
-	DischargeDiagnosis     Reference                                       `bson:"dischargeDiagnosis"`
-	ReAdmission            bool                                            `bson:"reAdmission"`
+	PreAdmissionIdentifier Identifier                                      `bson:"preAdmissionIdentifier,omitempty", json:"preAdmissionIdentifier,omitempty"`
+	Origin                 Reference                                       `bson:"origin,omitempty", json:"origin,omitempty"`
+	AdmitSource            CodeableConcept                                 `bson:"admitSource,omitempty", json:"admitSource,omitempty"`
+	Period                 Period                                          `bson:"period,omitempty", json:"period,omitempty"`
+	Accomodation           []EncounterHospitalizationAccomodationComponent `bson:"accomodation,omitempty", json:"accomodation,omitempty"`
+	Diet                   CodeableConcept                                 `bson:"diet,omitempty", json:"diet,omitempty"`
+	SpecialCourtesy        []CodeableConcept                               `bson:"specialCourtesy,omitempty", json:"specialCourtesy,omitempty"`
+	SpecialArrangement     []CodeableConcept                               `bson:"specialArrangement,omitempty", json:"specialArrangement,omitempty"`
+	Destination            Reference                                       `bson:"destination,omitempty", json:"destination,omitempty"`
+	DischargeDisposition   CodeableConcept                                 `bson:"dischargeDisposition,omitempty", json:"dischargeDisposition,omitempty"`
+	DischargeDiagnosis     Reference                                       `bson:"dischargeDiagnosis,omitempty", json:"dischargeDiagnosis,omitempty"`
+	ReAdmission            bool                                            `bson:"reAdmission,omitempty", json:"reAdmission,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec location
 type EncounterLocationComponent struct {
-	Location Reference `bson:"location"`
-	Period   Period    `bson:"period"`
+	Location Reference `bson:"location,omitempty", json:"location,omitempty"`
+	Period   Period    `bson:"period,omitempty", json:"period,omitempty"`
 }

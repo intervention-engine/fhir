@@ -28,48 +28,48 @@ package models
 
 type MedicationDispense struct {
 	Id                      string                                  `json:"-" bson:"_id"`
-	Identifier              Identifier                              `bson:"identifier"`
-	Status                  string                                  `bson:"status"`
-	Patient                 Reference                               `bson:"patient"`
-	Dispenser               Reference                               `bson:"dispenser"`
-	AuthorizingPrescription []Reference                             `bson:"authorizingPrescription"`
-	Dispense                []MedicationDispenseDispenseComponent   `bson:"dispense"`
-	Substitution            MedicationDispenseSubstitutionComponent `bson:"substitution"`
+	Identifier              Identifier                              `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Status                  string                                  `bson:"status,omitempty", json:"status,omitempty"`
+	Patient                 Reference                               `bson:"patient,omitempty", json:"patient,omitempty"`
+	Dispenser               Reference                               `bson:"dispenser,omitempty", json:"dispenser,omitempty"`
+	AuthorizingPrescription []Reference                             `bson:"authorizingPrescription,omitempty", json:"authorizingPrescription,omitempty"`
+	Dispense                []MedicationDispenseDispenseComponent   `bson:"dispense,omitempty", json:"dispense,omitempty"`
+	Substitution            MedicationDispenseSubstitutionComponent `bson:"substitution,omitempty", json:"substitution,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dosage
 type MedicationDispenseDispenseDosageComponent struct {
-	AdditionalInstructions  CodeableConcept `bson:"additionalInstructions"`
-	ScheduleDateTime        FHIRDateTime    `bson:"scheduleDateTime"`
-	SchedulePeriod          Period          `bson:"schedulePeriod"`
-	ScheduleTiming          Timing          `bson:"scheduleTiming"`
-	AsNeededBoolean         bool            `bson:"asNeededBoolean"`
-	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept"`
-	Site                    CodeableConcept `bson:"site"`
-	Route                   CodeableConcept `bson:"route"`
-	Method                  CodeableConcept `bson:"method"`
-	Quantity                Quantity        `bson:"quantity"`
-	Rate                    Ratio           `bson:"rate"`
-	MaxDosePerPeriod        Ratio           `bson:"maxDosePerPeriod"`
+	AdditionalInstructions  CodeableConcept `bson:"additionalInstructions,omitempty", json:"additionalInstructions,omitempty"`
+	ScheduleDateTime        FHIRDateTime    `bson:"scheduleDateTime,omitempty", json:"scheduleDateTime,omitempty"`
+	SchedulePeriod          Period          `bson:"schedulePeriod,omitempty", json:"schedulePeriod,omitempty"`
+	ScheduleTiming          Timing          `bson:"scheduleTiming,omitempty", json:"scheduleTiming,omitempty"`
+	AsNeededBoolean         bool            `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
+	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
+	Site                    CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
+	Route                   CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`
+	Method                  CodeableConcept `bson:"method,omitempty", json:"method,omitempty"`
+	Quantity                Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	Rate                    Ratio           `bson:"rate,omitempty", json:"rate,omitempty"`
+	MaxDosePerPeriod        Ratio           `bson:"maxDosePerPeriod,omitempty", json:"maxDosePerPeriod,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dispense
 type MedicationDispenseDispenseComponent struct {
-	Identifier     Identifier                                  `bson:"identifier"`
-	Status         string                                      `bson:"status"`
-	Type           CodeableConcept                             `bson:"type"`
-	Quantity       Quantity                                    `bson:"quantity"`
-	Medication     Reference                                   `bson:"medication"`
-	WhenPrepared   FHIRDateTime                                `bson:"whenPrepared"`
-	WhenHandedOver FHIRDateTime                                `bson:"whenHandedOver"`
-	Destination    Reference                                   `bson:"destination"`
-	Receiver       []Reference                                 `bson:"receiver"`
-	Dosage         []MedicationDispenseDispenseDosageComponent `bson:"dosage"`
+	Identifier     Identifier                                  `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Status         string                                      `bson:"status,omitempty", json:"status,omitempty"`
+	Type           CodeableConcept                             `bson:"type,omitempty", json:"type,omitempty"`
+	Quantity       Quantity                                    `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	Medication     Reference                                   `bson:"medication,omitempty", json:"medication,omitempty"`
+	WhenPrepared   FHIRDateTime                                `bson:"whenPrepared,omitempty", json:"whenPrepared,omitempty"`
+	WhenHandedOver FHIRDateTime                                `bson:"whenHandedOver,omitempty", json:"whenHandedOver,omitempty"`
+	Destination    Reference                                   `bson:"destination,omitempty", json:"destination,omitempty"`
+	Receiver       []Reference                                 `bson:"receiver,omitempty", json:"receiver,omitempty"`
+	Dosage         []MedicationDispenseDispenseDosageComponent `bson:"dosage,omitempty", json:"dosage,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec substitution
 type MedicationDispenseSubstitutionComponent struct {
-	Type             CodeableConcept   `bson:"type"`
-	Reason           []CodeableConcept `bson:"reason"`
-	ResponsibleParty []Reference       `bson:"responsibleParty"`
+	Type             CodeableConcept   `bson:"type,omitempty", json:"type,omitempty"`
+	Reason           []CodeableConcept `bson:"reason,omitempty", json:"reason,omitempty"`
+	ResponsibleParty []Reference       `bson:"responsibleParty,omitempty", json:"responsibleParty,omitempty"`
 }

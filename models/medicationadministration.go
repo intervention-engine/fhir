@@ -28,31 +28,31 @@ package models
 
 type MedicationAdministration struct {
 	Id                    string                                    `json:"-" bson:"_id"`
-	Identifier            []Identifier                              `bson:"identifier"`
-	Status                string                                    `bson:"status"`
-	Patient               Reference                                 `bson:"patient"`
-	Practitioner          Reference                                 `bson:"practitioner"`
-	Encounter             Reference                                 `bson:"encounter"`
-	Prescription          Reference                                 `bson:"prescription"`
-	WasNotGiven           bool                                      `bson:"wasNotGiven"`
-	ReasonNotGiven        []CodeableConcept                         `bson:"reasonNotGiven"`
-	EffectiveTimeDateTime FHIRDateTime                              `bson:"effectiveTimeDateTime"`
-	EffectiveTimePeriod   Period                                    `bson:"effectiveTimePeriod"`
-	Medication            Reference                                 `bson:"medication"`
-	Device                []Reference                               `bson:"device"`
-	Dosage                []MedicationAdministrationDosageComponent `bson:"dosage"`
+	Identifier            []Identifier                              `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Status                string                                    `bson:"status,omitempty", json:"status,omitempty"`
+	Patient               Reference                                 `bson:"patient,omitempty", json:"patient,omitempty"`
+	Practitioner          Reference                                 `bson:"practitioner,omitempty", json:"practitioner,omitempty"`
+	Encounter             Reference                                 `bson:"encounter,omitempty", json:"encounter,omitempty"`
+	Prescription          Reference                                 `bson:"prescription,omitempty", json:"prescription,omitempty"`
+	WasNotGiven           bool                                      `bson:"wasNotGiven,omitempty", json:"wasNotGiven,omitempty"`
+	ReasonNotGiven        []CodeableConcept                         `bson:"reasonNotGiven,omitempty", json:"reasonNotGiven,omitempty"`
+	EffectiveTimeDateTime FHIRDateTime                              `bson:"effectiveTimeDateTime,omitempty", json:"effectiveTimeDateTime,omitempty"`
+	EffectiveTimePeriod   Period                                    `bson:"effectiveTimePeriod,omitempty", json:"effectiveTimePeriod,omitempty"`
+	Medication            Reference                                 `bson:"medication,omitempty", json:"medication,omitempty"`
+	Device                []Reference                               `bson:"device,omitempty", json:"device,omitempty"`
+	Dosage                []MedicationAdministrationDosageComponent `bson:"dosage,omitempty", json:"dosage,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dosage
 type MedicationAdministrationDosageComponent struct {
-	TimingDateTime          FHIRDateTime    `bson:"timingDateTime"`
-	TimingPeriod            Period          `bson:"timingPeriod"`
-	AsNeededBoolean         bool            `bson:"asNeededBoolean"`
-	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept"`
-	Site                    CodeableConcept `bson:"site"`
-	Route                   CodeableConcept `bson:"route"`
-	Method                  CodeableConcept `bson:"method"`
-	Quantity                Quantity        `bson:"quantity"`
-	Rate                    Ratio           `bson:"rate"`
-	MaxDosePerPeriod        Ratio           `bson:"maxDosePerPeriod"`
+	TimingDateTime          FHIRDateTime    `bson:"timingDateTime,omitempty", json:"timingDateTime,omitempty"`
+	TimingPeriod            Period          `bson:"timingPeriod,omitempty", json:"timingPeriod,omitempty"`
+	AsNeededBoolean         bool            `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
+	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
+	Site                    CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
+	Route                   CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`
+	Method                  CodeableConcept `bson:"method,omitempty", json:"method,omitempty"`
+	Quantity                Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	Rate                    Ratio           `bson:"rate,omitempty", json:"rate,omitempty"`
+	MaxDosePerPeriod        Ratio           `bson:"maxDosePerPeriod,omitempty", json:"maxDosePerPeriod,omitempty"`
 }

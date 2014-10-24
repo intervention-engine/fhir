@@ -28,14 +28,14 @@ package models
 
 type AppointmentResponse struct {
 	Id                string            `json:"-" bson:"_id"`
-	Identifier        []Identifier      `bson:"identifier"`
-	Appointment       Reference         `bson:"appointment"`
-	ParticipantType   []CodeableConcept `bson:"participantType"`
-	Individual        []Reference       `bson:"individual"`
-	ParticipantStatus string            `bson:"participantStatus"`
-	Comment           string            `bson:"comment"`
-	Start             FHIRDateTime      `bson:"start"`
-	End               FHIRDateTime      `bson:"end"`
-	LastModifiedBy    Reference         `bson:"lastModifiedBy"`
-	LastModified      FHIRDateTime      `bson:"lastModified"`
+	Identifier        []Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Appointment       Reference         `bson:"appointment,omitempty", json:"appointment,omitempty"`
+	ParticipantType   []CodeableConcept `bson:"participantType,omitempty", json:"participantType,omitempty"`
+	Individual        []Reference       `bson:"individual,omitempty", json:"individual,omitempty"`
+	ParticipantStatus string            `bson:"participantStatus,omitempty", json:"participantStatus,omitempty"`
+	Comment           string            `bson:"comment,omitempty", json:"comment,omitempty"`
+	Start             FHIRDateTime      `bson:"start,omitempty", json:"start,omitempty"`
+	End               FHIRDateTime      `bson:"end,omitempty", json:"end,omitempty"`
+	LastModifiedBy    Reference         `bson:"lastModifiedBy,omitempty", json:"lastModifiedBy,omitempty"`
+	LastModified      FHIRDateTime      `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
 }

@@ -28,13 +28,13 @@ package models
 
 type OrderResponse struct {
 	Id                       string          `json:"-" bson:"_id"`
-	Identifier               []Identifier    `bson:"identifier"`
-	Request                  Reference       `bson:"request"`
-	Date                     FHIRDateTime    `bson:"date"`
-	Who                      Reference       `bson:"who"`
-	AuthorityCodeableConcept CodeableConcept `bson:"authorityCodeableConcept"`
-	AuthorityReference       Reference       `bson:"authorityReference"`
-	Code                     string          `bson:"code"`
-	Description              string          `bson:"description"`
-	Fulfillment              []Reference     `bson:"fulfillment"`
+	Identifier               []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Request                  Reference       `bson:"request,omitempty", json:"request,omitempty"`
+	Date                     FHIRDateTime    `bson:"date,omitempty", json:"date,omitempty"`
+	Who                      Reference       `bson:"who,omitempty", json:"who,omitempty"`
+	AuthorityCodeableConcept CodeableConcept `bson:"authorityCodeableConcept,omitempty", json:"authorityCodeableConcept,omitempty"`
+	AuthorityReference       Reference       `bson:"authorityReference,omitempty", json:"authorityReference,omitempty"`
+	Code                     string          `bson:"code,omitempty", json:"code,omitempty"`
+	Description              string          `bson:"description,omitempty", json:"description,omitempty"`
+	Fulfillment              []Reference     `bson:"fulfillment,omitempty", json:"fulfillment,omitempty"`
 }

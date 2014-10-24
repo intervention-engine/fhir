@@ -28,26 +28,26 @@ package models
 
 type DeviceObservationReport struct {
 	Id            string                                          `json:"-" bson:"_id"`
-	Instant       FHIRDateTime                                    `bson:"instant"`
-	Identifier    Identifier                                      `bson:"identifier"`
-	Source        Reference                                       `bson:"source"`
-	Subject       Reference                                       `bson:"subject"`
-	VirtualDevice []DeviceObservationReportVirtualDeviceComponent `bson:"virtualDevice"`
+	Instant       FHIRDateTime                                    `bson:"instant,omitempty", json:"instant,omitempty"`
+	Identifier    Identifier                                      `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Source        Reference                                       `bson:"source,omitempty", json:"source,omitempty"`
+	Subject       Reference                                       `bson:"subject,omitempty", json:"subject,omitempty"`
+	VirtualDevice []DeviceObservationReportVirtualDeviceComponent `bson:"virtualDevice,omitempty", json:"virtualDevice,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec metric
 type DeviceObservationReportVirtualDeviceChannelMetricComponent struct {
-	Observation Reference `bson:"observation"`
+	Observation Reference `bson:"observation,omitempty", json:"observation,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec channel
 type DeviceObservationReportVirtualDeviceChannelComponent struct {
-	Code   CodeableConcept                                              `bson:"code"`
-	Metric []DeviceObservationReportVirtualDeviceChannelMetricComponent `bson:"metric"`
+	Code   CodeableConcept                                              `bson:"code,omitempty", json:"code,omitempty"`
+	Metric []DeviceObservationReportVirtualDeviceChannelMetricComponent `bson:"metric,omitempty", json:"metric,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec virtualDevice
 type DeviceObservationReportVirtualDeviceComponent struct {
-	Code    CodeableConcept                                        `bson:"code"`
-	Channel []DeviceObservationReportVirtualDeviceChannelComponent `bson:"channel"`
+	Code    CodeableConcept                                        `bson:"code,omitempty", json:"code,omitempty"`
+	Channel []DeviceObservationReportVirtualDeviceChannelComponent `bson:"channel,omitempty", json:"channel,omitempty"`
 }

@@ -28,131 +28,131 @@ package models
 
 type Profile struct {
 	Id            string                          `json:"-" bson:"_id"`
-	Url           string                          `bson:"url"`
-	Identifier    []Identifier                    `bson:"identifier"`
-	Version       string                          `bson:"version"`
-	Name          string                          `bson:"name"`
-	Publisher     string                          `bson:"publisher"`
-	Telecom       []ContactPoint                  `bson:"telecom"`
-	Description   string                          `bson:"description"`
-	Code          []Coding                        `bson:"code"`
-	Status        string                          `bson:"status"`
-	Experimental  bool                            `bson:"experimental"`
-	Date          FHIRDateTime                    `bson:"date"`
-	Requirements  string                          `bson:"requirements"`
-	FhirVersion   string                          `bson:"fhirVersion"`
-	Mapping       []ProfileMappingComponent       `bson:"mapping"`
-	Structure     []ProfileStructureComponent     `bson:"structure"`
-	ExtensionDefn []ProfileExtensionDefnComponent `bson:"extensionDefn"`
+	Url           string                          `bson:"url,omitempty", json:"url,omitempty"`
+	Identifier    []Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Version       string                          `bson:"version,omitempty", json:"version,omitempty"`
+	Name          string                          `bson:"name,omitempty", json:"name,omitempty"`
+	Publisher     string                          `bson:"publisher,omitempty", json:"publisher,omitempty"`
+	Telecom       []ContactPoint                  `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Description   string                          `bson:"description,omitempty", json:"description,omitempty"`
+	Code          []Coding                        `bson:"code,omitempty", json:"code,omitempty"`
+	Status        string                          `bson:"status,omitempty", json:"status,omitempty"`
+	Experimental  bool                            `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Date          FHIRDateTime                    `bson:"date,omitempty", json:"date,omitempty"`
+	Requirements  string                          `bson:"requirements,omitempty", json:"requirements,omitempty"`
+	FhirVersion   string                          `bson:"fhirVersion,omitempty", json:"fhirVersion,omitempty"`
+	Mapping       []ProfileMappingComponent       `bson:"mapping,omitempty", json:"mapping,omitempty"`
+	Structure     []ProfileStructureComponent     `bson:"structure,omitempty", json:"structure,omitempty"`
+	ExtensionDefn []ProfileExtensionDefnComponent `bson:"extensionDefn,omitempty", json:"extensionDefn,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec mapping
 type ProfileMappingComponent struct {
-	Identity string `bson:"identity"`
-	Uri      string `bson:"uri"`
-	Name     string `bson:"name"`
-	Comments string `bson:"comments"`
+	Identity string `bson:"identity,omitempty", json:"identity,omitempty"`
+	Uri      string `bson:"uri,omitempty", json:"uri,omitempty"`
+	Name     string `bson:"name,omitempty", json:"name,omitempty"`
+	Comments string `bson:"comments,omitempty", json:"comments,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec slicing
 type ElementSlicingComponent struct {
-	Discriminator string `bson:"discriminator"`
-	Ordered       bool   `bson:"ordered"`
-	Rules         string `bson:"rules"`
+	Discriminator string `bson:"discriminator,omitempty", json:"discriminator,omitempty"`
+	Ordered       bool   `bson:"ordered,omitempty", json:"ordered,omitempty"`
+	Rules         string `bson:"rules,omitempty", json:"rules,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec type
 type TypeRefComponent struct {
-	Code        string   `bson:"code"`
-	Profile     string   `bson:"profile"`
-	Aggregation []string `bson:"aggregation"`
+	Code        string   `bson:"code,omitempty", json:"code,omitempty"`
+	Profile     string   `bson:"profile,omitempty", json:"profile,omitempty"`
+	Aggregation []string `bson:"aggregation,omitempty", json:"aggregation,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec constraint
 type ElementDefinitionConstraintComponent struct {
-	Key      string `bson:"key"`
-	Name     string `bson:"name"`
-	Severity string `bson:"severity"`
-	Human    string `bson:"human"`
-	Xpath    string `bson:"xpath"`
+	Key      string `bson:"key,omitempty", json:"key,omitempty"`
+	Name     string `bson:"name,omitempty", json:"name,omitempty"`
+	Severity string `bson:"severity,omitempty", json:"severity,omitempty"`
+	Human    string `bson:"human,omitempty", json:"human,omitempty"`
+	Xpath    string `bson:"xpath,omitempty", json:"xpath,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec binding
 type ElementDefinitionBindingComponent struct {
-	Name               string    `bson:"name"`
-	IsExtensible       bool      `bson:"isExtensible"`
-	Conformance        string    `bson:"conformance"`
-	Description        string    `bson:"description"`
-	ReferenceUri       string    `bson:"referenceUri"`
-	ReferenceReference Reference `bson:"referenceReference"`
+	Name               string    `bson:"name,omitempty", json:"name,omitempty"`
+	IsExtensible       bool      `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
+	Conformance        string    `bson:"conformance,omitempty", json:"conformance,omitempty"`
+	Description        string    `bson:"description,omitempty", json:"description,omitempty"`
+	ReferenceUri       string    `bson:"referenceUri,omitempty", json:"referenceUri,omitempty"`
+	ReferenceReference Reference `bson:"referenceReference,omitempty", json:"referenceReference,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec mapping
 type ElementDefinitionMappingComponent struct {
-	Identity string `bson:"identity"`
-	Map      string `bson:"map"`
+	Identity string `bson:"identity,omitempty", json:"identity,omitempty"`
+	Map      string `bson:"map,omitempty", json:"map,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec definition
 type ElementDefinitionComponent struct {
-	Short         string                                 `bson:"short"`
-	Formal        string                                 `bson:"formal"`
-	Comments      string                                 `bson:"comments"`
-	Requirements  string                                 `bson:"requirements"`
-	Synonym       []string                               `bson:"synonym"`
-	Min           float64                                `bson:"min"`
-	Max           string                                 `bson:"max"`
-	Type          []TypeRefComponent                     `bson:"type"`
-	NameReference string                                 `bson:"nameReference"`
-	MaxLength     float64                                `bson:"maxLength"`
-	Condition     []string                               `bson:"condition"`
-	Constraint    []ElementDefinitionConstraintComponent `bson:"constraint"`
-	MustSupport   bool                                   `bson:"mustSupport"`
-	IsModifier    bool                                   `bson:"isModifier"`
-	Binding       ElementDefinitionBindingComponent      `bson:"binding"`
-	Mapping       []ElementDefinitionMappingComponent    `bson:"mapping"`
+	Short         string                                 `bson:"short,omitempty", json:"short,omitempty"`
+	Formal        string                                 `bson:"formal,omitempty", json:"formal,omitempty"`
+	Comments      string                                 `bson:"comments,omitempty", json:"comments,omitempty"`
+	Requirements  string                                 `bson:"requirements,omitempty", json:"requirements,omitempty"`
+	Synonym       []string                               `bson:"synonym,omitempty", json:"synonym,omitempty"`
+	Min           float64                                `bson:"min,omitempty", json:"min,omitempty"`
+	Max           string                                 `bson:"max,omitempty", json:"max,omitempty"`
+	Type          []TypeRefComponent                     `bson:"type,omitempty", json:"type,omitempty"`
+	NameReference string                                 `bson:"nameReference,omitempty", json:"nameReference,omitempty"`
+	MaxLength     float64                                `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
+	Condition     []string                               `bson:"condition,omitempty", json:"condition,omitempty"`
+	Constraint    []ElementDefinitionConstraintComponent `bson:"constraint,omitempty", json:"constraint,omitempty"`
+	MustSupport   bool                                   `bson:"mustSupport,omitempty", json:"mustSupport,omitempty"`
+	IsModifier    bool                                   `bson:"isModifier,omitempty", json:"isModifier,omitempty"`
+	Binding       ElementDefinitionBindingComponent      `bson:"binding,omitempty", json:"binding,omitempty"`
+	Mapping       []ElementDefinitionMappingComponent    `bson:"mapping,omitempty", json:"mapping,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec element
 type ElementComponent struct {
-	Path           string                     `bson:"path"`
-	Representation []string                   `bson:"representation"`
-	Name           string                     `bson:"name"`
-	Slicing        ElementSlicingComponent    `bson:"slicing"`
-	Definition     ElementDefinitionComponent `bson:"definition"`
+	Path           string                     `bson:"path,omitempty", json:"path,omitempty"`
+	Representation []string                   `bson:"representation,omitempty", json:"representation,omitempty"`
+	Name           string                     `bson:"name,omitempty", json:"name,omitempty"`
+	Slicing        ElementSlicingComponent    `bson:"slicing,omitempty", json:"slicing,omitempty"`
+	Definition     ElementDefinitionComponent `bson:"definition,omitempty", json:"definition,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec snapshot
 type ConstraintComponent struct {
-	Element []ElementComponent `bson:"element"`
+	Element []ElementComponent `bson:"element,omitempty", json:"element,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec searchParam
 type ProfileStructureSearchParamComponent struct {
-	Name          string   `bson:"name"`
-	Type          string   `bson:"type"`
-	Documentation string   `bson:"documentation"`
-	Xpath         string   `bson:"xpath"`
-	Target        []string `bson:"target"`
+	Name          string   `bson:"name,omitempty", json:"name,omitempty"`
+	Type          string   `bson:"type,omitempty", json:"type,omitempty"`
+	Documentation string   `bson:"documentation,omitempty", json:"documentation,omitempty"`
+	Xpath         string   `bson:"xpath,omitempty", json:"xpath,omitempty"`
+	Target        []string `bson:"target,omitempty", json:"target,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec structure
 type ProfileStructureComponent struct {
-	Type         string                                 `bson:"type"`
-	Base         string                                 `bson:"base"`
-	Name         string                                 `bson:"name"`
-	Publish      bool                                   `bson:"publish"`
-	Purpose      string                                 `bson:"purpose"`
-	Snapshot     ConstraintComponent                    `bson:"snapshot"`
-	Differential ConstraintComponent                    `bson:"differential"`
-	SearchParam  []ProfileStructureSearchParamComponent `bson:"searchParam"`
+	Type         string                                 `bson:"type,omitempty", json:"type,omitempty"`
+	Base         string                                 `bson:"base,omitempty", json:"base,omitempty"`
+	Name         string                                 `bson:"name,omitempty", json:"name,omitempty"`
+	Publish      bool                                   `bson:"publish,omitempty", json:"publish,omitempty"`
+	Purpose      string                                 `bson:"purpose,omitempty", json:"purpose,omitempty"`
+	Snapshot     ConstraintComponent                    `bson:"snapshot,omitempty", json:"snapshot,omitempty"`
+	Differential ConstraintComponent                    `bson:"differential,omitempty", json:"differential,omitempty"`
+	SearchParam  []ProfileStructureSearchParamComponent `bson:"searchParam,omitempty", json:"searchParam,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec extensionDefn
 type ProfileExtensionDefnComponent struct {
-	Code        string             `bson:"code"`
-	Display     string             `bson:"display"`
-	ContextType string             `bson:"contextType"`
-	Context     []string           `bson:"context"`
-	Element     []ElementComponent `bson:"element"`
+	Code        string             `bson:"code,omitempty", json:"code,omitempty"`
+	Display     string             `bson:"display,omitempty", json:"display,omitempty"`
+	ContextType string             `bson:"contextType,omitempty", json:"contextType,omitempty"`
+	Context     []string           `bson:"context,omitempty", json:"context,omitempty"`
+	Element     []ElementComponent `bson:"element,omitempty", json:"element,omitempty"`
 }

@@ -28,54 +28,54 @@ package models
 
 type CarePlan struct {
 	Id          string                         `json:"-" bson:"_id"`
-	Identifier  []Identifier                   `bson:"identifier"`
-	Patient     Reference                      `bson:"patient"`
-	Status      string                         `bson:"status"`
-	Period      Period                         `bson:"period"`
-	Modified    FHIRDateTime                   `bson:"modified"`
-	Concern     []Reference                    `bson:"concern"`
-	Participant []CarePlanParticipantComponent `bson:"participant"`
-	Goal        []CarePlanGoalComponent        `bson:"goal"`
-	Activity    []CarePlanActivityComponent    `bson:"activity"`
-	Notes       string                         `bson:"notes"`
+	Identifier  []Identifier                   `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Patient     Reference                      `bson:"patient,omitempty", json:"patient,omitempty"`
+	Status      string                         `bson:"status,omitempty", json:"status,omitempty"`
+	Period      Period                         `bson:"period,omitempty", json:"period,omitempty"`
+	Modified    FHIRDateTime                   `bson:"modified,omitempty", json:"modified,omitempty"`
+	Concern     []Reference                    `bson:"concern,omitempty", json:"concern,omitempty"`
+	Participant []CarePlanParticipantComponent `bson:"participant,omitempty", json:"participant,omitempty"`
+	Goal        []CarePlanGoalComponent        `bson:"goal,omitempty", json:"goal,omitempty"`
+	Activity    []CarePlanActivityComponent    `bson:"activity,omitempty", json:"activity,omitempty"`
+	Notes       string                         `bson:"notes,omitempty", json:"notes,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec participant
 type CarePlanParticipantComponent struct {
-	Role   CodeableConcept `bson:"role"`
-	Member Reference       `bson:"member"`
+	Role   CodeableConcept `bson:"role,omitempty", json:"role,omitempty"`
+	Member Reference       `bson:"member,omitempty", json:"member,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec goal
 type CarePlanGoalComponent struct {
-	Description string      `bson:"description"`
-	Status      string      `bson:"status"`
-	Notes       string      `bson:"notes"`
-	Concern     []Reference `bson:"concern"`
+	Description string      `bson:"description,omitempty", json:"description,omitempty"`
+	Status      string      `bson:"status,omitempty", json:"status,omitempty"`
+	Notes       string      `bson:"notes,omitempty", json:"notes,omitempty"`
+	Concern     []Reference `bson:"concern,omitempty", json:"concern,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec simple
 type CarePlanActivitySimpleComponent struct {
-	Category        string          `bson:"category"`
-	Code            CodeableConcept `bson:"code"`
-	ScheduledTiming Timing          `bson:"scheduledTiming"`
-	ScheduledPeriod Period          `bson:"scheduledPeriod"`
-	ScheduledString string          `bson:"scheduledString"`
-	Location        Reference       `bson:"location"`
-	Performer       []Reference     `bson:"performer"`
-	Product         Reference       `bson:"product"`
-	DailyAmount     Quantity        `bson:"dailyAmount"`
-	Quantity        Quantity        `bson:"quantity"`
-	Details         string          `bson:"details"`
+	Category        string          `bson:"category,omitempty", json:"category,omitempty"`
+	Code            CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
+	ScheduledTiming Timing          `bson:"scheduledTiming,omitempty", json:"scheduledTiming,omitempty"`
+	ScheduledPeriod Period          `bson:"scheduledPeriod,omitempty", json:"scheduledPeriod,omitempty"`
+	ScheduledString string          `bson:"scheduledString,omitempty", json:"scheduledString,omitempty"`
+	Location        Reference       `bson:"location,omitempty", json:"location,omitempty"`
+	Performer       []Reference     `bson:"performer,omitempty", json:"performer,omitempty"`
+	Product         Reference       `bson:"product,omitempty", json:"product,omitempty"`
+	DailyAmount     Quantity        `bson:"dailyAmount,omitempty", json:"dailyAmount,omitempty"`
+	Quantity        Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	Details         string          `bson:"details,omitempty", json:"details,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec activity
 type CarePlanActivityComponent struct {
-	Goal            []Reference                     `bson:"goal"`
-	Status          string                          `bson:"status"`
-	Prohibited      bool                            `bson:"prohibited"`
-	ActionResulting []Reference                     `bson:"actionResulting"`
-	Notes           string                          `bson:"notes"`
-	Detail          Reference                       `bson:"detail"`
-	Simple          CarePlanActivitySimpleComponent `bson:"simple"`
+	Goal            []Reference                     `bson:"goal,omitempty", json:"goal,omitempty"`
+	Status          string                          `bson:"status,omitempty", json:"status,omitempty"`
+	Prohibited      bool                            `bson:"prohibited,omitempty", json:"prohibited,omitempty"`
+	ActionResulting []Reference                     `bson:"actionResulting,omitempty", json:"actionResulting,omitempty"`
+	Notes           string                          `bson:"notes,omitempty", json:"notes,omitempty"`
+	Detail          Reference                       `bson:"detail,omitempty", json:"detail,omitempty"`
+	Simple          CarePlanActivitySimpleComponent `bson:"simple,omitempty", json:"simple,omitempty"`
 }

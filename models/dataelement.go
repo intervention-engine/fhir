@@ -28,39 +28,39 @@ package models
 
 type DataElement struct {
 	Id           string                        `json:"-" bson:"_id"`
-	Identifier   Identifier                    `bson:"identifier"`
-	Version      string                        `bson:"version"`
-	Publisher    string                        `bson:"publisher"`
-	Telecom      []ContactPoint                `bson:"telecom"`
-	Status       string                        `bson:"status"`
-	Date         FHIRDateTime                  `bson:"date"`
-	Name         string                        `bson:"name"`
-	Category     []CodeableConcept             `bson:"category"`
-	Code         []Coding                      `bson:"code"`
-	Question     string                        `bson:"question"`
-	Definition   string                        `bson:"definition"`
-	Comments     string                        `bson:"comments"`
-	Requirements string                        `bson:"requirements"`
-	Synonym      []string                      `bson:"synonym"`
-	Type         string                        `bson:"type"`
-	MaxLength    float64                       `bson:"maxLength"`
-	Units        CodeableConcept               `bson:"units"`
-	Binding      DataElementBindingComponent   `bson:"binding"`
-	Mapping      []DataElementMappingComponent `bson:"mapping"`
+	Identifier   Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Version      string                        `bson:"version,omitempty", json:"version,omitempty"`
+	Publisher    string                        `bson:"publisher,omitempty", json:"publisher,omitempty"`
+	Telecom      []ContactPoint                `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Status       string                        `bson:"status,omitempty", json:"status,omitempty"`
+	Date         FHIRDateTime                  `bson:"date,omitempty", json:"date,omitempty"`
+	Name         string                        `bson:"name,omitempty", json:"name,omitempty"`
+	Category     []CodeableConcept             `bson:"category,omitempty", json:"category,omitempty"`
+	Code         []Coding                      `bson:"code,omitempty", json:"code,omitempty"`
+	Question     string                        `bson:"question,omitempty", json:"question,omitempty"`
+	Definition   string                        `bson:"definition,omitempty", json:"definition,omitempty"`
+	Comments     string                        `bson:"comments,omitempty", json:"comments,omitempty"`
+	Requirements string                        `bson:"requirements,omitempty", json:"requirements,omitempty"`
+	Synonym      []string                      `bson:"synonym,omitempty", json:"synonym,omitempty"`
+	Type         string                        `bson:"type,omitempty", json:"type,omitempty"`
+	MaxLength    float64                       `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
+	Units        CodeableConcept               `bson:"units,omitempty", json:"units,omitempty"`
+	Binding      DataElementBindingComponent   `bson:"binding,omitempty", json:"binding,omitempty"`
+	Mapping      []DataElementMappingComponent `bson:"mapping,omitempty", json:"mapping,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec binding
 type DataElementBindingComponent struct {
-	IsExtensible bool      `bson:"isExtensible"`
-	Conformance  string    `bson:"conformance"`
-	Description  string    `bson:"description"`
-	ValueSet     Reference `bson:"valueSet"`
+	IsExtensible bool      `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
+	Conformance  string    `bson:"conformance,omitempty", json:"conformance,omitempty"`
+	Description  string    `bson:"description,omitempty", json:"description,omitempty"`
+	ValueSet     Reference `bson:"valueSet,omitempty", json:"valueSet,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec mapping
 type DataElementMappingComponent struct {
-	Uri      string `bson:"uri"`
-	Name     string `bson:"name"`
-	Comments string `bson:"comments"`
-	Map      string `bson:"map"`
+	Uri      string `bson:"uri,omitempty", json:"uri,omitempty"`
+	Name     string `bson:"name,omitempty", json:"name,omitempty"`
+	Comments string `bson:"comments,omitempty", json:"comments,omitempty"`
+	Map      string `bson:"map,omitempty", json:"map,omitempty"`
 }

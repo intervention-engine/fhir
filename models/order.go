@@ -28,20 +28,20 @@ package models
 
 type Order struct {
 	Id                    string             `json:"-" bson:"_id"`
-	Identifier            []Identifier       `bson:"identifier"`
-	Date                  FHIRDateTime       `bson:"date"`
-	Subject               Reference          `bson:"subject"`
-	Source                Reference          `bson:"source"`
-	Target                Reference          `bson:"target"`
-	ReasonCodeableConcept CodeableConcept    `bson:"reasonCodeableConcept"`
-	ReasonReference       Reference          `bson:"reasonReference"`
-	Authority             Reference          `bson:"authority"`
-	When                  OrderWhenComponent `bson:"when"`
-	Detail                []Reference        `bson:"detail"`
+	Identifier            []Identifier       `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Date                  FHIRDateTime       `bson:"date,omitempty", json:"date,omitempty"`
+	Subject               Reference          `bson:"subject,omitempty", json:"subject,omitempty"`
+	Source                Reference          `bson:"source,omitempty", json:"source,omitempty"`
+	Target                Reference          `bson:"target,omitempty", json:"target,omitempty"`
+	ReasonCodeableConcept CodeableConcept    `bson:"reasonCodeableConcept,omitempty", json:"reasonCodeableConcept,omitempty"`
+	ReasonReference       Reference          `bson:"reasonReference,omitempty", json:"reasonReference,omitempty"`
+	Authority             Reference          `bson:"authority,omitempty", json:"authority,omitempty"`
+	When                  OrderWhenComponent `bson:"when,omitempty", json:"when,omitempty"`
+	Detail                []Reference        `bson:"detail,omitempty", json:"detail,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec when
 type OrderWhenComponent struct {
-	Code     CodeableConcept `bson:"code"`
-	Schedule Timing          `bson:"schedule"`
+	Code     CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
+	Schedule Timing          `bson:"schedule,omitempty", json:"schedule,omitempty"`
 }

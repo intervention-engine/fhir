@@ -28,22 +28,22 @@ package models
 
 type Organization struct {
 	Id         string                         `json:"-" bson:"_id"`
-	Identifier []Identifier                   `bson:"identifier"`
-	Name       string                         `bson:"name"`
-	Type       CodeableConcept                `bson:"type"`
-	Telecom    []ContactPoint                 `bson:"telecom"`
-	Address    []Address                      `bson:"address"`
-	PartOf     Reference                      `bson:"partOf"`
-	Contact    []OrganizationContactComponent `bson:"contact"`
-	Location   []Reference                    `bson:"location"`
-	Active     bool                           `bson:"active"`
+	Identifier []Identifier                   `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Name       string                         `bson:"name,omitempty", json:"name,omitempty"`
+	Type       CodeableConcept                `bson:"type,omitempty", json:"type,omitempty"`
+	Telecom    []ContactPoint                 `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Address    []Address                      `bson:"address,omitempty", json:"address,omitempty"`
+	PartOf     Reference                      `bson:"partOf,omitempty", json:"partOf,omitempty"`
+	Contact    []OrganizationContactComponent `bson:"contact,omitempty", json:"contact,omitempty"`
+	Location   []Reference                    `bson:"location,omitempty", json:"location,omitempty"`
+	Active     bool                           `bson:"active,omitempty", json:"active,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec contact
 type OrganizationContactComponent struct {
-	Purpose CodeableConcept `bson:"purpose"`
-	Name    HumanName       `bson:"name"`
-	Telecom []ContactPoint  `bson:"telecom"`
-	Address Address         `bson:"address"`
-	Gender  CodeableConcept `bson:"gender"`
+	Purpose CodeableConcept `bson:"purpose,omitempty", json:"purpose,omitempty"`
+	Name    HumanName       `bson:"name,omitempty", json:"name,omitempty"`
+	Telecom []ContactPoint  `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Address Address         `bson:"address,omitempty", json:"address,omitempty"`
+	Gender  CodeableConcept `bson:"gender,omitempty", json:"gender,omitempty"`
 }

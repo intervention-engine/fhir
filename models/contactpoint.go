@@ -28,8 +28,8 @@ package models
 
 type ContactPoint struct {
 	Id     string `json:"-" bson:"_id"`
-	System string `bson:"system"`
-	Value  string `bson:"value"`
-	Use    string `bson:"use"`
-	Period Period `bson:"period"`
+	System string `bson:"system,omitempty", json:"system,omitempty"`
+	Value  string `bson:"value,omitempty", json:"value,omitempty"`
+	Use    string `bson:"use,omitempty", json:"use,omitempty"`
+	Period Period `bson:"period,omitempty", json:"period,omitempty"`
 }

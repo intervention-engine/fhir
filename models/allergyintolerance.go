@@ -28,14 +28,14 @@ package models
 
 type AllergyIntolerance struct {
 	Id              string       `json:"-" bson:"_id"`
-	Identifier      []Identifier `bson:"identifier"`
-	Criticality     string       `bson:"criticality"`
-	SensitivityType string       `bson:"sensitivityType"`
-	RecordedDate    FHIRDateTime `bson:"recordedDate"`
-	Status          string       `bson:"status"`
-	Subject         Reference    `bson:"subject"`
-	Recorder        Reference    `bson:"recorder"`
-	Substance       Reference    `bson:"substance"`
-	Reaction        []Reference  `bson:"reaction"`
-	SensitivityTest []Reference  `bson:"sensitivityTest"`
+	Identifier      []Identifier `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Criticality     string       `bson:"criticality,omitempty", json:"criticality,omitempty"`
+	SensitivityType string       `bson:"sensitivityType,omitempty", json:"sensitivityType,omitempty"`
+	RecordedDate    FHIRDateTime `bson:"recordedDate,omitempty", json:"recordedDate,omitempty"`
+	Status          string       `bson:"status,omitempty", json:"status,omitempty"`
+	Subject         Reference    `bson:"subject,omitempty", json:"subject,omitempty"`
+	Recorder        Reference    `bson:"recorder,omitempty", json:"recorder,omitempty"`
+	Substance       Reference    `bson:"substance,omitempty", json:"substance,omitempty"`
+	Reaction        []Reference  `bson:"reaction,omitempty", json:"reaction,omitempty"`
+	SensitivityTest []Reference  `bson:"sensitivityTest,omitempty", json:"sensitivityTest,omitempty"`
 }

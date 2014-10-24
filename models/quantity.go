@@ -28,9 +28,9 @@ package models
 
 type Quantity struct {
 	Id         string  `json:"-" bson:"_id"`
-	Value      float64 `bson:"value"`
-	Comparator string  `bson:"comparator"`
-	Units      string  `bson:"units"`
-	System     string  `bson:"system"`
-	Code       string  `bson:"code"`
+	Value      float64 `bson:"value,omitempty", json:"value,omitempty"`
+	Comparator string  `bson:"comparator,omitempty", json:"comparator,omitempty"`
+	Units      string  `bson:"units,omitempty", json:"units,omitempty"`
+	System     string  `bson:"system,omitempty", json:"system,omitempty"`
+	Code       string  `bson:"code,omitempty", json:"code,omitempty"`
 }

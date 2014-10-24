@@ -28,10 +28,10 @@ package models
 
 type Alert struct {
 	Id         string          `json:"-" bson:"_id"`
-	Identifier []Identifier    `bson:"identifier"`
-	Category   CodeableConcept `bson:"category"`
-	Status     string          `bson:"status"`
-	Subject    Reference       `bson:"subject"`
-	Author     Reference       `bson:"author"`
-	Note       string          `bson:"note"`
+	Identifier []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Category   CodeableConcept `bson:"category,omitempty", json:"category,omitempty"`
+	Status     string          `bson:"status,omitempty", json:"status,omitempty"`
+	Subject    Reference       `bson:"subject,omitempty", json:"subject,omitempty"`
+	Author     Reference       `bson:"author,omitempty", json:"author,omitempty"`
+	Note       string          `bson:"note,omitempty", json:"note,omitempty"`
 }

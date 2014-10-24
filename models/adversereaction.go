@@ -28,25 +28,25 @@ package models
 
 type AdverseReaction struct {
 	Id              string                             `json:"-" bson:"_id"`
-	Identifier      []Identifier                       `bson:"identifier"`
-	Date            FHIRDateTime                       `bson:"date"`
-	Subject         Reference                          `bson:"subject"`
-	DidNotOccurFlag bool                               `bson:"didNotOccurFlag"`
-	Recorder        Reference                          `bson:"recorder"`
-	Symptom         []AdverseReactionSymptomComponent  `bson:"symptom"`
-	Exposure        []AdverseReactionExposureComponent `bson:"exposure"`
+	Identifier      []Identifier                       `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Date            FHIRDateTime                       `bson:"date,omitempty", json:"date,omitempty"`
+	Subject         Reference                          `bson:"subject,omitempty", json:"subject,omitempty"`
+	DidNotOccurFlag bool                               `bson:"didNotOccurFlag,omitempty", json:"didNotOccurFlag,omitempty"`
+	Recorder        Reference                          `bson:"recorder,omitempty", json:"recorder,omitempty"`
+	Symptom         []AdverseReactionSymptomComponent  `bson:"symptom,omitempty", json:"symptom,omitempty"`
+	Exposure        []AdverseReactionExposureComponent `bson:"exposure,omitempty", json:"exposure,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec symptom
 type AdverseReactionSymptomComponent struct {
-	Code     CodeableConcept `bson:"code"`
-	Severity string          `bson:"severity"`
+	Code     CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
+	Severity string          `bson:"severity,omitempty", json:"severity,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec exposure
 type AdverseReactionExposureComponent struct {
-	Date                 FHIRDateTime `bson:"date"`
-	Type                 string       `bson:"type"`
-	CausalityExpectation string       `bson:"causalityExpectation"`
-	Substance            Reference    `bson:"substance"`
+	Date                 FHIRDateTime `bson:"date,omitempty", json:"date,omitempty"`
+	Type                 string       `bson:"type,omitempty", json:"type,omitempty"`
+	CausalityExpectation string       `bson:"causalityExpectation,omitempty", json:"causalityExpectation,omitempty"`
+	Substance            Reference    `bson:"substance,omitempty", json:"substance,omitempty"`
 }

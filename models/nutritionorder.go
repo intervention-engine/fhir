@@ -28,53 +28,53 @@ package models
 
 type NutritionOrder struct {
 	Id                     string                        `json:"-" bson:"_id"`
-	Subject                Reference                     `bson:"subject"`
-	Orderer                Reference                     `bson:"orderer"`
-	Identifier             []Identifier                  `bson:"identifier"`
-	Encounter              Reference                     `bson:"encounter"`
-	DateTime               FHIRDateTime                  `bson:"dateTime"`
-	AllergyIntolerance     []Reference                   `bson:"allergyIntolerance"`
-	FoodPreferenceModifier []CodeableConcept             `bson:"foodPreferenceModifier"`
-	ExcludeFoodModifier    []CodeableConcept             `bson:"excludeFoodModifier"`
-	Item                   []NutritionOrderItemComponent `bson:"item"`
-	Status                 string                        `bson:"status"`
+	Subject                Reference                     `bson:"subject,omitempty", json:"subject,omitempty"`
+	Orderer                Reference                     `bson:"orderer,omitempty", json:"orderer,omitempty"`
+	Identifier             []Identifier                  `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Encounter              Reference                     `bson:"encounter,omitempty", json:"encounter,omitempty"`
+	DateTime               FHIRDateTime                  `bson:"dateTime,omitempty", json:"dateTime,omitempty"`
+	AllergyIntolerance     []Reference                   `bson:"allergyIntolerance,omitempty", json:"allergyIntolerance,omitempty"`
+	FoodPreferenceModifier []CodeableConcept             `bson:"foodPreferenceModifier,omitempty", json:"foodPreferenceModifier,omitempty"`
+	ExcludeFoodModifier    []CodeableConcept             `bson:"excludeFoodModifier,omitempty", json:"excludeFoodModifier,omitempty"`
+	Item                   []NutritionOrderItemComponent `bson:"item,omitempty", json:"item,omitempty"`
+	Status                 string                        `bson:"status,omitempty", json:"status,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec oralDiet
 type NutritionOrderItemOralDietComponent struct {
-	Code                   []CodeableConcept `bson:"code"`
-	NutrientModifier       []CodeableConcept `bson:"nutrientModifier"`
-	NutrientAmountQuantity Quantity          `bson:"nutrientAmountQuantity"`
-	NutrientAmountRange    Range             `bson:"nutrientAmountRange"`
-	TextureModifier        []CodeableConcept `bson:"textureModifier"`
-	FoodType               []CodeableConcept `bson:"foodType"`
-	FluidConsistencyType   []CodeableConcept `bson:"fluidConsistencyType"`
-	Description            string            `bson:"description"`
+	Code                   []CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
+	NutrientModifier       []CodeableConcept `bson:"nutrientModifier,omitempty", json:"nutrientModifier,omitempty"`
+	NutrientAmountQuantity Quantity          `bson:"nutrientAmountQuantity,omitempty", json:"nutrientAmountQuantity,omitempty"`
+	NutrientAmountRange    Range             `bson:"nutrientAmountRange,omitempty", json:"nutrientAmountRange,omitempty"`
+	TextureModifier        []CodeableConcept `bson:"textureModifier,omitempty", json:"textureModifier,omitempty"`
+	FoodType               []CodeableConcept `bson:"foodType,omitempty", json:"foodType,omitempty"`
+	FluidConsistencyType   []CodeableConcept `bson:"fluidConsistencyType,omitempty", json:"fluidConsistencyType,omitempty"`
+	Description            string            `bson:"description,omitempty", json:"description,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec supplement
 type NutritionOrderItemSupplementComponent struct {
-	Type     []CodeableConcept `bson:"type"`
-	Quantity Quantity          `bson:"quantity"`
-	Name     string            `bson:"name"`
+	Type     []CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
+	Quantity Quantity          `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	Name     string            `bson:"name,omitempty", json:"name,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec enteralFormula
 type NutritionOrderItemEnteralFormulaComponent struct {
-	BaseFormulaType       CodeableConcept   `bson:"baseFormulaType"`
-	AdditiveType          []CodeableConcept `bson:"additiveType"`
-	CaloricDensity        []Quantity        `bson:"caloricDensity"`
-	RouteofAdministration []CodeableConcept `bson:"routeofAdministration"`
-	Rate                  []Quantity        `bson:"rate"`
-	BaseFormulaName       string            `bson:"baseFormulaName"`
+	BaseFormulaType       CodeableConcept   `bson:"baseFormulaType,omitempty", json:"baseFormulaType,omitempty"`
+	AdditiveType          []CodeableConcept `bson:"additiveType,omitempty", json:"additiveType,omitempty"`
+	CaloricDensity        []Quantity        `bson:"caloricDensity,omitempty", json:"caloricDensity,omitempty"`
+	RouteofAdministration []CodeableConcept `bson:"routeofAdministration,omitempty", json:"routeofAdministration,omitempty"`
+	Rate                  []Quantity        `bson:"rate,omitempty", json:"rate,omitempty"`
+	BaseFormulaName       string            `bson:"baseFormulaName,omitempty", json:"baseFormulaName,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec item
 type NutritionOrderItemComponent struct {
-	ScheduledTiming Timing                                    `bson:"scheduledTiming"`
-	ScheduledPeriod Period                                    `bson:"scheduledPeriod"`
-	IsInEffect      bool                                      `bson:"isInEffect"`
-	OralDiet        NutritionOrderItemOralDietComponent       `bson:"oralDiet"`
-	Supplement      NutritionOrderItemSupplementComponent     `bson:"supplement"`
-	EnteralFormula  NutritionOrderItemEnteralFormulaComponent `bson:"enteralFormula"`
+	ScheduledTiming Timing                                    `bson:"scheduledTiming,omitempty", json:"scheduledTiming,omitempty"`
+	ScheduledPeriod Period                                    `bson:"scheduledPeriod,omitempty", json:"scheduledPeriod,omitempty"`
+	IsInEffect      bool                                      `bson:"isInEffect,omitempty", json:"isInEffect,omitempty"`
+	OralDiet        NutritionOrderItemOralDietComponent       `bson:"oralDiet,omitempty", json:"oralDiet,omitempty"`
+	Supplement      NutritionOrderItemSupplementComponent     `bson:"supplement,omitempty", json:"supplement,omitempty"`
+	EnteralFormula  NutritionOrderItemEnteralFormulaComponent `bson:"enteralFormula,omitempty", json:"enteralFormula,omitempty"`
 }

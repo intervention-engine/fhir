@@ -28,33 +28,33 @@ package models
 
 type OperationDefinition struct {
 	Id           string                                  `json:"-" bson:"_id"`
-	Identifier   string                                  `bson:"identifier"`
-	Version      string                                  `bson:"version"`
-	Title        string                                  `bson:"title"`
-	Publisher    string                                  `bson:"publisher"`
-	Telecom      []ContactPoint                          `bson:"telecom"`
-	Description  string                                  `bson:"description"`
-	Code         []Coding                                `bson:"code"`
-	Status       string                                  `bson:"status"`
-	Experimental bool                                    `bson:"experimental"`
-	Date         FHIRDateTime                            `bson:"date"`
-	Kind         string                                  `bson:"kind"`
-	Name         string                                  `bson:"name"`
-	Notes        string                                  `bson:"notes"`
-	Base         Reference                               `bson:"base"`
-	System       bool                                    `bson:"system"`
-	Type         []string                                `bson:"type"`
-	Instance     bool                                    `bson:"instance"`
-	Parameter    []OperationDefinitionParameterComponent `bson:"parameter"`
+	Identifier   string                                  `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Version      string                                  `bson:"version,omitempty", json:"version,omitempty"`
+	Title        string                                  `bson:"title,omitempty", json:"title,omitempty"`
+	Publisher    string                                  `bson:"publisher,omitempty", json:"publisher,omitempty"`
+	Telecom      []ContactPoint                          `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Description  string                                  `bson:"description,omitempty", json:"description,omitempty"`
+	Code         []Coding                                `bson:"code,omitempty", json:"code,omitempty"`
+	Status       string                                  `bson:"status,omitempty", json:"status,omitempty"`
+	Experimental bool                                    `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Date         FHIRDateTime                            `bson:"date,omitempty", json:"date,omitempty"`
+	Kind         string                                  `bson:"kind,omitempty", json:"kind,omitempty"`
+	Name         string                                  `bson:"name,omitempty", json:"name,omitempty"`
+	Notes        string                                  `bson:"notes,omitempty", json:"notes,omitempty"`
+	Base         Reference                               `bson:"base,omitempty", json:"base,omitempty"`
+	System       bool                                    `bson:"system,omitempty", json:"system,omitempty"`
+	Type         []string                                `bson:"type,omitempty", json:"type,omitempty"`
+	Instance     bool                                    `bson:"instance,omitempty", json:"instance,omitempty"`
+	Parameter    []OperationDefinitionParameterComponent `bson:"parameter,omitempty", json:"parameter,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec parameter
 type OperationDefinitionParameterComponent struct {
-	Name          string    `bson:"name"`
-	Use           string    `bson:"use"`
-	Min           float64   `bson:"min"`
-	Max           string    `bson:"max"`
-	Documentation string    `bson:"documentation"`
-	Type          Coding    `bson:"type"`
-	Profile       Reference `bson:"profile"`
+	Name          string    `bson:"name,omitempty", json:"name,omitempty"`
+	Use           string    `bson:"use,omitempty", json:"use,omitempty"`
+	Min           float64   `bson:"min,omitempty", json:"min,omitempty"`
+	Max           string    `bson:"max,omitempty", json:"max,omitempty"`
+	Documentation string    `bson:"documentation,omitempty", json:"documentation,omitempty"`
+	Type          Coding    `bson:"type,omitempty", json:"type,omitempty"`
+	Profile       Reference `bson:"profile,omitempty", json:"profile,omitempty"`
 }

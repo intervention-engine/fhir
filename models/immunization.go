@@ -28,47 +28,47 @@ package models
 
 type Immunization struct {
 	Id                  string                                     `json:"-" bson:"_id"`
-	Identifier          []Identifier                               `bson:"identifier"`
-	Date                FHIRDateTime                               `bson:"date"`
-	VaccineType         CodeableConcept                            `bson:"vaccineType"`
-	Subject             Reference                                  `bson:"subject"`
-	RefusedIndicator    bool                                       `bson:"refusedIndicator"`
-	Reported            bool                                       `bson:"reported"`
-	Performer           Reference                                  `bson:"performer"`
-	Requester           Reference                                  `bson:"requester"`
-	Manufacturer        Reference                                  `bson:"manufacturer"`
-	Location            Reference                                  `bson:"location"`
-	LotNumber           string                                     `bson:"lotNumber"`
-	ExpirationDate      FHIRDateTime                               `bson:"expirationDate"`
-	Site                CodeableConcept                            `bson:"site"`
-	Route               CodeableConcept                            `bson:"route"`
-	DoseQuantity        Quantity                                   `bson:"doseQuantity"`
-	Explanation         ImmunizationExplanationComponent           `bson:"explanation"`
-	Reaction            []ImmunizationReactionComponent            `bson:"reaction"`
-	VaccinationProtocol []ImmunizationVaccinationProtocolComponent `bson:"vaccinationProtocol"`
+	Identifier          []Identifier                               `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Date                FHIRDateTime                               `bson:"date,omitempty", json:"date,omitempty"`
+	VaccineType         CodeableConcept                            `bson:"vaccineType,omitempty", json:"vaccineType,omitempty"`
+	Subject             Reference                                  `bson:"subject,omitempty", json:"subject,omitempty"`
+	RefusedIndicator    bool                                       `bson:"refusedIndicator,omitempty", json:"refusedIndicator,omitempty"`
+	Reported            bool                                       `bson:"reported,omitempty", json:"reported,omitempty"`
+	Performer           Reference                                  `bson:"performer,omitempty", json:"performer,omitempty"`
+	Requester           Reference                                  `bson:"requester,omitempty", json:"requester,omitempty"`
+	Manufacturer        Reference                                  `bson:"manufacturer,omitempty", json:"manufacturer,omitempty"`
+	Location            Reference                                  `bson:"location,omitempty", json:"location,omitempty"`
+	LotNumber           string                                     `bson:"lotNumber,omitempty", json:"lotNumber,omitempty"`
+	ExpirationDate      FHIRDateTime                               `bson:"expirationDate,omitempty", json:"expirationDate,omitempty"`
+	Site                CodeableConcept                            `bson:"site,omitempty", json:"site,omitempty"`
+	Route               CodeableConcept                            `bson:"route,omitempty", json:"route,omitempty"`
+	DoseQuantity        Quantity                                   `bson:"doseQuantity,omitempty", json:"doseQuantity,omitempty"`
+	Explanation         ImmunizationExplanationComponent           `bson:"explanation,omitempty", json:"explanation,omitempty"`
+	Reaction            []ImmunizationReactionComponent            `bson:"reaction,omitempty", json:"reaction,omitempty"`
+	VaccinationProtocol []ImmunizationVaccinationProtocolComponent `bson:"vaccinationProtocol,omitempty", json:"vaccinationProtocol,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec explanation
 type ImmunizationExplanationComponent struct {
-	Reason        []CodeableConcept `bson:"reason"`
-	RefusalReason []CodeableConcept `bson:"refusalReason"`
+	Reason        []CodeableConcept `bson:"reason,omitempty", json:"reason,omitempty"`
+	RefusalReason []CodeableConcept `bson:"refusalReason,omitempty", json:"refusalReason,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec reaction
 type ImmunizationReactionComponent struct {
-	Date     FHIRDateTime `bson:"date"`
-	Detail   Reference    `bson:"detail"`
-	Reported bool         `bson:"reported"`
+	Date     FHIRDateTime `bson:"date,omitempty", json:"date,omitempty"`
+	Detail   Reference    `bson:"detail,omitempty", json:"detail,omitempty"`
+	Reported bool         `bson:"reported,omitempty", json:"reported,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec vaccinationProtocol
 type ImmunizationVaccinationProtocolComponent struct {
-	DoseSequence     float64         `bson:"doseSequence"`
-	Description      string          `bson:"description"`
-	Authority        Reference       `bson:"authority"`
-	Series           string          `bson:"series"`
-	SeriesDoses      float64         `bson:"seriesDoses"`
-	DoseTarget       CodeableConcept `bson:"doseTarget"`
-	DoseStatus       CodeableConcept `bson:"doseStatus"`
-	DoseStatusReason CodeableConcept `bson:"doseStatusReason"`
+	DoseSequence     float64         `bson:"doseSequence,omitempty", json:"doseSequence,omitempty"`
+	Description      string          `bson:"description,omitempty", json:"description,omitempty"`
+	Authority        Reference       `bson:"authority,omitempty", json:"authority,omitempty"`
+	Series           string          `bson:"series,omitempty", json:"series,omitempty"`
+	SeriesDoses      float64         `bson:"seriesDoses,omitempty", json:"seriesDoses,omitempty"`
+	DoseTarget       CodeableConcept `bson:"doseTarget,omitempty", json:"doseTarget,omitempty"`
+	DoseStatus       CodeableConcept `bson:"doseStatus,omitempty", json:"doseStatus,omitempty"`
+	DoseStatusReason CodeableConcept `bson:"doseStatusReason,omitempty", json:"doseStatusReason,omitempty"`
 }

@@ -28,47 +28,47 @@ package models
 
 type QuestionnaireAnswers struct {
 	Id            string         `json:"-" bson:"_id"`
-	Identifier    Identifier     `bson:"identifier"`
-	Questionnaire Reference      `bson:"questionnaire"`
-	Status        string         `bson:"status"`
-	Subject       Reference      `bson:"subject"`
-	Author        Reference      `bson:"author"`
-	Authored      FHIRDateTime   `bson:"authored"`
-	Source        Reference      `bson:"source"`
-	Encounter     Reference      `bson:"encounter"`
-	Group         GroupComponent `bson:"group"`
+	Identifier    Identifier     `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Questionnaire Reference      `bson:"questionnaire,omitempty", json:"questionnaire,omitempty"`
+	Status        string         `bson:"status,omitempty", json:"status,omitempty"`
+	Subject       Reference      `bson:"subject,omitempty", json:"subject,omitempty"`
+	Author        Reference      `bson:"author,omitempty", json:"author,omitempty"`
+	Authored      FHIRDateTime   `bson:"authored,omitempty", json:"authored,omitempty"`
+	Source        Reference      `bson:"source,omitempty", json:"source,omitempty"`
+	Encounter     Reference      `bson:"encounter,omitempty", json:"encounter,omitempty"`
+	Group         GroupComponent `bson:"group,omitempty", json:"group,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec answer
 type QuestionAnswerComponent struct {
-	ValueBoolean    bool         `bson:"valueBoolean"`
-	ValueDecimal    float64      `bson:"valueDecimal"`
-	ValueInteger    float64      `bson:"valueInteger"`
-	ValueDate       FHIRDateTime `bson:"valueDate"`
-	ValueDateTime   FHIRDateTime `bson:"valueDateTime"`
-	ValueInstant    FHIRDateTime `bson:"valueInstant"`
-	ValueTime       FHIRDateTime `bson:"valueTime"`
-	ValueString     string       `bson:"valueString"`
-	ValueAttachment Attachment   `bson:"valueAttachment"`
-	ValueCoding     Coding       `bson:"valueCoding"`
-	ValueQuantity   Quantity     `bson:"valueQuantity"`
-	ValueReference  Reference    `bson:"valueReference"`
+	ValueBoolean    bool         `bson:"valueBoolean,omitempty", json:"valueBoolean,omitempty"`
+	ValueDecimal    float64      `bson:"valueDecimal,omitempty", json:"valueDecimal,omitempty"`
+	ValueInteger    float64      `bson:"valueInteger,omitempty", json:"valueInteger,omitempty"`
+	ValueDate       FHIRDateTime `bson:"valueDate,omitempty", json:"valueDate,omitempty"`
+	ValueDateTime   FHIRDateTime `bson:"valueDateTime,omitempty", json:"valueDateTime,omitempty"`
+	ValueInstant    FHIRDateTime `bson:"valueInstant,omitempty", json:"valueInstant,omitempty"`
+	ValueTime       FHIRDateTime `bson:"valueTime,omitempty", json:"valueTime,omitempty"`
+	ValueString     string       `bson:"valueString,omitempty", json:"valueString,omitempty"`
+	ValueAttachment Attachment   `bson:"valueAttachment,omitempty", json:"valueAttachment,omitempty"`
+	ValueCoding     Coding       `bson:"valueCoding,omitempty", json:"valueCoding,omitempty"`
+	ValueQuantity   Quantity     `bson:"valueQuantity,omitempty", json:"valueQuantity,omitempty"`
+	ValueReference  Reference    `bson:"valueReference,omitempty", json:"valueReference,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec question
 type QuestionComponent struct {
-	LinkId string                    `bson:"linkId"`
-	Text   string                    `bson:"text"`
-	Answer []QuestionAnswerComponent `bson:"answer"`
-	Group  []GroupComponent          `bson:"group"`
+	LinkId string                    `bson:"linkId,omitempty", json:"linkId,omitempty"`
+	Text   string                    `bson:"text,omitempty", json:"text,omitempty"`
+	Answer []QuestionAnswerComponent `bson:"answer,omitempty", json:"answer,omitempty"`
+	Group  []GroupComponent          `bson:"group,omitempty", json:"group,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec group
 type GroupComponent struct {
-	LinkId   string              `bson:"linkId"`
-	Title    string              `bson:"title"`
-	Text     string              `bson:"text"`
-	Subject  Reference           `bson:"subject"`
-	Group    []GroupComponent    `bson:"group"`
-	Question []QuestionComponent `bson:"question"`
+	LinkId   string              `bson:"linkId,omitempty", json:"linkId,omitempty"`
+	Title    string              `bson:"title,omitempty", json:"title,omitempty"`
+	Text     string              `bson:"text,omitempty", json:"text,omitempty"`
+	Subject  Reference           `bson:"subject,omitempty", json:"subject,omitempty"`
+	Group    []GroupComponent    `bson:"group,omitempty", json:"group,omitempty"`
+	Question []QuestionComponent `bson:"question,omitempty", json:"question,omitempty"`
 }

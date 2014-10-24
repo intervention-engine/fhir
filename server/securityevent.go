@@ -2,12 +2,11 @@ package server
 
 import (
 	"encoding/json"
-	"net/http"
-	"os"
-
 	"github.com/gorilla/mux"
 	"gitlab.mitre.org/intervention-engine/fhir/models"
 	"gopkg.in/mgo.v2/bson"
+	"net/http"
+	"os"
 )
 
 func SecurityEventIndexHandler(rw http.ResponseWriter, r *http.Request) {

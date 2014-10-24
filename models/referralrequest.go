@@ -28,19 +28,19 @@ package models
 
 type ReferralRequest struct {
 	Id                    string            `json:"-" bson:"_id"`
-	Status                string            `bson:"status"`
-	Identifier            []Identifier      `bson:"identifier"`
-	Type                  CodeableConcept   `bson:"type"`
-	Specialty             CodeableConcept   `bson:"specialty"`
-	Priority              CodeableConcept   `bson:"priority"`
-	Subject               Reference         `bson:"subject"`
-	Requester             Reference         `bson:"requester"`
-	Recipient             []Reference       `bson:"recipient"`
-	Encounter             Reference         `bson:"encounter"`
-	DateSent              FHIRDateTime      `bson:"dateSent"`
-	Reason                CodeableConcept   `bson:"reason"`
-	Description           string            `bson:"description"`
-	ServiceRequested      []CodeableConcept `bson:"serviceRequested"`
-	SupportingInformation []Reference       `bson:"supportingInformation"`
-	FulfillmentTime       Period            `bson:"fulfillmentTime"`
+	Status                string            `bson:"status,omitempty", json:"status,omitempty"`
+	Identifier            []Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Type                  CodeableConcept   `bson:"type,omitempty", json:"type,omitempty"`
+	Specialty             CodeableConcept   `bson:"specialty,omitempty", json:"specialty,omitempty"`
+	Priority              CodeableConcept   `bson:"priority,omitempty", json:"priority,omitempty"`
+	Subject               Reference         `bson:"subject,omitempty", json:"subject,omitempty"`
+	Requester             Reference         `bson:"requester,omitempty", json:"requester,omitempty"`
+	Recipient             []Reference       `bson:"recipient,omitempty", json:"recipient,omitempty"`
+	Encounter             Reference         `bson:"encounter,omitempty", json:"encounter,omitempty"`
+	DateSent              FHIRDateTime      `bson:"dateSent,omitempty", json:"dateSent,omitempty"`
+	Reason                CodeableConcept   `bson:"reason,omitempty", json:"reason,omitempty"`
+	Description           string            `bson:"description,omitempty", json:"description,omitempty"`
+	ServiceRequested      []CodeableConcept `bson:"serviceRequested,omitempty", json:"serviceRequested,omitempty"`
+	SupportingInformation []Reference       `bson:"supportingInformation,omitempty", json:"supportingInformation,omitempty"`
+	FulfillmentTime       Period            `bson:"fulfillmentTime,omitempty", json:"fulfillmentTime,omitempty"`
 }
