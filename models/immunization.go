@@ -32,8 +32,8 @@ type Immunization struct {
 	Date                FHIRDateTime                               `bson:"date,omitempty", json:"date,omitempty"`
 	VaccineType         CodeableConcept                            `bson:"vaccineType,omitempty", json:"vaccineType,omitempty"`
 	Subject             Reference                                  `bson:"subject,omitempty", json:"subject,omitempty"`
-	RefusedIndicator    bool                                       `bson:"refusedIndicator,omitempty", json:"refusedIndicator,omitempty"`
-	Reported            bool                                       `bson:"reported,omitempty", json:"reported,omitempty"`
+	RefusedIndicator    *bool                                      `bson:"refusedIndicator,omitempty", json:"refusedIndicator,omitempty"`
+	Reported            *bool                                      `bson:"reported,omitempty", json:"reported,omitempty"`
 	Performer           Reference                                  `bson:"performer,omitempty", json:"performer,omitempty"`
 	Requester           Reference                                  `bson:"requester,omitempty", json:"requester,omitempty"`
 	Manufacturer        Reference                                  `bson:"manufacturer,omitempty", json:"manufacturer,omitempty"`
@@ -58,7 +58,7 @@ type ImmunizationExplanationComponent struct {
 type ImmunizationReactionComponent struct {
 	Date     FHIRDateTime `bson:"date,omitempty", json:"date,omitempty"`
 	Detail   Reference    `bson:"detail,omitempty", json:"detail,omitempty"`
-	Reported bool         `bson:"reported,omitempty", json:"reported,omitempty"`
+	Reported *bool        `bson:"reported,omitempty", json:"reported,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec vaccinationProtocol

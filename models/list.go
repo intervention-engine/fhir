@@ -33,7 +33,7 @@ type List struct {
 	Subject     Reference            `bson:"subject,omitempty", json:"subject,omitempty"`
 	Source      Reference            `bson:"source,omitempty", json:"source,omitempty"`
 	Date        FHIRDateTime         `bson:"date,omitempty", json:"date,omitempty"`
-	Ordered     bool                 `bson:"ordered,omitempty", json:"ordered,omitempty"`
+	Ordered     *bool                `bson:"ordered,omitempty", json:"ordered,omitempty"`
 	Mode        string               `bson:"mode,omitempty", json:"mode,omitempty"`
 	Entry       []ListEntryComponent `bson:"entry,omitempty", json:"entry,omitempty"`
 	EmptyReason CodeableConcept      `bson:"emptyReason,omitempty", json:"emptyReason,omitempty"`
@@ -42,7 +42,7 @@ type List struct {
 // This is an ugly hack to deal with embedded structures in the spec entry
 type ListEntryComponent struct {
 	Flag    []CodeableConcept `bson:"flag,omitempty", json:"flag,omitempty"`
-	Deleted bool              `bson:"deleted,omitempty", json:"deleted,omitempty"`
+	Deleted *bool             `bson:"deleted,omitempty", json:"deleted,omitempty"`
 	Date    FHIRDateTime      `bson:"date,omitempty", json:"date,omitempty"`
 	Item    Reference         `bson:"item,omitempty", json:"item,omitempty"`
 }

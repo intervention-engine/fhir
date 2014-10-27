@@ -30,7 +30,7 @@ type MedicationStatement struct {
 	Id             string                               `json:"-" bson:"_id"`
 	Identifier     []Identifier                         `bson:"identifier,omitempty", json:"identifier,omitempty"`
 	Patient        Reference                            `bson:"patient,omitempty", json:"patient,omitempty"`
-	WasNotGiven    bool                                 `bson:"wasNotGiven,omitempty", json:"wasNotGiven,omitempty"`
+	WasNotGiven    *bool                                `bson:"wasNotGiven,omitempty", json:"wasNotGiven,omitempty"`
 	ReasonNotGiven []CodeableConcept                    `bson:"reasonNotGiven,omitempty", json:"reasonNotGiven,omitempty"`
 	WhenGiven      Period                               `bson:"whenGiven,omitempty", json:"whenGiven,omitempty"`
 	Medication     Reference                            `bson:"medication,omitempty", json:"medication,omitempty"`
@@ -41,7 +41,7 @@ type MedicationStatement struct {
 // This is an ugly hack to deal with embedded structures in the spec dosage
 type MedicationStatementDosageComponent struct {
 	Schedule                Timing          `bson:"schedule,omitempty", json:"schedule,omitempty"`
-	AsNeededBoolean         bool            `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
+	AsNeededBoolean         *bool           `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
 	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
 	Site                    CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
 	Route                   CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`

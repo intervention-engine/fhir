@@ -36,7 +36,7 @@ type Organization struct {
 	PartOf     Reference                      `bson:"partOf,omitempty", json:"partOf,omitempty"`
 	Contact    []OrganizationContactComponent `bson:"contact,omitempty", json:"contact,omitempty"`
 	Location   []Reference                    `bson:"location,omitempty", json:"location,omitempty"`
-	Active     bool                           `bson:"active,omitempty", json:"active,omitempty"`
+	Active     *bool                          `bson:"active,omitempty", json:"active,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec contact

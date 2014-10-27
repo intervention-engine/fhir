@@ -51,7 +51,7 @@ type DataElement struct {
 
 // This is an ugly hack to deal with embedded structures in the spec binding
 type DataElementBindingComponent struct {
-	IsExtensible bool      `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
+	IsExtensible *bool     `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
 	Conformance  string    `bson:"conformance,omitempty", json:"conformance,omitempty"`
 	Description  string    `bson:"description,omitempty", json:"description,omitempty"`
 	ValueSet     Reference `bson:"valueSet,omitempty", json:"valueSet,omitempty"`

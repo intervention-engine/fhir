@@ -33,11 +33,11 @@ type Patient struct {
 	Telecom              []ContactPoint         `bson:"telecom,omitempty", json:"telecom,omitempty"`
 	Gender               CodeableConcept        `bson:"gender,omitempty", json:"gender,omitempty"`
 	BirthDate            FHIRDateTime           `bson:"birthDate,omitempty", json:"birthDate,omitempty"`
-	DeceasedBoolean      bool                   `bson:"deceasedBoolean,omitempty", json:"deceasedBoolean,omitempty"`
+	DeceasedBoolean      *bool                  `bson:"deceasedBoolean,omitempty", json:"deceasedBoolean,omitempty"`
 	DeceasedDateTime     FHIRDateTime           `bson:"deceasedDateTime,omitempty", json:"deceasedDateTime,omitempty"`
 	Address              []Address              `bson:"address,omitempty", json:"address,omitempty"`
 	MaritalStatus        CodeableConcept        `bson:"maritalStatus,omitempty", json:"maritalStatus,omitempty"`
-	MultipleBirthBoolean bool                   `bson:"multipleBirthBoolean,omitempty", json:"multipleBirthBoolean,omitempty"`
+	MultipleBirthBoolean *bool                  `bson:"multipleBirthBoolean,omitempty", json:"multipleBirthBoolean,omitempty"`
 	MultipleBirthInteger float64                `bson:"multipleBirthInteger,omitempty", json:"multipleBirthInteger,omitempty"`
 	Photo                []Attachment           `bson:"photo,omitempty", json:"photo,omitempty"`
 	Contact              []ContactComponent     `bson:"contact,omitempty", json:"contact,omitempty"`
@@ -46,7 +46,7 @@ type Patient struct {
 	CareProvider         []Reference            `bson:"careProvider,omitempty", json:"careProvider,omitempty"`
 	ManagingOrganization Reference              `bson:"managingOrganization,omitempty", json:"managingOrganization,omitempty"`
 	Link                 []PatientLinkComponent `bson:"link,omitempty", json:"link,omitempty"`
-	Active               bool                   `bson:"active,omitempty", json:"active,omitempty"`
+	Active               *bool                  `bson:"active,omitempty", json:"active,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec contact

@@ -37,7 +37,7 @@ type Profile struct {
 	Description   string                          `bson:"description,omitempty", json:"description,omitempty"`
 	Code          []Coding                        `bson:"code,omitempty", json:"code,omitempty"`
 	Status        string                          `bson:"status,omitempty", json:"status,omitempty"`
-	Experimental  bool                            `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Experimental  *bool                           `bson:"experimental,omitempty", json:"experimental,omitempty"`
 	Date          FHIRDateTime                    `bson:"date,omitempty", json:"date,omitempty"`
 	Requirements  string                          `bson:"requirements,omitempty", json:"requirements,omitempty"`
 	FhirVersion   string                          `bson:"fhirVersion,omitempty", json:"fhirVersion,omitempty"`
@@ -57,7 +57,7 @@ type ProfileMappingComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec slicing
 type ElementSlicingComponent struct {
 	Discriminator string `bson:"discriminator,omitempty", json:"discriminator,omitempty"`
-	Ordered       bool   `bson:"ordered,omitempty", json:"ordered,omitempty"`
+	Ordered       *bool  `bson:"ordered,omitempty", json:"ordered,omitempty"`
 	Rules         string `bson:"rules,omitempty", json:"rules,omitempty"`
 }
 
@@ -80,7 +80,7 @@ type ElementDefinitionConstraintComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec binding
 type ElementDefinitionBindingComponent struct {
 	Name               string    `bson:"name,omitempty", json:"name,omitempty"`
-	IsExtensible       bool      `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
+	IsExtensible       *bool     `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
 	Conformance        string    `bson:"conformance,omitempty", json:"conformance,omitempty"`
 	Description        string    `bson:"description,omitempty", json:"description,omitempty"`
 	ReferenceUri       string    `bson:"referenceUri,omitempty", json:"referenceUri,omitempty"`
@@ -107,8 +107,8 @@ type ElementDefinitionComponent struct {
 	MaxLength     float64                                `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
 	Condition     []string                               `bson:"condition,omitempty", json:"condition,omitempty"`
 	Constraint    []ElementDefinitionConstraintComponent `bson:"constraint,omitempty", json:"constraint,omitempty"`
-	MustSupport   bool                                   `bson:"mustSupport,omitempty", json:"mustSupport,omitempty"`
-	IsModifier    bool                                   `bson:"isModifier,omitempty", json:"isModifier,omitempty"`
+	MustSupport   *bool                                  `bson:"mustSupport,omitempty", json:"mustSupport,omitempty"`
+	IsModifier    *bool                                  `bson:"isModifier,omitempty", json:"isModifier,omitempty"`
 	Binding       ElementDefinitionBindingComponent      `bson:"binding,omitempty", json:"binding,omitempty"`
 	Mapping       []ElementDefinitionMappingComponent    `bson:"mapping,omitempty", json:"mapping,omitempty"`
 }
@@ -141,7 +141,7 @@ type ProfileStructureComponent struct {
 	Type         string                                 `bson:"type,omitempty", json:"type,omitempty"`
 	Base         string                                 `bson:"base,omitempty", json:"base,omitempty"`
 	Name         string                                 `bson:"name,omitempty", json:"name,omitempty"`
-	Publish      bool                                   `bson:"publish,omitempty", json:"publish,omitempty"`
+	Publish      *bool                                  `bson:"publish,omitempty", json:"publish,omitempty"`
 	Purpose      string                                 `bson:"purpose,omitempty", json:"purpose,omitempty"`
 	Snapshot     ConstraintComponent                    `bson:"snapshot,omitempty", json:"snapshot,omitempty"`
 	Differential ConstraintComponent                    `bson:"differential,omitempty", json:"differential,omitempty"`

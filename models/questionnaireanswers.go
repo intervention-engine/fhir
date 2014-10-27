@@ -41,7 +41,7 @@ type QuestionnaireAnswers struct {
 
 // This is an ugly hack to deal with embedded structures in the spec answer
 type QuestionAnswerComponent struct {
-	ValueBoolean    bool         `bson:"valueBoolean,omitempty", json:"valueBoolean,omitempty"`
+	ValueBoolean    *bool        `bson:"valueBoolean,omitempty", json:"valueBoolean,omitempty"`
 	ValueDecimal    float64      `bson:"valueDecimal,omitempty", json:"valueDecimal,omitempty"`
 	ValueInteger    float64      `bson:"valueInteger,omitempty", json:"valueInteger,omitempty"`
 	ValueDate       FHIRDateTime `bson:"valueDate,omitempty", json:"valueDate,omitempty"`

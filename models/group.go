@@ -30,7 +30,7 @@ type Group struct {
 	Id             string                         `json:"-" bson:"_id"`
 	Identifier     Identifier                     `bson:"identifier,omitempty", json:"identifier,omitempty"`
 	Type           string                         `bson:"type,omitempty", json:"type,omitempty"`
-	Actual         bool                           `bson:"actual,omitempty", json:"actual,omitempty"`
+	Actual         *bool                          `bson:"actual,omitempty", json:"actual,omitempty"`
 	Code           CodeableConcept                `bson:"code,omitempty", json:"code,omitempty"`
 	Name           string                         `bson:"name,omitempty", json:"name,omitempty"`
 	Quantity       float64                        `bson:"quantity,omitempty", json:"quantity,omitempty"`
@@ -42,8 +42,8 @@ type Group struct {
 type GroupCharacteristicComponent struct {
 	Code                 CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
 	ValueCodeableConcept CodeableConcept `bson:"valueCodeableConcept,omitempty", json:"valueCodeableConcept,omitempty"`
-	ValueBoolean         bool            `bson:"valueBoolean,omitempty", json:"valueBoolean,omitempty"`
+	ValueBoolean         *bool           `bson:"valueBoolean,omitempty", json:"valueBoolean,omitempty"`
 	ValueQuantity        Quantity        `bson:"valueQuantity,omitempty", json:"valueQuantity,omitempty"`
 	ValueRange           Range           `bson:"valueRange,omitempty", json:"valueRange,omitempty"`
-	Exclude              bool            `bson:"exclude,omitempty", json:"exclude,omitempty"`
+	Exclude              *bool           `bson:"exclude,omitempty", json:"exclude,omitempty"`
 }

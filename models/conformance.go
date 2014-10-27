@@ -35,12 +35,12 @@ type Conformance struct {
 	Telecom        []ContactPoint                     `bson:"telecom,omitempty", json:"telecom,omitempty"`
 	Description    string                             `bson:"description,omitempty", json:"description,omitempty"`
 	Status         string                             `bson:"status,omitempty", json:"status,omitempty"`
-	Experimental   bool                               `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Experimental   *bool                              `bson:"experimental,omitempty", json:"experimental,omitempty"`
 	Date           FHIRDateTime                       `bson:"date,omitempty", json:"date,omitempty"`
 	Software       ConformanceSoftwareComponent       `bson:"software,omitempty", json:"software,omitempty"`
 	Implementation ConformanceImplementationComponent `bson:"implementation,omitempty", json:"implementation,omitempty"`
 	FhirVersion    string                             `bson:"fhirVersion,omitempty", json:"fhirVersion,omitempty"`
-	AcceptUnknown  bool                               `bson:"acceptUnknown,omitempty", json:"acceptUnknown,omitempty"`
+	AcceptUnknown  *bool                              `bson:"acceptUnknown,omitempty", json:"acceptUnknown,omitempty"`
 	Format         []string                           `bson:"format,omitempty", json:"format,omitempty"`
 	Profile        []Reference                        `bson:"profile,omitempty", json:"profile,omitempty"`
 	Rest           []ConformanceRestComponent         `bson:"rest,omitempty", json:"rest,omitempty"`
@@ -69,7 +69,7 @@ type ConformanceRestSecurityCertificateComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec security
 type ConformanceRestSecurityComponent struct {
-	Cors        bool                                          `bson:"cors,omitempty", json:"cors,omitempty"`
+	Cors        *bool                                         `bson:"cors,omitempty", json:"cors,omitempty"`
 	Service     []CodeableConcept                             `bson:"service,omitempty", json:"service,omitempty"`
 	Description string                                        `bson:"description,omitempty", json:"description,omitempty"`
 	Certificate []ConformanceRestSecurityCertificateComponent `bson:"certificate,omitempty", json:"certificate,omitempty"`
@@ -96,8 +96,8 @@ type ConformanceRestResourceComponent struct {
 	Type          string                                        `bson:"type,omitempty", json:"type,omitempty"`
 	Profile       Reference                                     `bson:"profile,omitempty", json:"profile,omitempty"`
 	Interaction   []ResourceInteractionComponent                `bson:"interaction,omitempty", json:"interaction,omitempty"`
-	ReadHistory   bool                                          `bson:"readHistory,omitempty", json:"readHistory,omitempty"`
-	UpdateCreate  bool                                          `bson:"updateCreate,omitempty", json:"updateCreate,omitempty"`
+	ReadHistory   *bool                                         `bson:"readHistory,omitempty", json:"readHistory,omitempty"`
+	UpdateCreate  *bool                                         `bson:"updateCreate,omitempty", json:"updateCreate,omitempty"`
 	SearchInclude []string                                      `bson:"searchInclude,omitempty", json:"searchInclude,omitempty"`
 	SearchParam   []ConformanceRestResourceSearchParamComponent `bson:"searchParam,omitempty", json:"searchParam,omitempty"`
 }

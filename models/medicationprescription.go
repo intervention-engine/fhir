@@ -49,7 +49,7 @@ type MedicationPrescriptionDosageInstructionComponent struct {
 	ScheduledDateTime       FHIRDateTime    `bson:"scheduledDateTime,omitempty", json:"scheduledDateTime,omitempty"`
 	ScheduledPeriod         Period          `bson:"scheduledPeriod,omitempty", json:"scheduledPeriod,omitempty"`
 	ScheduledTiming         Timing          `bson:"scheduledTiming,omitempty", json:"scheduledTiming,omitempty"`
-	AsNeededBoolean         bool            `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
+	AsNeededBoolean         *bool           `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
 	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
 	Site                    CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
 	Route                   CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`

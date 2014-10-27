@@ -30,7 +30,7 @@ type Medication struct {
 	Id           string                     `json:"-" bson:"_id"`
 	Name         string                     `bson:"name,omitempty", json:"name,omitempty"`
 	Code         CodeableConcept            `bson:"code,omitempty", json:"code,omitempty"`
-	IsBrand      bool                       `bson:"isBrand,omitempty", json:"isBrand,omitempty"`
+	IsBrand      *bool                      `bson:"isBrand,omitempty", json:"isBrand,omitempty"`
 	Manufacturer Reference                  `bson:"manufacturer,omitempty", json:"manufacturer,omitempty"`
 	Kind         string                     `bson:"kind,omitempty", json:"kind,omitempty"`
 	Product      MedicationProductComponent `bson:"product,omitempty", json:"product,omitempty"`

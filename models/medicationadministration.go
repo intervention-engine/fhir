@@ -34,7 +34,7 @@ type MedicationAdministration struct {
 	Practitioner          Reference                                 `bson:"practitioner,omitempty", json:"practitioner,omitempty"`
 	Encounter             Reference                                 `bson:"encounter,omitempty", json:"encounter,omitempty"`
 	Prescription          Reference                                 `bson:"prescription,omitempty", json:"prescription,omitempty"`
-	WasNotGiven           bool                                      `bson:"wasNotGiven,omitempty", json:"wasNotGiven,omitempty"`
+	WasNotGiven           *bool                                     `bson:"wasNotGiven,omitempty", json:"wasNotGiven,omitempty"`
 	ReasonNotGiven        []CodeableConcept                         `bson:"reasonNotGiven,omitempty", json:"reasonNotGiven,omitempty"`
 	EffectiveTimeDateTime FHIRDateTime                              `bson:"effectiveTimeDateTime,omitempty", json:"effectiveTimeDateTime,omitempty"`
 	EffectiveTimePeriod   Period                                    `bson:"effectiveTimePeriod,omitempty", json:"effectiveTimePeriod,omitempty"`
@@ -47,7 +47,7 @@ type MedicationAdministration struct {
 type MedicationAdministrationDosageComponent struct {
 	TimingDateTime          FHIRDateTime    `bson:"timingDateTime,omitempty", json:"timingDateTime,omitempty"`
 	TimingPeriod            Period          `bson:"timingPeriod,omitempty", json:"timingPeriod,omitempty"`
-	AsNeededBoolean         bool            `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
+	AsNeededBoolean         *bool           `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
 	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
 	Site                    CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
 	Route                   CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`

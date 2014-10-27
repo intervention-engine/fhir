@@ -71,7 +71,7 @@ type EncounterHospitalizationComponent struct {
 	Destination            Reference                                       `bson:"destination,omitempty", json:"destination,omitempty"`
 	DischargeDisposition   CodeableConcept                                 `bson:"dischargeDisposition,omitempty", json:"dischargeDisposition,omitempty"`
 	DischargeDiagnosis     Reference                                       `bson:"dischargeDiagnosis,omitempty", json:"dischargeDiagnosis,omitempty"`
-	ReAdmission            bool                                            `bson:"reAdmission,omitempty", json:"reAdmission,omitempty"`
+	ReAdmission            *bool                                           `bson:"reAdmission,omitempty", json:"reAdmission,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec location

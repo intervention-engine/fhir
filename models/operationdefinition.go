@@ -36,15 +36,15 @@ type OperationDefinition struct {
 	Description  string                                  `bson:"description,omitempty", json:"description,omitempty"`
 	Code         []Coding                                `bson:"code,omitempty", json:"code,omitempty"`
 	Status       string                                  `bson:"status,omitempty", json:"status,omitempty"`
-	Experimental bool                                    `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Experimental *bool                                   `bson:"experimental,omitempty", json:"experimental,omitempty"`
 	Date         FHIRDateTime                            `bson:"date,omitempty", json:"date,omitempty"`
 	Kind         string                                  `bson:"kind,omitempty", json:"kind,omitempty"`
 	Name         string                                  `bson:"name,omitempty", json:"name,omitempty"`
 	Notes        string                                  `bson:"notes,omitempty", json:"notes,omitempty"`
 	Base         Reference                               `bson:"base,omitempty", json:"base,omitempty"`
-	System       bool                                    `bson:"system,omitempty", json:"system,omitempty"`
+	System       *bool                                   `bson:"system,omitempty", json:"system,omitempty"`
 	Type         []string                                `bson:"type,omitempty", json:"type,omitempty"`
-	Instance     bool                                    `bson:"instance,omitempty", json:"instance,omitempty"`
+	Instance     *bool                                   `bson:"instance,omitempty", json:"instance,omitempty"`
 	Parameter    []OperationDefinitionParameterComponent `bson:"parameter,omitempty", json:"parameter,omitempty"`
 }
 

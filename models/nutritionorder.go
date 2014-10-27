@@ -73,7 +73,7 @@ type NutritionOrderItemEnteralFormulaComponent struct {
 type NutritionOrderItemComponent struct {
 	ScheduledTiming Timing                                    `bson:"scheduledTiming,omitempty", json:"scheduledTiming,omitempty"`
 	ScheduledPeriod Period                                    `bson:"scheduledPeriod,omitempty", json:"scheduledPeriod,omitempty"`
-	IsInEffect      bool                                      `bson:"isInEffect,omitempty", json:"isInEffect,omitempty"`
+	IsInEffect      *bool                                     `bson:"isInEffect,omitempty", json:"isInEffect,omitempty"`
 	OralDiet        NutritionOrderItemOralDietComponent       `bson:"oralDiet,omitempty", json:"oralDiet,omitempty"`
 	Supplement      NutritionOrderItemSupplementComponent     `bson:"supplement,omitempty", json:"supplement,omitempty"`
 	EnteralFormula  NutritionOrderItemEnteralFormulaComponent `bson:"enteralFormula,omitempty", json:"enteralFormula,omitempty"`

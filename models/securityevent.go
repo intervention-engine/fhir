@@ -57,7 +57,7 @@ type SecurityEventParticipantComponent struct {
 	UserId    string                                   `bson:"userId,omitempty", json:"userId,omitempty"`
 	AltId     string                                   `bson:"altId,omitempty", json:"altId,omitempty"`
 	Name      string                                   `bson:"name,omitempty", json:"name,omitempty"`
-	Requestor bool                                     `bson:"requestor,omitempty", json:"requestor,omitempty"`
+	Requestor *bool                                    `bson:"requestor,omitempty", json:"requestor,omitempty"`
 	Media     Coding                                   `bson:"media,omitempty", json:"media,omitempty"`
 	Network   SecurityEventParticipantNetworkComponent `bson:"network,omitempty", json:"network,omitempty"`
 }

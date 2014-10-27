@@ -34,7 +34,7 @@ type Slot struct {
 	FreeBusyType string          `bson:"freeBusyType,omitempty", json:"freeBusyType,omitempty"`
 	Start        FHIRDateTime    `bson:"start,omitempty", json:"start,omitempty"`
 	End          FHIRDateTime    `bson:"end,omitempty", json:"end,omitempty"`
-	Overbooked   bool            `bson:"overbooked,omitempty", json:"overbooked,omitempty"`
+	Overbooked   *bool           `bson:"overbooked,omitempty", json:"overbooked,omitempty"`
 	Comment      string          `bson:"comment,omitempty", json:"comment,omitempty"`
 	LastModified FHIRDateTime    `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
 }

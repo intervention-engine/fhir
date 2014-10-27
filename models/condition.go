@@ -42,7 +42,7 @@ type Condition struct {
 	OnsetAge         Quantity                        `bson:"onsetAge,omitempty", json:"onsetAge,omitempty"`
 	AbatementDate    FHIRDateTime                    `bson:"abatementDate,omitempty", json:"abatementDate,omitempty"`
 	AbatementAge     Quantity                        `bson:"abatementAge,omitempty", json:"abatementAge,omitempty"`
-	AbatementBoolean bool                            `bson:"abatementBoolean,omitempty", json:"abatementBoolean,omitempty"`
+	AbatementBoolean *bool                           `bson:"abatementBoolean,omitempty", json:"abatementBoolean,omitempty"`
 	Stage            ConditionStageComponent         `bson:"stage,omitempty", json:"stage,omitempty"`
 	Evidence         []ConditionEvidenceComponent    `bson:"evidence,omitempty", json:"evidence,omitempty"`
 	Location         []ConditionLocationComponent    `bson:"location,omitempty", json:"location,omitempty"`

@@ -32,6 +32,6 @@ type Coding struct {
 	Version  string    `bson:"version,omitempty", json:"version,omitempty"`
 	Code     string    `bson:"code,omitempty", json:"code,omitempty"`
 	Display  string    `bson:"display,omitempty", json:"display,omitempty"`
-	Primary  bool      `bson:"primary,omitempty", json:"primary,omitempty"`
+	Primary  *bool     `bson:"primary,omitempty", json:"primary,omitempty"`
 	ValueSet Reference `bson:"valueSet,omitempty", json:"valueSet,omitempty"`
 }

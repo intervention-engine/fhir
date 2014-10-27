@@ -31,7 +31,7 @@ type AdverseReaction struct {
 	Identifier      []Identifier                       `bson:"identifier,omitempty", json:"identifier,omitempty"`
 	Date            FHIRDateTime                       `bson:"date,omitempty", json:"date,omitempty"`
 	Subject         Reference                          `bson:"subject,omitempty", json:"subject,omitempty"`
-	DidNotOccurFlag bool                               `bson:"didNotOccurFlag,omitempty", json:"didNotOccurFlag,omitempty"`
+	DidNotOccurFlag *bool                              `bson:"didNotOccurFlag,omitempty", json:"didNotOccurFlag,omitempty"`
 	Recorder        Reference                          `bson:"recorder,omitempty", json:"recorder,omitempty"`
 	Symptom         []AdverseReactionSymptomComponent  `bson:"symptom,omitempty", json:"symptom,omitempty"`
 	Exposure        []AdverseReactionExposureComponent `bson:"exposure,omitempty", json:"exposure,omitempty"`

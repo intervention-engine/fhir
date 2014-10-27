@@ -35,7 +35,7 @@ type Reference struct {
 	Display      string `bson:"display,omitempty", json:"display,omitempty"`
 	Type         string `bson:"type,omitempty", json:"type,omitempty"`
 	ReferencedID string `bson:"referenceid,omitempty", json:"referenceid,omitempty"`
-	External	bool  `bson:"external,omitempty", json:"external,omitempty"`
+	External		 *bool  `bson:"external,omitempty", json:"external,omitempty"`
 }
 
 type reference Reference
@@ -46,7 +46,8 @@ func (r *Reference) UnmarshalJSON(data []byte) (err error) {
 		splitURL := strings.Split(ref.Reference, "/")
  		ref.ReferencedID = splitURL[len(splitURL)-1]
 		ref.Type = splitURL[len(splitURL)-2]
-		ref.External = strings.HasPrefix(ref.Reference, "http")
+		external := strings.HasPrefix(ref.Reference, "http")
+		ref.External = &external
 		*r = Reference(ref)
     return
   }

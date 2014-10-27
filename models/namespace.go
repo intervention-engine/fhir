@@ -45,7 +45,7 @@ type Namespace struct {
 type NamespaceUniqueIdComponent struct {
 	Type      string `bson:"type,omitempty", json:"type,omitempty"`
 	Value     string `bson:"value,omitempty", json:"value,omitempty"`
-	Preferred bool   `bson:"preferred,omitempty", json:"preferred,omitempty"`
+	Preferred *bool  `bson:"preferred,omitempty", json:"preferred,omitempty"`
 	Period    Period `bson:"period,omitempty", json:"period,omitempty"`
 }
 

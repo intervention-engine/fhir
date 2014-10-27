@@ -36,7 +36,7 @@ type ConceptMap struct {
 	Description     string                       `bson:"description,omitempty", json:"description,omitempty"`
 	Copyright       string                       `bson:"copyright,omitempty", json:"copyright,omitempty"`
 	Status          string                       `bson:"status,omitempty", json:"status,omitempty"`
-	Experimental    bool                         `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Experimental    *bool                        `bson:"experimental,omitempty", json:"experimental,omitempty"`
 	Date            FHIRDateTime                 `bson:"date,omitempty", json:"date,omitempty"`
 	SourceUri       string                       `bson:"sourceUri,omitempty", json:"sourceUri,omitempty"`
 	SourceReference Reference                    `bson:"sourceReference,omitempty", json:"sourceReference,omitempty"`

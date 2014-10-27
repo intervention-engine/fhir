@@ -73,7 +73,7 @@ type CarePlanActivitySimpleComponent struct {
 type CarePlanActivityComponent struct {
 	Goal            []Reference                     `bson:"goal,omitempty", json:"goal,omitempty"`
 	Status          string                          `bson:"status,omitempty", json:"status,omitempty"`
-	Prohibited      bool                            `bson:"prohibited,omitempty", json:"prohibited,omitempty"`
+	Prohibited      *bool                           `bson:"prohibited,omitempty", json:"prohibited,omitempty"`
 	ActionResulting []Reference                     `bson:"actionResulting,omitempty", json:"actionResulting,omitempty"`
 	Notes           string                          `bson:"notes,omitempty", json:"notes,omitempty"`
 	Detail          Reference                       `bson:"detail,omitempty", json:"detail,omitempty"`

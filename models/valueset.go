@@ -32,14 +32,14 @@ type ValueSet struct {
 	Version      string                     `bson:"version,omitempty", json:"version,omitempty"`
 	Name         string                     `bson:"name,omitempty", json:"name,omitempty"`
 	Purpose      string                     `bson:"purpose,omitempty", json:"purpose,omitempty"`
-	Immutable    bool                       `bson:"immutable,omitempty", json:"immutable,omitempty"`
+	Immutable    *bool                      `bson:"immutable,omitempty", json:"immutable,omitempty"`
 	Publisher    string                     `bson:"publisher,omitempty", json:"publisher,omitempty"`
 	Telecom      []ContactPoint             `bson:"telecom,omitempty", json:"telecom,omitempty"`
 	Description  string                     `bson:"description,omitempty", json:"description,omitempty"`
 	Copyright    string                     `bson:"copyright,omitempty", json:"copyright,omitempty"`
 	Status       string                     `bson:"status,omitempty", json:"status,omitempty"`
-	Experimental bool                       `bson:"experimental,omitempty", json:"experimental,omitempty"`
-	Extensible   bool                       `bson:"extensible,omitempty", json:"extensible,omitempty"`
+	Experimental *bool                      `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Extensible   *bool                      `bson:"extensible,omitempty", json:"extensible,omitempty"`
 	Date         FHIRDateTime               `bson:"date,omitempty", json:"date,omitempty"`
 	StableDate   FHIRDateTime               `bson:"stableDate,omitempty", json:"stableDate,omitempty"`
 	Define       ValueSetDefineComponent    `bson:"define,omitempty", json:"define,omitempty"`
@@ -57,7 +57,7 @@ type ConceptDefinitionDesignationComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec concept
 type ConceptDefinitionComponent struct {
 	Code        string                                  `bson:"code,omitempty", json:"code,omitempty"`
-	Abstract    bool                                    `bson:"abstract,omitempty", json:"abstract,omitempty"`
+	Abstract    *bool                                   `bson:"abstract,omitempty", json:"abstract,omitempty"`
 	Display     string                                  `bson:"display,omitempty", json:"display,omitempty"`
 	Definition  string                                  `bson:"definition,omitempty", json:"definition,omitempty"`
 	Designation []ConceptDefinitionDesignationComponent `bson:"designation,omitempty", json:"designation,omitempty"`
@@ -68,7 +68,7 @@ type ConceptDefinitionComponent struct {
 type ValueSetDefineComponent struct {
 	System        string                       `bson:"system,omitempty", json:"system,omitempty"`
 	Version       string                       `bson:"version,omitempty", json:"version,omitempty"`
-	CaseSensitive bool                         `bson:"caseSensitive,omitempty", json:"caseSensitive,omitempty"`
+	CaseSensitive *bool                        `bson:"caseSensitive,omitempty", json:"caseSensitive,omitempty"`
 	Concept       []ConceptDefinitionComponent `bson:"concept,omitempty", json:"concept,omitempty"`
 }
 
@@ -104,7 +104,7 @@ type ValueSetComposeComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec contains
 type ValueSetExpansionContainsComponent struct {
 	System   string                               `bson:"system,omitempty", json:"system,omitempty"`
-	Abstract bool                                 `bson:"abstract,omitempty", json:"abstract,omitempty"`
+	Abstract *bool                                `bson:"abstract,omitempty", json:"abstract,omitempty"`
 	Version  string                               `bson:"version,omitempty", json:"version,omitempty"`
 	Code     string                               `bson:"code,omitempty", json:"code,omitempty"`
 	Display  string                               `bson:"display,omitempty", json:"display,omitempty"`

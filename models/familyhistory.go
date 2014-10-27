@@ -55,7 +55,7 @@ type FamilyHistoryRelationComponent struct {
 	AgeAge          Quantity                                  `bson:"ageAge,omitempty", json:"ageAge,omitempty"`
 	AgeRange        Range                                     `bson:"ageRange,omitempty", json:"ageRange,omitempty"`
 	AgeString       string                                    `bson:"ageString,omitempty", json:"ageString,omitempty"`
-	DeceasedBoolean bool                                      `bson:"deceasedBoolean,omitempty", json:"deceasedBoolean,omitempty"`
+	DeceasedBoolean *bool                                     `bson:"deceasedBoolean,omitempty", json:"deceasedBoolean,omitempty"`
 	DeceasedAge     Quantity                                  `bson:"deceasedAge,omitempty", json:"deceasedAge,omitempty"`
 	DeceasedRange   Range                                     `bson:"deceasedRange,omitempty", json:"deceasedRange,omitempty"`
 	DeceasedDate    FHIRDateTime                              `bson:"deceasedDate,omitempty", json:"deceasedDate,omitempty"`
