@@ -26,8 +26,29 @@
 
 package models
 
+import "encoding/json"
+import "strings"
+
 type Reference struct {
-	Id        string `json:"-" bson:"_id"`
-	Reference string `bson:"reference,omitempty", json:"reference,omitempty"`
-	Display   string `bson:"display,omitempty", json:"display,omitempty"`
+	Id           string `json:"-" bson:"_id"`
+	Reference    string `bson:"reference,omitempty", json:"reference,omitempty"`
+	Display      string `bson:"display,omitempty", json:"display,omitempty"`
+	Type         string `bson:"type,omitempty", json:"type,omitempty"`
+	ReferencedID string `bson:"referenceid,omitempty", json:"referenceid,omitempty"`
+	External	bool  `bson:"external,omitempty", json:"external,omitempty"`
+}
+
+type reference Reference
+
+func (r *Reference) UnmarshalJSON(data []byte) (err error) {
+	ref := reference{}
+	if err = json.Unmarshal(data, &ref); err == nil {
+		splitURL := strings.Split(ref.Reference, "/")
+ 		ref.ReferencedID = splitURL[len(splitURL)-1]
+		ref.Type = splitURL[len(splitURL)-2]
+		ref.External = strings.HasPrefix(ref.Reference, "http")
+		*r = Reference(ref)
+    return
+  }
+	return err
 }
