@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type DiagnosticOrder struct {
 	Id                    string                          `json:"-" bson:"_id"`
 	Subject               Reference                       `bson:"subject,omitempty", json:"subject,omitempty"`
@@ -56,4 +58,19 @@ type DiagnosticOrderItemComponent struct {
 	BodySite CodeableConcept                 `bson:"bodySite,omitempty", json:"bodySite,omitempty"`
 	Status   string                          `bson:"status,omitempty", json:"status,omitempty"`
 	Event    []DiagnosticOrderEventComponent `bson:"event,omitempty", json:"event,omitempty"`
+}
+type DiagnosticOrderBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []DiagnosticOrder
+	Category     DiagnosticOrderCategory
+}
+
+type DiagnosticOrderCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

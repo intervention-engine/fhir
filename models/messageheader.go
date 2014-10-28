@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type MessageHeader struct {
 	Id          string                         `json:"-" bson:"_id"`
 	Identifier  string                         `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -63,4 +65,19 @@ type MessageDestinationComponent struct {
 	Name     string    `bson:"name,omitempty", json:"name,omitempty"`
 	Target   Reference `bson:"target,omitempty", json:"target,omitempty"`
 	Endpoint string    `bson:"endpoint,omitempty", json:"endpoint,omitempty"`
+}
+type MessageHeaderBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []MessageHeader
+	Category     MessageHeaderCategory
+}
+
+type MessageHeaderCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

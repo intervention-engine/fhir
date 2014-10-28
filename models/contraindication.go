@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Contraindication struct {
 	Id         string                                `json:"-" bson:"_id"`
 	Patient    Reference                             `bson:"patient,omitempty", json:"patient,omitempty"`
@@ -45,4 +47,19 @@ type ContraindicationMitigationComponent struct {
 	Action CodeableConcept `bson:"action,omitempty", json:"action,omitempty"`
 	Date   FHIRDateTime    `bson:"date,omitempty", json:"date,omitempty"`
 	Author Reference       `bson:"author,omitempty", json:"author,omitempty"`
+}
+type ContraindicationBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Contraindication
+	Category     ContraindicationCategory
+}
+
+type ContraindicationCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

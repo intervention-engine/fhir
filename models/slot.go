@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Slot struct {
 	Id           string          `json:"-" bson:"_id"`
 	Identifier   []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -37,4 +39,19 @@ type Slot struct {
 	Overbooked   *bool           `bson:"overbooked,omitempty", json:"overbooked,omitempty"`
 	Comment      string          `bson:"comment,omitempty", json:"comment,omitempty"`
 	LastModified FHIRDateTime    `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
+}
+type SlotBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Slot
+	Category     SlotCategory
+}
+
+type SlotCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

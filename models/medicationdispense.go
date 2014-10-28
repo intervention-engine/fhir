@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type MedicationDispense struct {
 	Id                      string                                  `json:"-" bson:"_id"`
 	Identifier              Identifier                              `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -72,4 +74,19 @@ type MedicationDispenseSubstitutionComponent struct {
 	Type             CodeableConcept   `bson:"type,omitempty", json:"type,omitempty"`
 	Reason           []CodeableConcept `bson:"reason,omitempty", json:"reason,omitempty"`
 	ResponsibleParty []Reference       `bson:"responsibleParty,omitempty", json:"responsibleParty,omitempty"`
+}
+type MedicationDispenseBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []MedicationDispense
+	Category     MedicationDispenseCategory
+}
+
+type MedicationDispenseCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

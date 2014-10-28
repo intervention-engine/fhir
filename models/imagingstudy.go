@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type ImagingStudy struct {
 	Id                  string                        `json:"-" bson:"_id"`
 	DateTime            FHIRDateTime                  `bson:"dateTime,omitempty", json:"dateTime,omitempty"`
@@ -70,4 +72,19 @@ type ImagingStudySeriesComponent struct {
 	BodySite          Coding                                `bson:"bodySite,omitempty", json:"bodySite,omitempty"`
 	DateTime          FHIRDateTime                          `bson:"dateTime,omitempty", json:"dateTime,omitempty"`
 	Instance          []ImagingStudySeriesInstanceComponent `bson:"instance,omitempty", json:"instance,omitempty"`
+}
+type ImagingStudyBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []ImagingStudy
+	Category     ImagingStudyCategory
+}
+
+type ImagingStudyCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

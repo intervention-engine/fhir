@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type OperationOutcome struct {
 	Id    string                           `json:"-" bson:"_id"`
 	Issue []OperationOutcomeIssueComponent `bson:"issue,omitempty", json:"issue,omitempty"`
@@ -37,4 +39,19 @@ type OperationOutcomeIssueComponent struct {
 	Type     Coding   `bson:"type,omitempty", json:"type,omitempty"`
 	Details  string   `bson:"details,omitempty", json:"details,omitempty"`
 	Location []string `bson:"location,omitempty", json:"location,omitempty"`
+}
+type OperationOutcomeBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []OperationOutcome
+	Category     OperationOutcomeCategory
+}
+
+type OperationOutcomeCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

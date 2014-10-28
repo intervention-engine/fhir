@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Immunization struct {
 	Id                  string                                     `json:"-" bson:"_id"`
 	Identifier          []Identifier                               `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -71,4 +73,19 @@ type ImmunizationVaccinationProtocolComponent struct {
 	DoseTarget       CodeableConcept `bson:"doseTarget,omitempty", json:"doseTarget,omitempty"`
 	DoseStatus       CodeableConcept `bson:"doseStatus,omitempty", json:"doseStatus,omitempty"`
 	DoseStatusReason CodeableConcept `bson:"doseStatusReason,omitempty", json:"doseStatusReason,omitempty"`
+}
+type ImmunizationBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Immunization
+	Category     ImmunizationCategory
+}
+
+type ImmunizationCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

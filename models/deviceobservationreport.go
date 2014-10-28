@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type DeviceObservationReport struct {
 	Id            string                                          `json:"-" bson:"_id"`
 	Instant       FHIRDateTime                                    `bson:"instant,omitempty", json:"instant,omitempty"`
@@ -50,4 +52,19 @@ type DeviceObservationReportVirtualDeviceChannelComponent struct {
 type DeviceObservationReportVirtualDeviceComponent struct {
 	Code    CodeableConcept                                        `bson:"code,omitempty", json:"code,omitempty"`
 	Channel []DeviceObservationReportVirtualDeviceChannelComponent `bson:"channel,omitempty", json:"channel,omitempty"`
+}
+type DeviceObservationReportBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []DeviceObservationReport
+	Category     DeviceObservationReportCategory
+}
+
+type DeviceObservationReportCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

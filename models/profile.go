@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Profile struct {
 	Id            string                          `json:"-" bson:"_id"`
 	Url           string                          `bson:"url,omitempty", json:"url,omitempty"`
@@ -155,4 +157,19 @@ type ProfileExtensionDefnComponent struct {
 	ContextType string             `bson:"contextType,omitempty", json:"contextType,omitempty"`
 	Context     []string           `bson:"context,omitempty", json:"context,omitempty"`
 	Element     []ElementComponent `bson:"element,omitempty", json:"element,omitempty"`
+}
+type ProfileBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Profile
+	Category     ProfileCategory
+}
+
+type ProfileCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

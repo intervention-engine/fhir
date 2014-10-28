@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type DocumentManifest struct {
 	Id               string          `json:"-" bson:"_id"`
 	MasterIdentifier Identifier      `bson:"masterIdentifier,omitempty", json:"masterIdentifier,omitempty"`
@@ -41,4 +43,19 @@ type DocumentManifest struct {
 	Description      string          `bson:"description,omitempty", json:"description,omitempty"`
 	Confidentiality  CodeableConcept `bson:"confidentiality,omitempty", json:"confidentiality,omitempty"`
 	Content          []Reference     `bson:"content,omitempty", json:"content,omitempty"`
+}
+type DocumentManifestBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []DocumentManifest
+	Category     DocumentManifestCategory
+}
+
+type DocumentManifestCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

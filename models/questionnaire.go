@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Questionnaire struct {
 	Id         string         `json:"-" bson:"_id"`
 	Identifier []Identifier   `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -34,4 +36,19 @@ type Questionnaire struct {
 	Date       FHIRDateTime   `bson:"date,omitempty", json:"date,omitempty"`
 	Publisher  string         `bson:"publisher,omitempty", json:"publisher,omitempty"`
 	Group      GroupComponent `bson:"group,omitempty", json:"group,omitempty"`
+}
+type QuestionnaireBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Questionnaire
+	Category     QuestionnaireCategory
+}
+
+type QuestionnaireCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

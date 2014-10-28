@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Availability struct {
 	Id              string            `json:"-" bson:"_id"`
 	Identifier      []Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -34,4 +36,19 @@ type Availability struct {
 	PlanningHorizon Period            `bson:"planningHorizon,omitempty", json:"planningHorizon,omitempty"`
 	Comment         string            `bson:"comment,omitempty", json:"comment,omitempty"`
 	LastModified    FHIRDateTime      `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
+}
+type AvailabilityBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Availability
+	Category     AvailabilityCategory
+}
+
+type AvailabilityCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

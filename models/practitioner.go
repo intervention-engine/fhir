@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Practitioner struct {
 	Id            string                               `json:"-" bson:"_id"`
 	Identifier    []Identifier                         `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -50,4 +52,19 @@ type PractitionerQualificationComponent struct {
 	Code       CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
 	Period     Period          `bson:"period,omitempty", json:"period,omitempty"`
 	Issuer     Reference       `bson:"issuer,omitempty", json:"issuer,omitempty"`
+}
+type PractitionerBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Practitioner
+	Category     PractitionerCategory
+}
+
+type PractitionerCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

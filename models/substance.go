@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Substance struct {
 	Id          string                         `json:"-" bson:"_id"`
 	Type        CodeableConcept                `bson:"type,omitempty", json:"type,omitempty"`
@@ -45,4 +47,19 @@ type SubstanceInstanceComponent struct {
 type SubstanceIngredientComponent struct {
 	Quantity  Ratio     `bson:"quantity,omitempty", json:"quantity,omitempty"`
 	Substance Reference `bson:"substance,omitempty", json:"substance,omitempty"`
+}
+type SubstanceBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Substance
+	Category     SubstanceCategory
+}
+
+type SubstanceCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

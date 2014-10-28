@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type AppointmentResponse struct {
 	Id                string            `json:"-" bson:"_id"`
 	Identifier        []Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -38,4 +40,19 @@ type AppointmentResponse struct {
 	End               FHIRDateTime      `bson:"end,omitempty", json:"end,omitempty"`
 	LastModifiedBy    Reference         `bson:"lastModifiedBy,omitempty", json:"lastModifiedBy,omitempty"`
 	LastModified      FHIRDateTime      `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
+}
+type AppointmentResponseBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []AppointmentResponse
+	Category     AppointmentResponseCategory
+}
+
+type AppointmentResponseCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

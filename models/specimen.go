@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Specimen struct {
 	Id                  string                       `json:"-" bson:"_id"`
 	Identifier          []Identifier                 `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -71,4 +73,19 @@ type SpecimenContainerComponent struct {
 	Capacity         Quantity        `bson:"capacity,omitempty", json:"capacity,omitempty"`
 	SpecimenQuantity Quantity        `bson:"specimenQuantity,omitempty", json:"specimenQuantity,omitempty"`
 	Additive         Reference       `bson:"additive,omitempty", json:"additive,omitempty"`
+}
+type SpecimenBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Specimen
+	Category     SpecimenCategory
+}
+
+type SpecimenCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

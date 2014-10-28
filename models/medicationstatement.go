@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type MedicationStatement struct {
 	Id             string                               `json:"-" bson:"_id"`
 	Identifier     []Identifier                         `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -49,4 +51,19 @@ type MedicationStatementDosageComponent struct {
 	Quantity                Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
 	Rate                    Ratio           `bson:"rate,omitempty", json:"rate,omitempty"`
 	MaxDosePerPeriod        Ratio           `bson:"maxDosePerPeriod,omitempty", json:"maxDosePerPeriod,omitempty"`
+}
+type MedicationStatementBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []MedicationStatement
+	Category     MedicationStatementCategory
+}
+
+type MedicationStatementCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

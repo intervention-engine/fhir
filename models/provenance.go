@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Provenance struct {
 	Id                 string                      `json:"-" bson:"_id"`
 	Target             []Reference                 `bson:"target,omitempty", json:"target,omitempty"`
@@ -54,4 +56,19 @@ type ProvenanceEntityComponent struct {
 	Reference string                   `bson:"reference,omitempty", json:"reference,omitempty"`
 	Display   string                   `bson:"display,omitempty", json:"display,omitempty"`
 	Agent     ProvenanceAgentComponent `bson:"agent,omitempty", json:"agent,omitempty"`
+}
+type ProvenanceBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Provenance
+	Category     ProvenanceCategory
+}
+
+type ProvenanceCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

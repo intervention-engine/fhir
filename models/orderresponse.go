@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type OrderResponse struct {
 	Id                       string          `json:"-" bson:"_id"`
 	Identifier               []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -37,4 +39,19 @@ type OrderResponse struct {
 	Code                     string          `bson:"code,omitempty", json:"code,omitempty"`
 	Description              string          `bson:"description,omitempty", json:"description,omitempty"`
 	Fulfillment              []Reference     `bson:"fulfillment,omitempty", json:"fulfillment,omitempty"`
+}
+type OrderResponseBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []OrderResponse
+	Category     OrderResponseCategory
+}
+
+type OrderResponseCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

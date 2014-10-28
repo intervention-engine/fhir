@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Location struct {
 	Id                   string                    `json:"-" bson:"_id"`
 	Identifier           []Identifier              `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -47,4 +49,19 @@ type LocationPositionComponent struct {
 	Longitude float64 `bson:"longitude,omitempty", json:"longitude,omitempty"`
 	Latitude  float64 `bson:"latitude,omitempty", json:"latitude,omitempty"`
 	Altitude  float64 `bson:"altitude,omitempty", json:"altitude,omitempty"`
+}
+type LocationBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Location
+	Category     LocationCategory
+}
+
+type LocationCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

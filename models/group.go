@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Group struct {
 	Id             string                         `json:"-" bson:"_id"`
 	Identifier     Identifier                     `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -46,4 +48,19 @@ type GroupCharacteristicComponent struct {
 	ValueQuantity        Quantity        `bson:"valueQuantity,omitempty", json:"valueQuantity,omitempty"`
 	ValueRange           Range           `bson:"valueRange,omitempty", json:"valueRange,omitempty"`
 	Exclude              *bool           `bson:"exclude,omitempty", json:"exclude,omitempty"`
+}
+type GroupBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Group
+	Category     GroupCategory
+}
+
+type GroupCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Observation struct {
 	Id                   string                               `json:"-" bson:"_id"`
 	Name                 CodeableConcept                      `bson:"name,omitempty", json:"name,omitempty"`
@@ -69,4 +71,19 @@ type ObservationReferenceRangeComponent struct {
 type ObservationRelatedComponent struct {
 	Type   string    `bson:"type,omitempty", json:"type,omitempty"`
 	Target Reference `bson:"target,omitempty", json:"target,omitempty"`
+}
+type ObservationBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Observation
+	Category     ObservationCategory
+}
+
+type ObservationCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

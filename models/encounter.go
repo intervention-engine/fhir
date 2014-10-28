@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Encounter struct {
 	Id              string                            `json:"-" bson:"_id"`
 	Identifier      []Identifier                      `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -78,4 +80,19 @@ type EncounterHospitalizationComponent struct {
 type EncounterLocationComponent struct {
 	Location Reference `bson:"location,omitempty", json:"location,omitempty"`
 	Period   Period    `bson:"period,omitempty", json:"period,omitempty"`
+}
+type EncounterBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Encounter
+	Category     EncounterCategory
+}
+
+type EncounterCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

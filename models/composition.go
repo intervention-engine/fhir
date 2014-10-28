@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Composition struct {
 	Id              string                         `json:"-" bson:"_id"`
 	Identifier      Identifier                     `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -69,4 +71,19 @@ type SectionComponent struct {
 	Order       CodeableConcept    `bson:"order,omitempty", json:"order,omitempty"`
 	Section     []SectionComponent `bson:"section,omitempty", json:"section,omitempty"`
 	Entry       []Reference        `bson:"entry,omitempty", json:"entry,omitempty"`
+}
+type CompositionBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Composition
+	Category     CompositionCategory
+}
+
+type CompositionCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

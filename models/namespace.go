@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Namespace struct {
 	Id          string                       `json:"-" bson:"_id"`
 	Type        string                       `bson:"type,omitempty", json:"type,omitempty"`
@@ -53,4 +55,19 @@ type NamespaceUniqueIdComponent struct {
 type NamespaceContactComponent struct {
 	Name    HumanName      `bson:"name,omitempty", json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty", json:"telecom,omitempty"`
+}
+type NamespaceBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Namespace
+	Category     NamespaceCategory
+}
+
+type NamespaceCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type List struct {
 	Id          string               `json:"-" bson:"_id"`
 	Identifier  []Identifier         `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -45,4 +47,19 @@ type ListEntryComponent struct {
 	Deleted *bool             `bson:"deleted,omitempty", json:"deleted,omitempty"`
 	Date    FHIRDateTime      `bson:"date,omitempty", json:"date,omitempty"`
 	Item    Reference         `bson:"item,omitempty", json:"item,omitempty"`
+}
+type ListBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []List
+	Category     ListCategory
+}
+
+type ListCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

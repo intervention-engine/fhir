@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Subscription struct {
 	Id       string                       `json:"-" bson:"_id"`
 	Criteria string                       `bson:"criteria,omitempty", json:"criteria,omitempty"`
@@ -51,4 +53,19 @@ type SubscriptionTagComponent struct {
 	Term        string `bson:"term,omitempty", json:"term,omitempty"`
 	Scheme      string `bson:"scheme,omitempty", json:"scheme,omitempty"`
 	Description string `bson:"description,omitempty", json:"description,omitempty"`
+}
+type SubscriptionBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Subscription
+	Category     SubscriptionCategory
+}
+
+type SubscriptionCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

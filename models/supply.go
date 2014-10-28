@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Supply struct {
 	Id          string                    `json:"-" bson:"_id"`
 	Kind        CodeableConcept           `bson:"kind,omitempty", json:"kind,omitempty"`
@@ -48,4 +50,19 @@ type SupplyDispenseComponent struct {
 	WhenHandedOver Period          `bson:"whenHandedOver,omitempty", json:"whenHandedOver,omitempty"`
 	Destination    Reference       `bson:"destination,omitempty", json:"destination,omitempty"`
 	Receiver       []Reference     `bson:"receiver,omitempty", json:"receiver,omitempty"`
+}
+type SupplyBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Supply
+	Category     SupplyCategory
+}
+
+type SupplyCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

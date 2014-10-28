@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type ImmunizationRecommendation struct {
 	Id             string                                              `json:"-" bson:"_id"`
 	Identifier     []Identifier                                        `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -57,4 +59,19 @@ type ImmunizationRecommendationRecommendationComponent struct {
 	Protocol                     ImmunizationRecommendationRecommendationProtocolComponent        `bson:"protocol,omitempty", json:"protocol,omitempty"`
 	SupportingImmunization       []Reference                                                      `bson:"supportingImmunization,omitempty", json:"supportingImmunization,omitempty"`
 	SupportingPatientInformation []Reference                                                      `bson:"supportingPatientInformation,omitempty", json:"supportingPatientInformation,omitempty"`
+}
+type ImmunizationRecommendationBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []ImmunizationRecommendation
+	Category     ImmunizationRecommendationCategory
+}
+
+type ImmunizationRecommendationCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

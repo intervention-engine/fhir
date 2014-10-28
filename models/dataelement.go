@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type DataElement struct {
 	Id           string                        `json:"-" bson:"_id"`
 	Identifier   Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -63,4 +65,19 @@ type DataElementMappingComponent struct {
 	Name     string `bson:"name,omitempty", json:"name,omitempty"`
 	Comments string `bson:"comments,omitempty", json:"comments,omitempty"`
 	Map      string `bson:"map,omitempty", json:"map,omitempty"`
+}
+type DataElementBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []DataElement
+	Category     DataElementCategory
+}
+
+type DataElementCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

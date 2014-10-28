@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type AdverseReaction struct {
 	Id              string                             `json:"-" bson:"_id"`
 	Identifier      []Identifier                       `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -49,4 +51,19 @@ type AdverseReactionExposureComponent struct {
 	Type                 string       `bson:"type,omitempty", json:"type,omitempty"`
 	CausalityExpectation string       `bson:"causalityExpectation,omitempty", json:"causalityExpectation,omitempty"`
 	Substance            Reference    `bson:"substance,omitempty", json:"substance,omitempty"`
+}
+type AdverseReactionBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []AdverseReaction
+	Category     AdverseReactionCategory
+}
+
+type AdverseReactionCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

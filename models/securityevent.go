@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type SecurityEvent struct {
 	Id          string                              `json:"-" bson:"_id"`
 	Event       SecurityEventEventComponent         `bson:"event,omitempty", json:"event,omitempty"`
@@ -87,4 +89,19 @@ type SecurityEventObjectComponent struct {
 	Description string                               `bson:"description,omitempty", json:"description,omitempty"`
 	Query       string                               `bson:"query,omitempty", json:"query,omitempty"`
 	Detail      []SecurityEventObjectDetailComponent `bson:"detail,omitempty", json:"detail,omitempty"`
+}
+type SecurityEventBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []SecurityEvent
+	Category     SecurityEventCategory
+}
+
+type SecurityEventCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

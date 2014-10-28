@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Query struct {
 	Id         string                 `json:"-" bson:"_id"`
 	Identifier string                 `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -44,4 +46,19 @@ type QueryResponseComponent struct {
 	Next       []Extension `bson:"next,omitempty", json:"next,omitempty"`
 	Last       []Extension `bson:"last,omitempty", json:"last,omitempty"`
 	Reference  []Reference `bson:"reference,omitempty", json:"reference,omitempty"`
+}
+type QueryBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Query
+	Category     QueryCategory
+}
+
+type QueryCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

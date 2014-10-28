@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Media struct {
 	Id         string          `json:"-" bson:"_id"`
 	Type       string          `bson:"type,omitempty", json:"type,omitempty"`
@@ -41,4 +43,19 @@ type Media struct {
 	Frames     float64         `bson:"frames,omitempty", json:"frames,omitempty"`
 	Length     float64         `bson:"length,omitempty", json:"length,omitempty"`
 	Content    Attachment      `bson:"content,omitempty", json:"content,omitempty"`
+}
+type MediaBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Media
+	Category     MediaCategory
+}
+
+type MediaCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

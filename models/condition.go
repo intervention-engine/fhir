@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Condition struct {
 	Id               string                          `json:"-" bson:"_id"`
 	Identifier       []Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -73,4 +75,19 @@ type ConditionRelatedItemComponent struct {
 	Type   string          `bson:"type,omitempty", json:"type,omitempty"`
 	Code   CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
 	Target Reference       `bson:"target,omitempty", json:"target,omitempty"`
+}
+type ConditionBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Condition
+	Category     ConditionCategory
+}
+
+type ConditionCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

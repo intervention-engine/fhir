@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Other struct {
 	Id         string          `json:"-" bson:"_id"`
 	Identifier []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -33,4 +35,19 @@ type Other struct {
 	Subject    Reference       `bson:"subject,omitempty", json:"subject,omitempty"`
 	Author     Reference       `bson:"author,omitempty", json:"author,omitempty"`
 	Created    FHIRDateTime    `bson:"created,omitempty", json:"created,omitempty"`
+}
+type OtherBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Other
+	Category     OtherCategory
+}
+
+type OtherCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

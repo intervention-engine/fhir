@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type AllergyIntolerance struct {
 	Id              string       `json:"-" bson:"_id"`
 	Identifier      []Identifier `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -38,4 +40,19 @@ type AllergyIntolerance struct {
 	Substance       Reference    `bson:"substance,omitempty", json:"substance,omitempty"`
 	Reaction        []Reference  `bson:"reaction,omitempty", json:"reaction,omitempty"`
 	SensitivityTest []Reference  `bson:"sensitivityTest,omitempty", json:"sensitivityTest,omitempty"`
+}
+type AllergyIntoleranceBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []AllergyIntolerance
+	Category     AllergyIntoleranceCategory
+}
+
+type AllergyIntoleranceCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

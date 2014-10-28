@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type DocumentReference struct {
 	Id               string                                `json:"-" bson:"_id"`
 	MasterIdentifier Identifier                            `bson:"masterIdentifier,omitempty", json:"masterIdentifier,omitempty"`
@@ -78,4 +80,19 @@ type DocumentReferenceContextComponent struct {
 	Event        []CodeableConcept `bson:"event,omitempty", json:"event,omitempty"`
 	Period       Period            `bson:"period,omitempty", json:"period,omitempty"`
 	FacilityType CodeableConcept   `bson:"facilityType,omitempty", json:"facilityType,omitempty"`
+}
+type DocumentReferenceBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []DocumentReference
+	Category     DocumentReferenceCategory
+}
+
+type DocumentReferenceCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

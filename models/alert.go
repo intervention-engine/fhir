@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Alert struct {
 	Id         string          `json:"-" bson:"_id"`
 	Identifier []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -34,4 +36,19 @@ type Alert struct {
 	Subject    Reference       `bson:"subject,omitempty", json:"subject,omitempty"`
 	Author     Reference       `bson:"author,omitempty", json:"author,omitempty"`
 	Note       string          `bson:"note,omitempty", json:"note,omitempty"`
+}
+type AlertBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Alert
+	Category     AlertCategory
+}
+
+type AlertCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

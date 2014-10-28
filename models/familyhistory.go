@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type FamilyHistory struct {
 	Id         string                           `json:"-" bson:"_id"`
 	Identifier []Identifier                     `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -62,4 +64,19 @@ type FamilyHistoryRelationComponent struct {
 	DeceasedString  string                                    `bson:"deceasedString,omitempty", json:"deceasedString,omitempty"`
 	Note            string                                    `bson:"note,omitempty", json:"note,omitempty"`
 	Condition       []FamilyHistoryRelationConditionComponent `bson:"condition,omitempty", json:"condition,omitempty"`
+}
+type FamilyHistoryBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []FamilyHistory
+	Category     FamilyHistoryCategory
+}
+
+type FamilyHistoryCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

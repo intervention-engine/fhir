@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Device struct {
 	Id           string          `json:"-" bson:"_id"`
 	Identifier   []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -41,4 +43,19 @@ type Device struct {
 	Patient      Reference       `bson:"patient,omitempty", json:"patient,omitempty"`
 	Contact      []ContactPoint  `bson:"contact,omitempty", json:"contact,omitempty"`
 	Url          string          `bson:"url,omitempty", json:"url,omitempty"`
+}
+type DeviceBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Device
+	Category     DeviceCategory
+}
+
+type DeviceCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

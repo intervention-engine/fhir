@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type DiagnosticReport struct {
 	Id                 string                           `json:"-" bson:"_id"`
 	Name               CodeableConcept                  `bson:"name,omitempty", json:"name,omitempty"`
@@ -51,4 +53,19 @@ type DiagnosticReport struct {
 type DiagnosticReportImageComponent struct {
 	Comment string    `bson:"comment,omitempty", json:"comment,omitempty"`
 	Link    Reference `bson:"link,omitempty", json:"link,omitempty"`
+}
+type DiagnosticReportBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []DiagnosticReport
+	Category     DiagnosticReportCategory
+}
+
+type DiagnosticReportCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	"gitlab.mitre.org/intervention-engine/fhir/models"
@@ -19,9 +20,17 @@ func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Requ
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var bundle models.ImmunizationRecommendationBundle
+	bundle.Type = "Bundle"
+	bundle.Title = "ImmunizationRecommendation Index"
+	bundle.Id = bson.NewObjectId().Hex()
+	bundle.Updated = time.Now()
+	bundle.TotalResults = len(result)
+	bundle.Entries = result
+
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(bundle)
 }
 
 func ImmunizationRecommendationShowHandler(rw http.ResponseWriter, r *http.Request) {

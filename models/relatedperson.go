@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type RelatedPerson struct {
 	Id           string          `json:"-" bson:"_id"`
 	Identifier   []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -36,4 +38,19 @@ type RelatedPerson struct {
 	Gender       CodeableConcept `bson:"gender,omitempty", json:"gender,omitempty"`
 	Address      Address         `bson:"address,omitempty", json:"address,omitempty"`
 	Photo        []Attachment    `bson:"photo,omitempty", json:"photo,omitempty"`
+}
+type RelatedPersonBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []RelatedPerson
+	Category     RelatedPersonCategory
+}
+
+type RelatedPersonCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

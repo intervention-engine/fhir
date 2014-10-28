@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Medication struct {
 	Id           string                     `json:"-" bson:"_id"`
 	Name         string                     `bson:"name,omitempty", json:"name,omitempty"`
@@ -59,4 +61,19 @@ type MedicationPackageContentComponent struct {
 type MedicationPackageComponent struct {
 	Container CodeableConcept                     `bson:"container,omitempty", json:"container,omitempty"`
 	Content   []MedicationPackageContentComponent `bson:"content,omitempty", json:"content,omitempty"`
+}
+type MedicationBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Medication
+	Category     MedicationCategory
+}
+
+type MedicationCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

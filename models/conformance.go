@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Conformance struct {
 	Id             string                             `json:"-" bson:"_id"`
 	Identifier     string                             `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -150,4 +152,19 @@ type ConformanceDocumentComponent struct {
 	Mode          string    `bson:"mode,omitempty", json:"mode,omitempty"`
 	Documentation string    `bson:"documentation,omitempty", json:"documentation,omitempty"`
 	Profile       Reference `bson:"profile,omitempty", json:"profile,omitempty"`
+}
+type ConformanceBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Conformance
+	Category     ConformanceCategory
+}
+
+type ConformanceCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

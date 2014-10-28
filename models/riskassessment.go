@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type RiskAssessment struct {
 	Id         string                              `json:"-" bson:"_id"`
 	Subject    Reference                           `bson:"subject,omitempty", json:"subject,omitempty"`
@@ -49,4 +51,19 @@ type RiskAssessmentPredictionComponent struct {
 	WhenPeriod                 Period          `bson:"whenPeriod,omitempty", json:"whenPeriod,omitempty"`
 	WhenRange                  Range           `bson:"whenRange,omitempty", json:"whenRange,omitempty"`
 	Rationale                  string          `bson:"rationale,omitempty", json:"rationale,omitempty"`
+}
+type RiskAssessmentBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []RiskAssessment
+	Category     RiskAssessmentCategory
+}
+
+type RiskAssessmentCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

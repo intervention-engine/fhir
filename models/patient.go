@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Patient struct {
 	Id                   string                 `json:"-" bson:"_id"`
 	Identifier           []Identifier           `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -70,4 +72,19 @@ type AnimalComponent struct {
 type PatientLinkComponent struct {
 	Other Reference `bson:"other,omitempty", json:"other,omitempty"`
 	Type  string    `bson:"type,omitempty", json:"type,omitempty"`
+}
+type PatientBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Patient
+	Category     PatientCategory
+}
+
+type PatientCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

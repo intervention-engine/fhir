@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type CarePlan struct {
 	Id          string                         `json:"-" bson:"_id"`
 	Identifier  []Identifier                   `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -78,4 +80,19 @@ type CarePlanActivityComponent struct {
 	Notes           string                          `bson:"notes,omitempty", json:"notes,omitempty"`
 	Detail          Reference                       `bson:"detail,omitempty", json:"detail,omitempty"`
 	Simple          CarePlanActivitySimpleComponent `bson:"simple,omitempty", json:"simple,omitempty"`
+}
+type CarePlanBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []CarePlan
+	Category     CarePlanCategory
+}
+
+type CarePlanCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

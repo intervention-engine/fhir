@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Organization struct {
 	Id         string                         `json:"-" bson:"_id"`
 	Identifier []Identifier                   `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -46,4 +48,19 @@ type OrganizationContactComponent struct {
 	Telecom []ContactPoint  `bson:"telecom,omitempty", json:"telecom,omitempty"`
 	Address Address         `bson:"address,omitempty", json:"address,omitempty"`
 	Gender  CodeableConcept `bson:"gender,omitempty", json:"gender,omitempty"`
+}
+type OrganizationBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Organization
+	Category     OrganizationCategory
+}
+
+type OrganizationCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

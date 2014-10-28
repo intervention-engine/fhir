@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type OperationDefinition struct {
 	Id           string                                  `json:"-" bson:"_id"`
 	Identifier   string                                  `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -57,4 +59,19 @@ type OperationDefinitionParameterComponent struct {
 	Documentation string    `bson:"documentation,omitempty", json:"documentation,omitempty"`
 	Type          Coding    `bson:"type,omitempty", json:"type,omitempty"`
 	Profile       Reference `bson:"profile,omitempty", json:"profile,omitempty"`
+}
+type OperationDefinitionBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []OperationDefinition
+	Category     OperationDefinitionCategory
+}
+
+type OperationDefinitionCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

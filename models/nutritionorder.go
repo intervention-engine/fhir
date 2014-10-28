@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type NutritionOrder struct {
 	Id                     string                        `json:"-" bson:"_id"`
 	Subject                Reference                     `bson:"subject,omitempty", json:"subject,omitempty"`
@@ -77,4 +79,19 @@ type NutritionOrderItemComponent struct {
 	OralDiet        NutritionOrderItemOralDietComponent       `bson:"oralDiet,omitempty", json:"oralDiet,omitempty"`
 	Supplement      NutritionOrderItemSupplementComponent     `bson:"supplement,omitempty", json:"supplement,omitempty"`
 	EnteralFormula  NutritionOrderItemEnteralFormulaComponent `bson:"enteralFormula,omitempty", json:"enteralFormula,omitempty"`
+}
+type NutritionOrderBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []NutritionOrder
+	Category     NutritionOrderCategory
+}
+
+type NutritionOrderCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

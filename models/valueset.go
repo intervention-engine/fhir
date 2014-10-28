@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type ValueSet struct {
 	Id           string                     `json:"-" bson:"_id"`
 	Identifier   string                     `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -116,4 +118,19 @@ type ValueSetExpansionComponent struct {
 	Identifier Identifier                           `bson:"identifier,omitempty", json:"identifier,omitempty"`
 	Timestamp  FHIRDateTime                         `bson:"timestamp,omitempty", json:"timestamp,omitempty"`
 	Contains   []ValueSetExpansionContainsComponent `bson:"contains,omitempty", json:"contains,omitempty"`
+}
+type ValueSetBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []ValueSet
+	Category     ValueSetCategory
+}
+
+type ValueSetCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

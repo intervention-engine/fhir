@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Order struct {
 	Id                    string             `json:"-" bson:"_id"`
 	Identifier            []Identifier       `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -44,4 +46,19 @@ type Order struct {
 type OrderWhenComponent struct {
 	Code     CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
 	Schedule Timing          `bson:"schedule,omitempty", json:"schedule,omitempty"`
+}
+type OrderBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Order
+	Category     OrderCategory
+}
+
+type OrderCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

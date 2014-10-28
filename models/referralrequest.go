@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type ReferralRequest struct {
 	Id                    string            `json:"-" bson:"_id"`
 	Status                string            `bson:"status,omitempty", json:"status,omitempty"`
@@ -43,4 +45,19 @@ type ReferralRequest struct {
 	ServiceRequested      []CodeableConcept `bson:"serviceRequested,omitempty", json:"serviceRequested,omitempty"`
 	SupportingInformation []Reference       `bson:"supportingInformation,omitempty", json:"supportingInformation,omitempty"`
 	FulfillmentTime       Period            `bson:"fulfillmentTime,omitempty", json:"fulfillmentTime,omitempty"`
+}
+type ReferralRequestBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []ReferralRequest
+	Category     ReferralRequestCategory
+}
+
+type ReferralRequestCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

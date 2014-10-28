@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type ConceptMap struct {
 	Id              string                       `json:"-" bson:"_id"`
 	Identifier      string                       `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -67,4 +69,19 @@ type ConceptMapElementComponent struct {
 	Code       string                          `bson:"code,omitempty", json:"code,omitempty"`
 	DependsOn  []OtherElementComponent         `bson:"dependsOn,omitempty", json:"dependsOn,omitempty"`
 	Map        []ConceptMapElementMapComponent `bson:"map,omitempty", json:"map,omitempty"`
+}
+type ConceptMapBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []ConceptMap
+	Category     ConceptMapCategory
+}
+
+type ConceptMapCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

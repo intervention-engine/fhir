@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Appointment struct {
 	Id             string                            `json:"-" bson:"_id"`
 	Identifier     []Identifier                      `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -51,4 +53,19 @@ type AppointmentParticipantComponent struct {
 	Actor    Reference         `bson:"actor,omitempty", json:"actor,omitempty"`
 	Required string            `bson:"required,omitempty", json:"required,omitempty"`
 	Status   string            `bson:"status,omitempty", json:"status,omitempty"`
+}
+type AppointmentBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Appointment
+	Category     AppointmentCategory
+}
+
+type AppointmentCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }

@@ -26,6 +26,8 @@
 
 package models
 
+import "time"
+
 type Procedure struct {
 	Id           string                          `json:"-" bson:"_id"`
 	Identifier   []Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
@@ -54,4 +56,19 @@ type ProcedurePerformerComponent struct {
 type ProcedureRelatedItemComponent struct {
 	Type   string    `bson:"type,omitempty", json:"type,omitempty"`
 	Target Reference `bson:"target,omitempty", json:"target,omitempty"`
+}
+type ProcedureBundle struct {
+	Type         string
+	Title        string
+	Id           string
+	Updated      time.Time
+	TotalResults int
+	Entries      []Procedure
+	Category     ProcedureCategory
+}
+
+type ProcedureCategory struct {
+	Term   string
+	Label  string
+	Scheme string
 }
