@@ -97,22 +97,32 @@ type ElementDefinitionMappingComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec definition
 type ElementDefinitionComponent struct {
-	Short         string                                 `bson:"short,omitempty", json:"short,omitempty"`
-	Formal        string                                 `bson:"formal,omitempty", json:"formal,omitempty"`
-	Comments      string                                 `bson:"comments,omitempty", json:"comments,omitempty"`
-	Requirements  string                                 `bson:"requirements,omitempty", json:"requirements,omitempty"`
-	Synonym       []string                               `bson:"synonym,omitempty", json:"synonym,omitempty"`
-	Min           float64                                `bson:"min,omitempty", json:"min,omitempty"`
-	Max           string                                 `bson:"max,omitempty", json:"max,omitempty"`
-	Type          []TypeRefComponent                     `bson:"type,omitempty", json:"type,omitempty"`
-	NameReference string                                 `bson:"nameReference,omitempty", json:"nameReference,omitempty"`
-	MaxLength     float64                                `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
-	Condition     []string                               `bson:"condition,omitempty", json:"condition,omitempty"`
-	Constraint    []ElementDefinitionConstraintComponent `bson:"constraint,omitempty", json:"constraint,omitempty"`
-	MustSupport   *bool                                  `bson:"mustSupport,omitempty", json:"mustSupport,omitempty"`
-	IsModifier    *bool                                  `bson:"isModifier,omitempty", json:"isModifier,omitempty"`
-	Binding       ElementDefinitionBindingComponent      `bson:"binding,omitempty", json:"binding,omitempty"`
-	Mapping       []ElementDefinitionMappingComponent    `bson:"mapping,omitempty", json:"mapping,omitempty"`
+	Short                 string                                 `bson:"short,omitempty", json:"short,omitempty"`
+	Formal                string                                 `bson:"formal,omitempty", json:"formal,omitempty"`
+	Comments              string                                 `bson:"comments,omitempty", json:"comments,omitempty"`
+	Requirements          string                                 `bson:"requirements,omitempty", json:"requirements,omitempty"`
+	Synonym               []string                               `bson:"synonym,omitempty", json:"synonym,omitempty"`
+	Min                   float64                                `bson:"min,omitempty", json:"min,omitempty"`
+	Max                   string                                 `bson:"max,omitempty", json:"max,omitempty"`
+	Type                  []TypeRefComponent                     `bson:"type,omitempty", json:"type,omitempty"`
+	NameReference         string                                 `bson:"nameReference,omitempty", json:"nameReference,omitempty"`
+	ValueString           string                                 `bson:"valuestring,omitempty", json:"valuestring,omitempty"`
+	ValueInteger          int                                    `bson:"valueinteger,omitempty", json:"valueinteger,omitempty"`
+	ValueDateTime         FHIRDateTime                           `bson:"valuedatetime,omitempty", json:"valuedatetime,omitempty"`
+	ValueBoolean          boolean                                `bson:"valueboolean,omitempty", json:"valueboolean,omitempty"`
+	ValueCodableConcept   CodableConcept                         `bson:"valuecodableconcept,omitempty", json:"valuecodableconcept,omitempty"`
+	ExampleString         string                                 `bson:"examplestring,omitempty", json:"examplestring,omitempty"`
+	ExampleInteger        int                                    `bson:"exampleinteger,omitempty", json:"exampleinteger,omitempty"`
+	ExampleDateTime       FHIRDateTime                           `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
+	ExampleBoolean        boolean                                `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
+	ExampleCodableConcept CodableConcept                         `bson:"examplecodableconcept,omitempty", json:"examplecodableconcept,omitempty"`
+	MaxLength             float64                                `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
+	Condition             []string                               `bson:"condition,omitempty", json:"condition,omitempty"`
+	Constraint            []ElementDefinitionConstraintComponent `bson:"constraint,omitempty", json:"constraint,omitempty"`
+	MustSupport           *bool                                  `bson:"mustSupport,omitempty", json:"mustSupport,omitempty"`
+	IsModifier            *bool                                  `bson:"isModifier,omitempty", json:"isModifier,omitempty"`
+	Binding               ElementDefinitionBindingComponent      `bson:"binding,omitempty", json:"binding,omitempty"`
+	Mapping               []ElementDefinitionMappingComponent    `bson:"mapping,omitempty", json:"mapping,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec element
