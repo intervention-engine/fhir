@@ -27,11 +27,11 @@
 package models
 
 type Extension struct {
-	Id                  string         `json:"-" bson:"_id"`
-	Url                 string         `bson:"url,omitempty", json:"url,omitempty"`
-	ValueString         string         `bson:"valuestring,omitempty", json:"valuestring,omitempty"`
-	ValueInteger        int            `bson:"valueinteger,omitempty", json:"valueinteger,omitempty"`
-	ValueDateTime       FHIRDateTime   `bson:"valuedatetime,omitempty", json:"valuedatetime,omitempty"`
-	ValueBoolean        boolean        `bson:"valueboolean,omitempty", json:"valueboolean,omitempty"`
-	ValueCodableConcept CodableConcept `bson:"valuecodableconcept,omitempty", json:"valuecodableconcept,omitempty"`
+	Id                  string          `json:"-" bson:"_id"`
+	Url                 string          `bson:"url,omitempty", json:"url,omitempty"`
+	ValueString         string          `bson:"valuestring,omitempty", json:"valuestring,omitempty"`
+	ValueInteger        int             `bson:"valueinteger,omitempty", json:"valueinteger,omitempty"`
+	ValueDateTime       FHIRDateTime    `bson:"valuedatetime,omitempty", json:"valuedatetime,omitempty"`
+	ValueBoolean        *bool           `bson:"valueboolean,omitempty", json:"valueboolean,omitempty"`
+	ValueCodableConcept CodeableConcept `bson:"valuecodableconcept,omitempty", json:"valuecodableconcept,omitempty"`
 }

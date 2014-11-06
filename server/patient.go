@@ -74,12 +74,19 @@ func PatientCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	f := Database.C("facts")
+	fact := patient.ToFact()
+	err = f.Insert(fact)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
 	host, err := os.Hostname()
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/patient/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Patient/"+i.Hex())
 }
 
 func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
@@ -106,6 +113,18 @@ func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	f := Database.C("facts")
+	fact := patient.ToFact()
+	tempFact := models.Fact{}
+	err = f.Find(bson.M{"targetid": id.Hex()}).One(&tempFact)
+
+	fact.Id = tempFact.Id
+
+	err = f.Update(bson.M{"targetid": id.Hex()}, fact)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request) {
@@ -123,7 +142,11 @@ func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request) {
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
 	}
 
+	f := Database.C("facts")
+	err = f.Remove(bson.M{"targetid": id.Hex()})
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 }

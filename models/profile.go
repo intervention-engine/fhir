@@ -109,13 +109,13 @@ type ElementDefinitionComponent struct {
 	ValueString           string                                 `bson:"valuestring,omitempty", json:"valuestring,omitempty"`
 	ValueInteger          int                                    `bson:"valueinteger,omitempty", json:"valueinteger,omitempty"`
 	ValueDateTime         FHIRDateTime                           `bson:"valuedatetime,omitempty", json:"valuedatetime,omitempty"`
-	ValueBoolean          boolean                                `bson:"valueboolean,omitempty", json:"valueboolean,omitempty"`
-	ValueCodableConcept   CodableConcept                         `bson:"valuecodableconcept,omitempty", json:"valuecodableconcept,omitempty"`
+	ValueBoolean          *bool                                  `bson:"valueboolean,omitempty", json:"valueboolean,omitempty"`
+	ValueCodableConcept   CodeableConcept                        `bson:"valuecodableconcept,omitempty", json:"valuecodableconcept,omitempty"`
 	ExampleString         string                                 `bson:"examplestring,omitempty", json:"examplestring,omitempty"`
 	ExampleInteger        int                                    `bson:"exampleinteger,omitempty", json:"exampleinteger,omitempty"`
 	ExampleDateTime       FHIRDateTime                           `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
-	ExampleBoolean        boolean                                `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
-	ExampleCodableConcept CodableConcept                         `bson:"examplecodableconcept,omitempty", json:"examplecodableconcept,omitempty"`
+	ExampleBoolean        *bool                                  `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
+	ExampleCodableConcept CodeableConcept                        `bson:"examplecodableconcept,omitempty", json:"examplecodableconcept,omitempty"`
 	MaxLength             float64                                `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
 	Condition             []string                               `bson:"condition,omitempty", json:"condition,omitempty"`
 	Constraint            []ElementDefinitionConstraintComponent `bson:"constraint,omitempty", json:"constraint,omitempty"`

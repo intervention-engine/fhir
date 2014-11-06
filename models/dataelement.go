@@ -48,8 +48,8 @@ type DataElement struct {
 	ExampleString         string                        `bson:"examplestring,omitempty", json:"examplestring,omitempty"`
 	ExampleInteger        int                           `bson:"exampleinteger,omitempty", json:"exampleinteger,omitempty"`
 	ExampleDateTime       FHIRDateTime                  `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
-	ExampleBoolean        boolean                       `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
-	ExampleCodableConcept CodableConcept                `bson:"examplecodableconcept,omitempty", json:"examplecodableconcept,omitempty"`
+	ExampleBoolean        *bool                         `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
+	ExampleCodableConcept CodeableConcept               `bson:"examplecodableconcept,omitempty", json:"examplecodableconcept,omitempty"`
 	MaxLength             float64                       `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
 	Units                 CodeableConcept               `bson:"units,omitempty", json:"units,omitempty"`
 	Binding               DataElementBindingComponent   `bson:"binding,omitempty", json:"binding,omitempty"`
