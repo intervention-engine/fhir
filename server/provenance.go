@@ -79,7 +79,7 @@ func ProvenanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/provenance/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Provenance/"+i.Hex())
 }
 
 func ProvenanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {

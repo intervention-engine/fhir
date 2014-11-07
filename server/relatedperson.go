@@ -79,7 +79,7 @@ func RelatedPersonCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/relatedperson/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/RelatedPerson/"+i.Hex())
 }
 
 func RelatedPersonUpdateHandler(rw http.ResponseWriter, r *http.Request) {

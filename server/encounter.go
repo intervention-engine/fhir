@@ -79,7 +79,7 @@ func EncounterCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/encounter/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Encounter/"+i.Hex())
 }
 
 func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request) {

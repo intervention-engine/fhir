@@ -79,7 +79,7 @@ func OtherCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/other/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Other/"+i.Hex())
 }
 
 func OtherUpdateHandler(rw http.ResponseWriter, r *http.Request) {

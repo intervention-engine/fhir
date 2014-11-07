@@ -79,7 +79,7 @@ func AppointmentResponseCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/appointmentresponse/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/AppointmentResponse/"+i.Hex())
 }
 
 func AppointmentResponseUpdateHandler(rw http.ResponseWriter, r *http.Request) {

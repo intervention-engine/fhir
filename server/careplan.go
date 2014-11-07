@@ -79,7 +79,7 @@ func CarePlanCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/careplan/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/CarePlan/"+i.Hex())
 }
 
 func CarePlanUpdateHandler(rw http.ResponseWriter, r *http.Request) {

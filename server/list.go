@@ -79,7 +79,7 @@ func ListCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/list/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/List/"+i.Hex())
 }
 
 func ListUpdateHandler(rw http.ResponseWriter, r *http.Request) {

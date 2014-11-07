@@ -79,7 +79,7 @@ func MediaCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/media/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Media/"+i.Hex())
 }
 
 func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request) {

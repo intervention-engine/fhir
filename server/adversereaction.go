@@ -79,7 +79,7 @@ func AdverseReactionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/adversereaction/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/AdverseReaction/"+i.Hex())
 }
 
 func AdverseReactionUpdateHandler(rw http.ResponseWriter, r *http.Request) {

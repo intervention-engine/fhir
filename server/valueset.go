@@ -79,7 +79,7 @@ func ValueSetCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/valueset/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/ValueSet/"+i.Hex())
 }
 
 func ValueSetUpdateHandler(rw http.ResponseWriter, r *http.Request) {

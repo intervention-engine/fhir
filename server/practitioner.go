@@ -79,7 +79,7 @@ func PractitionerCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/practitioner/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Practitioner/"+i.Hex())
 }
 
 func PractitionerUpdateHandler(rw http.ResponseWriter, r *http.Request) {

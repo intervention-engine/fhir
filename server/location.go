@@ -79,7 +79,7 @@ func LocationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/location/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Location/"+i.Hex())
 }
 
 func LocationUpdateHandler(rw http.ResponseWriter, r *http.Request) {

@@ -29,31 +29,31 @@ package models
 import "time"
 
 type DataElement struct {
-	Id                    string                        `json:"-" bson:"_id"`
-	Identifier            Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Version               string                        `bson:"version,omitempty", json:"version,omitempty"`
-	Publisher             string                        `bson:"publisher,omitempty", json:"publisher,omitempty"`
-	Telecom               []ContactPoint                `bson:"telecom,omitempty", json:"telecom,omitempty"`
-	Status                string                        `bson:"status,omitempty", json:"status,omitempty"`
-	Date                  FHIRDateTime                  `bson:"date,omitempty", json:"date,omitempty"`
-	Name                  string                        `bson:"name,omitempty", json:"name,omitempty"`
-	Category              []CodeableConcept             `bson:"category,omitempty", json:"category,omitempty"`
-	Code                  []Coding                      `bson:"code,omitempty", json:"code,omitempty"`
-	Question              string                        `bson:"question,omitempty", json:"question,omitempty"`
-	Definition            string                        `bson:"definition,omitempty", json:"definition,omitempty"`
-	Comments              string                        `bson:"comments,omitempty", json:"comments,omitempty"`
-	Requirements          string                        `bson:"requirements,omitempty", json:"requirements,omitempty"`
-	Synonym               []string                      `bson:"synonym,omitempty", json:"synonym,omitempty"`
-	Type                  string                        `bson:"type,omitempty", json:"type,omitempty"`
-	ExampleString         string                        `bson:"examplestring,omitempty", json:"examplestring,omitempty"`
-	ExampleInteger        int                           `bson:"exampleinteger,omitempty", json:"exampleinteger,omitempty"`
-	ExampleDateTime       FHIRDateTime                  `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
-	ExampleBoolean        *bool                         `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
-	ExampleCodableConcept CodeableConcept               `bson:"examplecodableconcept,omitempty", json:"examplecodableconcept,omitempty"`
-	MaxLength             float64                       `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
-	Units                 CodeableConcept               `bson:"units,omitempty", json:"units,omitempty"`
-	Binding               DataElementBindingComponent   `bson:"binding,omitempty", json:"binding,omitempty"`
-	Mapping               []DataElementMappingComponent `bson:"mapping,omitempty", json:"mapping,omitempty"`
+	Id                     string                        `json:"-" bson:"_id"`
+	Identifier             Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Version                string                        `bson:"version,omitempty", json:"version,omitempty"`
+	Publisher              string                        `bson:"publisher,omitempty", json:"publisher,omitempty"`
+	Telecom                []ContactPoint                `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Status                 string                        `bson:"status,omitempty", json:"status,omitempty"`
+	Date                   FHIRDateTime                  `bson:"date,omitempty", json:"date,omitempty"`
+	Name                   string                        `bson:"name,omitempty", json:"name,omitempty"`
+	Category               []CodeableConcept             `bson:"category,omitempty", json:"category,omitempty"`
+	Code                   []Coding                      `bson:"code,omitempty", json:"code,omitempty"`
+	Question               string                        `bson:"question,omitempty", json:"question,omitempty"`
+	Definition             string                        `bson:"definition,omitempty", json:"definition,omitempty"`
+	Comments               string                        `bson:"comments,omitempty", json:"comments,omitempty"`
+	Requirements           string                        `bson:"requirements,omitempty", json:"requirements,omitempty"`
+	Synonym                []string                      `bson:"synonym,omitempty", json:"synonym,omitempty"`
+	Type                   string                        `bson:"type,omitempty", json:"type,omitempty"`
+	ExampleString          string                        `bson:"examplestring,omitempty", json:"examplestring,omitempty"`
+	ExampleInteger         int                           `bson:"exampleinteger,omitempty", json:"exampleinteger,omitempty"`
+	ExampleDateTime        FHIRDateTime                  `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
+	ExampleBoolean         *bool                         `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
+	ExampleCodeableConcept CodeableConcept               `bson:"examplecodeableconcept,omitempty", json:"examplecodeableconcept,omitempty"`
+	MaxLength              float64                       `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
+	Units                  CodeableConcept               `bson:"units,omitempty", json:"units,omitempty"`
+	Binding                DataElementBindingComponent   `bson:"binding,omitempty", json:"binding,omitempty"`
+	Mapping                []DataElementMappingComponent `bson:"mapping,omitempty", json:"mapping,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec binding

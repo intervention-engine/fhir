@@ -79,7 +79,7 @@ func OperationOutcomeCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/operationoutcome/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/OperationOutcome/"+i.Hex())
 }
 
 func OperationOutcomeUpdateHandler(rw http.ResponseWriter, r *http.Request) {

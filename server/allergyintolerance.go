@@ -79,7 +79,7 @@ func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/allergyintolerance/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/AllergyIntolerance/"+i.Hex())
 }
 
 func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request) {

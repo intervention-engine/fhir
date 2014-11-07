@@ -79,7 +79,7 @@ func DiagnosticReportCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/diagnosticreport/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/DiagnosticReport/"+i.Hex())
 }
 
 func DiagnosticReportUpdateHandler(rw http.ResponseWriter, r *http.Request) {

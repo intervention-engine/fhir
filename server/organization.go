@@ -79,7 +79,7 @@ func OrganizationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/organization/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Organization/"+i.Hex())
 }
 
 func OrganizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {

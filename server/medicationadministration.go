@@ -79,7 +79,7 @@ func MedicationAdministrationCreateHandler(rw http.ResponseWriter, r *http.Reque
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/medicationadministration/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/MedicationAdministration/"+i.Hex())
 }
 
 func MedicationAdministrationUpdateHandler(rw http.ResponseWriter, r *http.Request) {

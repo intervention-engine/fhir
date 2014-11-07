@@ -79,7 +79,7 @@ func SubscriptionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/subscription/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Subscription/"+i.Hex())
 }
 
 func SubscriptionUpdateHandler(rw http.ResponseWriter, r *http.Request) {

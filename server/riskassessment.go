@@ -79,7 +79,7 @@ func RiskAssessmentCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/riskassessment/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/RiskAssessment/"+i.Hex())
 }
 
 func RiskAssessmentUpdateHandler(rw http.ResponseWriter, r *http.Request) {

@@ -79,7 +79,7 @@ func ConformanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/conformance/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Conformance/"+i.Hex())
 }
 
 func ConformanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {

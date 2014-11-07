@@ -79,7 +79,7 @@ func AvailabilityCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/availability/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Availability/"+i.Hex())
 }
 
 func AvailabilityUpdateHandler(rw http.ResponseWriter, r *http.Request) {

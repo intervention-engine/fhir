@@ -79,7 +79,7 @@ func FamilyHistoryCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/familyhistory/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/FamilyHistory/"+i.Hex())
 }
 
 func FamilyHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request) {

@@ -79,7 +79,7 @@ func ObservationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/observation/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Observation/"+i.Hex())
 }
 
 func ObservationUpdateHandler(rw http.ResponseWriter, r *http.Request) {

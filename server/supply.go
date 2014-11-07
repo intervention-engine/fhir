@@ -79,7 +79,7 @@ func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/supply/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Supply/"+i.Hex())
 }
 
 func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request) {

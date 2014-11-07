@@ -79,7 +79,7 @@ func DeviceObservationReportCreateHandler(rw http.ResponseWriter, r *http.Reques
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/deviceobservationreport/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/DeviceObservationReport/"+i.Hex())
 }
 
 func DeviceObservationReportUpdateHandler(rw http.ResponseWriter, r *http.Request) {

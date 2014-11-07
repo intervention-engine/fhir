@@ -79,7 +79,7 @@ func OperationDefinitionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/operationdefinition/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/OperationDefinition/"+i.Hex())
 }
 
 func OperationDefinitionUpdateHandler(rw http.ResponseWriter, r *http.Request) {

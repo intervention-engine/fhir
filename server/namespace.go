@@ -79,7 +79,7 @@ func NamespaceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/namespace/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Namespace/"+i.Hex())
 }
 
 func NamespaceUpdateHandler(rw http.ResponseWriter, r *http.Request) {

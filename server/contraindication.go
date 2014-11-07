@@ -79,7 +79,7 @@ func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/contraindication/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Contraindication/"+i.Hex())
 }
 
 func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request) {

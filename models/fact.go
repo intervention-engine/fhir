@@ -10,7 +10,7 @@ type Fact struct {
 	BirthDate             FHIRDateTime      `json:"birthdate" bson:"birthdate"`
 	Codes                 []CodeableConcept `json:"codes" bson:"codes"`
 	ResultQuantity        Quantity          `json:"resultquantity" bson:"resultquantity"`
-	ResultCodeableConcept CodeableConcept    `json:"resultcodeableconcept" bson:"resultcodeableconcept"`
+	ResultCodeableConcept CodeableConcept   `json:"resultcodeableconcept" bson:"resultcodeableconcept"`
 	PatientID             string            `json:"patientid" bson:"patientid"`
 }
 

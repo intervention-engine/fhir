@@ -79,7 +79,7 @@ func ProfileCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/profile/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Profile/"+i.Hex())
 }
 
 func ProfileUpdateHandler(rw http.ResponseWriter, r *http.Request) {

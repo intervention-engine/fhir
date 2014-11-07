@@ -79,7 +79,7 @@ func ConceptMapCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/conceptmap/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/ConceptMap/"+i.Hex())
 }
 
 func ConceptMapUpdateHandler(rw http.ResponseWriter, r *http.Request) {

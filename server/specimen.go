@@ -79,7 +79,7 @@ func SpecimenCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/specimen/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Specimen/"+i.Hex())
 }
 
 func SpecimenUpdateHandler(rw http.ResponseWriter, r *http.Request) {

@@ -79,7 +79,7 @@ func ImmunizationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/immunization/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Immunization/"+i.Hex())
 }
 
 func ImmunizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {

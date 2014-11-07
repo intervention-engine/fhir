@@ -79,7 +79,7 @@ func SecurityEventCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/securityevent/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/SecurityEvent/"+i.Hex())
 }
 
 func SecurityEventUpdateHandler(rw http.ResponseWriter, r *http.Request) {

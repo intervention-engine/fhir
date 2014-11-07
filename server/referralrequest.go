@@ -79,7 +79,7 @@ func ReferralRequestCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/referralrequest/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/ReferralRequest/"+i.Hex())
 }
 
 func ReferralRequestUpdateHandler(rw http.ResponseWriter, r *http.Request) {

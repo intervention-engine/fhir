@@ -79,7 +79,7 @@ func DataElementCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/dataelement/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/DataElement/"+i.Hex())
 }
 
 func DataElementUpdateHandler(rw http.ResponseWriter, r *http.Request) {

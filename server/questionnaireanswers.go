@@ -79,7 +79,7 @@ func QuestionnaireAnswersCreateHandler(rw http.ResponseWriter, r *http.Request) 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/questionnaireanswers/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/QuestionnaireAnswers/"+i.Hex())
 }
 
 func QuestionnaireAnswersUpdateHandler(rw http.ResponseWriter, r *http.Request) {

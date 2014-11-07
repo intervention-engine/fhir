@@ -79,7 +79,7 @@ func DocumentManifestCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/documentmanifest/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/DocumentManifest/"+i.Hex())
 }
 
 func DocumentManifestUpdateHandler(rw http.ResponseWriter, r *http.Request) {

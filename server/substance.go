@@ -79,7 +79,7 @@ func SubstanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/substance/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Substance/"+i.Hex())
 }
 
 func SubstanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {

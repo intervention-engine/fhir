@@ -79,7 +79,7 @@ func SlotCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/slot/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Slot/"+i.Hex())
 }
 
 func SlotUpdateHandler(rw http.ResponseWriter, r *http.Request) {

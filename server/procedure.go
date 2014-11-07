@@ -79,7 +79,7 @@ func ProcedureCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/procedure/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Procedure/"+i.Hex())
 }
 
 func ProcedureUpdateHandler(rw http.ResponseWriter, r *http.Request) {

@@ -79,7 +79,7 @@ func DeviceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/device/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Device/"+i.Hex())
 }
 
 func DeviceUpdateHandler(rw http.ResponseWriter, r *http.Request) {

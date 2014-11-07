@@ -79,7 +79,7 @@ func DiagnosticOrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/diagnosticorder/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/DiagnosticOrder/"+i.Hex())
 }
 
 func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {

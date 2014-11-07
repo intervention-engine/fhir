@@ -79,7 +79,7 @@ func CompositionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/composition/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Composition/"+i.Hex())
 }
 
 func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request) {

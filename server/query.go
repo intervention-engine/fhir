@@ -79,7 +79,7 @@ func QueryCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/query/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/Query/"+i.Hex())
 }
 
 func QueryUpdateHandler(rw http.ResponseWriter, r *http.Request) {

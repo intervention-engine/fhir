@@ -79,7 +79,7 @@ func OrderResponseCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+"/orderresponse/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":8080/OrderResponse/"+i.Hex())
 }
 
 func OrderResponseUpdateHandler(rw http.ResponseWriter, r *http.Request) {
