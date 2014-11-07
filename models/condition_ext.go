@@ -4,6 +4,7 @@ import "gopkg.in/mgo.v2/bson"
 
 func (c *Condition) ToFact() Fact {
 	f := Fact{}
+  f.Type = "Condition"
 	f.StartDate = c.OnsetDate
 	f.EndDate = c.AbatementDate
 	f.Codes = []CodeableConcept{c.Code}

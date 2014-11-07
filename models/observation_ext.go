@@ -4,6 +4,7 @@ import "gopkg.in/mgo.v2/bson"
 
 func (o *Observation) ToFact() Fact {
 	f := Fact{}
+  f.Type = "Observation"
 	f.StartDate = o.AppliesPeriod.Start
 	f.EndDate = o.AppliesPeriod.End
 	f.ResultQuantity = o.ValueQuantity

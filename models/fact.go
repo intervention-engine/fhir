@@ -10,4 +10,5 @@ type Fact struct {
 	ResultQuantity        Quantity          `json:"resultquantity" bson:"resultquantity"`
 	ResultCodeableConcept CodeableConcept   `json:"resultcodeableconcept" bson:"resultcodeableconcept"`
 	PatientID             string            `json:"patientid" bson:"patientid"`
+	Type									string						`json:"type" bson:"type"`
 }

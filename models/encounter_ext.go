@@ -4,6 +4,7 @@ import "gopkg.in/mgo.v2/bson"
 
 func (e *Encounter) ToFact() Fact {
 	f := Fact{}
+  f.Type = "Encounter"
 	f.StartDate = e.Period.Start
 	f.EndDate = e.Period.End
 	f.Codes = e.Type
