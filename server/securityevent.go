@@ -87,7 +87,7 @@ func SecurityEventCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting securityevent create context")
-	context.Set(r, "SecurityEvent", result)
+	context.Set(r, "SecurityEvent", securityevent)
 	context.Set(r, "Resource", "SecurityEvent")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func SecurityEventUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting securityevent update context")
-	context.Set(r, "SecurityEvent", result)
+	context.Set(r, "SecurityEvent", securityevent)
 	context.Set(r, "Resource", "SecurityEvent")
 	context.Set(r, "Action", "update")
 }

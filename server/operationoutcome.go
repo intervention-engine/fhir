@@ -87,7 +87,7 @@ func OperationOutcomeCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting operationoutcome create context")
-	context.Set(r, "OperationOutcome", result)
+	context.Set(r, "OperationOutcome", operationoutcome)
 	context.Set(r, "Resource", "OperationOutcome")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func OperationOutcomeUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting operationoutcome update context")
-	context.Set(r, "OperationOutcome", result)
+	context.Set(r, "OperationOutcome", operationoutcome)
 	context.Set(r, "Resource", "OperationOutcome")
 	context.Set(r, "Action", "update")
 }

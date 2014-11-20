@@ -87,7 +87,7 @@ func DeviceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting device create context")
-	context.Set(r, "Device", result)
+	context.Set(r, "Device", device)
 	context.Set(r, "Resource", "Device")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func DeviceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting device update context")
-	context.Set(r, "Device", result)
+	context.Set(r, "Device", device)
 	context.Set(r, "Resource", "Device")
 	context.Set(r, "Action", "update")
 }

@@ -87,7 +87,7 @@ func OtherCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting other create context")
-	context.Set(r, "Other", result)
+	context.Set(r, "Other", other)
 	context.Set(r, "Resource", "Other")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func OtherUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting other update context")
-	context.Set(r, "Other", result)
+	context.Set(r, "Other", other)
 	context.Set(r, "Resource", "Other")
 	context.Set(r, "Action", "update")
 }

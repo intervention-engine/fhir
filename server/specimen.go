@@ -87,7 +87,7 @@ func SpecimenCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting specimen create context")
-	context.Set(r, "Specimen", result)
+	context.Set(r, "Specimen", specimen)
 	context.Set(r, "Resource", "Specimen")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func SpecimenUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting specimen update context")
-	context.Set(r, "Specimen", result)
+	context.Set(r, "Specimen", specimen)
 	context.Set(r, "Resource", "Specimen")
 	context.Set(r, "Action", "update")
 }

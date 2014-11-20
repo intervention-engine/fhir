@@ -87,7 +87,7 @@ func LocationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting location create context")
-	context.Set(r, "Location", result)
+	context.Set(r, "Location", location)
 	context.Set(r, "Resource", "Location")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func LocationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting location update context")
-	context.Set(r, "Location", result)
+	context.Set(r, "Location", location)
 	context.Set(r, "Resource", "Location")
 	context.Set(r, "Action", "update")
 }

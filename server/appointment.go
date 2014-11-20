@@ -87,7 +87,7 @@ func AppointmentCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting appointment create context")
-	context.Set(r, "Appointment", result)
+	context.Set(r, "Appointment", appointment)
 	context.Set(r, "Resource", "Appointment")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func AppointmentUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting appointment update context")
-	context.Set(r, "Appointment", result)
+	context.Set(r, "Appointment", appointment)
 	context.Set(r, "Resource", "Appointment")
 	context.Set(r, "Action", "update")
 }

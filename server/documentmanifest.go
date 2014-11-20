@@ -87,7 +87,7 @@ func DocumentManifestCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting documentmanifest create context")
-	context.Set(r, "DocumentManifest", result)
+	context.Set(r, "DocumentManifest", documentmanifest)
 	context.Set(r, "Resource", "DocumentManifest")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func DocumentManifestUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting documentmanifest update context")
-	context.Set(r, "DocumentManifest", result)
+	context.Set(r, "DocumentManifest", documentmanifest)
 	context.Set(r, "Resource", "DocumentManifest")
 	context.Set(r, "Action", "update")
 }

@@ -87,7 +87,7 @@ func SlotCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting slot create context")
-	context.Set(r, "Slot", result)
+	context.Set(r, "Slot", slot)
 	context.Set(r, "Resource", "Slot")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func SlotUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting slot update context")
-	context.Set(r, "Slot", result)
+	context.Set(r, "Slot", slot)
 	context.Set(r, "Resource", "Slot")
 	context.Set(r, "Action", "update")
 }

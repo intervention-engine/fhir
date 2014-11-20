@@ -87,7 +87,7 @@ func ListCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting list create context")
-	context.Set(r, "List", result)
+	context.Set(r, "List", list)
 	context.Set(r, "Resource", "List")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ListUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting list update context")
-	context.Set(r, "List", result)
+	context.Set(r, "List", list)
 	context.Set(r, "Resource", "List")
 	context.Set(r, "Action", "update")
 }

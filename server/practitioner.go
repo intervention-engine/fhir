@@ -87,7 +87,7 @@ func PractitionerCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting practitioner create context")
-	context.Set(r, "Practitioner", result)
+	context.Set(r, "Practitioner", practitioner)
 	context.Set(r, "Resource", "Practitioner")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func PractitionerUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting practitioner update context")
-	context.Set(r, "Practitioner", result)
+	context.Set(r, "Practitioner", practitioner)
 	context.Set(r, "Resource", "Practitioner")
 	context.Set(r, "Action", "update")
 }

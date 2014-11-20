@@ -87,7 +87,7 @@ func SubscriptionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting subscription create context")
-	context.Set(r, "Subscription", result)
+	context.Set(r, "Subscription", subscription)
 	context.Set(r, "Resource", "Subscription")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func SubscriptionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting subscription update context")
-	context.Set(r, "Subscription", result)
+	context.Set(r, "Subscription", subscription)
 	context.Set(r, "Resource", "Subscription")
 	context.Set(r, "Action", "update")
 }

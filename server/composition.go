@@ -87,7 +87,7 @@ func CompositionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting composition create context")
-	context.Set(r, "Composition", result)
+	context.Set(r, "Composition", composition)
 	context.Set(r, "Resource", "Composition")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting composition update context")
-	context.Set(r, "Composition", result)
+	context.Set(r, "Composition", composition)
 	context.Set(r, "Resource", "Composition")
 	context.Set(r, "Action", "update")
 }

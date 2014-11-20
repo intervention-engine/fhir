@@ -87,7 +87,7 @@ func DiagnosticReportCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting diagnosticreport create context")
-	context.Set(r, "DiagnosticReport", result)
+	context.Set(r, "DiagnosticReport", diagnosticreport)
 	context.Set(r, "Resource", "DiagnosticReport")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func DiagnosticReportUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting diagnosticreport update context")
-	context.Set(r, "DiagnosticReport", result)
+	context.Set(r, "DiagnosticReport", diagnosticreport)
 	context.Set(r, "Resource", "DiagnosticReport")
 	context.Set(r, "Action", "update")
 }

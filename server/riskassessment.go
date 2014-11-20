@@ -87,7 +87,7 @@ func RiskAssessmentCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting riskassessment create context")
-	context.Set(r, "RiskAssessment", result)
+	context.Set(r, "RiskAssessment", riskassessment)
 	context.Set(r, "Resource", "RiskAssessment")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func RiskAssessmentUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting riskassessment update context")
-	context.Set(r, "RiskAssessment", result)
+	context.Set(r, "RiskAssessment", riskassessment)
 	context.Set(r, "Resource", "RiskAssessment")
 	context.Set(r, "Action", "update")
 }

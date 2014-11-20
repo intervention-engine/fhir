@@ -87,7 +87,7 @@ func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting supply create context")
-	context.Set(r, "Supply", result)
+	context.Set(r, "Supply", supply)
 	context.Set(r, "Resource", "Supply")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting supply update context")
-	context.Set(r, "Supply", result)
+	context.Set(r, "Supply", supply)
 	context.Set(r, "Resource", "Supply")
 	context.Set(r, "Action", "update")
 }

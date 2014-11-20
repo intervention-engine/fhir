@@ -87,7 +87,7 @@ func AvailabilityCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting availability create context")
-	context.Set(r, "Availability", result)
+	context.Set(r, "Availability", availability)
 	context.Set(r, "Resource", "Availability")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func AvailabilityUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting availability update context")
-	context.Set(r, "Availability", result)
+	context.Set(r, "Availability", availability)
 	context.Set(r, "Resource", "Availability")
 	context.Set(r, "Action", "update")
 }

@@ -87,7 +87,7 @@ func NamespaceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting namespace create context")
-	context.Set(r, "Namespace", result)
+	context.Set(r, "Namespace", namespace)
 	context.Set(r, "Resource", "Namespace")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func NamespaceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting namespace update context")
-	context.Set(r, "Namespace", result)
+	context.Set(r, "Namespace", namespace)
 	context.Set(r, "Resource", "Namespace")
 	context.Set(r, "Action", "update")
 }

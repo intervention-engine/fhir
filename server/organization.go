@@ -87,7 +87,7 @@ func OrganizationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting organization create context")
-	context.Set(r, "Organization", result)
+	context.Set(r, "Organization", organization)
 	context.Set(r, "Resource", "Organization")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func OrganizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting organization update context")
-	context.Set(r, "Organization", result)
+	context.Set(r, "Organization", organization)
 	context.Set(r, "Resource", "Organization")
 	context.Set(r, "Action", "update")
 }

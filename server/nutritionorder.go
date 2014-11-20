@@ -87,7 +87,7 @@ func NutritionOrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting nutritionorder create context")
-	context.Set(r, "NutritionOrder", result)
+	context.Set(r, "NutritionOrder", nutritionorder)
 	context.Set(r, "Resource", "NutritionOrder")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func NutritionOrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting nutritionorder update context")
-	context.Set(r, "NutritionOrder", result)
+	context.Set(r, "NutritionOrder", nutritionorder)
 	context.Set(r, "Resource", "NutritionOrder")
 	context.Set(r, "Action", "update")
 }

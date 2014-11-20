@@ -87,7 +87,7 @@ func DataElementCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting dataelement create context")
-	context.Set(r, "DataElement", result)
+	context.Set(r, "DataElement", dataelement)
 	context.Set(r, "Resource", "DataElement")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func DataElementUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting dataelement update context")
-	context.Set(r, "DataElement", result)
+	context.Set(r, "DataElement", dataelement)
 	context.Set(r, "Resource", "DataElement")
 	context.Set(r, "Action", "update")
 }

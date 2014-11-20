@@ -87,7 +87,7 @@ func ImmunizationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting immunization create context")
-	context.Set(r, "Immunization", result)
+	context.Set(r, "Immunization", immunization)
 	context.Set(r, "Resource", "Immunization")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ImmunizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting immunization update context")
-	context.Set(r, "Immunization", result)
+	context.Set(r, "Immunization", immunization)
 	context.Set(r, "Resource", "Immunization")
 	context.Set(r, "Action", "update")
 }

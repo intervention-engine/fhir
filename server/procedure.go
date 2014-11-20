@@ -87,7 +87,7 @@ func ProcedureCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting procedure create context")
-	context.Set(r, "Procedure", result)
+	context.Set(r, "Procedure", procedure)
 	context.Set(r, "Resource", "Procedure")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ProcedureUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting procedure update context")
-	context.Set(r, "Procedure", result)
+	context.Set(r, "Procedure", procedure)
 	context.Set(r, "Resource", "Procedure")
 	context.Set(r, "Action", "update")
 }

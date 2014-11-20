@@ -87,7 +87,7 @@ func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting imagingstudy create context")
-	context.Set(r, "ImagingStudy", result)
+	context.Set(r, "ImagingStudy", imagingstudy)
 	context.Set(r, "Resource", "ImagingStudy")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ImagingStudyUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting imagingstudy update context")
-	context.Set(r, "ImagingStudy", result)
+	context.Set(r, "ImagingStudy", imagingstudy)
 	context.Set(r, "Resource", "ImagingStudy")
 	context.Set(r, "Action", "update")
 }

@@ -87,7 +87,7 @@ func RelatedPersonCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting relatedperson create context")
-	context.Set(r, "RelatedPerson", result)
+	context.Set(r, "RelatedPerson", relatedperson)
 	context.Set(r, "Resource", "RelatedPerson")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func RelatedPersonUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting relatedperson update context")
-	context.Set(r, "RelatedPerson", result)
+	context.Set(r, "RelatedPerson", relatedperson)
 	context.Set(r, "Resource", "RelatedPerson")
 	context.Set(r, "Action", "update")
 }

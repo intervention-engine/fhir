@@ -87,7 +87,7 @@ func AdverseReactionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting adversereaction create context")
-	context.Set(r, "AdverseReaction", result)
+	context.Set(r, "AdverseReaction", adversereaction)
 	context.Set(r, "Resource", "AdverseReaction")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func AdverseReactionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting adversereaction update context")
-	context.Set(r, "AdverseReaction", result)
+	context.Set(r, "AdverseReaction", adversereaction)
 	context.Set(r, "Resource", "AdverseReaction")
 	context.Set(r, "Action", "update")
 }

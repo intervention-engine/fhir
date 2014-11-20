@@ -87,7 +87,7 @@ func SubstanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting substance create context")
-	context.Set(r, "Substance", result)
+	context.Set(r, "Substance", substance)
 	context.Set(r, "Resource", "Substance")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func SubstanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting substance update context")
-	context.Set(r, "Substance", result)
+	context.Set(r, "Substance", substance)
 	context.Set(r, "Resource", "Substance")
 	context.Set(r, "Action", "update")
 }

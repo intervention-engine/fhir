@@ -87,7 +87,7 @@ func ImmunizationRecommendationCreateHandler(rw http.ResponseWriter, r *http.Req
 	}
 
 	log.Println("Setting immunizationrecommendation create context")
-	context.Set(r, "ImmunizationRecommendation", result)
+	context.Set(r, "ImmunizationRecommendation", immunizationrecommendation)
 	context.Set(r, "Resource", "ImmunizationRecommendation")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Req
 	}
 
 	log.Println("Setting immunizationrecommendation update context")
-	context.Set(r, "ImmunizationRecommendation", result)
+	context.Set(r, "ImmunizationRecommendation", immunizationrecommendation)
 	context.Set(r, "Resource", "ImmunizationRecommendation")
 	context.Set(r, "Action", "update")
 }

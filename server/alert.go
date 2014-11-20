@@ -87,7 +87,7 @@ func AlertCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting alert create context")
-	context.Set(r, "Alert", result)
+	context.Set(r, "Alert", alert)
 	context.Set(r, "Resource", "Alert")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func AlertUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting alert update context")
-	context.Set(r, "Alert", result)
+	context.Set(r, "Alert", alert)
 	context.Set(r, "Resource", "Alert")
 	context.Set(r, "Action", "update")
 }

@@ -87,7 +87,7 @@ func ConformanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting conformance create context")
-	context.Set(r, "Conformance", result)
+	context.Set(r, "Conformance", conformance)
 	context.Set(r, "Resource", "Conformance")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ConformanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting conformance update context")
-	context.Set(r, "Conformance", result)
+	context.Set(r, "Conformance", conformance)
 	context.Set(r, "Resource", "Conformance")
 	context.Set(r, "Action", "update")
 }

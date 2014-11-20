@@ -87,7 +87,7 @@ func FamilyHistoryCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting familyhistory create context")
-	context.Set(r, "FamilyHistory", result)
+	context.Set(r, "FamilyHistory", familyhistory)
 	context.Set(r, "Resource", "FamilyHistory")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func FamilyHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting familyhistory update context")
-	context.Set(r, "FamilyHistory", result)
+	context.Set(r, "FamilyHistory", familyhistory)
 	context.Set(r, "Resource", "FamilyHistory")
 	context.Set(r, "Action", "update")
 }

@@ -87,7 +87,7 @@ func DocumentReferenceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting documentreference create context")
-	context.Set(r, "DocumentReference", result)
+	context.Set(r, "DocumentReference", documentreference)
 	context.Set(r, "Resource", "DocumentReference")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting documentreference update context")
-	context.Set(r, "DocumentReference", result)
+	context.Set(r, "DocumentReference", documentreference)
 	context.Set(r, "Resource", "DocumentReference")
 	context.Set(r, "Action", "update")
 }

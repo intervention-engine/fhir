@@ -87,7 +87,7 @@ func PatientCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting patient create context")
-	context.Set(r, "Patient", result)
+	context.Set(r, "Patient", patient)
 	context.Set(r, "Resource", "Patient")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting patient update context")
-	context.Set(r, "Patient", result)
+	context.Set(r, "Patient", patient)
 	context.Set(r, "Resource", "Patient")
 	context.Set(r, "Action", "update")
 }

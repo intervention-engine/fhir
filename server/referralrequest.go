@@ -87,7 +87,7 @@ func ReferralRequestCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting referralrequest create context")
-	context.Set(r, "ReferralRequest", result)
+	context.Set(r, "ReferralRequest", referralrequest)
 	context.Set(r, "Resource", "ReferralRequest")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ReferralRequestUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting referralrequest update context")
-	context.Set(r, "ReferralRequest", result)
+	context.Set(r, "ReferralRequest", referralrequest)
 	context.Set(r, "Resource", "ReferralRequest")
 	context.Set(r, "Action", "update")
 }

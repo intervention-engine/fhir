@@ -87,7 +87,7 @@ func CarePlanCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting careplan create context")
-	context.Set(r, "CarePlan", result)
+	context.Set(r, "CarePlan", careplan)
 	context.Set(r, "Resource", "CarePlan")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func CarePlanUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting careplan update context")
-	context.Set(r, "CarePlan", result)
+	context.Set(r, "CarePlan", careplan)
 	context.Set(r, "Resource", "CarePlan")
 	context.Set(r, "Action", "update")
 }

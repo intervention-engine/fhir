@@ -87,7 +87,7 @@ func ValueSetCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting valueset create context")
-	context.Set(r, "ValueSet", result)
+	context.Set(r, "ValueSet", valueset)
 	context.Set(r, "Resource", "ValueSet")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ValueSetUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting valueset update context")
-	context.Set(r, "ValueSet", result)
+	context.Set(r, "ValueSet", valueset)
 	context.Set(r, "Resource", "ValueSet")
 	context.Set(r, "Action", "update")
 }

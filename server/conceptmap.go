@@ -87,7 +87,7 @@ func ConceptMapCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting conceptmap create context")
-	context.Set(r, "ConceptMap", result)
+	context.Set(r, "ConceptMap", conceptmap)
 	context.Set(r, "Resource", "ConceptMap")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ConceptMapUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting conceptmap update context")
-	context.Set(r, "ConceptMap", result)
+	context.Set(r, "ConceptMap", conceptmap)
 	context.Set(r, "Resource", "ConceptMap")
 	context.Set(r, "Action", "update")
 }

@@ -87,7 +87,7 @@ func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting allergyintolerance create context")
-	context.Set(r, "AllergyIntolerance", result)
+	context.Set(r, "AllergyIntolerance", allergyintolerance)
 	context.Set(r, "Resource", "AllergyIntolerance")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting allergyintolerance update context")
-	context.Set(r, "AllergyIntolerance", result)
+	context.Set(r, "AllergyIntolerance", allergyintolerance)
 	context.Set(r, "Resource", "AllergyIntolerance")
 	context.Set(r, "Action", "update")
 }

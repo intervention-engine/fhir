@@ -87,7 +87,7 @@ func EncounterCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting encounter create context")
-	context.Set(r, "Encounter", result)
+	context.Set(r, "Encounter", encounter)
 	context.Set(r, "Resource", "Encounter")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting encounter update context")
-	context.Set(r, "Encounter", result)
+	context.Set(r, "Encounter", encounter)
 	context.Set(r, "Resource", "Encounter")
 	context.Set(r, "Action", "update")
 }

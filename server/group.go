@@ -87,7 +87,7 @@ func GroupCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting group create context")
-	context.Set(r, "Group", result)
+	context.Set(r, "Group", group)
 	context.Set(r, "Resource", "Group")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func GroupUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting group update context")
-	context.Set(r, "Group", result)
+	context.Set(r, "Group", group)
 	context.Set(r, "Resource", "Group")
 	context.Set(r, "Action", "update")
 }

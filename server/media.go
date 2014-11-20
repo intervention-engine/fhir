@@ -87,7 +87,7 @@ func MediaCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting media create context")
-	context.Set(r, "Media", result)
+	context.Set(r, "Media", media)
 	context.Set(r, "Resource", "Media")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting media update context")
-	context.Set(r, "Media", result)
+	context.Set(r, "Media", media)
 	context.Set(r, "Resource", "Media")
 	context.Set(r, "Action", "update")
 }

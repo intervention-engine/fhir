@@ -87,7 +87,7 @@ func ProvenanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting provenance create context")
-	context.Set(r, "Provenance", result)
+	context.Set(r, "Provenance", provenance)
 	context.Set(r, "Resource", "Provenance")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ProvenanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting provenance update context")
-	context.Set(r, "Provenance", result)
+	context.Set(r, "Provenance", provenance)
 	context.Set(r, "Resource", "Provenance")
 	context.Set(r, "Action", "update")
 }

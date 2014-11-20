@@ -87,7 +87,7 @@ func ConditionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting condition create context")
-	context.Set(r, "Condition", result)
+	context.Set(r, "Condition", condition)
 	context.Set(r, "Resource", "Condition")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ConditionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting condition update context")
-	context.Set(r, "Condition", result)
+	context.Set(r, "Condition", condition)
 	context.Set(r, "Resource", "Condition")
 	context.Set(r, "Action", "update")
 }

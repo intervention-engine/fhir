@@ -87,7 +87,7 @@ func MessageHeaderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting messageheader create context")
-	context.Set(r, "MessageHeader", result)
+	context.Set(r, "MessageHeader", messageheader)
 	context.Set(r, "Resource", "MessageHeader")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func MessageHeaderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting messageheader update context")
-	context.Set(r, "MessageHeader", result)
+	context.Set(r, "MessageHeader", messageheader)
 	context.Set(r, "Resource", "MessageHeader")
 	context.Set(r, "Action", "update")
 }

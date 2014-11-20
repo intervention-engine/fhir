@@ -87,7 +87,7 @@ func QueryCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting query create context")
-	context.Set(r, "Query", result)
+	context.Set(r, "Query", query)
 	context.Set(r, "Resource", "Query")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func QueryUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting query update context")
-	context.Set(r, "Query", result)
+	context.Set(r, "Query", query)
 	context.Set(r, "Resource", "Query")
 	context.Set(r, "Action", "update")
 }

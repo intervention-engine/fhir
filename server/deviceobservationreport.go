@@ -87,7 +87,7 @@ func DeviceObservationReportCreateHandler(rw http.ResponseWriter, r *http.Reques
 	}
 
 	log.Println("Setting deviceobservationreport create context")
-	context.Set(r, "DeviceObservationReport", result)
+	context.Set(r, "DeviceObservationReport", deviceobservationreport)
 	context.Set(r, "Resource", "DeviceObservationReport")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func DeviceObservationReportUpdateHandler(rw http.ResponseWriter, r *http.Reques
 	}
 
 	log.Println("Setting deviceobservationreport update context")
-	context.Set(r, "DeviceObservationReport", result)
+	context.Set(r, "DeviceObservationReport", deviceobservationreport)
 	context.Set(r, "Resource", "DeviceObservationReport")
 	context.Set(r, "Action", "update")
 }

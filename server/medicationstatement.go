@@ -87,7 +87,7 @@ func MedicationStatementCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting medicationstatement create context")
-	context.Set(r, "MedicationStatement", result)
+	context.Set(r, "MedicationStatement", medicationstatement)
 	context.Set(r, "Resource", "MedicationStatement")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func MedicationStatementUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting medicationstatement update context")
-	context.Set(r, "MedicationStatement", result)
+	context.Set(r, "MedicationStatement", medicationstatement)
 	context.Set(r, "Resource", "MedicationStatement")
 	context.Set(r, "Action", "update")
 }

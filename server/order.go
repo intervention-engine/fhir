@@ -87,7 +87,7 @@ func OrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting order create context")
-	context.Set(r, "Order", result)
+	context.Set(r, "Order", order)
 	context.Set(r, "Resource", "Order")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func OrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting order update context")
-	context.Set(r, "Order", result)
+	context.Set(r, "Order", order)
 	context.Set(r, "Resource", "Order")
 	context.Set(r, "Action", "update")
 }

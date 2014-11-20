@@ -87,7 +87,7 @@ func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting contraindication create context")
-	context.Set(r, "Contraindication", result)
+	context.Set(r, "Contraindication", contraindication)
 	context.Set(r, "Resource", "Contraindication")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting contraindication update context")
-	context.Set(r, "Contraindication", result)
+	context.Set(r, "Contraindication", contraindication)
 	context.Set(r, "Resource", "Contraindication")
 	context.Set(r, "Action", "update")
 }

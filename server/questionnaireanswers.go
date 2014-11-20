@@ -87,7 +87,7 @@ func QuestionnaireAnswersCreateHandler(rw http.ResponseWriter, r *http.Request) 
 	}
 
 	log.Println("Setting questionnaireanswers create context")
-	context.Set(r, "QuestionnaireAnswers", result)
+	context.Set(r, "QuestionnaireAnswers", questionnaireanswers)
 	context.Set(r, "Resource", "QuestionnaireAnswers")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func QuestionnaireAnswersUpdateHandler(rw http.ResponseWriter, r *http.Request) 
 	}
 
 	log.Println("Setting questionnaireanswers update context")
-	context.Set(r, "QuestionnaireAnswers", result)
+	context.Set(r, "QuestionnaireAnswers", questionnaireanswers)
 	context.Set(r, "Resource", "QuestionnaireAnswers")
 	context.Set(r, "Action", "update")
 }

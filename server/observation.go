@@ -87,7 +87,7 @@ func ObservationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting observation create context")
-	context.Set(r, "Observation", result)
+	context.Set(r, "Observation", observation)
 	context.Set(r, "Resource", "Observation")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ObservationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting observation update context")
-	context.Set(r, "Observation", result)
+	context.Set(r, "Observation", observation)
 	context.Set(r, "Resource", "Observation")
 	context.Set(r, "Action", "update")
 }

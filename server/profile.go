@@ -87,7 +87,7 @@ func ProfileCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting profile create context")
-	context.Set(r, "Profile", result)
+	context.Set(r, "Profile", profile)
 	context.Set(r, "Resource", "Profile")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func ProfileUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting profile update context")
-	context.Set(r, "Profile", result)
+	context.Set(r, "Profile", profile)
 	context.Set(r, "Resource", "Profile")
 	context.Set(r, "Action", "update")
 }

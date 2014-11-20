@@ -87,7 +87,7 @@ func DiagnosticOrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting diagnosticorder create context")
-	context.Set(r, "DiagnosticOrder", result)
+	context.Set(r, "DiagnosticOrder", diagnosticorder)
 	context.Set(r, "Resource", "DiagnosticOrder")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting diagnosticorder update context")
-	context.Set(r, "DiagnosticOrder", result)
+	context.Set(r, "DiagnosticOrder", diagnosticorder)
 	context.Set(r, "Resource", "DiagnosticOrder")
 	context.Set(r, "Action", "update")
 }
