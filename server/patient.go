@@ -87,7 +87,7 @@ func PatientCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting patient create context")
-	context.Set(r, "Patient", patient)
+	context.Set(r, "Patient", result)
 	context.Set(r, "Resource", "Patient")
 	context.Set(r, "Action", "create")
 
@@ -125,7 +125,7 @@ func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Setting patient update context")
-	context.Set(r, "Patient", patient)
+	context.Set(r, "Patient", result)
 	context.Set(r, "Resource", "Patient")
 	context.Set(r, "Action", "update")
 }
@@ -145,6 +145,7 @@ func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request) {
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	log.Println("Setting patient delete context")

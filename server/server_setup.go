@@ -1,9 +1,10 @@
 package server
 
 import (
+	"log"
+
 	"github.com/codegangsta/negroni"
 	"gopkg.in/mgo.v2"
-	"log"
 )
 
 type FHIRServer struct {

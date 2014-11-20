@@ -2,10 +2,12 @@ package server
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gitlab.mitre.org/intervention-engine/fhir/models"
 	"gopkg.in/mgo.v2/bson"
@@ -27,6 +29,11 @@ func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Requ
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
 	bundle.Entries = result
+
+	log.Println("Setting immunizationrecommendation search context")
+	context.Set(r, "ImmunizationRecommendation", result)
+	context.Set(r, "Resource", "ImmunizationRecommendation")
+	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
@@ -53,6 +60,11 @@ func ImmunizationRecommendationShowHandler(rw http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	log.Println("Setting immunizationrecommendation read context")
+	context.Set(r, "ImmunizationRecommendation", result)
+	context.Set(r, "Resource", "ImmunizationRecommendation")
+	context.Set(r, "Action", "read")
+
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(rw).Encode(result)
@@ -73,6 +85,11 @@ func ImmunizationRecommendationCreateHandler(rw http.ResponseWriter, r *http.Req
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting immunizationrecommendation create context")
+	context.Set(r, "ImmunizationRecommendation", result)
+	context.Set(r, "Resource", "ImmunizationRecommendation")
+	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
@@ -106,6 +123,11 @@ func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Req
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting immunizationrecommendation update context")
+	context.Set(r, "ImmunizationRecommendation", result)
+	context.Set(r, "Resource", "ImmunizationRecommendation")
+	context.Set(r, "Action", "update")
 }
 
 func ImmunizationRecommendationDeleteHandler(rw http.ResponseWriter, r *http.Request) {
@@ -126,4 +148,8 @@ func ImmunizationRecommendationDeleteHandler(rw http.ResponseWriter, r *http.Req
 		return
 	}
 
+	log.Println("Setting immunizationrecommendation delete context")
+	context.Set(r, "ImmunizationRecommendation", id.Hex())
+	context.Set(r, "Resource", "ImmunizationRecommendation")
+	context.Set(r, "Action", "delete")
 }

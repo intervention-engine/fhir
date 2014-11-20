@@ -2,10 +2,12 @@ package server
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gitlab.mitre.org/intervention-engine/fhir/models"
 	"gopkg.in/mgo.v2/bson"
@@ -27,6 +29,11 @@ func MedicationDispenseIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
 	bundle.Entries = result
+
+	log.Println("Setting medicationdispense search context")
+	context.Set(r, "MedicationDispense", result)
+	context.Set(r, "Resource", "MedicationDispense")
+	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
@@ -53,6 +60,11 @@ func MedicationDispenseShowHandler(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("Setting medicationdispense read context")
+	context.Set(r, "MedicationDispense", result)
+	context.Set(r, "Resource", "MedicationDispense")
+	context.Set(r, "Action", "read")
+
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(rw).Encode(result)
@@ -73,6 +85,11 @@ func MedicationDispenseCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting medicationdispense create context")
+	context.Set(r, "MedicationDispense", result)
+	context.Set(r, "Resource", "MedicationDispense")
+	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
@@ -106,6 +123,11 @@ func MedicationDispenseUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting medicationdispense update context")
+	context.Set(r, "MedicationDispense", result)
+	context.Set(r, "Resource", "MedicationDispense")
+	context.Set(r, "Action", "update")
 }
 
 func MedicationDispenseDeleteHandler(rw http.ResponseWriter, r *http.Request) {
@@ -126,4 +148,8 @@ func MedicationDispenseDeleteHandler(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("Setting medicationdispense delete context")
+	context.Set(r, "MedicationDispense", id.Hex())
+	context.Set(r, "Resource", "MedicationDispense")
+	context.Set(r, "Action", "delete")
 }

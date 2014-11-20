@@ -2,10 +2,12 @@ package server
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gitlab.mitre.org/intervention-engine/fhir/models"
 	"gopkg.in/mgo.v2/bson"
@@ -27,6 +29,11 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
 	bundle.Entries = result
+
+	log.Println("Setting imagingstudy search context")
+	context.Set(r, "ImagingStudy", result)
+	context.Set(r, "Resource", "ImagingStudy")
+	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
@@ -53,6 +60,11 @@ func ImagingStudyShowHandler(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("Setting imagingstudy read context")
+	context.Set(r, "ImagingStudy", result)
+	context.Set(r, "Resource", "ImagingStudy")
+	context.Set(r, "Action", "read")
+
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(rw).Encode(result)
@@ -73,6 +85,11 @@ func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting imagingstudy create context")
+	context.Set(r, "ImagingStudy", result)
+	context.Set(r, "Resource", "ImagingStudy")
+	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
@@ -106,6 +123,11 @@ func ImagingStudyUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting imagingstudy update context")
+	context.Set(r, "ImagingStudy", result)
+	context.Set(r, "Resource", "ImagingStudy")
+	context.Set(r, "Action", "update")
 }
 
 func ImagingStudyDeleteHandler(rw http.ResponseWriter, r *http.Request) {
@@ -126,4 +148,8 @@ func ImagingStudyDeleteHandler(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("Setting imagingstudy delete context")
+	context.Set(r, "ImagingStudy", id.Hex())
+	context.Set(r, "Resource", "ImagingStudy")
+	context.Set(r, "Action", "delete")
 }

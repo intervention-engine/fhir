@@ -2,10 +2,12 @@ package server
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"gitlab.mitre.org/intervention-engine/fhir/models"
 	"gopkg.in/mgo.v2/bson"
@@ -27,6 +29,11 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request)
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
 	bundle.Entries = result
+
+	log.Println("Setting medicationprescription search context")
+	context.Set(r, "MedicationPrescription", result)
+	context.Set(r, "Resource", "MedicationPrescription")
+	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
@@ -53,6 +60,11 @@ func MedicationPrescriptionShowHandler(rw http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	log.Println("Setting medicationprescription read context")
+	context.Set(r, "MedicationPrescription", result)
+	context.Set(r, "Resource", "MedicationPrescription")
+	context.Set(r, "Action", "read")
+
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(rw).Encode(result)
@@ -73,6 +85,11 @@ func MedicationPrescriptionCreateHandler(rw http.ResponseWriter, r *http.Request
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting medicationprescription create context")
+	context.Set(r, "MedicationPrescription", result)
+	context.Set(r, "Resource", "MedicationPrescription")
+	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
@@ -106,6 +123,11 @@ func MedicationPrescriptionUpdateHandler(rw http.ResponseWriter, r *http.Request
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
+
+	log.Println("Setting medicationprescription update context")
+	context.Set(r, "MedicationPrescription", result)
+	context.Set(r, "Resource", "MedicationPrescription")
+	context.Set(r, "Action", "update")
 }
 
 func MedicationPrescriptionDeleteHandler(rw http.ResponseWriter, r *http.Request) {
@@ -126,4 +148,8 @@ func MedicationPrescriptionDeleteHandler(rw http.ResponseWriter, r *http.Request
 		return
 	}
 
+	log.Println("Setting medicationprescription delete context")
+	context.Set(r, "MedicationPrescription", id.Hex())
+	context.Set(r, "Resource", "MedicationPrescription")
+	context.Set(r, "Action", "delete")
 }
