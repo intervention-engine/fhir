@@ -1,7 +1,10 @@
+Intervention Engine FHIR Server
+===============================
+
 This project is a generic FHIR server implemented in Go, using MongoDB as storage. It contains slight extension of the Reference model in order to more readily support queries in MongoDB.
 
 Environment
-===========
+-----------
 
 This project currently uses Go 1.3.3 and is built using the Go toolchain.
 
@@ -17,12 +20,14 @@ To get all of the dependencies for this project, run:
 
 In this directory.
 
+This project also requires MongoDB 2.6.* or higher. To install MongoDB, refer to the [MongoDB installation guide](http://docs.mongodb.org/manual/installation/).
+
 To start the server, simply run server.go:
 
     go run server.go
 
 Custom Middleware
-=================
+-----------------
 
 Because this project is a generic FHIR server, it only supports simple CRUD methods for FHIR resources as-is. In order to provide extensibility, the FHIRServer type has a method called AddMiddleware that can be called as follows:
 
@@ -32,7 +37,7 @@ Because this project is a generic FHIR server, it only supports simple CRUD meth
 Where MyHandler is the middleware function that you want to add.
 
 License
-=======
+-------
 
 Copyright 2014 The MITRE Corporation
 
