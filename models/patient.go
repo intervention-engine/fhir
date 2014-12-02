@@ -73,6 +73,7 @@ type PatientLinkComponent struct {
 	Other Reference `bson:"other,omitempty", json:"other,omitempty"`
 	Type  string    `bson:"type,omitempty", json:"type,omitempty"`
 }
+
 type PatientBundle struct {
 	Type         string
 	Title        string

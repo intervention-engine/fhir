@@ -73,6 +73,7 @@ type ImagingStudySeriesComponent struct {
 	DateTime          FHIRDateTime                          `bson:"dateTime,omitempty", json:"dateTime,omitempty"`
 	Instance          []ImagingStudySeriesInstanceComponent `bson:"instance,omitempty", json:"instance,omitempty"`
 }
+
 type ImagingStudyBundle struct {
 	Type         string
 	Title        string

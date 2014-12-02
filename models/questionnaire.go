@@ -37,6 +37,7 @@ type Questionnaire struct {
 	Publisher  string         `bson:"publisher,omitempty", json:"publisher,omitempty"`
 	Group      GroupComponent `bson:"group,omitempty", json:"group,omitempty"`
 }
+
 type QuestionnaireBundle struct {
 	Type         string
 	Title        string

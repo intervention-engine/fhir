@@ -40,6 +40,7 @@ type OrderResponse struct {
 	Description              string          `bson:"description,omitempty", json:"description,omitempty"`
 	Fulfillment              []Reference     `bson:"fulfillment,omitempty", json:"fulfillment,omitempty"`
 }
+
 type OrderResponseBundle struct {
 	Type         string
 	Title        string

@@ -80,6 +80,7 @@ type NutritionOrderItemComponent struct {
 	Supplement      NutritionOrderItemSupplementComponent     `bson:"supplement,omitempty", json:"supplement,omitempty"`
 	EnteralFormula  NutritionOrderItemEnteralFormulaComponent `bson:"enteralFormula,omitempty", json:"enteralFormula,omitempty"`
 }
+
 type NutritionOrderBundle struct {
 	Type         string
 	Title        string

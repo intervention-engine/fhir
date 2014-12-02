@@ -56,6 +56,7 @@ type NamespaceContactComponent struct {
 	Name    HumanName      `bson:"name,omitempty", json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty", json:"telecom,omitempty"`
 }
+
 type NamespaceBundle struct {
 	Type         string
 	Title        string

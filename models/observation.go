@@ -72,6 +72,7 @@ type ObservationRelatedComponent struct {
 	Type   string    `bson:"type,omitempty", json:"type,omitempty"`
 	Target Reference `bson:"target,omitempty", json:"target,omitempty"`
 }
+
 type ObservationBundle struct {
 	Type         string
 	Title        string

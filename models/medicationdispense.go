@@ -75,6 +75,7 @@ type MedicationDispenseSubstitutionComponent struct {
 	Reason           []CodeableConcept `bson:"reason,omitempty", json:"reason,omitempty"`
 	ResponsibleParty []Reference       `bson:"responsibleParty,omitempty", json:"responsibleParty,omitempty"`
 }
+
 type MedicationDispenseBundle struct {
 	Type         string
 	Title        string

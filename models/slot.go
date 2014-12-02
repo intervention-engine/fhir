@@ -40,6 +40,7 @@ type Slot struct {
 	Comment      string          `bson:"comment,omitempty", json:"comment,omitempty"`
 	LastModified FHIRDateTime    `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
 }
+
 type SlotBundle struct {
 	Type         string
 	Title        string

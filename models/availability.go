@@ -37,6 +37,7 @@ type Availability struct {
 	Comment         string            `bson:"comment,omitempty", json:"comment,omitempty"`
 	LastModified    FHIRDateTime      `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
 }
+
 type AvailabilityBundle struct {
 	Type         string
 	Title        string

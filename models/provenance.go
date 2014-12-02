@@ -57,6 +57,7 @@ type ProvenanceEntityComponent struct {
 	Display   string                   `bson:"display,omitempty", json:"display,omitempty"`
 	Agent     ProvenanceAgentComponent `bson:"agent,omitempty", json:"agent,omitempty"`
 }
+
 type ProvenanceBundle struct {
 	Type         string
 	Title        string

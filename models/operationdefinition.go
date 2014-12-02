@@ -60,6 +60,7 @@ type OperationDefinitionParameterComponent struct {
 	Type          Coding    `bson:"type,omitempty", json:"type,omitempty"`
 	Profile       Reference `bson:"profile,omitempty", json:"profile,omitempty"`
 }
+
 type OperationDefinitionBundle struct {
 	Type         string
 	Title        string

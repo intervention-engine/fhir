@@ -52,6 +52,7 @@ type RiskAssessmentPredictionComponent struct {
 	WhenRange                  Range           `bson:"whenRange,omitempty", json:"whenRange,omitempty"`
 	Rationale                  string          `bson:"rationale,omitempty", json:"rationale,omitempty"`
 }
+
 type RiskAssessmentBundle struct {
 	Type         string
 	Title        string

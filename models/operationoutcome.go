@@ -40,6 +40,7 @@ type OperationOutcomeIssueComponent struct {
 	Details  string   `bson:"details,omitempty", json:"details,omitempty"`
 	Location []string `bson:"location,omitempty", json:"location,omitempty"`
 }
+
 type OperationOutcomeBundle struct {
 	Type         string
 	Title        string

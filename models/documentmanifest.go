@@ -44,6 +44,7 @@ type DocumentManifest struct {
 	Confidentiality  CodeableConcept `bson:"confidentiality,omitempty", json:"confidentiality,omitempty"`
 	Content          []Reference     `bson:"content,omitempty", json:"content,omitempty"`
 }
+
 type DocumentManifestBundle struct {
 	Type         string
 	Title        string

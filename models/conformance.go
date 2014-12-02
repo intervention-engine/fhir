@@ -153,6 +153,7 @@ type ConformanceDocumentComponent struct {
 	Documentation string    `bson:"documentation,omitempty", json:"documentation,omitempty"`
 	Profile       Reference `bson:"profile,omitempty", json:"profile,omitempty"`
 }
+
 type ConformanceBundle struct {
 	Type         string
 	Title        string

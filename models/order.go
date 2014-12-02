@@ -47,6 +47,7 @@ type OrderWhenComponent struct {
 	Code     CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
 	Schedule Timing          `bson:"schedule,omitempty", json:"schedule,omitempty"`
 }
+
 type OrderBundle struct {
 	Type         string
 	Title        string

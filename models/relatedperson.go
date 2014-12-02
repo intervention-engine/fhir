@@ -39,6 +39,7 @@ type RelatedPerson struct {
 	Address      Address         `bson:"address,omitempty", json:"address,omitempty"`
 	Photo        []Attachment    `bson:"photo,omitempty", json:"photo,omitempty"`
 }
+
 type RelatedPersonBundle struct {
 	Type         string
 	Title        string

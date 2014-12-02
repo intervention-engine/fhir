@@ -52,6 +52,7 @@ type MedicationStatementDosageComponent struct {
 	Rate                    Ratio           `bson:"rate,omitempty", json:"rate,omitempty"`
 	MaxDosePerPeriod        Ratio           `bson:"maxDosePerPeriod,omitempty", json:"maxDosePerPeriod,omitempty"`
 }
+
 type MedicationStatementBundle struct {
 	Type         string
 	Title        string

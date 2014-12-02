@@ -74,6 +74,7 @@ type GroupComponent struct {
 	Group    []GroupComponent    `bson:"group,omitempty", json:"group,omitempty"`
 	Question []QuestionComponent `bson:"question,omitempty", json:"question,omitempty"`
 }
+
 type QuestionnaireAnswersBundle struct {
 	Type         string
 	Title        string

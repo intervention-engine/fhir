@@ -48,6 +48,7 @@ type ContraindicationMitigationComponent struct {
 	Date   FHIRDateTime    `bson:"date,omitempty", json:"date,omitempty"`
 	Author Reference       `bson:"author,omitempty", json:"author,omitempty"`
 }
+
 type ContraindicationBundle struct {
 	Type         string
 	Title        string

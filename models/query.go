@@ -47,6 +47,7 @@ type QueryResponseComponent struct {
 	Last       []Extension `bson:"last,omitempty", json:"last,omitempty"`
 	Reference  []Reference `bson:"reference,omitempty", json:"reference,omitempty"`
 }
+
 type QueryBundle struct {
 	Type         string
 	Title        string

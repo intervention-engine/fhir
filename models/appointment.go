@@ -54,6 +54,7 @@ type AppointmentParticipantComponent struct {
 	Required string            `bson:"required,omitempty", json:"required,omitempty"`
 	Status   string            `bson:"status,omitempty", json:"status,omitempty"`
 }
+
 type AppointmentBundle struct {
 	Type         string
 	Title        string

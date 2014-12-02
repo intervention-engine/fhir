@@ -34,4 +34,5 @@ type Extension struct {
 	ValueDateTime        FHIRDateTime    `bson:"valuedatetime,omitempty", json:"valuedatetime,omitempty"`
 	ValueBoolean         *bool           `bson:"valueboolean,omitempty", json:"valueboolean,omitempty"`
 	ValueCodeableConcept CodeableConcept `bson:"valuecodeableconcept,omitempty", json:"valuecodeableconcept,omitempty"`
+	ValueRange           Range           `bson:"valuerange,omitempty", json:"valuerange,omitempty"`
 }

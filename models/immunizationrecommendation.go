@@ -60,6 +60,7 @@ type ImmunizationRecommendationRecommendationComponent struct {
 	SupportingImmunization       []Reference                                                      `bson:"supportingImmunization,omitempty", json:"supportingImmunization,omitempty"`
 	SupportingPatientInformation []Reference                                                      `bson:"supportingPatientInformation,omitempty", json:"supportingPatientInformation,omitempty"`
 }
+
 type ImmunizationRecommendationBundle struct {
 	Type         string
 	Title        string

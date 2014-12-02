@@ -81,6 +81,7 @@ type DocumentReferenceContextComponent struct {
 	Period       Period            `bson:"period,omitempty", json:"period,omitempty"`
 	FacilityType CodeableConcept   `bson:"facilityType,omitempty", json:"facilityType,omitempty"`
 }
+
 type DocumentReferenceBundle struct {
 	Type         string
 	Title        string

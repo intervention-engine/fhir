@@ -119,6 +119,7 @@ type ValueSetExpansionComponent struct {
 	Timestamp  FHIRDateTime                         `bson:"timestamp,omitempty", json:"timestamp,omitempty"`
 	Contains   []ValueSetExpansionContainsComponent `bson:"contains,omitempty", json:"contains,omitempty"`
 }
+
 type ValueSetBundle struct {
 	Type         string
 	Title        string

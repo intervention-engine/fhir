@@ -57,6 +57,7 @@ type ProcedureRelatedItemComponent struct {
 	Type   string    `bson:"type,omitempty", json:"type,omitempty"`
 	Target Reference `bson:"target,omitempty", json:"target,omitempty"`
 }
+
 type ProcedureBundle struct {
 	Type         string
 	Title        string

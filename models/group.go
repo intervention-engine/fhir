@@ -49,6 +49,7 @@ type GroupCharacteristicComponent struct {
 	ValueRange           Range           `bson:"valueRange,omitempty", json:"valueRange,omitempty"`
 	Exclude              *bool           `bson:"exclude,omitempty", json:"exclude,omitempty"`
 }
+
 type GroupBundle struct {
 	Type         string
 	Title        string

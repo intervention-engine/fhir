@@ -54,6 +54,7 @@ type SubscriptionTagComponent struct {
 	Scheme      string `bson:"scheme,omitempty", json:"scheme,omitempty"`
 	Description string `bson:"description,omitempty", json:"description,omitempty"`
 }
+
 type SubscriptionBundle struct {
 	Type         string
 	Title        string

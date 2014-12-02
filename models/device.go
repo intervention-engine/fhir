@@ -44,6 +44,7 @@ type Device struct {
 	Contact      []ContactPoint  `bson:"contact,omitempty", json:"contact,omitempty"`
 	Url          string          `bson:"url,omitempty", json:"url,omitempty"`
 }
+
 type DeviceBundle struct {
 	Type         string
 	Title        string

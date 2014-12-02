@@ -70,6 +70,7 @@ type ConceptMapElementComponent struct {
 	DependsOn  []OtherElementComponent         `bson:"dependsOn,omitempty", json:"dependsOn,omitempty"`
 	Map        []ConceptMapElementMapComponent `bson:"map,omitempty", json:"map,omitempty"`
 }
+
 type ConceptMapBundle struct {
 	Type         string
 	Title        string

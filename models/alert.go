@@ -37,6 +37,7 @@ type Alert struct {
 	Author     Reference       `bson:"author,omitempty", json:"author,omitempty"`
 	Note       string          `bson:"note,omitempty", json:"note,omitempty"`
 }
+
 type AlertBundle struct {
 	Type         string
 	Title        string

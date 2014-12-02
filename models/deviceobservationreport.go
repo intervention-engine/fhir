@@ -53,6 +53,7 @@ type DeviceObservationReportVirtualDeviceComponent struct {
 	Code    CodeableConcept                                        `bson:"code,omitempty", json:"code,omitempty"`
 	Channel []DeviceObservationReportVirtualDeviceChannelComponent `bson:"channel,omitempty", json:"channel,omitempty"`
 }
+
 type DeviceObservationReportBundle struct {
 	Type         string
 	Title        string

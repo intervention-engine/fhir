@@ -72,6 +72,7 @@ type SectionComponent struct {
 	Section     []SectionComponent `bson:"section,omitempty", json:"section,omitempty"`
 	Entry       []Reference        `bson:"entry,omitempty", json:"entry,omitempty"`
 }
+
 type CompositionBundle struct {
 	Type         string
 	Title        string

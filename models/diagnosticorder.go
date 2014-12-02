@@ -59,6 +59,7 @@ type DiagnosticOrderItemComponent struct {
 	Status   string                          `bson:"status,omitempty", json:"status,omitempty"`
 	Event    []DiagnosticOrderEventComponent `bson:"event,omitempty", json:"event,omitempty"`
 }
+
 type DiagnosticOrderBundle struct {
 	Type         string
 	Title        string

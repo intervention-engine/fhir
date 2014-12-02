@@ -66,6 +66,7 @@ type MessageDestinationComponent struct {
 	Target   Reference `bson:"target,omitempty", json:"target,omitempty"`
 	Endpoint string    `bson:"endpoint,omitempty", json:"endpoint,omitempty"`
 }
+
 type MessageHeaderBundle struct {
 	Type         string
 	Title        string

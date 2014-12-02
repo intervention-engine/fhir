@@ -41,6 +41,7 @@ type AllergyIntolerance struct {
 	Reaction        []Reference  `bson:"reaction,omitempty", json:"reaction,omitempty"`
 	SensitivityTest []Reference  `bson:"sensitivityTest,omitempty", json:"sensitivityTest,omitempty"`
 }
+
 type AllergyIntoleranceBundle struct {
 	Type         string
 	Title        string

@@ -52,6 +52,7 @@ type AdverseReactionExposureComponent struct {
 	CausalityExpectation string       `bson:"causalityExpectation,omitempty", json:"causalityExpectation,omitempty"`
 	Substance            Reference    `bson:"substance,omitempty", json:"substance,omitempty"`
 }
+
 type AdverseReactionBundle struct {
 	Type         string
 	Title        string

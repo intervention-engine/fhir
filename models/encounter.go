@@ -81,6 +81,7 @@ type EncounterLocationComponent struct {
 	Location Reference `bson:"location,omitempty", json:"location,omitempty"`
 	Period   Period    `bson:"period,omitempty", json:"period,omitempty"`
 }
+
 type EncounterBundle struct {
 	Type         string
 	Title        string

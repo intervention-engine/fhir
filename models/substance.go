@@ -48,6 +48,7 @@ type SubstanceIngredientComponent struct {
 	Quantity  Ratio     `bson:"quantity,omitempty", json:"quantity,omitempty"`
 	Substance Reference `bson:"substance,omitempty", json:"substance,omitempty"`
 }
+
 type SubstanceBundle struct {
 	Type         string
 	Title        string

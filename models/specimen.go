@@ -74,6 +74,7 @@ type SpecimenContainerComponent struct {
 	SpecimenQuantity Quantity        `bson:"specimenQuantity,omitempty", json:"specimenQuantity,omitempty"`
 	Additive         Reference       `bson:"additive,omitempty", json:"additive,omitempty"`
 }
+
 type SpecimenBundle struct {
 	Type         string
 	Title        string

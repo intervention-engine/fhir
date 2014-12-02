@@ -50,6 +50,7 @@ type DataElement struct {
 	ExampleDateTime        FHIRDateTime                  `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
 	ExampleBoolean         *bool                         `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
 	ExampleCodeableConcept CodeableConcept               `bson:"examplecodeableconcept,omitempty", json:"examplecodeableconcept,omitempty"`
+	ExampleRange           Range                         `bson:"examplerange,omitempty", json:"examplerange,omitempty"`
 	MaxLength              float64                       `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
 	Units                  CodeableConcept               `bson:"units,omitempty", json:"units,omitempty"`
 	Binding                DataElementBindingComponent   `bson:"binding,omitempty", json:"binding,omitempty"`
@@ -71,6 +72,7 @@ type DataElementMappingComponent struct {
 	Comments string `bson:"comments,omitempty", json:"comments,omitempty"`
 	Map      string `bson:"map,omitempty", json:"map,omitempty"`
 }
+
 type DataElementBundle struct {
 	Type         string
 	Title        string

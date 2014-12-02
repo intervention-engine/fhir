@@ -41,6 +41,7 @@ type AppointmentResponse struct {
 	LastModifiedBy    Reference         `bson:"lastModifiedBy,omitempty", json:"lastModifiedBy,omitempty"`
 	LastModified      FHIRDateTime      `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
 }
+
 type AppointmentResponseBundle struct {
 	Type         string
 	Title        string

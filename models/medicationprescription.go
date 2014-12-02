@@ -75,6 +75,7 @@ type MedicationPrescriptionSubstitutionComponent struct {
 	Type   CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
 	Reason CodeableConcept `bson:"reason,omitempty", json:"reason,omitempty"`
 }
+
 type MedicationPrescriptionBundle struct {
 	Type         string
 	Title        string

@@ -76,6 +76,7 @@ type ConditionRelatedItemComponent struct {
 	Code   CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
 	Target Reference       `bson:"target,omitempty", json:"target,omitempty"`
 }
+
 type ConditionBundle struct {
 	Type         string
 	Title        string

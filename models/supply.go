@@ -51,6 +51,7 @@ type SupplyDispenseComponent struct {
 	Destination    Reference       `bson:"destination,omitempty", json:"destination,omitempty"`
 	Receiver       []Reference     `bson:"receiver,omitempty", json:"receiver,omitempty"`
 }
+
 type SupplyBundle struct {
 	Type         string
 	Title        string

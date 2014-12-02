@@ -48,6 +48,7 @@ type ListEntryComponent struct {
 	Date    FHIRDateTime      `bson:"date,omitempty", json:"date,omitempty"`
 	Item    Reference         `bson:"item,omitempty", json:"item,omitempty"`
 }
+
 type ListBundle struct {
 	Type         string
 	Title        string

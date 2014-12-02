@@ -53,6 +53,7 @@ type PractitionerQualificationComponent struct {
 	Period     Period          `bson:"period,omitempty", json:"period,omitempty"`
 	Issuer     Reference       `bson:"issuer,omitempty", json:"issuer,omitempty"`
 }
+
 type PractitionerBundle struct {
 	Type         string
 	Title        string

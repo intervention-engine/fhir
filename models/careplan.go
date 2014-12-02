@@ -81,6 +81,7 @@ type CarePlanActivityComponent struct {
 	Detail          Reference                       `bson:"detail,omitempty", json:"detail,omitempty"`
 	Simple          CarePlanActivitySimpleComponent `bson:"simple,omitempty", json:"simple,omitempty"`
 }
+
 type CarePlanBundle struct {
 	Type         string
 	Title        string

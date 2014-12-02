@@ -65,6 +65,7 @@ type FamilyHistoryRelationComponent struct {
 	Note            string                                    `bson:"note,omitempty", json:"note,omitempty"`
 	Condition       []FamilyHistoryRelationConditionComponent `bson:"condition,omitempty", json:"condition,omitempty"`
 }
+
 type FamilyHistoryBundle struct {
 	Type         string
 	Title        string

@@ -44,6 +44,7 @@ type Media struct {
 	Length     float64         `bson:"length,omitempty", json:"length,omitempty"`
 	Content    Attachment      `bson:"content,omitempty", json:"content,omitempty"`
 }
+
 type MediaBundle struct {
 	Type         string
 	Title        string

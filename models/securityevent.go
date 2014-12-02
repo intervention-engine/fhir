@@ -90,6 +90,7 @@ type SecurityEventObjectComponent struct {
 	Query       string                               `bson:"query,omitempty", json:"query,omitempty"`
 	Detail      []SecurityEventObjectDetailComponent `bson:"detail,omitempty", json:"detail,omitempty"`
 }
+
 type SecurityEventBundle struct {
 	Type         string
 	Title        string

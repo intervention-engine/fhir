@@ -36,6 +36,7 @@ type Other struct {
 	Author     Reference       `bson:"author,omitempty", json:"author,omitempty"`
 	Created    FHIRDateTime    `bson:"created,omitempty", json:"created,omitempty"`
 }
+
 type OtherBundle struct {
 	Type         string
 	Title        string

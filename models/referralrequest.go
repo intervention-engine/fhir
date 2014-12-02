@@ -46,6 +46,7 @@ type ReferralRequest struct {
 	SupportingInformation []Reference       `bson:"supportingInformation,omitempty", json:"supportingInformation,omitempty"`
 	FulfillmentTime       Period            `bson:"fulfillmentTime,omitempty", json:"fulfillmentTime,omitempty"`
 }
+
 type ReferralRequestBundle struct {
 	Type         string
 	Title        string

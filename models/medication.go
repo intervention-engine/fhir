@@ -62,6 +62,7 @@ type MedicationPackageComponent struct {
 	Container CodeableConcept                     `bson:"container,omitempty", json:"container,omitempty"`
 	Content   []MedicationPackageContentComponent `bson:"content,omitempty", json:"content,omitempty"`
 }
+
 type MedicationBundle struct {
 	Type         string
 	Title        string

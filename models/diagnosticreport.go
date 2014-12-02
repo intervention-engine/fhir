@@ -54,6 +54,7 @@ type DiagnosticReportImageComponent struct {
 	Comment string    `bson:"comment,omitempty", json:"comment,omitempty"`
 	Link    Reference `bson:"link,omitempty", json:"link,omitempty"`
 }
+
 type DiagnosticReportBundle struct {
 	Type         string
 	Title        string

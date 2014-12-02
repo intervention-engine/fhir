@@ -49,6 +49,7 @@ type OrganizationContactComponent struct {
 	Address Address         `bson:"address,omitempty", json:"address,omitempty"`
 	Gender  CodeableConcept `bson:"gender,omitempty", json:"gender,omitempty"`
 }
+
 type OrganizationBundle struct {
 	Type         string
 	Title        string

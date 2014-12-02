@@ -74,6 +74,7 @@ type ImmunizationVaccinationProtocolComponent struct {
 	DoseStatus       CodeableConcept `bson:"doseStatus,omitempty", json:"doseStatus,omitempty"`
 	DoseStatusReason CodeableConcept `bson:"doseStatusReason,omitempty", json:"doseStatusReason,omitempty"`
 }
+
 type ImmunizationBundle struct {
 	Type         string
 	Title        string

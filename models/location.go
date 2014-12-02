@@ -50,6 +50,7 @@ type LocationPositionComponent struct {
 	Latitude  float64 `bson:"latitude,omitempty", json:"latitude,omitempty"`
 	Altitude  float64 `bson:"altitude,omitempty", json:"altitude,omitempty"`
 }
+
 type LocationBundle struct {
 	Type         string
 	Title        string
