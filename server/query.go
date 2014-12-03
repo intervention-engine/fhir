@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func QueryIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func QueryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Query
 	c := Database.C("querys")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func QueryIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func QueryShowHandler(rw http.ResponseWriter, r *http.Request) {
+func QueryShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func QueryShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func QueryCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func QueryCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	query := &models.Query{}
 	err := decoder.Decode(query)
@@ -96,10 +96,10 @@ func QueryCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Query/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Query/"+i.Hex())
 }
 
-func QueryUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func QueryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func QueryUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func QueryDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func QueryDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

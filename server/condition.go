@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Condition
 	c := Database.C("conditions")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ConditionShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ConditionShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ConditionShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ConditionCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ConditionCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	condition := &models.Condition{}
 	err := decoder.Decode(condition)
@@ -96,10 +96,10 @@ func ConditionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Condition/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Condition/"+i.Hex())
 }
 
-func ConditionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ConditionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ConditionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ConditionDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ConditionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

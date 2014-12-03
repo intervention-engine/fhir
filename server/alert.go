@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func AlertIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func AlertIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Alert
 	c := Database.C("alerts")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func AlertIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func AlertShowHandler(rw http.ResponseWriter, r *http.Request) {
+func AlertShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func AlertShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func AlertCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func AlertCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	alert := &models.Alert{}
 	err := decoder.Decode(alert)
@@ -96,10 +96,10 @@ func AlertCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Alert/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Alert/"+i.Hex())
 }
 
-func AlertUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func AlertUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func AlertUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func AlertDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func AlertDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.ConceptMap
 	c := Database.C("conceptmaps")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ConceptMapShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ConceptMapShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ConceptMapShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ConceptMapCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ConceptMapCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	conceptmap := &models.ConceptMap{}
 	err := decoder.Decode(conceptmap)
@@ -96,10 +96,10 @@ func ConceptMapCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/ConceptMap/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/ConceptMap/"+i.Hex())
 }
 
-func ConceptMapUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ConceptMapUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ConceptMapUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ConceptMapDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ConceptMapDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

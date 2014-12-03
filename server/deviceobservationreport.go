@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func DeviceObservationReportIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceObservationReportIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.DeviceObservationReport
 	c := Database.C("deviceobservationreports")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func DeviceObservationReportIndexHandler(rw http.ResponseWriter, r *http.Request
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func DeviceObservationReportShowHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceObservationReportShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func DeviceObservationReportShowHandler(rw http.ResponseWriter, r *http.Request)
 	json.NewEncoder(rw).Encode(result)
 }
 
-func DeviceObservationReportCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceObservationReportCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	deviceobservationreport := &models.DeviceObservationReport{}
 	err := decoder.Decode(deviceobservationreport)
@@ -96,10 +96,10 @@ func DeviceObservationReportCreateHandler(rw http.ResponseWriter, r *http.Reques
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/DeviceObservationReport/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/DeviceObservationReport/"+i.Hex())
 }
 
-func DeviceObservationReportUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceObservationReportUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func DeviceObservationReportUpdateHandler(rw http.ResponseWriter, r *http.Reques
 	context.Set(r, "Action", "update")
 }
 
-func DeviceObservationReportDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceObservationReportDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

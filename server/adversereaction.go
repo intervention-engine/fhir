@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func AdverseReactionIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func AdverseReactionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.AdverseReaction
 	c := Database.C("adversereactions")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func AdverseReactionIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func AdverseReactionShowHandler(rw http.ResponseWriter, r *http.Request) {
+func AdverseReactionShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func AdverseReactionShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func AdverseReactionCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func AdverseReactionCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	adversereaction := &models.AdverseReaction{}
 	err := decoder.Decode(adversereaction)
@@ -96,10 +96,10 @@ func AdverseReactionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/AdverseReaction/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/AdverseReaction/"+i.Hex())
 }
 
-func AdverseReactionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func AdverseReactionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func AdverseReactionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func AdverseReactionDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func AdverseReactionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.MedicationPrescription
 	c := Database.C("medicationprescriptions")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request)
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func MedicationPrescriptionShowHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationPrescriptionShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func MedicationPrescriptionShowHandler(rw http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(rw).Encode(result)
 }
 
-func MedicationPrescriptionCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationPrescriptionCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	medicationprescription := &models.MedicationPrescription{}
 	err := decoder.Decode(medicationprescription)
@@ -96,10 +96,10 @@ func MedicationPrescriptionCreateHandler(rw http.ResponseWriter, r *http.Request
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/MedicationPrescription/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/MedicationPrescription/"+i.Hex())
 }
 
-func MedicationPrescriptionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationPrescriptionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func MedicationPrescriptionUpdateHandler(rw http.ResponseWriter, r *http.Request
 	context.Set(r, "Action", "update")
 }
 
-func MedicationPrescriptionDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationPrescriptionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

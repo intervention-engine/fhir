@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func EncounterIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func EncounterIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Encounter
 	c := Database.C("encounters")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func EncounterIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func EncounterShowHandler(rw http.ResponseWriter, r *http.Request) {
+func EncounterShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func EncounterShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func EncounterCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func EncounterCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	encounter := &models.Encounter{}
 	err := decoder.Decode(encounter)
@@ -96,10 +96,10 @@ func EncounterCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Encounter/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Encounter/"+i.Hex())
 }
 
-func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func EncounterDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func EncounterDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

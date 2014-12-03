@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Contraindication
 	c := Database.C("contraindications")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ContraindicationShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ContraindicationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ContraindicationShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	contraindication := &models.Contraindication{}
 	err := decoder.Decode(contraindication)
@@ -96,10 +96,10 @@ func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Contraindication/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Contraindication/"+i.Hex())
 }
 
-func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ContraindicationDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ContraindicationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

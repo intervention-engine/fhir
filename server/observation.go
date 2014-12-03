@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Observation
 	c := Database.C("observations")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ObservationShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ObservationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ObservationShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ObservationCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ObservationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	observation := &models.Observation{}
 	err := decoder.Decode(observation)
@@ -96,10 +96,10 @@ func ObservationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Observation/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Observation/"+i.Hex())
 }
 
-func ObservationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ObservationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ObservationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ObservationDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ObservationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

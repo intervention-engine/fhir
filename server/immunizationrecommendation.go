@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.ImmunizationRecommendation
 	c := Database.C("immunizationrecommendations")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Requ
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ImmunizationRecommendationShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationRecommendationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ImmunizationRecommendationShowHandler(rw http.ResponseWriter, r *http.Reque
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ImmunizationRecommendationCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationRecommendationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	immunizationrecommendation := &models.ImmunizationRecommendation{}
 	err := decoder.Decode(immunizationrecommendation)
@@ -96,10 +96,10 @@ func ImmunizationRecommendationCreateHandler(rw http.ResponseWriter, r *http.Req
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/ImmunizationRecommendation/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/ImmunizationRecommendation/"+i.Hex())
 }
 
-func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Req
 	context.Set(r, "Action", "update")
 }
 
-func ImmunizationRecommendationDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationRecommendationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

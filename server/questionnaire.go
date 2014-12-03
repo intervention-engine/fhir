@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Questionnaire
 	c := Database.C("questionnaires")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func QuestionnaireShowHandler(rw http.ResponseWriter, r *http.Request) {
+func QuestionnaireShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func QuestionnaireShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func QuestionnaireCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func QuestionnaireCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	questionnaire := &models.Questionnaire{}
 	err := decoder.Decode(questionnaire)
@@ -96,10 +96,10 @@ func QuestionnaireCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Questionnaire/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Questionnaire/"+i.Hex())
 }
 
-func QuestionnaireUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func QuestionnaireUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func QuestionnaireUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

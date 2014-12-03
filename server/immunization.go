@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Immunization
 	c := Database.C("immunizations")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ImmunizationShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ImmunizationShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ImmunizationCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	immunization := &models.Immunization{}
 	err := decoder.Decode(immunization)
@@ -96,10 +96,10 @@ func ImmunizationCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Immunization/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Immunization/"+i.Hex())
 }
 
-func ImmunizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ImmunizationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ImmunizationDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ImmunizationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

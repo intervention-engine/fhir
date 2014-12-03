@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func MedicationAdministrationIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationAdministrationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.MedicationAdministration
 	c := Database.C("medicationadministrations")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func MedicationAdministrationIndexHandler(rw http.ResponseWriter, r *http.Reques
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func MedicationAdministrationShowHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationAdministrationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func MedicationAdministrationShowHandler(rw http.ResponseWriter, r *http.Request
 	json.NewEncoder(rw).Encode(result)
 }
 
-func MedicationAdministrationCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationAdministrationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	medicationadministration := &models.MedicationAdministration{}
 	err := decoder.Decode(medicationadministration)
@@ -96,10 +96,10 @@ func MedicationAdministrationCreateHandler(rw http.ResponseWriter, r *http.Reque
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/MedicationAdministration/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/MedicationAdministration/"+i.Hex())
 }
 
-func MedicationAdministrationUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationAdministrationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func MedicationAdministrationUpdateHandler(rw http.ResponseWriter, r *http.Reque
 	context.Set(r, "Action", "update")
 }
 
-func MedicationAdministrationDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func MedicationAdministrationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

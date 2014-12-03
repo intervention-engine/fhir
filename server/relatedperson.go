@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.RelatedPerson
 	c := Database.C("relatedpersons")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func RelatedPersonShowHandler(rw http.ResponseWriter, r *http.Request) {
+func RelatedPersonShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func RelatedPersonShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func RelatedPersonCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func RelatedPersonCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	relatedperson := &models.RelatedPerson{}
 	err := decoder.Decode(relatedperson)
@@ -96,10 +96,10 @@ func RelatedPersonCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/RelatedPerson/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/RelatedPerson/"+i.Hex())
 }
 
-func RelatedPersonUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func RelatedPersonUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func RelatedPersonUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func RelatedPersonDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func RelatedPersonDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

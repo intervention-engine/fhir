@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.DiagnosticOrder
 	c := Database.C("diagnosticorders")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func DiagnosticOrderShowHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticOrderShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func DiagnosticOrderShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func DiagnosticOrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticOrderCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	diagnosticorder := &models.DiagnosticOrder{}
 	err := decoder.Decode(diagnosticorder)
@@ -96,10 +96,10 @@ func DiagnosticOrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/DiagnosticOrder/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/DiagnosticOrder/"+i.Hex())
 }
 
-func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func DiagnosticOrderDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticOrderDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

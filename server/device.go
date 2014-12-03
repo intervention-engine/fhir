@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Device
 	c := Database.C("devices")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func DeviceShowHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func DeviceShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func DeviceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	device := &models.Device{}
 	err := decoder.Decode(device)
@@ -96,10 +96,10 @@ func DeviceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Device/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Device/"+i.Hex())
 }
 
-func DeviceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func DeviceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func DeviceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func DeviceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

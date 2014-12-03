@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Substance
 	c := Database.C("substances")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func SubstanceShowHandler(rw http.ResponseWriter, r *http.Request) {
+func SubstanceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func SubstanceShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func SubstanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func SubstanceCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	substance := &models.Substance{}
 	err := decoder.Decode(substance)
@@ -96,10 +96,10 @@ func SubstanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Substance/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Substance/"+i.Hex())
 }
 
-func SubstanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func SubstanceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func SubstanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func SubstanceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func SubstanceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

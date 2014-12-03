@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Supply
 	c := Database.C("supplys")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func SupplyShowHandler(rw http.ResponseWriter, r *http.Request) {
+func SupplyShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func SupplyShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	supply := &models.Supply{}
 	err := decoder.Decode(supply)
@@ -96,10 +96,10 @@ func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Supply/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Supply/"+i.Hex())
 }
 
-func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func SupplyDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func SupplyDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

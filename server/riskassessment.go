@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.RiskAssessment
 	c := Database.C("riskassessments")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func RiskAssessmentShowHandler(rw http.ResponseWriter, r *http.Request) {
+func RiskAssessmentShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func RiskAssessmentShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func RiskAssessmentCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func RiskAssessmentCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	riskassessment := &models.RiskAssessment{}
 	err := decoder.Decode(riskassessment)
@@ -96,10 +96,10 @@ func RiskAssessmentCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/RiskAssessment/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/RiskAssessment/"+i.Hex())
 }
 
-func RiskAssessmentUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func RiskAssessmentUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func RiskAssessmentUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func RiskAssessmentDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func RiskAssessmentDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

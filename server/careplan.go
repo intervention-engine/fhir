@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.CarePlan
 	c := Database.C("careplans")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func CarePlanShowHandler(rw http.ResponseWriter, r *http.Request) {
+func CarePlanShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func CarePlanShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func CarePlanCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func CarePlanCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	careplan := &models.CarePlan{}
 	err := decoder.Decode(careplan)
@@ -96,10 +96,10 @@ func CarePlanCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/CarePlan/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/CarePlan/"+i.Hex())
 }
 
-func CarePlanUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func CarePlanUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func CarePlanUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func CarePlanDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func CarePlanDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

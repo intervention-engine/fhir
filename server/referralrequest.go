@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ReferralRequestIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ReferralRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.ReferralRequest
 	c := Database.C("referralrequests")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ReferralRequestIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ReferralRequestShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ReferralRequestShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ReferralRequestShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ReferralRequestCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ReferralRequestCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	referralrequest := &models.ReferralRequest{}
 	err := decoder.Decode(referralrequest)
@@ -96,10 +96,10 @@ func ReferralRequestCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/ReferralRequest/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/ReferralRequest/"+i.Hex())
 }
 
-func ReferralRequestUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ReferralRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ReferralRequestUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ReferralRequestDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ReferralRequestDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

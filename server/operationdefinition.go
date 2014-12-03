@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.OperationDefinition
 	c := Database.C("operationdefinitions")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func OperationDefinitionShowHandler(rw http.ResponseWriter, r *http.Request) {
+func OperationDefinitionShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func OperationDefinitionShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func OperationDefinitionCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func OperationDefinitionCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	operationdefinition := &models.OperationDefinition{}
 	err := decoder.Decode(operationdefinition)
@@ -96,10 +96,10 @@ func OperationDefinitionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/OperationDefinition/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/OperationDefinition/"+i.Hex())
 }
 
-func OperationDefinitionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func OperationDefinitionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func OperationDefinitionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func OperationDefinitionDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func OperationDefinitionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

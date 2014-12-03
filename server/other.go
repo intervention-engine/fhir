@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func OtherIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func OtherIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Other
 	c := Database.C("others")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func OtherIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func OtherShowHandler(rw http.ResponseWriter, r *http.Request) {
+func OtherShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func OtherShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func OtherCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func OtherCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	other := &models.Other{}
 	err := decoder.Decode(other)
@@ -96,10 +96,10 @@ func OtherCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Other/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Other/"+i.Hex())
 }
 
-func OtherUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func OtherUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func OtherUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func OtherDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func OtherDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

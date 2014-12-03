@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.ImagingStudy
 	c := Database.C("imagingstudys")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ImagingStudyShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ImagingStudyShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ImagingStudyShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	imagingstudy := &models.ImagingStudy{}
 	err := decoder.Decode(imagingstudy)
@@ -96,10 +96,10 @@ func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/ImagingStudy/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/ImagingStudy/"+i.Hex())
 }
 
-func ImagingStudyUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ImagingStudyUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ImagingStudyUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ImagingStudyDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ImagingStudyDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.MessageHeader
 	c := Database.C("messageheaders")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func MessageHeaderShowHandler(rw http.ResponseWriter, r *http.Request) {
+func MessageHeaderShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func MessageHeaderShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func MessageHeaderCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func MessageHeaderCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	messageheader := &models.MessageHeader{}
 	err := decoder.Decode(messageheader)
@@ -96,10 +96,10 @@ func MessageHeaderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/MessageHeader/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/MessageHeader/"+i.Hex())
 }
 
-func MessageHeaderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func MessageHeaderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func MessageHeaderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func MessageHeaderDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func MessageHeaderDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

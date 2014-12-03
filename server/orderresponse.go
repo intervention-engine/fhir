@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.OrderResponse
 	c := Database.C("orderresponses")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func OrderResponseShowHandler(rw http.ResponseWriter, r *http.Request) {
+func OrderResponseShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func OrderResponseShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func OrderResponseCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func OrderResponseCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	orderresponse := &models.OrderResponse{}
 	err := decoder.Decode(orderresponse)
@@ -96,10 +96,10 @@ func OrderResponseCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/OrderResponse/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/OrderResponse/"+i.Hex())
 }
 
-func OrderResponseUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func OrderResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func OrderResponseUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func OrderResponseDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func OrderResponseDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

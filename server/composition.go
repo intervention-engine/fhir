@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func CompositionIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func CompositionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Composition
 	c := Database.C("compositions")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func CompositionIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func CompositionShowHandler(rw http.ResponseWriter, r *http.Request) {
+func CompositionShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func CompositionShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func CompositionCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func CompositionCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	composition := &models.Composition{}
 	err := decoder.Decode(composition)
@@ -96,10 +96,10 @@ func CompositionCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Composition/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Composition/"+i.Hex())
 }
 
-func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func CompositionDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func CompositionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

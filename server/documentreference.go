@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.DocumentReference
 	c := Database.C("documentreferences")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func DocumentReferenceShowHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentReferenceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func DocumentReferenceShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func DocumentReferenceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentReferenceCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	documentreference := &models.DocumentReference{}
 	err := decoder.Decode(documentreference)
@@ -96,10 +96,10 @@ func DocumentReferenceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/DocumentReference/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/DocumentReference/"+i.Hex())
 }
 
-func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func DocumentReferenceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentReferenceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func PatientIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func PatientIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Patient
 	c := Database.C("patients")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func PatientIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func PatientShowHandler(rw http.ResponseWriter, r *http.Request) {
+func PatientShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func PatientShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func PatientCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func PatientCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	patient := &models.Patient{}
 	err := decoder.Decode(patient)
@@ -96,10 +96,10 @@ func PatientCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Patient/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Patient/"+i.Hex())
 }
 
-func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Specimen
 	c := Database.C("specimens")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func SpecimenShowHandler(rw http.ResponseWriter, r *http.Request) {
+func SpecimenShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func SpecimenShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func SpecimenCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func SpecimenCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	specimen := &models.Specimen{}
 	err := decoder.Decode(specimen)
@@ -96,10 +96,10 @@ func SpecimenCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Specimen/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Specimen/"+i.Hex())
 }
 
-func SpecimenUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func SpecimenUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func SpecimenUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func SpecimenDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func SpecimenDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

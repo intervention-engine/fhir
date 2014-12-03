@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ValueSetIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ValueSetIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.ValueSet
 	c := Database.C("valuesets")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ValueSetIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ValueSetShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ValueSetShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ValueSetShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ValueSetCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ValueSetCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	valueset := &models.ValueSet{}
 	err := decoder.Decode(valueset)
@@ -96,10 +96,10 @@ func ValueSetCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/ValueSet/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/ValueSet/"+i.Hex())
 }
 
-func ValueSetUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ValueSetUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ValueSetUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ValueSetDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ValueSetDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

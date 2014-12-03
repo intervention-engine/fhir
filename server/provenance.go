@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Provenance
 	c := Database.C("provenances")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ProvenanceShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ProvenanceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ProvenanceShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ProvenanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ProvenanceCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	provenance := &models.Provenance{}
 	err := decoder.Decode(provenance)
@@ -96,10 +96,10 @@ func ProvenanceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Provenance/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Provenance/"+i.Hex())
 }
 
-func ProvenanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ProvenanceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ProvenanceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ProvenanceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ProvenanceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

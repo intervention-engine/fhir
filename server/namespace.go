@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func NamespaceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func NamespaceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Namespace
 	c := Database.C("namespaces")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func NamespaceIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func NamespaceShowHandler(rw http.ResponseWriter, r *http.Request) {
+func NamespaceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func NamespaceShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func NamespaceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func NamespaceCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	namespace := &models.Namespace{}
 	err := decoder.Decode(namespace)
@@ -96,10 +96,10 @@ func NamespaceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Namespace/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Namespace/"+i.Hex())
 }
 
-func NamespaceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func NamespaceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func NamespaceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func NamespaceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func NamespaceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

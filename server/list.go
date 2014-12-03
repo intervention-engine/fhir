@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ListIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func ListIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.List
 	c := Database.C("lists")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func ListIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ListShowHandler(rw http.ResponseWriter, r *http.Request) {
+func ListShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func ListShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func ListCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func ListCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	list := &models.List{}
 	err := decoder.Decode(list)
@@ -96,10 +96,10 @@ func ListCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/List/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/List/"+i.Hex())
 }
 
-func ListUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func ListUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func ListUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func ListDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func ListDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

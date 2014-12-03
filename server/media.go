@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func MediaIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Media
 	c := Database.C("medias")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func MediaShowHandler(rw http.ResponseWriter, r *http.Request) {
+func MediaShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func MediaShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func MediaCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func MediaCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	media := &models.Media{}
 	err := decoder.Decode(media)
@@ -96,10 +96,10 @@ func MediaCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Media/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Media/"+i.Hex())
 }
 
-func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func MediaDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func MediaDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

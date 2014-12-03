@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.NutritionOrder
 	c := Database.C("nutritionorders")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func NutritionOrderShowHandler(rw http.ResponseWriter, r *http.Request) {
+func NutritionOrderShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func NutritionOrderShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func NutritionOrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func NutritionOrderCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	nutritionorder := &models.NutritionOrder{}
 	err := decoder.Decode(nutritionorder)
@@ -96,10 +96,10 @@ func NutritionOrderCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/NutritionOrder/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/NutritionOrder/"+i.Hex())
 }
 
-func NutritionOrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func NutritionOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func NutritionOrderUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func NutritionOrderDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func NutritionOrderDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

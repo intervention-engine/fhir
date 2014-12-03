@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.DocumentManifest
 	c := Database.C("documentmanifests")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func DocumentManifestShowHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentManifestShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func DocumentManifestShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func DocumentManifestCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentManifestCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	documentmanifest := &models.DocumentManifest{}
 	err := decoder.Decode(documentmanifest)
@@ -96,10 +96,10 @@ func DocumentManifestCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/DocumentManifest/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/DocumentManifest/"+i.Hex())
 }
 
-func DocumentManifestUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentManifestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func DocumentManifestUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func DocumentManifestDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func DocumentManifestDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

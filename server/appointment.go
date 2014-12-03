@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Appointment
 	c := Database.C("appointments")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func AppointmentShowHandler(rw http.ResponseWriter, r *http.Request) {
+func AppointmentShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func AppointmentShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func AppointmentCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func AppointmentCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	appointment := &models.Appointment{}
 	err := decoder.Decode(appointment)
@@ -96,10 +96,10 @@ func AppointmentCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Appointment/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Appointment/"+i.Hex())
 }
 
-func AppointmentUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func AppointmentUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func AppointmentUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func AppointmentDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func AppointmentDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

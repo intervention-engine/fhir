@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func DiagnosticReportIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticReportIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.DiagnosticReport
 	c := Database.C("diagnosticreports")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func DiagnosticReportIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func DiagnosticReportShowHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticReportShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func DiagnosticReportShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func DiagnosticReportCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticReportCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	diagnosticreport := &models.DiagnosticReport{}
 	err := decoder.Decode(diagnosticreport)
@@ -96,10 +96,10 @@ func DiagnosticReportCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/DiagnosticReport/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/DiagnosticReport/"+i.Hex())
 }
 
-func DiagnosticReportUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticReportUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func DiagnosticReportUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func DiagnosticReportDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func DiagnosticReportDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

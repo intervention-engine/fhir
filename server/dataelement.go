@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func DataElementIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func DataElementIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.DataElement
 	c := Database.C("dataelements")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func DataElementIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func DataElementShowHandler(rw http.ResponseWriter, r *http.Request) {
+func DataElementShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func DataElementShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func DataElementCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func DataElementCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	dataelement := &models.DataElement{}
 	err := decoder.Decode(dataelement)
@@ -96,10 +96,10 @@ func DataElementCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/DataElement/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/DataElement/"+i.Hex())
 }
 
-func DataElementUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func DataElementUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func DataElementUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func DataElementDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func DataElementDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

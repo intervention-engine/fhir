@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Practitioner
 	c := Database.C("practitioners")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func PractitionerShowHandler(rw http.ResponseWriter, r *http.Request) {
+func PractitionerShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func PractitionerShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func PractitionerCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func PractitionerCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	practitioner := &models.Practitioner{}
 	err := decoder.Decode(practitioner)
@@ -96,10 +96,10 @@ func PractitionerCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/Practitioner/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/Practitioner/"+i.Hex())
 }
 
-func PractitionerUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func PractitionerUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func PractitionerUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func PractitionerDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func PractitionerDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

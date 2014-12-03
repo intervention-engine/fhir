@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func FamilyHistoryIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func FamilyHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.FamilyHistory
 	c := Database.C("familyhistorys")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func FamilyHistoryIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func FamilyHistoryShowHandler(rw http.ResponseWriter, r *http.Request) {
+func FamilyHistoryShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func FamilyHistoryShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func FamilyHistoryCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func FamilyHistoryCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	familyhistory := &models.FamilyHistory{}
 	err := decoder.Decode(familyhistory)
@@ -96,10 +96,10 @@ func FamilyHistoryCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/FamilyHistory/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/FamilyHistory/"+i.Hex())
 }
 
-func FamilyHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func FamilyHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func FamilyHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func FamilyHistoryDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func FamilyHistoryDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

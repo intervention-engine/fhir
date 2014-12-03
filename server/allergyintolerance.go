@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.AllergyIntolerance
 	c := Database.C("allergyintolerances")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func AllergyIntoleranceShowHandler(rw http.ResponseWriter, r *http.Request) {
+func AllergyIntoleranceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func AllergyIntoleranceShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	allergyintolerance := &models.AllergyIntolerance{}
 	err := decoder.Decode(allergyintolerance)
@@ -96,10 +96,10 @@ func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/AllergyIntolerance/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/AllergyIntolerance/"+i.Hex())
 }
 
-func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func AllergyIntoleranceDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func AllergyIntoleranceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]

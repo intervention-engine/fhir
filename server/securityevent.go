@@ -13,7 +13,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func SecurityEventIndexHandler(rw http.ResponseWriter, r *http.Request) {
+func SecurityEventIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.SecurityEvent
 	c := Database.C("securityevents")
 	iter := c.Find(nil).Limit(100).Iter()
@@ -40,7 +40,7 @@ func SecurityEventIndexHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func SecurityEventShowHandler(rw http.ResponseWriter, r *http.Request) {
+func SecurityEventShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -70,7 +70,7 @@ func SecurityEventShowHandler(rw http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(rw).Encode(result)
 }
 
-func SecurityEventCreateHandler(rw http.ResponseWriter, r *http.Request) {
+func SecurityEventCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
 	securityevent := &models.SecurityEvent{}
 	err := decoder.Decode(securityevent)
@@ -96,10 +96,10 @@ func SecurityEventCreateHandler(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	rw.Header().Add("Location", "http://"+host+":8080/SecurityEvent/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/SecurityEvent/"+i.Hex())
 }
 
-func SecurityEventUpdateHandler(rw http.ResponseWriter, r *http.Request) {
+func SecurityEventUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -130,7 +130,7 @@ func SecurityEventUpdateHandler(rw http.ResponseWriter, r *http.Request) {
 	context.Set(r, "Action", "update")
 }
 
-func SecurityEventDeleteHandler(rw http.ResponseWriter, r *http.Request) {
+func SecurityEventDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
