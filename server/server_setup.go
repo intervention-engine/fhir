@@ -18,6 +18,14 @@ func (f *FHIRServer) AddMiddleware(key string, middleware negroni.Handler) {
 	f.MiddlewareConfig[key] = append(f.MiddlewareConfig[key], middleware)
 }
 
+func NewServer(databaseHost string) *FHIRServer {
+	server := &FHIRServer{DatabaseHost: databaseHost, MiddlewareConfig: make(map[string][]negroni.Handler)}
+	server.Router = mux.NewRouter()
+	server.Router.StrictSlash(true)
+	server.Router.KeepContext = true
+	return server
+}
+
 func (f *FHIRServer) Run() {
 	var err error
 
@@ -29,9 +37,6 @@ func (f *FHIRServer) Run() {
 	defer MongoSession.Close()
 
 	Database = MongoSession.DB("fhir")
-	f.Router = mux.NewRouter()
-	f.Router.StrictSlash(true)
-	f.Router.KeepContext = true
 
 	RegisterRoutes(f.Router, f.MiddlewareConfig)
 
