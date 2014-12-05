@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	s := server.FHIRServer{DatabaseHost: "localhost", Middleware: make([]negroni.Handler, 0)}
+	s := server.FHIRServer{DatabaseHost: "localhost", MiddlewareConfig: make(map[string][]negroni.Handler)}
 
 	s.Run()
 }
