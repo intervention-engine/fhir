@@ -31,7 +31,7 @@ Custom Middleware
 
 Because this project is a generic FHIR server, it only supports simple CRUD methods for FHIR resources as-is. In order to provide extensibility, the FHIRServer type has a method called AddMiddleware that can be called as follows:
 
-    s := server.FHIRServer{DatabaseHost: "localhost", Middleware: make([]negroni.Handler, 0)}
+    s := server.NewServer("localhost")
     s.AddMiddleware(negroni.HandlerFunc(MyHandler))
 
 Where MyHandler is the middleware function that you want to add.
