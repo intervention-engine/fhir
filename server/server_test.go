@@ -103,13 +103,10 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
   splitLocation := strings.Split(res.Header["Location"][0], "/")
   createdPatientId := splitLocation[len(splitLocation)-1]
 
-  res, err = http.Get(s.Server.URL + "/Patient/" + createdPatientId)
-  util.CheckErr(err)
-
-  decoder := json.NewDecoder(res.Body)
-  patient := &models.Patient{}
-  err = decoder.Decode(patient)
-  util.CheckErr(err)
+	patientCollection := Database.C("patients")
+	patient := models.Patient{}
+	err = patientCollection.Find(bson.M{"_id": createdPatientId}).One(&patient)
+	util.CheckErr(err)
   c.Assert(patient.Name[0].Family[0], Equals, "Daffy")
 }
 
@@ -122,15 +119,12 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
   client := &http.Client{}
   req, err := http.NewRequest("PUT", s.Server.URL + "/Patient/" + s.FixtureId, &buf)
   util.CheckErr(err)
-  res, err := client.Do(req)
+  _, err = client.Do(req)
 
-  res, err = http.Get(s.Server.URL + "/Patient/" + s.FixtureId)
-  util.CheckErr(err)
-
-  decoder := json.NewDecoder(res.Body)
-  patient := &models.Patient{}
-  err = decoder.Decode(patient)
-  util.CheckErr(err)
+	patientCollection := Database.C("patients")
+	patient := models.Patient{}
+	err = patientCollection.Find(bson.M{"_id": s.FixtureId}).One(&patient)
+	util.CheckErr(err)
   c.Assert(patient.Name[0].Family[0], Equals, "Darkwing")
 }
 
