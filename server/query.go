@@ -9,7 +9,7 @@ import (
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
-	"gitlab.mitre.org/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/models"
 	"gopkg.in/mgo.v2/bson"
 )
 

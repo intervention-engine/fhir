@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"gitlab.mitre.org/intervention-engine/fhir/server"
+	"github.com/intervention-engine/fhir/server"
 )
 
 func main() {
