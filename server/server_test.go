@@ -6,7 +6,6 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
-  "bytes"
   "strings"
 
 	"github.com/codegangsta/negroni"
@@ -93,11 +92,10 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 }
 
 func (s *ServerSuite) TestCreatePatient(c *C) {
-  createPatient := LoadPatientFromFixture("../fixtures/patient-example-b.json")
-  var buf bytes.Buffer
-  encoder := json.NewEncoder(&buf)
-  encoder.Encode(createPatient)
-  res, err := http.Post(s.Server.URL + "/Patient", "application/json", &buf)
+	data, err := os.Open("../fixtures/patient-example-b.json")
+	defer data.Close()
+	util.CheckErr(err)
+  res, err := http.Post(s.Server.URL + "/Patient", "application/json", data)
   util.CheckErr(err)
 
   splitLocation := strings.Split(res.Header["Location"][0], "/")
@@ -111,13 +109,12 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 }
 
 func (s *ServerSuite) TestUpdatePatient(c *C) {
-  updatePatient := LoadPatientFromFixture("../fixtures/patient-example-c.json")
-  var buf bytes.Buffer
-  encoder := json.NewEncoder(&buf)
-  encoder.Encode(updatePatient)
+	data, err := os.Open("../fixtures/patient-example-c.json")
+	defer data.Close()
+	util.CheckErr(err)
 
   client := &http.Client{}
-  req, err := http.NewRequest("PUT", s.Server.URL + "/Patient/" + s.FixtureId, &buf)
+  req, err := http.NewRequest("PUT", s.Server.URL + "/Patient/" + s.FixtureId, data)
   util.CheckErr(err)
   _, err = client.Do(req)
 
@@ -130,11 +127,10 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 
 func (s *ServerSuite) TestDeletePatient(c *C) {
 
-  createPatient := LoadPatientFromFixture("../fixtures/patient-example-d.json")
-  var buf bytes.Buffer
-  encoder := json.NewEncoder(&buf)
-  encoder.Encode(createPatient)
-  res, err := http.Post(s.Server.URL + "/Patient", "application/json", &buf)
+	data, err := os.Open("../fixtures/patient-example-d.json")
+	defer data.Close()
+	util.CheckErr(err)
+  res, err := http.Post(s.Server.URL + "/Patient", "application/json", data)
   util.CheckErr(err)
 
   splitLocation := strings.Split(res.Header["Location"][0], "/")
