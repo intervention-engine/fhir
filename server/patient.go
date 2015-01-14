@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -40,34 +41,38 @@ func PatientIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func PatientShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-
+func LoadPatient(r *http.Request) (*models.Patient, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
 	} else {
-		http.Error(rw, "Invalid id", http.StatusBadRequest)
+		return nil, errors.New("Invalid id")
 	}
 
 	c := Database.C("patients")
-
 	result := models.Patient{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	log.Println("Setting patient read context")
 	context.Set(r, "Patient", result)
 	context.Set(r, "Resource", "Patient")
-	context.Set(r, "Action", "read")
+	return &result, nil
+}
 
+func PatientShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	context.Set(r, "Action", "read")
+	_, err := LoadPatient(r)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(context.Get(r, "Patient"))
 }
 
 func PatientCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

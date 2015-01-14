@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -40,34 +41,38 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func SupplyShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-
+func LoadSupply(r *http.Request) (*models.Supply, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
 	} else {
-		http.Error(rw, "Invalid id", http.StatusBadRequest)
+		return nil, errors.New("Invalid id")
 	}
 
 	c := Database.C("supplys")
-
 	result := models.Supply{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	log.Println("Setting supply read context")
 	context.Set(r, "Supply", result)
 	context.Set(r, "Resource", "Supply")
-	context.Set(r, "Action", "read")
+	return &result, nil
+}
 
+func SupplyShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	context.Set(r, "Action", "read")
+	_, err := LoadSupply(r)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(context.Get(r, "Supply"))
 }
 
 func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -40,34 +41,38 @@ func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ConceptMapShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-
+func LoadConceptMap(r *http.Request) (*models.ConceptMap, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
 	} else {
-		http.Error(rw, "Invalid id", http.StatusBadRequest)
+		return nil, errors.New("Invalid id")
 	}
 
 	c := Database.C("conceptmaps")
-
 	result := models.ConceptMap{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	log.Println("Setting conceptmap read context")
 	context.Set(r, "ConceptMap", result)
 	context.Set(r, "Resource", "ConceptMap")
-	context.Set(r, "Action", "read")
+	return &result, nil
+}
 
+func ConceptMapShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	context.Set(r, "Action", "read")
+	_, err := LoadConceptMap(r)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(context.Get(r, "ConceptMap"))
 }
 
 func ConceptMapCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -40,34 +41,38 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func ImagingStudyShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-
+func LoadImagingStudy(r *http.Request) (*models.ImagingStudy, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
 	} else {
-		http.Error(rw, "Invalid id", http.StatusBadRequest)
+		return nil, errors.New("Invalid id")
 	}
 
 	c := Database.C("imagingstudys")
-
 	result := models.ImagingStudy{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	log.Println("Setting imagingstudy read context")
 	context.Set(r, "ImagingStudy", result)
 	context.Set(r, "Resource", "ImagingStudy")
-	context.Set(r, "Action", "read")
+	return &result, nil
+}
 
+func ImagingStudyShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	context.Set(r, "Action", "read")
+	_, err := LoadImagingStudy(r)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(context.Get(r, "ImagingStudy"))
 }
 
 func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

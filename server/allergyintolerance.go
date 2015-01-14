@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -40,34 +41,38 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func AllergyIntoleranceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-
+func LoadAllergyIntolerance(r *http.Request) (*models.AllergyIntolerance, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
 	} else {
-		http.Error(rw, "Invalid id", http.StatusBadRequest)
+		return nil, errors.New("Invalid id")
 	}
 
 	c := Database.C("allergyintolerances")
-
 	result := models.AllergyIntolerance{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	log.Println("Setting allergyintolerance read context")
 	context.Set(r, "AllergyIntolerance", result)
 	context.Set(r, "Resource", "AllergyIntolerance")
-	context.Set(r, "Action", "read")
+	return &result, nil
+}
 
+func AllergyIntoleranceShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	context.Set(r, "Action", "read")
+	_, err := LoadAllergyIntolerance(r)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(context.Get(r, "AllergyIntolerance"))
 }
 
 func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

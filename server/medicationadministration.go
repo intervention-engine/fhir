@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -40,34 +41,38 @@ func MedicationAdministrationIndexHandler(rw http.ResponseWriter, r *http.Reques
 	json.NewEncoder(rw).Encode(bundle)
 }
 
-func MedicationAdministrationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-
+func LoadMedicationAdministration(r *http.Request) (*models.MedicationAdministration, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
 	} else {
-		http.Error(rw, "Invalid id", http.StatusBadRequest)
+		return nil, errors.New("Invalid id")
 	}
 
 	c := Database.C("medicationadministrations")
-
 	result := models.MedicationAdministration{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	log.Println("Setting medicationadministration read context")
 	context.Set(r, "MedicationAdministration", result)
 	context.Set(r, "Resource", "MedicationAdministration")
-	context.Set(r, "Action", "read")
+	return &result, nil
+}
 
+func MedicationAdministrationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	context.Set(r, "Action", "read")
+	_, err := LoadMedicationAdministration(r)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(result)
+	json.NewEncoder(rw).Encode(context.Get(r, "MedicationAdministration"))
 }
 
 func MedicationAdministrationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
