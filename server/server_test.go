@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+  "strings"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
@@ -95,8 +96,8 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 	data, err := os.Open("../fixtures/patient-example-b.json")
 	defer data.Close()
 	util.CheckErr(err)
-	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
-	util.CheckErr(err)
+  res, err := http.Post(s.Server.URL + "/Patient", "application/json", data)
+  util.CheckErr(err)
 
 	splitLocation := strings.Split(res.Header["Location"][0], "/")
 	createdPatientId := splitLocation[len(splitLocation)-1]
@@ -113,10 +114,10 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 	defer data.Close()
 	util.CheckErr(err)
 
-	client := &http.Client{}
-	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+s.FixtureId, data)
-	util.CheckErr(err)
-	_, err = client.Do(req)
+  client := &http.Client{}
+  req, err := http.NewRequest("PUT", s.Server.URL + "/Patient/" + s.FixtureId, data)
+  util.CheckErr(err)
+  _, err = client.Do(req)
 
 	patientCollection := Database.C("patients")
 	patient := models.Patient{}
@@ -130,8 +131,8 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	data, err := os.Open("../fixtures/patient-example-d.json")
 	defer data.Close()
 	util.CheckErr(err)
-	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
-	util.CheckErr(err)
+  res, err := http.Post(s.Server.URL + "/Patient", "application/json", data)
+  util.CheckErr(err)
 
 	splitLocation := strings.Split(res.Header["Location"][0], "/")
 	createdPatientId := splitLocation[len(splitLocation)-1]
