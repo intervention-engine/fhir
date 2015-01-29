@@ -155,17 +155,24 @@ type ConformanceDocumentComponent struct {
 }
 
 type ConformanceBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Conformance
-	Category     ConformanceCategory
+	Type         string                   `json:"resourceType,omitempty"`
+	Title        string                   `json:"title,omitempty"`
+	Id           string                   `json:"id,omitempty"`
+	Updated      time.Time                `json:"updated,omitempty"`
+	TotalResults int                      `json:"totalResults,omitempty"`
+	Entry        []ConformanceBundleEntry `json:"entry,omitempty"`
+	Category     ConformanceCategory      `json:"category,omitempty"`
+}
+
+type ConformanceBundleEntry struct {
+	Title    string              `json:"title,omitempty"`
+	Id       string              `json:"id,omitempty"`
+	Content  Conformance         `json:"content,omitempty"`
+	Category ConformanceCategory `json:"category,omitempty"`
 }
 
 type ConformanceCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

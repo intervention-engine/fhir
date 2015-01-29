@@ -68,17 +68,24 @@ type MessageDestinationComponent struct {
 }
 
 type MessageHeaderBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []MessageHeader
-	Category     MessageHeaderCategory
+	Type         string                     `json:"resourceType,omitempty"`
+	Title        string                     `json:"title,omitempty"`
+	Id           string                     `json:"id,omitempty"`
+	Updated      time.Time                  `json:"updated,omitempty"`
+	TotalResults int                        `json:"totalResults,omitempty"`
+	Entry        []MessageHeaderBundleEntry `json:"entry,omitempty"`
+	Category     MessageHeaderCategory      `json:"category,omitempty"`
+}
+
+type MessageHeaderBundleEntry struct {
+	Title    string                `json:"title,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Content  MessageHeader         `json:"content,omitempty"`
+	Category MessageHeaderCategory `json:"category,omitempty"`
 }
 
 type MessageHeaderCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

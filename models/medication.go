@@ -64,17 +64,24 @@ type MedicationPackageComponent struct {
 }
 
 type MedicationBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Medication
-	Category     MedicationCategory
+	Type         string                  `json:"resourceType,omitempty"`
+	Title        string                  `json:"title,omitempty"`
+	Id           string                  `json:"id,omitempty"`
+	Updated      time.Time               `json:"updated,omitempty"`
+	TotalResults int                     `json:"totalResults,omitempty"`
+	Entry        []MedicationBundleEntry `json:"entry,omitempty"`
+	Category     MedicationCategory      `json:"category,omitempty"`
+}
+
+type MedicationBundleEntry struct {
+	Title    string             `json:"title,omitempty"`
+	Id       string             `json:"id,omitempty"`
+	Content  Medication         `json:"content,omitempty"`
+	Category MedicationCategory `json:"category,omitempty"`
 }
 
 type MedicationCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

@@ -23,13 +23,22 @@ func EncounterIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var encounterEntryList []models.EncounterBundleEntry
+	for _, encounter := range result {
+		var entry models.EncounterBundleEntry
+		entry.Title = "Encounter " + encounter.Id
+		entry.Id = encounter.Id
+		entry.Content = encounter
+		encounterEntryList = append(encounterEntryList, entry)
+	}
+
 	var bundle models.EncounterBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Encounter Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = encounterEntryList
 
 	log.Println("Setting encounter search context")
 	context.Set(r, "Encounter", result)

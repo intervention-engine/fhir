@@ -23,13 +23,22 @@ func QueryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var queryEntryList []models.QueryBundleEntry
+	for _, query := range result {
+		var entry models.QueryBundleEntry
+		entry.Title = "Query " + query.Id
+		entry.Id = query.Id
+		entry.Content = query
+		queryEntryList = append(queryEntryList, entry)
+	}
+
 	var bundle models.QueryBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Query Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = queryEntryList
 
 	log.Println("Setting query search context")
 	context.Set(r, "Query", result)

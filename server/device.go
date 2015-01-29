@@ -23,13 +23,22 @@ func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var deviceEntryList []models.DeviceBundleEntry
+	for _, device := range result {
+		var entry models.DeviceBundleEntry
+		entry.Title = "Device " + device.Id
+		entry.Id = device.Id
+		entry.Content = device
+		deviceEntryList = append(deviceEntryList, entry)
+	}
+
 	var bundle models.DeviceBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Device Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = deviceEntryList
 
 	log.Println("Setting device search context")
 	context.Set(r, "Device", result)

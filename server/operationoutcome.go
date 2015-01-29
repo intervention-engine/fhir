@@ -23,13 +23,22 @@ func OperationOutcomeIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var operationoutcomeEntryList []models.OperationOutcomeBundleEntry
+	for _, operationoutcome := range result {
+		var entry models.OperationOutcomeBundleEntry
+		entry.Title = "OperationOutcome " + operationoutcome.Id
+		entry.Id = operationoutcome.Id
+		entry.Content = operationoutcome
+		operationoutcomeEntryList = append(operationoutcomeEntryList, entry)
+	}
+
 	var bundle models.OperationOutcomeBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "OperationOutcome Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = operationoutcomeEntryList
 
 	log.Println("Setting operationoutcome search context")
 	context.Set(r, "OperationOutcome", result)

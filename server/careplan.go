@@ -23,13 +23,22 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var careplanEntryList []models.CarePlanBundleEntry
+	for _, careplan := range result {
+		var entry models.CarePlanBundleEntry
+		entry.Title = "CarePlan " + careplan.Id
+		entry.Id = careplan.Id
+		entry.Content = careplan
+		careplanEntryList = append(careplanEntryList, entry)
+	}
+
 	var bundle models.CarePlanBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "CarePlan Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = careplanEntryList
 
 	log.Println("Setting careplan search context")
 	context.Set(r, "CarePlan", result)

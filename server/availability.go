@@ -23,13 +23,22 @@ func AvailabilityIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var availabilityEntryList []models.AvailabilityBundleEntry
+	for _, availability := range result {
+		var entry models.AvailabilityBundleEntry
+		entry.Title = "Availability " + availability.Id
+		entry.Id = availability.Id
+		entry.Content = availability
+		availabilityEntryList = append(availabilityEntryList, entry)
+	}
+
 	var bundle models.AvailabilityBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Availability Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = availabilityEntryList
 
 	log.Println("Setting availability search context")
 	context.Set(r, "Availability", result)

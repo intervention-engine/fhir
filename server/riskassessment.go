@@ -23,13 +23,22 @@ func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var riskassessmentEntryList []models.RiskAssessmentBundleEntry
+	for _, riskassessment := range result {
+		var entry models.RiskAssessmentBundleEntry
+		entry.Title = "RiskAssessment " + riskassessment.Id
+		entry.Id = riskassessment.Id
+		entry.Content = riskassessment
+		riskassessmentEntryList = append(riskassessmentEntryList, entry)
+	}
+
 	var bundle models.RiskAssessmentBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "RiskAssessment Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = riskassessmentEntryList
 
 	log.Println("Setting riskassessment search context")
 	context.Set(r, "RiskAssessment", result)

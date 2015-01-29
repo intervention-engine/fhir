@@ -23,13 +23,22 @@ func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var conceptmapEntryList []models.ConceptMapBundleEntry
+	for _, conceptmap := range result {
+		var entry models.ConceptMapBundleEntry
+		entry.Title = "ConceptMap " + conceptmap.Id
+		entry.Id = conceptmap.Id
+		entry.Content = conceptmap
+		conceptmapEntryList = append(conceptmapEntryList, entry)
+	}
+
 	var bundle models.ConceptMapBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "ConceptMap Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = conceptmapEntryList
 
 	log.Println("Setting conceptmap search context")
 	context.Set(r, "ConceptMap", result)

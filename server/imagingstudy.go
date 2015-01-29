@@ -23,13 +23,22 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var imagingstudyEntryList []models.ImagingStudyBundleEntry
+	for _, imagingstudy := range result {
+		var entry models.ImagingStudyBundleEntry
+		entry.Title = "ImagingStudy " + imagingstudy.Id
+		entry.Id = imagingstudy.Id
+		entry.Content = imagingstudy
+		imagingstudyEntryList = append(imagingstudyEntryList, entry)
+	}
+
 	var bundle models.ImagingStudyBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "ImagingStudy Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = imagingstudyEntryList
 
 	log.Println("Setting imagingstudy search context")
 	context.Set(r, "ImagingStudy", result)

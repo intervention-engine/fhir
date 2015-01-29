@@ -23,13 +23,22 @@ func NamespaceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var namespaceEntryList []models.NamespaceBundleEntry
+	for _, namespace := range result {
+		var entry models.NamespaceBundleEntry
+		entry.Title = "Namespace " + namespace.Id
+		entry.Id = namespace.Id
+		entry.Content = namespace
+		namespaceEntryList = append(namespaceEntryList, entry)
+	}
+
 	var bundle models.NamespaceBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Namespace Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = namespaceEntryList
 
 	log.Println("Setting namespace search context")
 	context.Set(r, "Namespace", result)

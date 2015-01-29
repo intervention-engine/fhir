@@ -77,17 +77,24 @@ type MedicationPrescriptionSubstitutionComponent struct {
 }
 
 type MedicationPrescriptionBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []MedicationPrescription
-	Category     MedicationPrescriptionCategory
+	Type         string                              `json:"resourceType,omitempty"`
+	Title        string                              `json:"title,omitempty"`
+	Id           string                              `json:"id,omitempty"`
+	Updated      time.Time                           `json:"updated,omitempty"`
+	TotalResults int                                 `json:"totalResults,omitempty"`
+	Entry        []MedicationPrescriptionBundleEntry `json:"entry,omitempty"`
+	Category     MedicationPrescriptionCategory      `json:"category,omitempty"`
+}
+
+type MedicationPrescriptionBundleEntry struct {
+	Title    string                         `json:"title,omitempty"`
+	Id       string                         `json:"id,omitempty"`
+	Content  MedicationPrescription         `json:"content,omitempty"`
+	Category MedicationPrescriptionCategory `json:"category,omitempty"`
 }
 
 type MedicationPrescriptionCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

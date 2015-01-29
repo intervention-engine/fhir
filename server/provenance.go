@@ -23,13 +23,22 @@ func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var provenanceEntryList []models.ProvenanceBundleEntry
+	for _, provenance := range result {
+		var entry models.ProvenanceBundleEntry
+		entry.Title = "Provenance " + provenance.Id
+		entry.Id = provenance.Id
+		entry.Content = provenance
+		provenanceEntryList = append(provenanceEntryList, entry)
+	}
+
 	var bundle models.ProvenanceBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Provenance Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = provenanceEntryList
 
 	log.Println("Setting provenance search context")
 	context.Set(r, "Provenance", result)

@@ -23,13 +23,22 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var allergyintoleranceEntryList []models.AllergyIntoleranceBundleEntry
+	for _, allergyintolerance := range result {
+		var entry models.AllergyIntoleranceBundleEntry
+		entry.Title = "AllergyIntolerance " + allergyintolerance.Id
+		entry.Id = allergyintolerance.Id
+		entry.Content = allergyintolerance
+		allergyintoleranceEntryList = append(allergyintoleranceEntryList, entry)
+	}
+
 	var bundle models.AllergyIntoleranceBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "AllergyIntolerance Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = allergyintoleranceEntryList
 
 	log.Println("Setting allergyintolerance search context")
 	context.Set(r, "AllergyIntolerance", result)

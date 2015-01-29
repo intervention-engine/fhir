@@ -42,17 +42,24 @@ type OrderResponse struct {
 }
 
 type OrderResponseBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []OrderResponse
-	Category     OrderResponseCategory
+	Type         string                     `json:"resourceType,omitempty"`
+	Title        string                     `json:"title,omitempty"`
+	Id           string                     `json:"id,omitempty"`
+	Updated      time.Time                  `json:"updated,omitempty"`
+	TotalResults int                        `json:"totalResults,omitempty"`
+	Entry        []OrderResponseBundleEntry `json:"entry,omitempty"`
+	Category     OrderResponseCategory      `json:"category,omitempty"`
+}
+
+type OrderResponseBundleEntry struct {
+	Title    string                `json:"title,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Content  OrderResponse         `json:"content,omitempty"`
+	Category OrderResponseCategory `json:"category,omitempty"`
 }
 
 type OrderResponseCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

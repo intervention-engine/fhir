@@ -74,17 +74,24 @@ type DataElementMappingComponent struct {
 }
 
 type DataElementBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []DataElement
-	Category     DataElementCategory
+	Type         string                   `json:"resourceType,omitempty"`
+	Title        string                   `json:"title,omitempty"`
+	Id           string                   `json:"id,omitempty"`
+	Updated      time.Time                `json:"updated,omitempty"`
+	TotalResults int                      `json:"totalResults,omitempty"`
+	Entry        []DataElementBundleEntry `json:"entry,omitempty"`
+	Category     DataElementCategory      `json:"category,omitempty"`
+}
+
+type DataElementBundleEntry struct {
+	Title    string              `json:"title,omitempty"`
+	Id       string              `json:"id,omitempty"`
+	Content  DataElement         `json:"content,omitempty"`
+	Category DataElementCategory `json:"category,omitempty"`
 }
 
 type DataElementCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

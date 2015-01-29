@@ -23,13 +23,22 @@ func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var nutritionorderEntryList []models.NutritionOrderBundleEntry
+	for _, nutritionorder := range result {
+		var entry models.NutritionOrderBundleEntry
+		entry.Title = "NutritionOrder " + nutritionorder.Id
+		entry.Id = nutritionorder.Id
+		entry.Content = nutritionorder
+		nutritionorderEntryList = append(nutritionorderEntryList, entry)
+	}
+
 	var bundle models.NutritionOrderBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "NutritionOrder Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = nutritionorderEntryList
 
 	log.Println("Setting nutritionorder search context")
 	context.Set(r, "NutritionOrder", result)

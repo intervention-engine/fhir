@@ -50,17 +50,24 @@ type SubstanceIngredientComponent struct {
 }
 
 type SubstanceBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Substance
-	Category     SubstanceCategory
+	Type         string                 `json:"resourceType,omitempty"`
+	Title        string                 `json:"title,omitempty"`
+	Id           string                 `json:"id,omitempty"`
+	Updated      time.Time              `json:"updated,omitempty"`
+	TotalResults int                    `json:"totalResults,omitempty"`
+	Entry        []SubstanceBundleEntry `json:"entry,omitempty"`
+	Category     SubstanceCategory      `json:"category,omitempty"`
+}
+
+type SubstanceBundleEntry struct {
+	Title    string            `json:"title,omitempty"`
+	Id       string            `json:"id,omitempty"`
+	Content  Substance         `json:"content,omitempty"`
+	Category SubstanceCategory `json:"category,omitempty"`
 }
 
 type SubstanceCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

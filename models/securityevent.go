@@ -92,17 +92,24 @@ type SecurityEventObjectComponent struct {
 }
 
 type SecurityEventBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []SecurityEvent
-	Category     SecurityEventCategory
+	Type         string                     `json:"resourceType,omitempty"`
+	Title        string                     `json:"title,omitempty"`
+	Id           string                     `json:"id,omitempty"`
+	Updated      time.Time                  `json:"updated,omitempty"`
+	TotalResults int                        `json:"totalResults,omitempty"`
+	Entry        []SecurityEventBundleEntry `json:"entry,omitempty"`
+	Category     SecurityEventCategory      `json:"category,omitempty"`
+}
+
+type SecurityEventBundleEntry struct {
+	Title    string                `json:"title,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Content  SecurityEvent         `json:"content,omitempty"`
+	Category SecurityEventCategory `json:"category,omitempty"`
 }
 
 type SecurityEventCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

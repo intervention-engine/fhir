@@ -56,17 +56,24 @@ type AppointmentParticipantComponent struct {
 }
 
 type AppointmentBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Appointment
-	Category     AppointmentCategory
+	Type         string                   `json:"resourceType,omitempty"`
+	Title        string                   `json:"title,omitempty"`
+	Id           string                   `json:"id,omitempty"`
+	Updated      time.Time                `json:"updated,omitempty"`
+	TotalResults int                      `json:"totalResults,omitempty"`
+	Entry        []AppointmentBundleEntry `json:"entry,omitempty"`
+	Category     AppointmentCategory      `json:"category,omitempty"`
+}
+
+type AppointmentBundleEntry struct {
+	Title    string              `json:"title,omitempty"`
+	Id       string              `json:"id,omitempty"`
+	Content  Appointment         `json:"content,omitempty"`
+	Category AppointmentCategory `json:"category,omitempty"`
 }
 
 type AppointmentCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

@@ -23,13 +23,22 @@ func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var conditionEntryList []models.ConditionBundleEntry
+	for _, condition := range result {
+		var entry models.ConditionBundleEntry
+		entry.Title = "Condition " + condition.Id
+		entry.Id = condition.Id
+		entry.Content = condition
+		conditionEntryList = append(conditionEntryList, entry)
+	}
+
 	var bundle models.ConditionBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Condition Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = conditionEntryList
 
 	log.Println("Setting condition search context")
 	context.Set(r, "Condition", result)

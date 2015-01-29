@@ -76,17 +76,24 @@ type ImmunizationVaccinationProtocolComponent struct {
 }
 
 type ImmunizationBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Immunization
-	Category     ImmunizationCategory
+	Type         string                    `json:"resourceType,omitempty"`
+	Title        string                    `json:"title,omitempty"`
+	Id           string                    `json:"id,omitempty"`
+	Updated      time.Time                 `json:"updated,omitempty"`
+	TotalResults int                       `json:"totalResults,omitempty"`
+	Entry        []ImmunizationBundleEntry `json:"entry,omitempty"`
+	Category     ImmunizationCategory      `json:"category,omitempty"`
+}
+
+type ImmunizationBundleEntry struct {
+	Title    string               `json:"title,omitempty"`
+	Id       string               `json:"id,omitempty"`
+	Content  Immunization         `json:"content,omitempty"`
+	Category ImmunizationCategory `json:"category,omitempty"`
 }
 
 type ImmunizationCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

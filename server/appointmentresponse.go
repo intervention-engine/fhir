@@ -23,13 +23,22 @@ func AppointmentResponseIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var appointmentresponseEntryList []models.AppointmentResponseBundleEntry
+	for _, appointmentresponse := range result {
+		var entry models.AppointmentResponseBundleEntry
+		entry.Title = "AppointmentResponse " + appointmentresponse.Id
+		entry.Id = appointmentresponse.Id
+		entry.Content = appointmentresponse
+		appointmentresponseEntryList = append(appointmentresponseEntryList, entry)
+	}
+
 	var bundle models.AppointmentResponseBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "AppointmentResponse Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = appointmentresponseEntryList
 
 	log.Println("Setting appointmentresponse search context")
 	context.Set(r, "AppointmentResponse", result)

@@ -23,13 +23,22 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var mediaEntryList []models.MediaBundleEntry
+	for _, media := range result {
+		var entry models.MediaBundleEntry
+		entry.Title = "Media " + media.Id
+		entry.Id = media.Id
+		entry.Content = media
+		mediaEntryList = append(mediaEntryList, entry)
+	}
+
 	var bundle models.MediaBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Media Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = mediaEntryList
 
 	log.Println("Setting media search context")
 	context.Set(r, "Media", result)

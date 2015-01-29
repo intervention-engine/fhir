@@ -23,13 +23,22 @@ func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var observationEntryList []models.ObservationBundleEntry
+	for _, observation := range result {
+		var entry models.ObservationBundleEntry
+		entry.Title = "Observation " + observation.Id
+		entry.Id = observation.Id
+		entry.Content = observation
+		observationEntryList = append(observationEntryList, entry)
+	}
+
 	var bundle models.ObservationBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Observation Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = observationEntryList
 
 	log.Println("Setting observation search context")
 	context.Set(r, "Observation", result)

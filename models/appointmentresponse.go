@@ -43,17 +43,24 @@ type AppointmentResponse struct {
 }
 
 type AppointmentResponseBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []AppointmentResponse
-	Category     AppointmentResponseCategory
+	Type         string                           `json:"resourceType,omitempty"`
+	Title        string                           `json:"title,omitempty"`
+	Id           string                           `json:"id,omitempty"`
+	Updated      time.Time                        `json:"updated,omitempty"`
+	TotalResults int                              `json:"totalResults,omitempty"`
+	Entry        []AppointmentResponseBundleEntry `json:"entry,omitempty"`
+	Category     AppointmentResponseCategory      `json:"category,omitempty"`
+}
+
+type AppointmentResponseBundleEntry struct {
+	Title    string                      `json:"title,omitempty"`
+	Id       string                      `json:"id,omitempty"`
+	Content  AppointmentResponse         `json:"content,omitempty"`
+	Category AppointmentResponseCategory `json:"category,omitempty"`
 }
 
 type AppointmentResponseCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

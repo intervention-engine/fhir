@@ -23,13 +23,22 @@ func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var documentreferenceEntryList []models.DocumentReferenceBundleEntry
+	for _, documentreference := range result {
+		var entry models.DocumentReferenceBundleEntry
+		entry.Title = "DocumentReference " + documentreference.Id
+		entry.Id = documentreference.Id
+		entry.Content = documentreference
+		documentreferenceEntryList = append(documentreferenceEntryList, entry)
+	}
+
 	var bundle models.DocumentReferenceBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "DocumentReference Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = documentreferenceEntryList
 
 	log.Println("Setting documentreference search context")
 	context.Set(r, "DocumentReference", result)

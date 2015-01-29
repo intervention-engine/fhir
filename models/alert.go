@@ -39,17 +39,24 @@ type Alert struct {
 }
 
 type AlertBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Alert
-	Category     AlertCategory
+	Type         string             `json:"resourceType,omitempty"`
+	Title        string             `json:"title,omitempty"`
+	Id           string             `json:"id,omitempty"`
+	Updated      time.Time          `json:"updated,omitempty"`
+	TotalResults int                `json:"totalResults,omitempty"`
+	Entry        []AlertBundleEntry `json:"entry,omitempty"`
+	Category     AlertCategory      `json:"category,omitempty"`
+}
+
+type AlertBundleEntry struct {
+	Title    string        `json:"title,omitempty"`
+	Id       string        `json:"id,omitempty"`
+	Content  Alert         `json:"content,omitempty"`
+	Category AlertCategory `json:"category,omitempty"`
 }
 
 type AlertCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

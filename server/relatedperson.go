@@ -23,13 +23,22 @@ func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var relatedpersonEntryList []models.RelatedPersonBundleEntry
+	for _, relatedperson := range result {
+		var entry models.RelatedPersonBundleEntry
+		entry.Title = "RelatedPerson " + relatedperson.Id
+		entry.Id = relatedperson.Id
+		entry.Content = relatedperson
+		relatedpersonEntryList = append(relatedpersonEntryList, entry)
+	}
+
 	var bundle models.RelatedPersonBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "RelatedPerson Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = relatedpersonEntryList
 
 	log.Println("Setting relatedperson search context")
 	context.Set(r, "RelatedPerson", result)

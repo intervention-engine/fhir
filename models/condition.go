@@ -78,17 +78,24 @@ type ConditionRelatedItemComponent struct {
 }
 
 type ConditionBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Condition
-	Category     ConditionCategory
+	Type         string                 `json:"resourceType,omitempty"`
+	Title        string                 `json:"title,omitempty"`
+	Id           string                 `json:"id,omitempty"`
+	Updated      time.Time              `json:"updated,omitempty"`
+	TotalResults int                    `json:"totalResults,omitempty"`
+	Entry        []ConditionBundleEntry `json:"entry,omitempty"`
+	Category     ConditionCategory      `json:"category,omitempty"`
+}
+
+type ConditionBundleEntry struct {
+	Title    string            `json:"title,omitempty"`
+	Id       string            `json:"id,omitempty"`
+	Content  Condition         `json:"content,omitempty"`
+	Category ConditionCategory `json:"category,omitempty"`
 }
 
 type ConditionCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

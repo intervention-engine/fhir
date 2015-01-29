@@ -51,17 +51,24 @@ type OrganizationContactComponent struct {
 }
 
 type OrganizationBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Organization
-	Category     OrganizationCategory
+	Type         string                    `json:"resourceType,omitempty"`
+	Title        string                    `json:"title,omitempty"`
+	Id           string                    `json:"id,omitempty"`
+	Updated      time.Time                 `json:"updated,omitempty"`
+	TotalResults int                       `json:"totalResults,omitempty"`
+	Entry        []OrganizationBundleEntry `json:"entry,omitempty"`
+	Category     OrganizationCategory      `json:"category,omitempty"`
+}
+
+type OrganizationBundleEntry struct {
+	Title    string               `json:"title,omitempty"`
+	Id       string               `json:"id,omitempty"`
+	Content  Organization         `json:"content,omitempty"`
+	Category OrganizationCategory `json:"category,omitempty"`
 }
 
 type OrganizationCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

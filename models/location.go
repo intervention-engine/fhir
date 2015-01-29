@@ -52,17 +52,24 @@ type LocationPositionComponent struct {
 }
 
 type LocationBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Location
-	Category     LocationCategory
+	Type         string                `json:"resourceType,omitempty"`
+	Title        string                `json:"title,omitempty"`
+	Id           string                `json:"id,omitempty"`
+	Updated      time.Time             `json:"updated,omitempty"`
+	TotalResults int                   `json:"totalResults,omitempty"`
+	Entry        []LocationBundleEntry `json:"entry,omitempty"`
+	Category     LocationCategory      `json:"category,omitempty"`
+}
+
+type LocationBundleEntry struct {
+	Title    string           `json:"title,omitempty"`
+	Id       string           `json:"id,omitempty"`
+	Content  Location         `json:"content,omitempty"`
+	Category LocationCategory `json:"category,omitempty"`
 }
 
 type LocationCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

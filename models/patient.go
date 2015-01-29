@@ -75,17 +75,24 @@ type PatientLinkComponent struct {
 }
 
 type PatientBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Patient
-	Category     PatientCategory
+	Type         string               `json:"resourceType,omitempty"`
+	Title        string               `json:"title,omitempty"`
+	Id           string               `json:"id,omitempty"`
+	Updated      time.Time            `json:"updated,omitempty"`
+	TotalResults int                  `json:"totalResults,omitempty"`
+	Entry        []PatientBundleEntry `json:"entry,omitempty"`
+	Category     PatientCategory      `json:"category,omitempty"`
+}
+
+type PatientBundleEntry struct {
+	Title    string          `json:"title,omitempty"`
+	Id       string          `json:"id,omitempty"`
+	Content  Patient         `json:"content,omitempty"`
+	Category PatientCategory `json:"category,omitempty"`
 }
 
 type PatientCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

@@ -23,13 +23,22 @@ func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var messageheaderEntryList []models.MessageHeaderBundleEntry
+	for _, messageheader := range result {
+		var entry models.MessageHeaderBundleEntry
+		entry.Title = "MessageHeader " + messageheader.Id
+		entry.Id = messageheader.Id
+		entry.Content = messageheader
+		messageheaderEntryList = append(messageheaderEntryList, entry)
+	}
+
 	var bundle models.MessageHeaderBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "MessageHeader Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = messageheaderEntryList
 
 	log.Println("Setting messageheader search context")
 	context.Set(r, "MessageHeader", result)

@@ -62,17 +62,24 @@ type OperationDefinitionParameterComponent struct {
 }
 
 type OperationDefinitionBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []OperationDefinition
-	Category     OperationDefinitionCategory
+	Type         string                           `json:"resourceType,omitempty"`
+	Title        string                           `json:"title,omitempty"`
+	Id           string                           `json:"id,omitempty"`
+	Updated      time.Time                        `json:"updated,omitempty"`
+	TotalResults int                              `json:"totalResults,omitempty"`
+	Entry        []OperationDefinitionBundleEntry `json:"entry,omitempty"`
+	Category     OperationDefinitionCategory      `json:"category,omitempty"`
+}
+
+type OperationDefinitionBundleEntry struct {
+	Title    string                      `json:"title,omitempty"`
+	Id       string                      `json:"id,omitempty"`
+	Content  OperationDefinition         `json:"content,omitempty"`
+	Category OperationDefinitionCategory `json:"category,omitempty"`
 }
 
 type OperationDefinitionCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

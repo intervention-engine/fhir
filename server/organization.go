@@ -23,13 +23,22 @@ func OrganizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var organizationEntryList []models.OrganizationBundleEntry
+	for _, organization := range result {
+		var entry models.OrganizationBundleEntry
+		entry.Title = "Organization " + organization.Id
+		entry.Id = organization.Id
+		entry.Content = organization
+		organizationEntryList = append(organizationEntryList, entry)
+	}
+
 	var bundle models.OrganizationBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Organization Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = organizationEntryList
 
 	log.Println("Setting organization search context")
 	context.Set(r, "Organization", result)

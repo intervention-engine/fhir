@@ -56,17 +56,24 @@ type DiagnosticReportImageComponent struct {
 }
 
 type DiagnosticReportBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []DiagnosticReport
-	Category     DiagnosticReportCategory
+	Type         string                        `json:"resourceType,omitempty"`
+	Title        string                        `json:"title,omitempty"`
+	Id           string                        `json:"id,omitempty"`
+	Updated      time.Time                     `json:"updated,omitempty"`
+	TotalResults int                           `json:"totalResults,omitempty"`
+	Entry        []DiagnosticReportBundleEntry `json:"entry,omitempty"`
+	Category     DiagnosticReportCategory      `json:"category,omitempty"`
+}
+
+type DiagnosticReportBundleEntry struct {
+	Title    string                   `json:"title,omitempty"`
+	Id       string                   `json:"id,omitempty"`
+	Content  DiagnosticReport         `json:"content,omitempty"`
+	Category DiagnosticReportCategory `json:"category,omitempty"`
 }
 
 type DiagnosticReportCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

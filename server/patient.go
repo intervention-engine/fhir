@@ -23,13 +23,22 @@ func PatientIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var patientEntryList []models.PatientBundleEntry
+	for _, patient := range result {
+		var entry models.PatientBundleEntry
+		entry.Title = "Patient " + patient.Id
+		entry.Id = patient.Id
+		entry.Content = patient
+		patientEntryList = append(patientEntryList, entry)
+	}
+
 	var bundle models.PatientBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Patient Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = patientEntryList
 
 	log.Println("Setting patient search context")
 	context.Set(r, "Patient", result)

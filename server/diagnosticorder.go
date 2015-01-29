@@ -23,13 +23,22 @@ func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var diagnosticorderEntryList []models.DiagnosticOrderBundleEntry
+	for _, diagnosticorder := range result {
+		var entry models.DiagnosticOrderBundleEntry
+		entry.Title = "DiagnosticOrder " + diagnosticorder.Id
+		entry.Id = diagnosticorder.Id
+		entry.Content = diagnosticorder
+		diagnosticorderEntryList = append(diagnosticorderEntryList, entry)
+	}
+
 	var bundle models.DiagnosticOrderBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "DiagnosticOrder Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = diagnosticorderEntryList
 
 	log.Println("Setting diagnosticorder search context")
 	context.Set(r, "DiagnosticOrder", result)

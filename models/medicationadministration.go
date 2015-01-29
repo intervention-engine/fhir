@@ -60,17 +60,24 @@ type MedicationAdministrationDosageComponent struct {
 }
 
 type MedicationAdministrationBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []MedicationAdministration
-	Category     MedicationAdministrationCategory
+	Type         string                                `json:"resourceType,omitempty"`
+	Title        string                                `json:"title,omitempty"`
+	Id           string                                `json:"id,omitempty"`
+	Updated      time.Time                             `json:"updated,omitempty"`
+	TotalResults int                                   `json:"totalResults,omitempty"`
+	Entry        []MedicationAdministrationBundleEntry `json:"entry,omitempty"`
+	Category     MedicationAdministrationCategory      `json:"category,omitempty"`
+}
+
+type MedicationAdministrationBundleEntry struct {
+	Title    string                           `json:"title,omitempty"`
+	Id       string                           `json:"id,omitempty"`
+	Content  MedicationAdministration         `json:"content,omitempty"`
+	Category MedicationAdministrationCategory `json:"category,omitempty"`
 }
 
 type MedicationAdministrationCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

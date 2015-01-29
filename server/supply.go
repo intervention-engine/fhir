@@ -23,13 +23,22 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var supplyEntryList []models.SupplyBundleEntry
+	for _, supply := range result {
+		var entry models.SupplyBundleEntry
+		entry.Title = "Supply " + supply.Id
+		entry.Id = supply.Id
+		entry.Content = supply
+		supplyEntryList = append(supplyEntryList, entry)
+	}
+
 	var bundle models.SupplyBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Supply Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = supplyEntryList
 
 	log.Println("Setting supply search context")
 	context.Set(r, "Supply", result)

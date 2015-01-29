@@ -23,13 +23,22 @@ func ReferralRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var referralrequestEntryList []models.ReferralRequestBundleEntry
+	for _, referralrequest := range result {
+		var entry models.ReferralRequestBundleEntry
+		entry.Title = "ReferralRequest " + referralrequest.Id
+		entry.Id = referralrequest.Id
+		entry.Content = referralrequest
+		referralrequestEntryList = append(referralrequestEntryList, entry)
+	}
+
 	var bundle models.ReferralRequestBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "ReferralRequest Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = referralrequestEntryList
 
 	log.Println("Setting referralrequest search context")
 	context.Set(r, "ReferralRequest", result)

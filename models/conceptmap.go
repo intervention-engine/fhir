@@ -72,17 +72,24 @@ type ConceptMapElementComponent struct {
 }
 
 type ConceptMapBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []ConceptMap
-	Category     ConceptMapCategory
+	Type         string                  `json:"resourceType,omitempty"`
+	Title        string                  `json:"title,omitempty"`
+	Id           string                  `json:"id,omitempty"`
+	Updated      time.Time               `json:"updated,omitempty"`
+	TotalResults int                     `json:"totalResults,omitempty"`
+	Entry        []ConceptMapBundleEntry `json:"entry,omitempty"`
+	Category     ConceptMapCategory      `json:"category,omitempty"`
+}
+
+type ConceptMapBundleEntry struct {
+	Title    string             `json:"title,omitempty"`
+	Id       string             `json:"id,omitempty"`
+	Content  ConceptMap         `json:"content,omitempty"`
+	Category ConceptMapCategory `json:"category,omitempty"`
 }
 
 type ConceptMapCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

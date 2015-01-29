@@ -23,13 +23,22 @@ func ValueSetIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var valuesetEntryList []models.ValueSetBundleEntry
+	for _, valueset := range result {
+		var entry models.ValueSetBundleEntry
+		entry.Title = "ValueSet " + valueset.Id
+		entry.Id = valueset.Id
+		entry.Content = valueset
+		valuesetEntryList = append(valuesetEntryList, entry)
+	}
+
 	var bundle models.ValueSetBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "ValueSet Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = valuesetEntryList
 
 	log.Println("Setting valueset search context")
 	context.Set(r, "ValueSet", result)

@@ -23,13 +23,22 @@ func MedicationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var medicationEntryList []models.MedicationBundleEntry
+	for _, medication := range result {
+		var entry models.MedicationBundleEntry
+		entry.Title = "Medication " + medication.Id
+		entry.Id = medication.Id
+		entry.Content = medication
+		medicationEntryList = append(medicationEntryList, entry)
+	}
+
 	var bundle models.MedicationBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Medication Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = medicationEntryList
 
 	log.Println("Setting medication search context")
 	context.Set(r, "Medication", result)

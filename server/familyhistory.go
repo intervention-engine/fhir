@@ -23,13 +23,22 @@ func FamilyHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var familyhistoryEntryList []models.FamilyHistoryBundleEntry
+	for _, familyhistory := range result {
+		var entry models.FamilyHistoryBundleEntry
+		entry.Title = "FamilyHistory " + familyhistory.Id
+		entry.Id = familyhistory.Id
+		entry.Content = familyhistory
+		familyhistoryEntryList = append(familyhistoryEntryList, entry)
+	}
+
 	var bundle models.FamilyHistoryBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "FamilyHistory Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = familyhistoryEntryList
 
 	log.Println("Setting familyhistory search context")
 	context.Set(r, "FamilyHistory", result)

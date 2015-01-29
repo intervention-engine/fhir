@@ -43,17 +43,24 @@ type AllergyIntolerance struct {
 }
 
 type AllergyIntoleranceBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []AllergyIntolerance
-	Category     AllergyIntoleranceCategory
+	Type         string                          `json:"resourceType,omitempty"`
+	Title        string                          `json:"title,omitempty"`
+	Id           string                          `json:"id,omitempty"`
+	Updated      time.Time                       `json:"updated,omitempty"`
+	TotalResults int                             `json:"totalResults,omitempty"`
+	Entry        []AllergyIntoleranceBundleEntry `json:"entry,omitempty"`
+	Category     AllergyIntoleranceCategory      `json:"category,omitempty"`
+}
+
+type AllergyIntoleranceBundleEntry struct {
+	Title    string                     `json:"title,omitempty"`
+	Id       string                     `json:"id,omitempty"`
+	Content  AllergyIntolerance         `json:"content,omitempty"`
+	Category AllergyIntoleranceCategory `json:"category,omitempty"`
 }
 
 type AllergyIntoleranceCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

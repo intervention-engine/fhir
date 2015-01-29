@@ -23,13 +23,22 @@ func DeviceObservationReportIndexHandler(rw http.ResponseWriter, r *http.Request
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var deviceobservationreportEntryList []models.DeviceObservationReportBundleEntry
+	for _, deviceobservationreport := range result {
+		var entry models.DeviceObservationReportBundleEntry
+		entry.Title = "DeviceObservationReport " + deviceobservationreport.Id
+		entry.Id = deviceobservationreport.Id
+		entry.Content = deviceobservationreport
+		deviceobservationreportEntryList = append(deviceobservationreportEntryList, entry)
+	}
+
 	var bundle models.DeviceObservationReportBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "DeviceObservationReport Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = deviceobservationreportEntryList
 
 	log.Println("Setting deviceobservationreport search context")
 	context.Set(r, "DeviceObservationReport", result)

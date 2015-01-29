@@ -23,13 +23,22 @@ func DiagnosticReportIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var diagnosticreportEntryList []models.DiagnosticReportBundleEntry
+	for _, diagnosticreport := range result {
+		var entry models.DiagnosticReportBundleEntry
+		entry.Title = "DiagnosticReport " + diagnosticreport.Id
+		entry.Id = diagnosticreport.Id
+		entry.Content = diagnosticreport
+		diagnosticreportEntryList = append(diagnosticreportEntryList, entry)
+	}
+
 	var bundle models.DiagnosticReportBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "DiagnosticReport Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = diagnosticreportEntryList
 
 	log.Println("Setting diagnosticreport search context")
 	context.Set(r, "DiagnosticReport", result)

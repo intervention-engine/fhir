@@ -23,13 +23,22 @@ func OtherIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var otherEntryList []models.OtherBundleEntry
+	for _, other := range result {
+		var entry models.OtherBundleEntry
+		entry.Title = "Other " + other.Id
+		entry.Id = other.Id
+		entry.Content = other
+		otherEntryList = append(otherEntryList, entry)
+	}
+
 	var bundle models.OtherBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Other Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = otherEntryList
 
 	log.Println("Setting other search context")
 	context.Set(r, "Other", result)

@@ -23,13 +23,22 @@ func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var orderresponseEntryList []models.OrderResponseBundleEntry
+	for _, orderresponse := range result {
+		var entry models.OrderResponseBundleEntry
+		entry.Title = "OrderResponse " + orderresponse.Id
+		entry.Id = orderresponse.Id
+		entry.Content = orderresponse
+		orderresponseEntryList = append(orderresponseEntryList, entry)
+	}
+
 	var bundle models.OrderResponseBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "OrderResponse Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = orderresponseEntryList
 
 	log.Println("Setting orderresponse search context")
 	context.Set(r, "OrderResponse", result)

@@ -23,13 +23,22 @@ func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var specimenEntryList []models.SpecimenBundleEntry
+	for _, specimen := range result {
+		var entry models.SpecimenBundleEntry
+		entry.Title = "Specimen " + specimen.Id
+		entry.Id = specimen.Id
+		entry.Content = specimen
+		specimenEntryList = append(specimenEntryList, entry)
+	}
+
 	var bundle models.SpecimenBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Specimen Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = specimenEntryList
 
 	log.Println("Setting specimen search context")
 	context.Set(r, "Specimen", result)

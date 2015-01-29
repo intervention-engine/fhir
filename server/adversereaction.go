@@ -23,13 +23,22 @@ func AdverseReactionIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var adversereactionEntryList []models.AdverseReactionBundleEntry
+	for _, adversereaction := range result {
+		var entry models.AdverseReactionBundleEntry
+		entry.Title = "AdverseReaction " + adversereaction.Id
+		entry.Id = adversereaction.Id
+		entry.Content = adversereaction
+		adversereactionEntryList = append(adversereactionEntryList, entry)
+	}
+
 	var bundle models.AdverseReactionBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "AdverseReaction Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = adversereactionEntryList
 
 	log.Println("Setting adversereaction search context")
 	context.Set(r, "AdverseReaction", result)

@@ -23,13 +23,22 @@ func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var appointmentEntryList []models.AppointmentBundleEntry
+	for _, appointment := range result {
+		var entry models.AppointmentBundleEntry
+		entry.Title = "Appointment " + appointment.Id
+		entry.Id = appointment.Id
+		entry.Content = appointment
+		appointmentEntryList = append(appointmentEntryList, entry)
+	}
+
 	var bundle models.AppointmentBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Appointment Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = appointmentEntryList
 
 	log.Println("Setting appointment search context")
 	context.Set(r, "Appointment", result)

@@ -38,17 +38,24 @@ type Other struct {
 }
 
 type OtherBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Other
-	Category     OtherCategory
+	Type         string             `json:"resourceType,omitempty"`
+	Title        string             `json:"title,omitempty"`
+	Id           string             `json:"id,omitempty"`
+	Updated      time.Time          `json:"updated,omitempty"`
+	TotalResults int                `json:"totalResults,omitempty"`
+	Entry        []OtherBundleEntry `json:"entry,omitempty"`
+	Category     OtherCategory      `json:"category,omitempty"`
+}
+
+type OtherBundleEntry struct {
+	Title    string        `json:"title,omitempty"`
+	Id       string        `json:"id,omitempty"`
+	Content  Other         `json:"content,omitempty"`
+	Category OtherCategory `json:"category,omitempty"`
 }
 
 type OtherCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

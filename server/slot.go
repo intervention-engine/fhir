@@ -23,13 +23,22 @@ func SlotIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var slotEntryList []models.SlotBundleEntry
+	for _, slot := range result {
+		var entry models.SlotBundleEntry
+		entry.Title = "Slot " + slot.Id
+		entry.Id = slot.Id
+		entry.Content = slot
+		slotEntryList = append(slotEntryList, entry)
+	}
+
 	var bundle models.SlotBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Slot Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = slotEntryList
 
 	log.Println("Setting slot search context")
 	context.Set(r, "Slot", result)

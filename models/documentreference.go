@@ -83,17 +83,24 @@ type DocumentReferenceContextComponent struct {
 }
 
 type DocumentReferenceBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []DocumentReference
-	Category     DocumentReferenceCategory
+	Type         string                         `json:"resourceType,omitempty"`
+	Title        string                         `json:"title,omitempty"`
+	Id           string                         `json:"id,omitempty"`
+	Updated      time.Time                      `json:"updated,omitempty"`
+	TotalResults int                            `json:"totalResults,omitempty"`
+	Entry        []DocumentReferenceBundleEntry `json:"entry,omitempty"`
+	Category     DocumentReferenceCategory      `json:"category,omitempty"`
+}
+
+type DocumentReferenceBundleEntry struct {
+	Title    string                    `json:"title,omitempty"`
+	Id       string                    `json:"id,omitempty"`
+	Content  DocumentReference         `json:"content,omitempty"`
+	Category DocumentReferenceCategory `json:"category,omitempty"`
 }
 
 type DocumentReferenceCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

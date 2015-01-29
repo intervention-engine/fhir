@@ -59,17 +59,24 @@ type ProvenanceEntityComponent struct {
 }
 
 type ProvenanceBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Provenance
-	Category     ProvenanceCategory
+	Type         string                  `json:"resourceType,omitempty"`
+	Title        string                  `json:"title,omitempty"`
+	Id           string                  `json:"id,omitempty"`
+	Updated      time.Time               `json:"updated,omitempty"`
+	TotalResults int                     `json:"totalResults,omitempty"`
+	Entry        []ProvenanceBundleEntry `json:"entry,omitempty"`
+	Category     ProvenanceCategory      `json:"category,omitempty"`
+}
+
+type ProvenanceBundleEntry struct {
+	Title    string             `json:"title,omitempty"`
+	Id       string             `json:"id,omitempty"`
+	Content  Provenance         `json:"content,omitempty"`
+	Category ProvenanceCategory `json:"category,omitempty"`
 }
 
 type ProvenanceCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

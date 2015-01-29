@@ -54,17 +54,24 @@ type AdverseReactionExposureComponent struct {
 }
 
 type AdverseReactionBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []AdverseReaction
-	Category     AdverseReactionCategory
+	Type         string                       `json:"resourceType,omitempty"`
+	Title        string                       `json:"title,omitempty"`
+	Id           string                       `json:"id,omitempty"`
+	Updated      time.Time                    `json:"updated,omitempty"`
+	TotalResults int                          `json:"totalResults,omitempty"`
+	Entry        []AdverseReactionBundleEntry `json:"entry,omitempty"`
+	Category     AdverseReactionCategory      `json:"category,omitempty"`
+}
+
+type AdverseReactionBundleEntry struct {
+	Title    string                  `json:"title,omitempty"`
+	Id       string                  `json:"id,omitempty"`
+	Content  AdverseReaction         `json:"content,omitempty"`
+	Category AdverseReactionCategory `json:"category,omitempty"`
 }
 
 type AdverseReactionCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

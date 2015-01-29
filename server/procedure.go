@@ -23,13 +23,22 @@ func ProcedureIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var procedureEntryList []models.ProcedureBundleEntry
+	for _, procedure := range result {
+		var entry models.ProcedureBundleEntry
+		entry.Title = "Procedure " + procedure.Id
+		entry.Id = procedure.Id
+		entry.Content = procedure
+		procedureEntryList = append(procedureEntryList, entry)
+	}
+
 	var bundle models.ProcedureBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Procedure Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = procedureEntryList
 
 	log.Println("Setting procedure search context")
 	context.Set(r, "Procedure", result)

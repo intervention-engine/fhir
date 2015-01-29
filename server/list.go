@@ -23,13 +23,22 @@ func ListIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var listEntryList []models.ListBundleEntry
+	for _, list := range result {
+		var entry models.ListBundleEntry
+		entry.Title = "List " + list.Id
+		entry.Id = list.Id
+		entry.Content = list
+		listEntryList = append(listEntryList, entry)
+	}
+
 	var bundle models.ListBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "List Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = listEntryList
 
 	log.Println("Setting list search context")
 	context.Set(r, "List", result)

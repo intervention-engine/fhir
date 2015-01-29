@@ -50,17 +50,24 @@ type ContraindicationMitigationComponent struct {
 }
 
 type ContraindicationBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Contraindication
-	Category     ContraindicationCategory
+	Type         string                        `json:"resourceType,omitempty"`
+	Title        string                        `json:"title,omitempty"`
+	Id           string                        `json:"id,omitempty"`
+	Updated      time.Time                     `json:"updated,omitempty"`
+	TotalResults int                           `json:"totalResults,omitempty"`
+	Entry        []ContraindicationBundleEntry `json:"entry,omitempty"`
+	Category     ContraindicationCategory      `json:"category,omitempty"`
+}
+
+type ContraindicationBundleEntry struct {
+	Title    string                   `json:"title,omitempty"`
+	Id       string                   `json:"id,omitempty"`
+	Content  Contraindication         `json:"content,omitempty"`
+	Category ContraindicationCategory `json:"category,omitempty"`
 }
 
 type ContraindicationCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

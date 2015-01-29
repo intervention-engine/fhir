@@ -83,17 +83,24 @@ type CarePlanActivityComponent struct {
 }
 
 type CarePlanBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []CarePlan
-	Category     CarePlanCategory
+	Type         string                `json:"resourceType,omitempty"`
+	Title        string                `json:"title,omitempty"`
+	Id           string                `json:"id,omitempty"`
+	Updated      time.Time             `json:"updated,omitempty"`
+	TotalResults int                   `json:"totalResults,omitempty"`
+	Entry        []CarePlanBundleEntry `json:"entry,omitempty"`
+	Category     CarePlanCategory      `json:"category,omitempty"`
+}
+
+type CarePlanBundleEntry struct {
+	Title    string           `json:"title,omitempty"`
+	Id       string           `json:"id,omitempty"`
+	Content  CarePlan         `json:"content,omitempty"`
+	Category CarePlanCategory `json:"category,omitempty"`
 }
 
 type CarePlanCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

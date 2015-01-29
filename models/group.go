@@ -51,17 +51,24 @@ type GroupCharacteristicComponent struct {
 }
 
 type GroupBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Group
-	Category     GroupCategory
+	Type         string             `json:"resourceType,omitempty"`
+	Title        string             `json:"title,omitempty"`
+	Id           string             `json:"id,omitempty"`
+	Updated      time.Time          `json:"updated,omitempty"`
+	TotalResults int                `json:"totalResults,omitempty"`
+	Entry        []GroupBundleEntry `json:"entry,omitempty"`
+	Category     GroupCategory      `json:"category,omitempty"`
+}
+
+type GroupBundleEntry struct {
+	Title    string        `json:"title,omitempty"`
+	Id       string        `json:"id,omitempty"`
+	Content  Group         `json:"content,omitempty"`
+	Category GroupCategory `json:"category,omitempty"`
 }
 
 type GroupCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

@@ -67,17 +67,24 @@ type FamilyHistoryRelationComponent struct {
 }
 
 type FamilyHistoryBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []FamilyHistory
-	Category     FamilyHistoryCategory
+	Type         string                     `json:"resourceType,omitempty"`
+	Title        string                     `json:"title,omitempty"`
+	Id           string                     `json:"id,omitempty"`
+	Updated      time.Time                  `json:"updated,omitempty"`
+	TotalResults int                        `json:"totalResults,omitempty"`
+	Entry        []FamilyHistoryBundleEntry `json:"entry,omitempty"`
+	Category     FamilyHistoryCategory      `json:"category,omitempty"`
+}
+
+type FamilyHistoryBundleEntry struct {
+	Title    string                `json:"title,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Content  FamilyHistory         `json:"content,omitempty"`
+	Category FamilyHistoryCategory `json:"category,omitempty"`
 }
 
 type FamilyHistoryCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

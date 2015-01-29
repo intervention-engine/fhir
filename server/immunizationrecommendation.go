@@ -23,13 +23,22 @@ func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Requ
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var immunizationrecommendationEntryList []models.ImmunizationRecommendationBundleEntry
+	for _, immunizationrecommendation := range result {
+		var entry models.ImmunizationRecommendationBundleEntry
+		entry.Title = "ImmunizationRecommendation " + immunizationrecommendation.Id
+		entry.Id = immunizationrecommendation.Id
+		entry.Content = immunizationrecommendation
+		immunizationrecommendationEntryList = append(immunizationrecommendationEntryList, entry)
+	}
+
 	var bundle models.ImmunizationRecommendationBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "ImmunizationRecommendation Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = immunizationrecommendationEntryList
 
 	log.Println("Setting immunizationrecommendation search context")
 	context.Set(r, "ImmunizationRecommendation", result)

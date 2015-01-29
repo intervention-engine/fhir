@@ -23,13 +23,22 @@ func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var practitionerEntryList []models.PractitionerBundleEntry
+	for _, practitioner := range result {
+		var entry models.PractitionerBundleEntry
+		entry.Title = "Practitioner " + practitioner.Id
+		entry.Id = practitioner.Id
+		entry.Content = practitioner
+		practitionerEntryList = append(practitionerEntryList, entry)
+	}
+
 	var bundle models.PractitionerBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Practitioner Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = practitionerEntryList
 
 	log.Println("Setting practitioner search context")
 	context.Set(r, "Practitioner", result)

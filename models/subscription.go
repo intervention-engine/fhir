@@ -56,17 +56,24 @@ type SubscriptionTagComponent struct {
 }
 
 type SubscriptionBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Subscription
-	Category     SubscriptionCategory
+	Type         string                    `json:"resourceType,omitempty"`
+	Title        string                    `json:"title,omitempty"`
+	Id           string                    `json:"id,omitempty"`
+	Updated      time.Time                 `json:"updated,omitempty"`
+	TotalResults int                       `json:"totalResults,omitempty"`
+	Entry        []SubscriptionBundleEntry `json:"entry,omitempty"`
+	Category     SubscriptionCategory      `json:"category,omitempty"`
+}
+
+type SubscriptionBundleEntry struct {
+	Title    string               `json:"title,omitempty"`
+	Id       string               `json:"id,omitempty"`
+	Content  Subscription         `json:"content,omitempty"`
+	Category SubscriptionCategory `json:"category,omitempty"`
 }
 
 type SubscriptionCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

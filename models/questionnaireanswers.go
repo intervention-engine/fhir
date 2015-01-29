@@ -76,17 +76,24 @@ type GroupComponent struct {
 }
 
 type QuestionnaireAnswersBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []QuestionnaireAnswers
-	Category     QuestionnaireAnswersCategory
+	Type         string                            `json:"resourceType,omitempty"`
+	Title        string                            `json:"title,omitempty"`
+	Id           string                            `json:"id,omitempty"`
+	Updated      time.Time                         `json:"updated,omitempty"`
+	TotalResults int                               `json:"totalResults,omitempty"`
+	Entry        []QuestionnaireAnswersBundleEntry `json:"entry,omitempty"`
+	Category     QuestionnaireAnswersCategory      `json:"category,omitempty"`
+}
+
+type QuestionnaireAnswersBundleEntry struct {
+	Title    string                       `json:"title,omitempty"`
+	Id       string                       `json:"id,omitempty"`
+	Content  QuestionnaireAnswers         `json:"content,omitempty"`
+	Category QuestionnaireAnswersCategory `json:"category,omitempty"`
 }
 
 type QuestionnaireAnswersCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

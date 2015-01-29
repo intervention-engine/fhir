@@ -61,17 +61,24 @@ type DiagnosticOrderItemComponent struct {
 }
 
 type DiagnosticOrderBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []DiagnosticOrder
-	Category     DiagnosticOrderCategory
+	Type         string                       `json:"resourceType,omitempty"`
+	Title        string                       `json:"title,omitempty"`
+	Id           string                       `json:"id,omitempty"`
+	Updated      time.Time                    `json:"updated,omitempty"`
+	TotalResults int                          `json:"totalResults,omitempty"`
+	Entry        []DiagnosticOrderBundleEntry `json:"entry,omitempty"`
+	Category     DiagnosticOrderCategory      `json:"category,omitempty"`
+}
+
+type DiagnosticOrderBundleEntry struct {
+	Title    string                  `json:"title,omitempty"`
+	Id       string                  `json:"id,omitempty"`
+	Content  DiagnosticOrder         `json:"content,omitempty"`
+	Category DiagnosticOrderCategory `json:"category,omitempty"`
 }
 
 type DiagnosticOrderCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

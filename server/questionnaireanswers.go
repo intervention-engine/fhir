@@ -23,13 +23,22 @@ func QuestionnaireAnswersIndexHandler(rw http.ResponseWriter, r *http.Request, n
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var questionnaireanswersEntryList []models.QuestionnaireAnswersBundleEntry
+	for _, questionnaireanswers := range result {
+		var entry models.QuestionnaireAnswersBundleEntry
+		entry.Title = "QuestionnaireAnswers " + questionnaireanswers.Id
+		entry.Id = questionnaireanswers.Id
+		entry.Content = questionnaireanswers
+		questionnaireanswersEntryList = append(questionnaireanswersEntryList, entry)
+	}
+
 	var bundle models.QuestionnaireAnswersBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "QuestionnaireAnswers Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = questionnaireanswersEntryList
 
 	log.Println("Setting questionnaireanswers search context")
 	context.Set(r, "QuestionnaireAnswers", result)

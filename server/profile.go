@@ -23,13 +23,22 @@ func ProfileIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var profileEntryList []models.ProfileBundleEntry
+	for _, profile := range result {
+		var entry models.ProfileBundleEntry
+		entry.Title = "Profile " + profile.Id
+		entry.Id = profile.Id
+		entry.Content = profile
+		profileEntryList = append(profileEntryList, entry)
+	}
+
 	var bundle models.ProfileBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Profile Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = profileEntryList
 
 	log.Println("Setting profile search context")
 	context.Set(r, "Profile", result)

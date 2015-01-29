@@ -23,13 +23,22 @@ func CompositionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var compositionEntryList []models.CompositionBundleEntry
+	for _, composition := range result {
+		var entry models.CompositionBundleEntry
+		entry.Title = "Composition " + composition.Id
+		entry.Id = composition.Id
+		entry.Content = composition
+		compositionEntryList = append(compositionEntryList, entry)
+	}
+
 	var bundle models.CompositionBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Composition Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = compositionEntryList
 
 	log.Println("Setting composition search context")
 	context.Set(r, "Composition", result)

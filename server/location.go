@@ -23,13 +23,22 @@ func LocationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var locationEntryList []models.LocationBundleEntry
+	for _, location := range result {
+		var entry models.LocationBundleEntry
+		entry.Title = "Location " + location.Id
+		entry.Id = location.Id
+		entry.Content = location
+		locationEntryList = append(locationEntryList, entry)
+	}
+
 	var bundle models.LocationBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Location Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = locationEntryList
 
 	log.Println("Setting location search context")
 	context.Set(r, "Location", result)

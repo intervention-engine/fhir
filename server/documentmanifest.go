@@ -23,13 +23,22 @@ func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var documentmanifestEntryList []models.DocumentManifestBundleEntry
+	for _, documentmanifest := range result {
+		var entry models.DocumentManifestBundleEntry
+		entry.Title = "DocumentManifest " + documentmanifest.Id
+		entry.Id = documentmanifest.Id
+		entry.Content = documentmanifest
+		documentmanifestEntryList = append(documentmanifestEntryList, entry)
+	}
+
 	var bundle models.DocumentManifestBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "DocumentManifest Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = documentmanifestEntryList
 
 	log.Println("Setting documentmanifest search context")
 	context.Set(r, "DocumentManifest", result)

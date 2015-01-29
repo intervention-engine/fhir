@@ -46,17 +46,24 @@ type Media struct {
 }
 
 type MediaBundle struct {
-	Type         string
-	Title        string
-	Id           string
-	Updated      time.Time
-	TotalResults int
-	Entries      []Media
-	Category     MediaCategory
+	Type         string             `json:"resourceType,omitempty"`
+	Title        string             `json:"title,omitempty"`
+	Id           string             `json:"id,omitempty"`
+	Updated      time.Time          `json:"updated,omitempty"`
+	TotalResults int                `json:"totalResults,omitempty"`
+	Entry        []MediaBundleEntry `json:"entry,omitempty"`
+	Category     MediaCategory      `json:"category,omitempty"`
+}
+
+type MediaBundleEntry struct {
+	Title    string        `json:"title,omitempty"`
+	Id       string        `json:"id,omitempty"`
+	Content  Media         `json:"content,omitempty"`
+	Category MediaCategory `json:"category,omitempty"`
 }
 
 type MediaCategory struct {
-	Term   string
-	Label  string
-	Scheme string
+	Term   string `json:"term,omitempty"`
+	Label  string `json:"label,omitempty"`
+	Scheme string `json:"scheme,omitempty"`
 }

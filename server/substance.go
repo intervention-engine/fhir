@@ -23,13 +23,22 @@ func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var substanceEntryList []models.SubstanceBundleEntry
+	for _, substance := range result {
+		var entry models.SubstanceBundleEntry
+		entry.Title = "Substance " + substance.Id
+		entry.Id = substance.Id
+		entry.Content = substance
+		substanceEntryList = append(substanceEntryList, entry)
+	}
+
 	var bundle models.SubstanceBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Substance Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = substanceEntryList
 
 	log.Println("Setting substance search context")
 	context.Set(r, "Substance", result)

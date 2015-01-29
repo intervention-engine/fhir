@@ -23,13 +23,22 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
+	var contraindicationEntryList []models.ContraindicationBundleEntry
+	for _, contraindication := range result {
+		var entry models.ContraindicationBundleEntry
+		entry.Title = "Contraindication " + contraindication.Id
+		entry.Id = contraindication.Id
+		entry.Content = contraindication
+		contraindicationEntryList = append(contraindicationEntryList, entry)
+	}
+
 	var bundle models.ContraindicationBundle
 	bundle.Type = "Bundle"
 	bundle.Title = "Contraindication Index"
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Updated = time.Now()
 	bundle.TotalResults = len(result)
-	bundle.Entries = result
+	bundle.Entry = contraindicationEntryList
 
 	log.Println("Setting contraindication search context")
 	context.Set(r, "Contraindication", result)
