@@ -1,6 +1,8 @@
 Intervention Engine FHIR Server
 ===============================
 
+[![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=master)](https://travis-ci.org/intervention-engine/fhir)
+
 This project is a generic FHIR server implemented in Go, using MongoDB as storage. It contains slight extension of the Reference model in order to more readily support queries in MongoDB.
 
 Environment
