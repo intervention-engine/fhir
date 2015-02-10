@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -17,10 +18,27 @@ import (
 func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Observation
 	c := Database.C("observations")
-	iter := c.Find(nil).Limit(100).Iter()
-	err := iter.All(&result)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+
+	r.ParseForm()
+	if (len(r.Form) == 0) {
+		iter := c.Find(nil).Limit(100).Iter()
+		err := iter.All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		for key, value := range r.Form {
+			splitKey := strings.Split(key, ":")
+			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+				subjectType := splitKey[1]
+				//TODO:figure out what hostname to use here depending on whether reference is internal or external
+				referenceString := "http://localhost:3001/"+subjectType+"/"+value[0]
+				err := c.Find(bson.M{"subject.reference": referenceString}).All(&result)
+				if err != nil {
+					http.Error(rw, err.Error(), http.StatusInternalServerError)
+				}
+			}
+		}
 	}
 
 	var observationEntryList []models.ObservationBundleEntry
