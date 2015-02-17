@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Precision string
 
@@ -24,4 +27,12 @@ func (f *FHIRDateTime) UnmarshalJSON(data []byte) (err error) {
 		f.Time.UnmarshalJSON(data)
 	}
 	return err
+}
+
+func (f *FHIRDateTime) MarshalJSON() ([]byte, error) {
+	if f.Precision == Timestamp {
+		return json.Marshal(f.Time.Format(time.RFC3339))
+	} else {
+		return json.Marshal(f.Time.Format("2006-01-02"))
+	}
 }
