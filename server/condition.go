@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -16,6 +17,12 @@ import (
 
 func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Condition
+	c := Database.C("conditions")
+
+	host, err := os.Hostname()
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
 
 	r.ParseForm()
 	if (len(r.Form) == 0) {
@@ -29,8 +36,7 @@ func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 			splitKey := strings.Split(key, ":")
 			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
 				subjectType := splitKey[1]
-				//TODO:figure out what hostname to use here depending on whether reference is internal or external
-				referenceString := "http://localhost:3001/"+subjectType+"/"+value[0]
+				referenceString := "http://"+host+":3001/"+subjectType+"/"+value[0]
 				err := c.Find(bson.M{"subject.reference": referenceString}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
