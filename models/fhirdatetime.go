@@ -29,7 +29,7 @@ func (f *FHIRDateTime) UnmarshalJSON(data []byte) (err error) {
 	return err
 }
 
-func (f *FHIRDateTime) MarshalJSON() ([]byte, error) {
+func (f FHIRDateTime) MarshalJSON() ([]byte, error) {
 	if f.Precision == Timestamp {
 		return json.Marshal(f.Time.Format(time.RFC3339))
 	} else {
