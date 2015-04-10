@@ -18,7 +18,6 @@ import (
 func MedicationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Medication
 	c := Database.C("medications")
-
 	r.ParseForm()
 	if len(r.Form) == 0 {
 		iter := c.Find(nil).Limit(100).Iter()

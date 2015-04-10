@@ -36,7 +36,7 @@ func MedicationStatementIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
 				subjectType := splitKey[1]
 				referenceString := "http://" + host + ":3001/" + subjectType + "/" + value[0]
-				err := c.Find(bson.M{"patient.reference": referenceString}).All(&result)
+				err := c.Find(bson.M{"subject.reference": referenceString}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
 				}
