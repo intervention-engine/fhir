@@ -18,10 +18,6 @@ import (
 func MedicationStatementIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.MedicationStatement
 	c := Database.C("medicationstatements")
-	host, err := os.Hostname()
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-	}
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -34,9 +30,7 @@ func MedicationStatementIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
 			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
-				subjectType := splitKey[1]
-				referenceString := "http://" + host + ":3001/" + subjectType + "/" + value[0]
-				err := c.Find(bson.M{"subject.reference": referenceString}).All(&result)
+				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
 				}
