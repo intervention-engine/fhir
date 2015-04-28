@@ -29,20 +29,20 @@ package models
 import "time"
 
 type DocumentManifest struct {
-	Id               string          `json:"-" bson:"_id"`
-	MasterIdentifier Identifier      `bson:"masterIdentifier,omitempty", json:"masterIdentifier,omitempty"`
-	Identifier       []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Subject          []Reference     `bson:"subject,omitempty", json:"subject,omitempty"`
-	Recipient        []Reference     `bson:"recipient,omitempty", json:"recipient,omitempty"`
-	Type             CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
-	Author           []Reference     `bson:"author,omitempty", json:"author,omitempty"`
-	Created          FHIRDateTime    `bson:"created,omitempty", json:"created,omitempty"`
-	Source           string          `bson:"source,omitempty", json:"source,omitempty"`
-	Status           string          `bson:"status,omitempty", json:"status,omitempty"`
-	Supercedes       Reference       `bson:"supercedes,omitempty", json:"supercedes,omitempty"`
-	Description      string          `bson:"description,omitempty", json:"description,omitempty"`
-	Confidentiality  CodeableConcept `bson:"confidentiality,omitempty", json:"confidentiality,omitempty"`
-	Content          []Reference     `bson:"content,omitempty", json:"content,omitempty"`
+	Id               string           `json:"-" bson:"_id"`
+	MasterIdentifier *Identifier      `bson:"masterIdentifier,omitempty", json:"masterIdentifier,omitempty"`
+	Identifier       []Identifier     `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Subject          []Reference      `bson:"subject,omitempty", json:"subject,omitempty"`
+	Recipient        []Reference      `bson:"recipient,omitempty", json:"recipient,omitempty"`
+	Type             *CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
+	Author           []Reference      `bson:"author,omitempty", json:"author,omitempty"`
+	Created          *FHIRDateTime    `bson:"created,omitempty", json:"created,omitempty"`
+	Source           string           `bson:"source,omitempty", json:"source,omitempty"`
+	Status           string           `bson:"status,omitempty", json:"status,omitempty"`
+	Supercedes       *Reference       `bson:"supercedes,omitempty", json:"supercedes,omitempty"`
+	Description      string           `bson:"description,omitempty", json:"description,omitempty"`
+	Confidentiality  *CodeableConcept `bson:"confidentiality,omitempty", json:"confidentiality,omitempty"`
+	Content          []Reference      `bson:"content,omitempty", json:"content,omitempty"`
 }
 
 type DocumentManifestBundle struct {

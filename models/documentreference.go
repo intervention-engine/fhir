@@ -30,19 +30,19 @@ import "time"
 
 type DocumentReference struct {
 	Id               string                                `json:"-" bson:"_id"`
-	MasterIdentifier Identifier                            `bson:"masterIdentifier,omitempty", json:"masterIdentifier,omitempty"`
+	MasterIdentifier *Identifier                           `bson:"masterIdentifier,omitempty", json:"masterIdentifier,omitempty"`
 	Identifier       []Identifier                          `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Subject          Reference                             `bson:"subject,omitempty", json:"subject,omitempty"`
-	Type             CodeableConcept                       `bson:"type,omitempty", json:"type,omitempty"`
-	Class            CodeableConcept                       `bson:"class,omitempty", json:"class,omitempty"`
+	Subject          *Reference                            `bson:"subject,omitempty", json:"subject,omitempty"`
+	Type             *CodeableConcept                      `bson:"type,omitempty", json:"type,omitempty"`
+	Class            *CodeableConcept                      `bson:"class,omitempty", json:"class,omitempty"`
 	Author           []Reference                           `bson:"author,omitempty", json:"author,omitempty"`
-	Custodian        Reference                             `bson:"custodian,omitempty", json:"custodian,omitempty"`
+	Custodian        *Reference                            `bson:"custodian,omitempty", json:"custodian,omitempty"`
 	PolicyManager    string                                `bson:"policyManager,omitempty", json:"policyManager,omitempty"`
-	Authenticator    Reference                             `bson:"authenticator,omitempty", json:"authenticator,omitempty"`
-	Created          FHIRDateTime                          `bson:"created,omitempty", json:"created,omitempty"`
-	Indexed          FHIRDateTime                          `bson:"indexed,omitempty", json:"indexed,omitempty"`
+	Authenticator    *Reference                            `bson:"authenticator,omitempty", json:"authenticator,omitempty"`
+	Created          *FHIRDateTime                         `bson:"created,omitempty", json:"created,omitempty"`
+	Indexed          *FHIRDateTime                         `bson:"indexed,omitempty", json:"indexed,omitempty"`
 	Status           string                                `bson:"status,omitempty", json:"status,omitempty"`
-	DocStatus        CodeableConcept                       `bson:"docStatus,omitempty", json:"docStatus,omitempty"`
+	DocStatus        *CodeableConcept                      `bson:"docStatus,omitempty", json:"docStatus,omitempty"`
 	RelatesTo        []DocumentReferenceRelatesToComponent `bson:"relatesTo,omitempty", json:"relatesTo,omitempty"`
 	Description      string                                `bson:"description,omitempty", json:"description,omitempty"`
 	Confidentiality  []CodeableConcept                     `bson:"confidentiality,omitempty", json:"confidentiality,omitempty"`
@@ -52,14 +52,14 @@ type DocumentReference struct {
 	Size             float64                               `bson:"size,omitempty", json:"size,omitempty"`
 	Hash             string                                `bson:"hash,omitempty", json:"hash,omitempty"`
 	Location         string                                `bson:"location,omitempty", json:"location,omitempty"`
-	Service          DocumentReferenceServiceComponent     `bson:"service,omitempty", json:"service,omitempty"`
-	Context          DocumentReferenceContextComponent     `bson:"context,omitempty", json:"context,omitempty"`
+	Service          *DocumentReferenceServiceComponent    `bson:"service,omitempty", json:"service,omitempty"`
+	Context          *DocumentReferenceContextComponent    `bson:"context,omitempty", json:"context,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec relatesTo
 type DocumentReferenceRelatesToComponent struct {
-	Code   string    `bson:"code,omitempty", json:"code,omitempty"`
-	Target Reference `bson:"target,omitempty", json:"target,omitempty"`
+	Code   string     `bson:"code,omitempty", json:"code,omitempty"`
+	Target *Reference `bson:"target,omitempty", json:"target,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec parameter
@@ -70,7 +70,7 @@ type DocumentReferenceServiceParameterComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec service
 type DocumentReferenceServiceComponent struct {
-	Type      CodeableConcept                              `bson:"type,omitempty", json:"type,omitempty"`
+	Type      *CodeableConcept                             `bson:"type,omitempty", json:"type,omitempty"`
 	Address   string                                       `bson:"address,omitempty", json:"address,omitempty"`
 	Parameter []DocumentReferenceServiceParameterComponent `bson:"parameter,omitempty", json:"parameter,omitempty"`
 }
@@ -78,8 +78,8 @@ type DocumentReferenceServiceComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec context
 type DocumentReferenceContextComponent struct {
 	Event        []CodeableConcept `bson:"event,omitempty", json:"event,omitempty"`
-	Period       Period            `bson:"period,omitempty", json:"period,omitempty"`
-	FacilityType CodeableConcept   `bson:"facilityType,omitempty", json:"facilityType,omitempty"`
+	Period       *Period           `bson:"period,omitempty", json:"period,omitempty"`
+	FacilityType *CodeableConcept  `bson:"facilityType,omitempty", json:"facilityType,omitempty"`
 }
 
 type DocumentReferenceBundle struct {

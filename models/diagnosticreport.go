@@ -30,16 +30,16 @@ import "time"
 
 type DiagnosticReport struct {
 	Id                 string                           `json:"-" bson:"_id"`
-	Name               CodeableConcept                  `bson:"name,omitempty", json:"name,omitempty"`
+	Name               *CodeableConcept                 `bson:"name,omitempty", json:"name,omitempty"`
 	Status             string                           `bson:"status,omitempty", json:"status,omitempty"`
-	Issued             FHIRDateTime                     `bson:"issued,omitempty", json:"issued,omitempty"`
-	Subject            Reference                        `bson:"subject,omitempty", json:"subject,omitempty"`
-	Performer          Reference                        `bson:"performer,omitempty", json:"performer,omitempty"`
-	Identifier         Identifier                       `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Issued             *FHIRDateTime                    `bson:"issued,omitempty", json:"issued,omitempty"`
+	Subject            *Reference                       `bson:"subject,omitempty", json:"subject,omitempty"`
+	Performer          *Reference                       `bson:"performer,omitempty", json:"performer,omitempty"`
+	Identifier         *Identifier                      `bson:"identifier,omitempty", json:"identifier,omitempty"`
 	RequestDetail      []Reference                      `bson:"requestDetail,omitempty", json:"requestDetail,omitempty"`
-	ServiceCategory    CodeableConcept                  `bson:"serviceCategory,omitempty", json:"serviceCategory,omitempty"`
-	DiagnosticDateTime FHIRDateTime                     `bson:"diagnosticDateTime,omitempty", json:"diagnosticDateTime,omitempty"`
-	DiagnosticPeriod   Period                           `bson:"diagnosticPeriod,omitempty", json:"diagnosticPeriod,omitempty"`
+	ServiceCategory    *CodeableConcept                 `bson:"serviceCategory,omitempty", json:"serviceCategory,omitempty"`
+	DiagnosticDateTime *FHIRDateTime                    `bson:"diagnosticDateTime,omitempty", json:"diagnosticDateTime,omitempty"`
+	DiagnosticPeriod   *Period                          `bson:"diagnosticPeriod,omitempty", json:"diagnosticPeriod,omitempty"`
 	Specimen           []Reference                      `bson:"specimen,omitempty", json:"specimen,omitempty"`
 	Result             []Reference                      `bson:"result,omitempty", json:"result,omitempty"`
 	ImagingStudy       []Reference                      `bson:"imagingStudy,omitempty", json:"imagingStudy,omitempty"`
@@ -51,8 +51,8 @@ type DiagnosticReport struct {
 
 // This is an ugly hack to deal with embedded structures in the spec image
 type DiagnosticReportImageComponent struct {
-	Comment string    `bson:"comment,omitempty", json:"comment,omitempty"`
-	Link    Reference `bson:"link,omitempty", json:"link,omitempty"`
+	Comment string     `bson:"comment,omitempty", json:"comment,omitempty"`
+	Link    *Reference `bson:"link,omitempty", json:"link,omitempty"`
 }
 
 type DiagnosticReportBundle struct {

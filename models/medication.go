@@ -29,37 +29,37 @@ package models
 import "time"
 
 type Medication struct {
-	Id           string                     `json:"-" bson:"_id"`
-	Name         string                     `bson:"name,omitempty", json:"name,omitempty"`
-	Code         CodeableConcept            `bson:"code,omitempty", json:"code,omitempty"`
-	IsBrand      *bool                      `bson:"isBrand,omitempty", json:"isBrand,omitempty"`
-	Manufacturer Reference                  `bson:"manufacturer,omitempty", json:"manufacturer,omitempty"`
-	Kind         string                     `bson:"kind,omitempty", json:"kind,omitempty"`
-	Product      MedicationProductComponent `bson:"product,omitempty", json:"product,omitempty"`
-	Package      MedicationPackageComponent `bson:"package,omitempty", json:"package,omitempty"`
+	Id           string                      `json:"-" bson:"_id"`
+	Name         string                      `bson:"name,omitempty", json:"name,omitempty"`
+	Code         *CodeableConcept            `bson:"code,omitempty", json:"code,omitempty"`
+	IsBrand      *bool                       `bson:"isBrand,omitempty", json:"isBrand,omitempty"`
+	Manufacturer *Reference                  `bson:"manufacturer,omitempty", json:"manufacturer,omitempty"`
+	Kind         string                      `bson:"kind,omitempty", json:"kind,omitempty"`
+	Product      *MedicationProductComponent `bson:"product,omitempty", json:"product,omitempty"`
+	Package      *MedicationPackageComponent `bson:"package,omitempty", json:"package,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec ingredient
 type MedicationProductIngredientComponent struct {
-	Item   Reference `bson:"item,omitempty", json:"item,omitempty"`
-	Amount Ratio     `bson:"amount,omitempty", json:"amount,omitempty"`
+	Item   *Reference `bson:"item,omitempty", json:"item,omitempty"`
+	Amount *Ratio     `bson:"amount,omitempty", json:"amount,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec product
 type MedicationProductComponent struct {
-	Form       CodeableConcept                        `bson:"form,omitempty", json:"form,omitempty"`
+	Form       *CodeableConcept                       `bson:"form,omitempty", json:"form,omitempty"`
 	Ingredient []MedicationProductIngredientComponent `bson:"ingredient,omitempty", json:"ingredient,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec content
 type MedicationPackageContentComponent struct {
-	Item   Reference `bson:"item,omitempty", json:"item,omitempty"`
-	Amount Quantity  `bson:"amount,omitempty", json:"amount,omitempty"`
+	Item   *Reference `bson:"item,omitempty", json:"item,omitempty"`
+	Amount *Quantity  `bson:"amount,omitempty", json:"amount,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec package
 type MedicationPackageComponent struct {
-	Container CodeableConcept                     `bson:"container,omitempty", json:"container,omitempty"`
+	Container *CodeableConcept                    `bson:"container,omitempty", json:"container,omitempty"`
 	Content   []MedicationPackageContentComponent `bson:"content,omitempty", json:"content,omitempty"`
 }
 

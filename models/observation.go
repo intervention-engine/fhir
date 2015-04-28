@@ -30,47 +30,47 @@ import "time"
 
 type Observation struct {
 	Id                   string                               `json:"-" bson:"_id"`
-	Name                 CodeableConcept                      `bson:"name,omitempty", json:"name,omitempty"`
-	ValueQuantity        Quantity                             `bson:"valueQuantity,omitempty", json:"valueQuantity,omitempty"`
-	ValueCodeableConcept CodeableConcept                      `bson:"valueCodeableConcept,omitempty", json:"valueCodeableConcept,omitempty"`
-	ValueAttachment      Attachment                           `bson:"valueAttachment,omitempty", json:"valueAttachment,omitempty"`
-	ValueRatio           Ratio                                `bson:"valueRatio,omitempty", json:"valueRatio,omitempty"`
-	ValueDateTime        FHIRDateTime                         `bson:"valueDateTime,omitempty", json:"valueDateTime,omitempty"`
-	ValuePeriod          Period                               `bson:"valuePeriod,omitempty", json:"valuePeriod,omitempty"`
-	ValueSampledData     SampledData                          `bson:"valueSampledData,omitempty", json:"valueSampledData,omitempty"`
+	Name                 *CodeableConcept                     `bson:"name,omitempty", json:"name,omitempty"`
+	ValueQuantity        *Quantity                            `bson:"valueQuantity,omitempty", json:"valueQuantity,omitempty"`
+	ValueCodeableConcept *CodeableConcept                     `bson:"valueCodeableConcept,omitempty", json:"valueCodeableConcept,omitempty"`
+	ValueAttachment      *Attachment                          `bson:"valueAttachment,omitempty", json:"valueAttachment,omitempty"`
+	ValueRatio           *Ratio                               `bson:"valueRatio,omitempty", json:"valueRatio,omitempty"`
+	ValueDateTime        *FHIRDateTime                        `bson:"valueDateTime,omitempty", json:"valueDateTime,omitempty"`
+	ValuePeriod          *Period                              `bson:"valuePeriod,omitempty", json:"valuePeriod,omitempty"`
+	ValueSampledData     *SampledData                         `bson:"valueSampledData,omitempty", json:"valueSampledData,omitempty"`
 	ValueString          string                               `bson:"valueString,omitempty", json:"valueString,omitempty"`
-	ValueTime            FHIRDateTime                         `bson:"valueTime,omitempty", json:"valueTime,omitempty"`
-	Interpretation       CodeableConcept                      `bson:"interpretation,omitempty", json:"interpretation,omitempty"`
+	ValueTime            *FHIRDateTime                        `bson:"valueTime,omitempty", json:"valueTime,omitempty"`
+	Interpretation       *CodeableConcept                     `bson:"interpretation,omitempty", json:"interpretation,omitempty"`
 	Comments             string                               `bson:"comments,omitempty", json:"comments,omitempty"`
-	AppliesDateTime      FHIRDateTime                         `bson:"appliesDateTime,omitempty", json:"appliesDateTime,omitempty"`
-	AppliesPeriod        Period                               `bson:"appliesPeriod,omitempty", json:"appliesPeriod,omitempty"`
-	Issued               FHIRDateTime                         `bson:"issued,omitempty", json:"issued,omitempty"`
+	AppliesDateTime      *FHIRDateTime                        `bson:"appliesDateTime,omitempty", json:"appliesDateTime,omitempty"`
+	AppliesPeriod        *Period                              `bson:"appliesPeriod,omitempty", json:"appliesPeriod,omitempty"`
+	Issued               *FHIRDateTime                        `bson:"issued,omitempty", json:"issued,omitempty"`
 	Status               string                               `bson:"status,omitempty", json:"status,omitempty"`
 	Reliability          string                               `bson:"reliability,omitempty", json:"reliability,omitempty"`
-	BodySite             CodeableConcept                      `bson:"bodySite,omitempty", json:"bodySite,omitempty"`
-	Method               CodeableConcept                      `bson:"method,omitempty", json:"method,omitempty"`
-	Identifier           Identifier                           `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Subject              Reference                            `bson:"subject,omitempty", json:"subject,omitempty"`
-	Specimen             Reference                            `bson:"specimen,omitempty", json:"specimen,omitempty"`
+	BodySite             *CodeableConcept                     `bson:"bodySite,omitempty", json:"bodySite,omitempty"`
+	Method               *CodeableConcept                     `bson:"method,omitempty", json:"method,omitempty"`
+	Identifier           *Identifier                          `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Subject              *Reference                           `bson:"subject,omitempty", json:"subject,omitempty"`
+	Specimen             *Reference                           `bson:"specimen,omitempty", json:"specimen,omitempty"`
 	Performer            []Reference                          `bson:"performer,omitempty", json:"performer,omitempty"`
-	Encounter            Reference                            `bson:"encounter,omitempty", json:"encounter,omitempty"`
+	Encounter            *Reference                           `bson:"encounter,omitempty", json:"encounter,omitempty"`
 	ReferenceRange       []ObservationReferenceRangeComponent `bson:"referenceRange,omitempty", json:"referenceRange,omitempty"`
 	Related              []ObservationRelatedComponent        `bson:"related,omitempty", json:"related,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec referenceRange
 type ObservationReferenceRangeComponent struct {
-	Low     Quantity        `bson:"low,omitempty", json:"low,omitempty"`
-	High    Quantity        `bson:"high,omitempty", json:"high,omitempty"`
-	Meaning CodeableConcept `bson:"meaning,omitempty", json:"meaning,omitempty"`
-	Age     Range           `bson:"age,omitempty", json:"age,omitempty"`
-	Text    string          `bson:"text,omitempty", json:"text,omitempty"`
+	Low     *Quantity        `bson:"low,omitempty", json:"low,omitempty"`
+	High    *Quantity        `bson:"high,omitempty", json:"high,omitempty"`
+	Meaning *CodeableConcept `bson:"meaning,omitempty", json:"meaning,omitempty"`
+	Age     *Range           `bson:"age,omitempty", json:"age,omitempty"`
+	Text    string           `bson:"text,omitempty", json:"text,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec related
 type ObservationRelatedComponent struct {
-	Type   string    `bson:"type,omitempty", json:"type,omitempty"`
-	Target Reference `bson:"target,omitempty", json:"target,omitempty"`
+	Type   string     `bson:"type,omitempty", json:"type,omitempty"`
+	Target *Reference `bson:"target,omitempty", json:"target,omitempty"`
 }
 
 type ObservationBundle struct {

@@ -29,15 +29,15 @@ package models
 import "time"
 
 type RelatedPerson struct {
-	Id           string          `json:"-" bson:"_id"`
-	Identifier   []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Patient      Reference       `bson:"patient,omitempty", json:"patient,omitempty"`
-	Relationship CodeableConcept `bson:"relationship,omitempty", json:"relationship,omitempty"`
-	Name         HumanName       `bson:"name,omitempty", json:"name,omitempty"`
-	Telecom      []ContactPoint  `bson:"telecom,omitempty", json:"telecom,omitempty"`
-	Gender       CodeableConcept `bson:"gender,omitempty", json:"gender,omitempty"`
-	Address      Address         `bson:"address,omitempty", json:"address,omitempty"`
-	Photo        []Attachment    `bson:"photo,omitempty", json:"photo,omitempty"`
+	Id           string           `json:"-" bson:"_id"`
+	Identifier   []Identifier     `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Patient      *Reference       `bson:"patient,omitempty", json:"patient,omitempty"`
+	Relationship *CodeableConcept `bson:"relationship,omitempty", json:"relationship,omitempty"`
+	Name         *HumanName       `bson:"name,omitempty", json:"name,omitempty"`
+	Telecom      []ContactPoint   `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Gender       *CodeableConcept `bson:"gender,omitempty", json:"gender,omitempty"`
+	Address      *Address         `bson:"address,omitempty", json:"address,omitempty"`
+	Photo        []Attachment     `bson:"photo,omitempty", json:"photo,omitempty"`
 }
 
 type RelatedPersonBundle struct {

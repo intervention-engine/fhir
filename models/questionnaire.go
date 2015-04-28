@@ -29,13 +29,13 @@ package models
 import "time"
 
 type Questionnaire struct {
-	Id         string         `json:"-" bson:"_id"`
-	Identifier []Identifier   `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Version    string         `bson:"version,omitempty", json:"version,omitempty"`
-	Status     string         `bson:"status,omitempty", json:"status,omitempty"`
-	Date       FHIRDateTime   `bson:"date,omitempty", json:"date,omitempty"`
-	Publisher  string         `bson:"publisher,omitempty", json:"publisher,omitempty"`
-	Group      GroupComponent `bson:"group,omitempty", json:"group,omitempty"`
+	Id         string          `json:"-" bson:"_id"`
+	Identifier []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Version    string          `bson:"version,omitempty", json:"version,omitempty"`
+	Status     string          `bson:"status,omitempty", json:"status,omitempty"`
+	Date       *FHIRDateTime   `bson:"date,omitempty", json:"date,omitempty"`
+	Publisher  string          `bson:"publisher,omitempty", json:"publisher,omitempty"`
+	Group      *GroupComponent `bson:"group,omitempty", json:"group,omitempty"`
 }
 
 type QuestionnaireBundle struct {

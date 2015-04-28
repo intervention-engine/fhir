@@ -40,7 +40,7 @@ type Profile struct {
 	Code          []Coding                        `bson:"code,omitempty", json:"code,omitempty"`
 	Status        string                          `bson:"status,omitempty", json:"status,omitempty"`
 	Experimental  *bool                           `bson:"experimental,omitempty", json:"experimental,omitempty"`
-	Date          FHIRDateTime                    `bson:"date,omitempty", json:"date,omitempty"`
+	Date          *FHIRDateTime                   `bson:"date,omitempty", json:"date,omitempty"`
 	Requirements  string                          `bson:"requirements,omitempty", json:"requirements,omitempty"`
 	FhirVersion   string                          `bson:"fhirVersion,omitempty", json:"fhirVersion,omitempty"`
 	Mapping       []ProfileMappingComponent       `bson:"mapping,omitempty", json:"mapping,omitempty"`
@@ -81,12 +81,12 @@ type ElementDefinitionConstraintComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec binding
 type ElementDefinitionBindingComponent struct {
-	Name               string    `bson:"name,omitempty", json:"name,omitempty"`
-	IsExtensible       *bool     `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
-	Conformance        string    `bson:"conformance,omitempty", json:"conformance,omitempty"`
-	Description        string    `bson:"description,omitempty", json:"description,omitempty"`
-	ReferenceUri       string    `bson:"referenceUri,omitempty", json:"referenceUri,omitempty"`
-	ReferenceReference Reference `bson:"referenceReference,omitempty", json:"referenceReference,omitempty"`
+	Name               string     `bson:"name,omitempty", json:"name,omitempty"`
+	IsExtensible       *bool      `bson:"isExtensible,omitempty", json:"isExtensible,omitempty"`
+	Conformance        string     `bson:"conformance,omitempty", json:"conformance,omitempty"`
+	Description        string     `bson:"description,omitempty", json:"description,omitempty"`
+	ReferenceUri       string     `bson:"referenceUri,omitempty", json:"referenceUri,omitempty"`
+	ReferenceReference *Reference `bson:"referenceReference,omitempty", json:"referenceReference,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec mapping
@@ -108,32 +108,32 @@ type ElementDefinitionComponent struct {
 	NameReference          string                                 `bson:"nameReference,omitempty", json:"nameReference,omitempty"`
 	ValueString            string                                 `bson:"valuestring,omitempty", json:"valuestring,omitempty"`
 	ValueInteger           int                                    `bson:"valueinteger,omitempty", json:"valueinteger,omitempty"`
-	ValueDateTime          FHIRDateTime                           `bson:"valuedatetime,omitempty", json:"valuedatetime,omitempty"`
+	ValueDateTime          *FHIRDateTime                          `bson:"valuedatetime,omitempty", json:"valuedatetime,omitempty"`
 	ValueBoolean           *bool                                  `bson:"valueboolean,omitempty", json:"valueboolean,omitempty"`
-	ValueCodeableConcept   CodeableConcept                        `bson:"valuecodeableconcept,omitempty", json:"valuecodeableconcept,omitempty"`
-	ValueRange             Range                                  `bson:"valuerange,omitempty", json:"valuerange,omitempty"`
+	ValueCodeableConcept   *CodeableConcept                       `bson:"valuecodeableconcept,omitempty", json:"valuecodeableconcept,omitempty"`
+	ValueRange             *Range                                 `bson:"valuerange,omitempty", json:"valuerange,omitempty"`
 	ExampleString          string                                 `bson:"examplestring,omitempty", json:"examplestring,omitempty"`
 	ExampleInteger         int                                    `bson:"exampleinteger,omitempty", json:"exampleinteger,omitempty"`
-	ExampleDateTime        FHIRDateTime                           `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
+	ExampleDateTime        *FHIRDateTime                          `bson:"exampledatetime,omitempty", json:"exampledatetime,omitempty"`
 	ExampleBoolean         *bool                                  `bson:"exampleboolean,omitempty", json:"exampleboolean,omitempty"`
-	ExampleCodeableConcept CodeableConcept                        `bson:"examplecodeableconcept,omitempty", json:"examplecodeableconcept,omitempty"`
-	ExampleRange           Range                                  `bson:"examplerange,omitempty", json:"examplerange,omitempty"`
+	ExampleCodeableConcept *CodeableConcept                       `bson:"examplecodeableconcept,omitempty", json:"examplecodeableconcept,omitempty"`
+	ExampleRange           *Range                                 `bson:"examplerange,omitempty", json:"examplerange,omitempty"`
 	MaxLength              float64                                `bson:"maxLength,omitempty", json:"maxLength,omitempty"`
 	Condition              []string                               `bson:"condition,omitempty", json:"condition,omitempty"`
 	Constraint             []ElementDefinitionConstraintComponent `bson:"constraint,omitempty", json:"constraint,omitempty"`
 	MustSupport            *bool                                  `bson:"mustSupport,omitempty", json:"mustSupport,omitempty"`
 	IsModifier             *bool                                  `bson:"isModifier,omitempty", json:"isModifier,omitempty"`
-	Binding                ElementDefinitionBindingComponent      `bson:"binding,omitempty", json:"binding,omitempty"`
+	Binding                *ElementDefinitionBindingComponent     `bson:"binding,omitempty", json:"binding,omitempty"`
 	Mapping                []ElementDefinitionMappingComponent    `bson:"mapping,omitempty", json:"mapping,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec element
 type ElementComponent struct {
-	Path           string                     `bson:"path,omitempty", json:"path,omitempty"`
-	Representation []string                   `bson:"representation,omitempty", json:"representation,omitempty"`
-	Name           string                     `bson:"name,omitempty", json:"name,omitempty"`
-	Slicing        ElementSlicingComponent    `bson:"slicing,omitempty", json:"slicing,omitempty"`
-	Definition     ElementDefinitionComponent `bson:"definition,omitempty", json:"definition,omitempty"`
+	Path           string                      `bson:"path,omitempty", json:"path,omitempty"`
+	Representation []string                    `bson:"representation,omitempty", json:"representation,omitempty"`
+	Name           string                      `bson:"name,omitempty", json:"name,omitempty"`
+	Slicing        *ElementSlicingComponent    `bson:"slicing,omitempty", json:"slicing,omitempty"`
+	Definition     *ElementDefinitionComponent `bson:"definition,omitempty", json:"definition,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec snapshot
@@ -157,8 +157,8 @@ type ProfileStructureComponent struct {
 	Name         string                                 `bson:"name,omitempty", json:"name,omitempty"`
 	Publish      *bool                                  `bson:"publish,omitempty", json:"publish,omitempty"`
 	Purpose      string                                 `bson:"purpose,omitempty", json:"purpose,omitempty"`
-	Snapshot     ConstraintComponent                    `bson:"snapshot,omitempty", json:"snapshot,omitempty"`
-	Differential ConstraintComponent                    `bson:"differential,omitempty", json:"differential,omitempty"`
+	Snapshot     *ConstraintComponent                   `bson:"snapshot,omitempty", json:"snapshot,omitempty"`
+	Differential *ConstraintComponent                   `bson:"differential,omitempty", json:"differential,omitempty"`
 	SearchParam  []ProfileStructureSearchParamComponent `bson:"searchParam,omitempty", json:"searchParam,omitempty"`
 }
 

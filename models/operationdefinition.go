@@ -39,11 +39,11 @@ type OperationDefinition struct {
 	Code         []Coding                                `bson:"code,omitempty", json:"code,omitempty"`
 	Status       string                                  `bson:"status,omitempty", json:"status,omitempty"`
 	Experimental *bool                                   `bson:"experimental,omitempty", json:"experimental,omitempty"`
-	Date         FHIRDateTime                            `bson:"date,omitempty", json:"date,omitempty"`
+	Date         *FHIRDateTime                           `bson:"date,omitempty", json:"date,omitempty"`
 	Kind         string                                  `bson:"kind,omitempty", json:"kind,omitempty"`
 	Name         string                                  `bson:"name,omitempty", json:"name,omitempty"`
 	Notes        string                                  `bson:"notes,omitempty", json:"notes,omitempty"`
-	Base         Reference                               `bson:"base,omitempty", json:"base,omitempty"`
+	Base         *Reference                              `bson:"base,omitempty", json:"base,omitempty"`
 	System       *bool                                   `bson:"system,omitempty", json:"system,omitempty"`
 	Type         []string                                `bson:"type,omitempty", json:"type,omitempty"`
 	Instance     *bool                                   `bson:"instance,omitempty", json:"instance,omitempty"`
@@ -52,13 +52,13 @@ type OperationDefinition struct {
 
 // This is an ugly hack to deal with embedded structures in the spec parameter
 type OperationDefinitionParameterComponent struct {
-	Name          string    `bson:"name,omitempty", json:"name,omitempty"`
-	Use           string    `bson:"use,omitempty", json:"use,omitempty"`
-	Min           float64   `bson:"min,omitempty", json:"min,omitempty"`
-	Max           string    `bson:"max,omitempty", json:"max,omitempty"`
-	Documentation string    `bson:"documentation,omitempty", json:"documentation,omitempty"`
-	Type          Coding    `bson:"type,omitempty", json:"type,omitempty"`
-	Profile       Reference `bson:"profile,omitempty", json:"profile,omitempty"`
+	Name          string     `bson:"name,omitempty", json:"name,omitempty"`
+	Use           string     `bson:"use,omitempty", json:"use,omitempty"`
+	Min           float64    `bson:"min,omitempty", json:"min,omitempty"`
+	Max           string     `bson:"max,omitempty", json:"max,omitempty"`
+	Documentation string     `bson:"documentation,omitempty", json:"documentation,omitempty"`
+	Type          *Coding    `bson:"type,omitempty", json:"type,omitempty"`
+	Profile       *Reference `bson:"profile,omitempty", json:"profile,omitempty"`
 }
 
 type OperationDefinitionBundle struct {

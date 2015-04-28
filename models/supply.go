@@ -30,26 +30,26 @@ import "time"
 
 type Supply struct {
 	Id          string                    `json:"-" bson:"_id"`
-	Kind        CodeableConcept           `bson:"kind,omitempty", json:"kind,omitempty"`
-	Identifier  Identifier                `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Kind        *CodeableConcept          `bson:"kind,omitempty", json:"kind,omitempty"`
+	Identifier  *Identifier               `bson:"identifier,omitempty", json:"identifier,omitempty"`
 	Status      string                    `bson:"status,omitempty", json:"status,omitempty"`
-	OrderedItem Reference                 `bson:"orderedItem,omitempty", json:"orderedItem,omitempty"`
-	Patient     Reference                 `bson:"patient,omitempty", json:"patient,omitempty"`
+	OrderedItem *Reference                `bson:"orderedItem,omitempty", json:"orderedItem,omitempty"`
+	Patient     *Reference                `bson:"patient,omitempty", json:"patient,omitempty"`
 	Dispense    []SupplyDispenseComponent `bson:"dispense,omitempty", json:"dispense,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dispense
 type SupplyDispenseComponent struct {
-	Identifier     Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Status         string          `bson:"status,omitempty", json:"status,omitempty"`
-	Type           CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
-	Quantity       Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
-	SuppliedItem   Reference       `bson:"suppliedItem,omitempty", json:"suppliedItem,omitempty"`
-	Supplier       Reference       `bson:"supplier,omitempty", json:"supplier,omitempty"`
-	WhenPrepared   Period          `bson:"whenPrepared,omitempty", json:"whenPrepared,omitempty"`
-	WhenHandedOver Period          `bson:"whenHandedOver,omitempty", json:"whenHandedOver,omitempty"`
-	Destination    Reference       `bson:"destination,omitempty", json:"destination,omitempty"`
-	Receiver       []Reference     `bson:"receiver,omitempty", json:"receiver,omitempty"`
+	Identifier     *Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Status         string           `bson:"status,omitempty", json:"status,omitempty"`
+	Type           *CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
+	Quantity       *Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	SuppliedItem   *Reference       `bson:"suppliedItem,omitempty", json:"suppliedItem,omitempty"`
+	Supplier       *Reference       `bson:"supplier,omitempty", json:"supplier,omitempty"`
+	WhenPrepared   *Period          `bson:"whenPrepared,omitempty", json:"whenPrepared,omitempty"`
+	WhenHandedOver *Period          `bson:"whenHandedOver,omitempty", json:"whenHandedOver,omitempty"`
+	Destination    *Reference       `bson:"destination,omitempty", json:"destination,omitempty"`
+	Receiver       []Reference      `bson:"receiver,omitempty", json:"receiver,omitempty"`
 }
 
 type SupplyBundle struct {

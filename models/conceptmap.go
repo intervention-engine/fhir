@@ -39,11 +39,11 @@ type ConceptMap struct {
 	Copyright       string                       `bson:"copyright,omitempty", json:"copyright,omitempty"`
 	Status          string                       `bson:"status,omitempty", json:"status,omitempty"`
 	Experimental    *bool                        `bson:"experimental,omitempty", json:"experimental,omitempty"`
-	Date            FHIRDateTime                 `bson:"date,omitempty", json:"date,omitempty"`
+	Date            *FHIRDateTime                `bson:"date,omitempty", json:"date,omitempty"`
 	SourceUri       string                       `bson:"sourceUri,omitempty", json:"sourceUri,omitempty"`
-	SourceReference Reference                    `bson:"sourceReference,omitempty", json:"sourceReference,omitempty"`
+	SourceReference *Reference                   `bson:"sourceReference,omitempty", json:"sourceReference,omitempty"`
 	TargetUri       string                       `bson:"targetUri,omitempty", json:"targetUri,omitempty"`
-	TargetReference Reference                    `bson:"targetReference,omitempty", json:"targetReference,omitempty"`
+	TargetReference *Reference                   `bson:"targetReference,omitempty", json:"targetReference,omitempty"`
 	Element         []ConceptMapElementComponent `bson:"element,omitempty", json:"element,omitempty"`
 }
 

@@ -29,32 +29,32 @@ package models
 import "time"
 
 type Conformance struct {
-	Id             string                             `json:"-" bson:"_id"`
-	Identifier     string                             `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Version        string                             `bson:"version,omitempty", json:"version,omitempty"`
-	Name           string                             `bson:"name,omitempty", json:"name,omitempty"`
-	Publisher      string                             `bson:"publisher,omitempty", json:"publisher,omitempty"`
-	Telecom        []ContactPoint                     `bson:"telecom,omitempty", json:"telecom,omitempty"`
-	Description    string                             `bson:"description,omitempty", json:"description,omitempty"`
-	Status         string                             `bson:"status,omitempty", json:"status,omitempty"`
-	Experimental   *bool                              `bson:"experimental,omitempty", json:"experimental,omitempty"`
-	Date           FHIRDateTime                       `bson:"date,omitempty", json:"date,omitempty"`
-	Software       ConformanceSoftwareComponent       `bson:"software,omitempty", json:"software,omitempty"`
-	Implementation ConformanceImplementationComponent `bson:"implementation,omitempty", json:"implementation,omitempty"`
-	FhirVersion    string                             `bson:"fhirVersion,omitempty", json:"fhirVersion,omitempty"`
-	AcceptUnknown  *bool                              `bson:"acceptUnknown,omitempty", json:"acceptUnknown,omitempty"`
-	Format         []string                           `bson:"format,omitempty", json:"format,omitempty"`
-	Profile        []Reference                        `bson:"profile,omitempty", json:"profile,omitempty"`
-	Rest           []ConformanceRestComponent         `bson:"rest,omitempty", json:"rest,omitempty"`
-	Messaging      []ConformanceMessagingComponent    `bson:"messaging,omitempty", json:"messaging,omitempty"`
-	Document       []ConformanceDocumentComponent     `bson:"document,omitempty", json:"document,omitempty"`
+	Id             string                              `json:"-" bson:"_id"`
+	Identifier     string                              `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Version        string                              `bson:"version,omitempty", json:"version,omitempty"`
+	Name           string                              `bson:"name,omitempty", json:"name,omitempty"`
+	Publisher      string                              `bson:"publisher,omitempty", json:"publisher,omitempty"`
+	Telecom        []ContactPoint                      `bson:"telecom,omitempty", json:"telecom,omitempty"`
+	Description    string                              `bson:"description,omitempty", json:"description,omitempty"`
+	Status         string                              `bson:"status,omitempty", json:"status,omitempty"`
+	Experimental   *bool                               `bson:"experimental,omitempty", json:"experimental,omitempty"`
+	Date           *FHIRDateTime                       `bson:"date,omitempty", json:"date,omitempty"`
+	Software       *ConformanceSoftwareComponent       `bson:"software,omitempty", json:"software,omitempty"`
+	Implementation *ConformanceImplementationComponent `bson:"implementation,omitempty", json:"implementation,omitempty"`
+	FhirVersion    string                              `bson:"fhirVersion,omitempty", json:"fhirVersion,omitempty"`
+	AcceptUnknown  *bool                               `bson:"acceptUnknown,omitempty", json:"acceptUnknown,omitempty"`
+	Format         []string                            `bson:"format,omitempty", json:"format,omitempty"`
+	Profile        []Reference                         `bson:"profile,omitempty", json:"profile,omitempty"`
+	Rest           []ConformanceRestComponent          `bson:"rest,omitempty", json:"rest,omitempty"`
+	Messaging      []ConformanceMessagingComponent     `bson:"messaging,omitempty", json:"messaging,omitempty"`
+	Document       []ConformanceDocumentComponent      `bson:"document,omitempty", json:"document,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec software
 type ConformanceSoftwareComponent struct {
-	Name        string       `bson:"name,omitempty", json:"name,omitempty"`
-	Version     string       `bson:"version,omitempty", json:"version,omitempty"`
-	ReleaseDate FHIRDateTime `bson:"releaseDate,omitempty", json:"releaseDate,omitempty"`
+	Name        string        `bson:"name,omitempty", json:"name,omitempty"`
+	Version     string        `bson:"version,omitempty", json:"version,omitempty"`
+	ReleaseDate *FHIRDateTime `bson:"releaseDate,omitempty", json:"releaseDate,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec implementation
@@ -96,7 +96,7 @@ type ConformanceRestResourceSearchParamComponent struct {
 // This is an ugly hack to deal with embedded structures in the spec resource
 type ConformanceRestResourceComponent struct {
 	Type          string                                        `bson:"type,omitempty", json:"type,omitempty"`
-	Profile       Reference                                     `bson:"profile,omitempty", json:"profile,omitempty"`
+	Profile       *Reference                                    `bson:"profile,omitempty", json:"profile,omitempty"`
 	Interaction   []ResourceInteractionComponent                `bson:"interaction,omitempty", json:"interaction,omitempty"`
 	ReadHistory   *bool                                         `bson:"readHistory,omitempty", json:"readHistory,omitempty"`
 	UpdateCreate  *bool                                         `bson:"updateCreate,omitempty", json:"updateCreate,omitempty"`
@@ -112,15 +112,15 @@ type SystemInteractionComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec operation
 type ConformanceRestOperationComponent struct {
-	Name       string    `bson:"name,omitempty", json:"name,omitempty"`
-	Definition Reference `bson:"definition,omitempty", json:"definition,omitempty"`
+	Name       string     `bson:"name,omitempty", json:"name,omitempty"`
+	Definition *Reference `bson:"definition,omitempty", json:"definition,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec rest
 type ConformanceRestComponent struct {
 	Mode            string                              `bson:"mode,omitempty", json:"mode,omitempty"`
 	Documentation   string                              `bson:"documentation,omitempty", json:"documentation,omitempty"`
-	Security        ConformanceRestSecurityComponent    `bson:"security,omitempty", json:"security,omitempty"`
+	Security        *ConformanceRestSecurityComponent   `bson:"security,omitempty", json:"security,omitempty"`
 	Resource        []ConformanceRestResourceComponent  `bson:"resource,omitempty", json:"resource,omitempty"`
 	Interaction     []SystemInteractionComponent        `bson:"interaction,omitempty", json:"interaction,omitempty"`
 	Operation       []ConformanceRestOperationComponent `bson:"operation,omitempty", json:"operation,omitempty"`
@@ -129,14 +129,14 @@ type ConformanceRestComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec event
 type ConformanceMessagingEventComponent struct {
-	Code          Coding    `bson:"code,omitempty", json:"code,omitempty"`
-	Category      string    `bson:"category,omitempty", json:"category,omitempty"`
-	Mode          string    `bson:"mode,omitempty", json:"mode,omitempty"`
-	Protocol      []Coding  `bson:"protocol,omitempty", json:"protocol,omitempty"`
-	Focus         string    `bson:"focus,omitempty", json:"focus,omitempty"`
-	Request       Reference `bson:"request,omitempty", json:"request,omitempty"`
-	Response      Reference `bson:"response,omitempty", json:"response,omitempty"`
-	Documentation string    `bson:"documentation,omitempty", json:"documentation,omitempty"`
+	Code          *Coding    `bson:"code,omitempty", json:"code,omitempty"`
+	Category      string     `bson:"category,omitempty", json:"category,omitempty"`
+	Mode          string     `bson:"mode,omitempty", json:"mode,omitempty"`
+	Protocol      []Coding   `bson:"protocol,omitempty", json:"protocol,omitempty"`
+	Focus         string     `bson:"focus,omitempty", json:"focus,omitempty"`
+	Request       *Reference `bson:"request,omitempty", json:"request,omitempty"`
+	Response      *Reference `bson:"response,omitempty", json:"response,omitempty"`
+	Documentation string     `bson:"documentation,omitempty", json:"documentation,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec messaging
@@ -149,9 +149,9 @@ type ConformanceMessagingComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec document
 type ConformanceDocumentComponent struct {
-	Mode          string    `bson:"mode,omitempty", json:"mode,omitempty"`
-	Documentation string    `bson:"documentation,omitempty", json:"documentation,omitempty"`
-	Profile       Reference `bson:"profile,omitempty", json:"profile,omitempty"`
+	Mode          string     `bson:"mode,omitempty", json:"mode,omitempty"`
+	Documentation string     `bson:"documentation,omitempty", json:"documentation,omitempty"`
+	Profile       *Reference `bson:"profile,omitempty", json:"profile,omitempty"`
 }
 
 type ConformanceBundle struct {

@@ -27,7 +27,7 @@
 package models
 
 type Range struct {
-	Id   string   `json:"-" bson:"_id"`
-	Low  Quantity `bson:"low,omitempty", json:"low,omitempty"`
-	High Quantity `bson:"high,omitempty", json:"high,omitempty"`
+	Id   string    `json:"-" bson:"_id"`
+	Low  *Quantity `bson:"low,omitempty", json:"low,omitempty"`
+	High *Quantity `bson:"high,omitempty", json:"high,omitempty"`
 }
