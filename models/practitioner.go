@@ -30,28 +30,28 @@ import "time"
 
 type Practitioner struct {
 	Id            string                               `json:"-" bson:"_id"`
-	Identifier    []Identifier                         `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Name          *HumanName                           `bson:"name,omitempty", json:"name,omitempty"`
-	Telecom       []ContactPoint                       `bson:"telecom,omitempty", json:"telecom,omitempty"`
-	Address       []Address                            `bson:"address,omitempty", json:"address,omitempty"`
-	Gender        *CodeableConcept                     `bson:"gender,omitempty", json:"gender,omitempty"`
-	BirthDate     *FHIRDateTime                        `bson:"birthDate,omitempty", json:"birthDate,omitempty"`
-	Photo         []Attachment                         `bson:"photo,omitempty", json:"photo,omitempty"`
-	Organization  *Reference                           `bson:"organization,omitempty", json:"organization,omitempty"`
-	Role          []CodeableConcept                    `bson:"role,omitempty", json:"role,omitempty"`
-	Specialty     []CodeableConcept                    `bson:"specialty,omitempty", json:"specialty,omitempty"`
-	Period        *Period                              `bson:"period,omitempty", json:"period,omitempty"`
-	Location      []Reference                          `bson:"location,omitempty", json:"location,omitempty"`
-	Qualification []PractitionerQualificationComponent `bson:"qualification,omitempty", json:"qualification,omitempty"`
-	Communication []CodeableConcept                    `bson:"communication,omitempty", json:"communication,omitempty"`
+	Identifier    []Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Name          *HumanName                           `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom       []ContactPoint                       `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address       []Address                            `bson:"address,omitempty" json:"address,omitempty"`
+	Gender        *CodeableConcept                     `bson:"gender,omitempty" json:"gender,omitempty"`
+	BirthDate     *FHIRDateTime                        `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
+	Photo         []Attachment                         `bson:"photo,omitempty" json:"photo,omitempty"`
+	Organization  *Reference                           `bson:"organization,omitempty" json:"organization,omitempty"`
+	Role          []CodeableConcept                    `bson:"role,omitempty" json:"role,omitempty"`
+	Specialty     []CodeableConcept                    `bson:"specialty,omitempty" json:"specialty,omitempty"`
+	Period        *Period                              `bson:"period,omitempty" json:"period,omitempty"`
+	Location      []Reference                          `bson:"location,omitempty" json:"location,omitempty"`
+	Qualification []PractitionerQualificationComponent `bson:"qualification,omitempty" json:"qualification,omitempty"`
+	Communication []CodeableConcept                    `bson:"communication,omitempty" json:"communication,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec qualification
 type PractitionerQualificationComponent struct {
-	Identifier []Identifier     `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Code       *CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
-	Period     *Period          `bson:"period,omitempty", json:"period,omitempty"`
-	Issuer     *Reference       `bson:"issuer,omitempty", json:"issuer,omitempty"`
+	Identifier []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Period     *Period          `bson:"period,omitempty" json:"period,omitempty"`
+	Issuer     *Reference       `bson:"issuer,omitempty" json:"issuer,omitempty"`
 }
 
 type PractitionerBundle struct {

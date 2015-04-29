@@ -28,6 +28,6 @@ package models
 
 type Narrative struct {
 	Id     string `json:"-" bson:"_id"`
-	Status string `bson:"status,omitempty", json:"status,omitempty"`
-	Div    string `bson:"div,omitempty", json:"div,omitempty"`
+	Status string `bson:"status,omitempty" json:"status,omitempty"`
+	Div    string `bson:"div,omitempty" json:"div,omitempty"`
 }

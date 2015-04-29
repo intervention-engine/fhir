@@ -30,41 +30,41 @@ import "time"
 
 type MessageHeader struct {
 	Id          string                          `json:"-" bson:"_id"`
-	Identifier  string                          `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Timestamp   *FHIRDateTime                   `bson:"timestamp,omitempty", json:"timestamp,omitempty"`
-	Event       *Coding                         `bson:"event,omitempty", json:"event,omitempty"`
-	Response    *MessageHeaderResponseComponent `bson:"response,omitempty", json:"response,omitempty"`
-	Source      *MessageSourceComponent         `bson:"source,omitempty", json:"source,omitempty"`
-	Destination []MessageDestinationComponent   `bson:"destination,omitempty", json:"destination,omitempty"`
-	Enterer     *Reference                      `bson:"enterer,omitempty", json:"enterer,omitempty"`
-	Author      *Reference                      `bson:"author,omitempty", json:"author,omitempty"`
-	Receiver    *Reference                      `bson:"receiver,omitempty", json:"receiver,omitempty"`
-	Responsible *Reference                      `bson:"responsible,omitempty", json:"responsible,omitempty"`
-	Reason      *CodeableConcept                `bson:"reason,omitempty", json:"reason,omitempty"`
-	Data        []Reference                     `bson:"data,omitempty", json:"data,omitempty"`
+	Identifier  string                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Timestamp   *FHIRDateTime                   `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
+	Event       *Coding                         `bson:"event,omitempty" json:"event,omitempty"`
+	Response    *MessageHeaderResponseComponent `bson:"response,omitempty" json:"response,omitempty"`
+	Source      *MessageSourceComponent         `bson:"source,omitempty" json:"source,omitempty"`
+	Destination []MessageDestinationComponent   `bson:"destination,omitempty" json:"destination,omitempty"`
+	Enterer     *Reference                      `bson:"enterer,omitempty" json:"enterer,omitempty"`
+	Author      *Reference                      `bson:"author,omitempty" json:"author,omitempty"`
+	Receiver    *Reference                      `bson:"receiver,omitempty" json:"receiver,omitempty"`
+	Responsible *Reference                      `bson:"responsible,omitempty" json:"responsible,omitempty"`
+	Reason      *CodeableConcept                `bson:"reason,omitempty" json:"reason,omitempty"`
+	Data        []Reference                     `bson:"data,omitempty" json:"data,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec response
 type MessageHeaderResponseComponent struct {
-	Identifier string     `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Code       string     `bson:"code,omitempty", json:"code,omitempty"`
-	Details    *Reference `bson:"details,omitempty", json:"details,omitempty"`
+	Identifier string     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Code       string     `bson:"code,omitempty" json:"code,omitempty"`
+	Details    *Reference `bson:"details,omitempty" json:"details,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec source
 type MessageSourceComponent struct {
-	Name     string        `bson:"name,omitempty", json:"name,omitempty"`
-	Software string        `bson:"software,omitempty", json:"software,omitempty"`
-	Version  string        `bson:"version,omitempty", json:"version,omitempty"`
-	Contact  *ContactPoint `bson:"contact,omitempty", json:"contact,omitempty"`
-	Endpoint string        `bson:"endpoint,omitempty", json:"endpoint,omitempty"`
+	Name     string        `bson:"name,omitempty" json:"name,omitempty"`
+	Software string        `bson:"software,omitempty" json:"software,omitempty"`
+	Version  string        `bson:"version,omitempty" json:"version,omitempty"`
+	Contact  *ContactPoint `bson:"contact,omitempty" json:"contact,omitempty"`
+	Endpoint string        `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec destination
 type MessageDestinationComponent struct {
-	Name     string     `bson:"name,omitempty", json:"name,omitempty"`
-	Target   *Reference `bson:"target,omitempty", json:"target,omitempty"`
-	Endpoint string     `bson:"endpoint,omitempty", json:"endpoint,omitempty"`
+	Name     string     `bson:"name,omitempty" json:"name,omitempty"`
+	Target   *Reference `bson:"target,omitempty" json:"target,omitempty"`
+	Endpoint string     `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
 }
 
 type MessageHeaderBundle struct {

@@ -30,32 +30,32 @@ import "time"
 
 type Procedure struct {
 	Id           string                          `json:"-" bson:"_id"`
-	Identifier   []Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Subject      *Reference                      `bson:"subject,omitempty", json:"subject,omitempty"`
-	Type         *CodeableConcept                `bson:"type,omitempty", json:"type,omitempty"`
-	BodySite     []CodeableConcept               `bson:"bodySite,omitempty", json:"bodySite,omitempty"`
-	Indication   []CodeableConcept               `bson:"indication,omitempty", json:"indication,omitempty"`
-	Performer    []ProcedurePerformerComponent   `bson:"performer,omitempty", json:"performer,omitempty"`
-	Date         *Period                         `bson:"date,omitempty", json:"date,omitempty"`
-	Encounter    *Reference                      `bson:"encounter,omitempty", json:"encounter,omitempty"`
-	Outcome      string                          `bson:"outcome,omitempty", json:"outcome,omitempty"`
-	Report       []Reference                     `bson:"report,omitempty", json:"report,omitempty"`
-	Complication []CodeableConcept               `bson:"complication,omitempty", json:"complication,omitempty"`
-	FollowUp     string                          `bson:"followUp,omitempty", json:"followUp,omitempty"`
-	RelatedItem  []ProcedureRelatedItemComponent `bson:"relatedItem,omitempty", json:"relatedItem,omitempty"`
-	Notes        string                          `bson:"notes,omitempty", json:"notes,omitempty"`
+	Identifier   []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Subject      *Reference                      `bson:"subject,omitempty" json:"subject,omitempty"`
+	Type         *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
+	BodySite     []CodeableConcept               `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	Indication   []CodeableConcept               `bson:"indication,omitempty" json:"indication,omitempty"`
+	Performer    []ProcedurePerformerComponent   `bson:"performer,omitempty" json:"performer,omitempty"`
+	Date         *Period                         `bson:"date,omitempty" json:"date,omitempty"`
+	Encounter    *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Outcome      string                          `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	Report       []Reference                     `bson:"report,omitempty" json:"report,omitempty"`
+	Complication []CodeableConcept               `bson:"complication,omitempty" json:"complication,omitempty"`
+	FollowUp     string                          `bson:"followUp,omitempty" json:"followUp,omitempty"`
+	RelatedItem  []ProcedureRelatedItemComponent `bson:"relatedItem,omitempty" json:"relatedItem,omitempty"`
+	Notes        string                          `bson:"notes,omitempty" json:"notes,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec performer
 type ProcedurePerformerComponent struct {
-	Person *Reference       `bson:"person,omitempty", json:"person,omitempty"`
-	Role   *CodeableConcept `bson:"role,omitempty", json:"role,omitempty"`
+	Person *Reference       `bson:"person,omitempty" json:"person,omitempty"`
+	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec relatedItem
 type ProcedureRelatedItemComponent struct {
-	Type   string     `bson:"type,omitempty", json:"type,omitempty"`
-	Target *Reference `bson:"target,omitempty", json:"target,omitempty"`
+	Type   string     `bson:"type,omitempty" json:"type,omitempty"`
+	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 type ProcedureBundle struct {

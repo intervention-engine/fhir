@@ -28,12 +28,12 @@ package models
 
 type Address struct {
 	Id      string   `json:"-" bson:"_id"`
-	Use     string   `bson:"use,omitempty", json:"use,omitempty"`
-	Text    string   `bson:"text,omitempty", json:"text,omitempty"`
-	Line    []string `bson:"line,omitempty", json:"line,omitempty"`
-	City    string   `bson:"city,omitempty", json:"city,omitempty"`
-	State   string   `bson:"state,omitempty", json:"state,omitempty"`
-	Zip     string   `bson:"zip,omitempty", json:"zip,omitempty"`
-	Country string   `bson:"country,omitempty", json:"country,omitempty"`
-	Period  *Period  `bson:"period,omitempty", json:"period,omitempty"`
+	Use     string   `bson:"use,omitempty" json:"use,omitempty"`
+	Text    string   `bson:"text,omitempty" json:"text,omitempty"`
+	Line    []string `bson:"line,omitempty" json:"line,omitempty"`
+	City    string   `bson:"city,omitempty" json:"city,omitempty"`
+	State   string   `bson:"state,omitempty" json:"state,omitempty"`
+	Zip     string   `bson:"zip,omitempty" json:"zip,omitempty"`
+	Country string   `bson:"country,omitempty" json:"country,omitempty"`
+	Period  *Period  `bson:"period,omitempty" json:"period,omitempty"`
 }

@@ -30,51 +30,51 @@ import "time"
 
 type Condition struct {
 	Id               string                          `json:"-" bson:"_id"`
-	Identifier       []Identifier                    `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Subject          *Reference                      `bson:"subject,omitempty", json:"subject,omitempty"`
-	Encounter        *Reference                      `bson:"encounter,omitempty", json:"encounter,omitempty"`
-	Asserter         *Reference                      `bson:"asserter,omitempty", json:"asserter,omitempty"`
-	DateAsserted     *FHIRDateTime                   `bson:"dateAsserted,omitempty", json:"dateAsserted,omitempty"`
-	Code             *CodeableConcept                `bson:"code,omitempty", json:"code,omitempty"`
-	Category         *CodeableConcept                `bson:"category,omitempty", json:"category,omitempty"`
-	Status           string                          `bson:"status,omitempty", json:"status,omitempty"`
-	Certainty        *CodeableConcept                `bson:"certainty,omitempty", json:"certainty,omitempty"`
-	Severity         *CodeableConcept                `bson:"severity,omitempty", json:"severity,omitempty"`
-	OnsetDate        *FHIRDateTime                   `bson:"onsetDate,omitempty", json:"onsetDate,omitempty"`
-	OnsetAge         *Quantity                       `bson:"onsetAge,omitempty", json:"onsetAge,omitempty"`
-	AbatementDate    *FHIRDateTime                   `bson:"abatementDate,omitempty", json:"abatementDate,omitempty"`
-	AbatementAge     *Quantity                       `bson:"abatementAge,omitempty", json:"abatementAge,omitempty"`
-	AbatementBoolean *bool                           `bson:"abatementBoolean,omitempty", json:"abatementBoolean,omitempty"`
-	Stage            *ConditionStageComponent        `bson:"stage,omitempty", json:"stage,omitempty"`
-	Evidence         []ConditionEvidenceComponent    `bson:"evidence,omitempty", json:"evidence,omitempty"`
-	Location         []ConditionLocationComponent    `bson:"location,omitempty", json:"location,omitempty"`
-	RelatedItem      []ConditionRelatedItemComponent `bson:"relatedItem,omitempty", json:"relatedItem,omitempty"`
-	Notes            string                          `bson:"notes,omitempty", json:"notes,omitempty"`
+	Identifier       []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Subject          *Reference                      `bson:"subject,omitempty" json:"subject,omitempty"`
+	Encounter        *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Asserter         *Reference                      `bson:"asserter,omitempty" json:"asserter,omitempty"`
+	DateAsserted     *FHIRDateTime                   `bson:"dateAsserted,omitempty" json:"dateAsserted,omitempty"`
+	Code             *CodeableConcept                `bson:"code,omitempty" json:"code,omitempty"`
+	Category         *CodeableConcept                `bson:"category,omitempty" json:"category,omitempty"`
+	Status           string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Certainty        *CodeableConcept                `bson:"certainty,omitempty" json:"certainty,omitempty"`
+	Severity         *CodeableConcept                `bson:"severity,omitempty" json:"severity,omitempty"`
+	OnsetDate        *FHIRDateTime                   `bson:"onsetDate,omitempty" json:"onsetDate,omitempty"`
+	OnsetAge         *Quantity                       `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
+	AbatementDate    *FHIRDateTime                   `bson:"abatementDate,omitempty" json:"abatementDate,omitempty"`
+	AbatementAge     *Quantity                       `bson:"abatementAge,omitempty" json:"abatementAge,omitempty"`
+	AbatementBoolean *bool                           `bson:"abatementBoolean,omitempty" json:"abatementBoolean,omitempty"`
+	Stage            *ConditionStageComponent        `bson:"stage,omitempty" json:"stage,omitempty"`
+	Evidence         []ConditionEvidenceComponent    `bson:"evidence,omitempty" json:"evidence,omitempty"`
+	Location         []ConditionLocationComponent    `bson:"location,omitempty" json:"location,omitempty"`
+	RelatedItem      []ConditionRelatedItemComponent `bson:"relatedItem,omitempty" json:"relatedItem,omitempty"`
+	Notes            string                          `bson:"notes,omitempty" json:"notes,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec stage
 type ConditionStageComponent struct {
-	Summary    *CodeableConcept `bson:"summary,omitempty", json:"summary,omitempty"`
-	Assessment []Reference      `bson:"assessment,omitempty", json:"assessment,omitempty"`
+	Summary    *CodeableConcept `bson:"summary,omitempty" json:"summary,omitempty"`
+	Assessment []Reference      `bson:"assessment,omitempty" json:"assessment,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec evidence
 type ConditionEvidenceComponent struct {
-	Code   *CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
-	Detail []Reference      `bson:"detail,omitempty", json:"detail,omitempty"`
+	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Detail []Reference      `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec location
 type ConditionLocationComponent struct {
-	Code   *CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
-	Detail string           `bson:"detail,omitempty", json:"detail,omitempty"`
+	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Detail string           `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec relatedItem
 type ConditionRelatedItemComponent struct {
-	Type   string           `bson:"type,omitempty", json:"type,omitempty"`
-	Code   *CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
-	Target *Reference       `bson:"target,omitempty", json:"target,omitempty"`
+	Type   string           `bson:"type,omitempty" json:"type,omitempty"`
+	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Target *Reference       `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 type ConditionBundle struct {

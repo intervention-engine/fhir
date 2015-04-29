@@ -30,48 +30,48 @@ import "time"
 
 type Patient struct {
 	Id                   string                 `json:"-" bson:"_id"`
-	Identifier           []Identifier           `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Name                 []HumanName            `bson:"name,omitempty", json:"name,omitempty"`
-	Telecom              []ContactPoint         `bson:"telecom,omitempty", json:"telecom,omitempty"`
-	Gender               *CodeableConcept       `bson:"gender,omitempty", json:"gender,omitempty"`
-	BirthDate            *FHIRDateTime          `bson:"birthDate,omitempty", json:"birthDate,omitempty"`
-	DeceasedBoolean      *bool                  `bson:"deceasedBoolean,omitempty", json:"deceasedBoolean,omitempty"`
-	DeceasedDateTime     *FHIRDateTime          `bson:"deceasedDateTime,omitempty", json:"deceasedDateTime,omitempty"`
-	Address              []Address              `bson:"address,omitempty", json:"address,omitempty"`
-	MaritalStatus        *CodeableConcept       `bson:"maritalStatus,omitempty", json:"maritalStatus,omitempty"`
-	MultipleBirthBoolean *bool                  `bson:"multipleBirthBoolean,omitempty", json:"multipleBirthBoolean,omitempty"`
-	MultipleBirthInteger float64                `bson:"multipleBirthInteger,omitempty", json:"multipleBirthInteger,omitempty"`
-	Photo                []Attachment           `bson:"photo,omitempty", json:"photo,omitempty"`
-	Contact              []ContactComponent     `bson:"contact,omitempty", json:"contact,omitempty"`
-	Animal               *AnimalComponent       `bson:"animal,omitempty", json:"animal,omitempty"`
-	Communication        []CodeableConcept      `bson:"communication,omitempty", json:"communication,omitempty"`
-	CareProvider         []Reference            `bson:"careProvider,omitempty", json:"careProvider,omitempty"`
-	ManagingOrganization *Reference             `bson:"managingOrganization,omitempty", json:"managingOrganization,omitempty"`
-	Link                 []PatientLinkComponent `bson:"link,omitempty", json:"link,omitempty"`
-	Active               *bool                  `bson:"active,omitempty", json:"active,omitempty"`
+	Identifier           []Identifier           `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Name                 []HumanName            `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom              []ContactPoint         `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Gender               *CodeableConcept       `bson:"gender,omitempty" json:"gender,omitempty"`
+	BirthDate            *FHIRDateTime          `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
+	DeceasedBoolean      *bool                  `bson:"deceasedBoolean,omitempty" json:"deceasedBoolean,omitempty"`
+	DeceasedDateTime     *FHIRDateTime          `bson:"deceasedDateTime,omitempty" json:"deceasedDateTime,omitempty"`
+	Address              []Address              `bson:"address,omitempty" json:"address,omitempty"`
+	MaritalStatus        *CodeableConcept       `bson:"maritalStatus,omitempty" json:"maritalStatus,omitempty"`
+	MultipleBirthBoolean *bool                  `bson:"multipleBirthBoolean,omitempty" json:"multipleBirthBoolean,omitempty"`
+	MultipleBirthInteger float64                `bson:"multipleBirthInteger,omitempty" json:"multipleBirthInteger,omitempty"`
+	Photo                []Attachment           `bson:"photo,omitempty" json:"photo,omitempty"`
+	Contact              []ContactComponent     `bson:"contact,omitempty" json:"contact,omitempty"`
+	Animal               *AnimalComponent       `bson:"animal,omitempty" json:"animal,omitempty"`
+	Communication        []CodeableConcept      `bson:"communication,omitempty" json:"communication,omitempty"`
+	CareProvider         []Reference            `bson:"careProvider,omitempty" json:"careProvider,omitempty"`
+	ManagingOrganization *Reference             `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
+	Link                 []PatientLinkComponent `bson:"link,omitempty" json:"link,omitempty"`
+	Active               *bool                  `bson:"active,omitempty" json:"active,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec contact
 type ContactComponent struct {
-	Relationship []CodeableConcept `bson:"relationship,omitempty", json:"relationship,omitempty"`
-	Name         *HumanName        `bson:"name,omitempty", json:"name,omitempty"`
-	Telecom      []ContactPoint    `bson:"telecom,omitempty", json:"telecom,omitempty"`
-	Address      *Address          `bson:"address,omitempty", json:"address,omitempty"`
-	Gender       *CodeableConcept  `bson:"gender,omitempty", json:"gender,omitempty"`
-	Organization *Reference        `bson:"organization,omitempty", json:"organization,omitempty"`
+	Relationship []CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
+	Name         *HumanName        `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom      []ContactPoint    `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address      *Address          `bson:"address,omitempty" json:"address,omitempty"`
+	Gender       *CodeableConcept  `bson:"gender,omitempty" json:"gender,omitempty"`
+	Organization *Reference        `bson:"organization,omitempty" json:"organization,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec animal
 type AnimalComponent struct {
-	Species      *CodeableConcept `bson:"species,omitempty", json:"species,omitempty"`
-	Breed        *CodeableConcept `bson:"breed,omitempty", json:"breed,omitempty"`
-	GenderStatus *CodeableConcept `bson:"genderStatus,omitempty", json:"genderStatus,omitempty"`
+	Species      *CodeableConcept `bson:"species,omitempty" json:"species,omitempty"`
+	Breed        *CodeableConcept `bson:"breed,omitempty" json:"breed,omitempty"`
+	GenderStatus *CodeableConcept `bson:"genderStatus,omitempty" json:"genderStatus,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec link
 type PatientLinkComponent struct {
-	Other *Reference `bson:"other,omitempty", json:"other,omitempty"`
-	Type  string     `bson:"type,omitempty", json:"type,omitempty"`
+	Other *Reference `bson:"other,omitempty" json:"other,omitempty"`
+	Type  string     `bson:"type,omitempty" json:"type,omitempty"`
 }
 
 type PatientBundle struct {

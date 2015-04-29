@@ -30,29 +30,29 @@ import "time"
 
 type Subscription struct {
 	Id       string                        `json:"-" bson:"_id"`
-	Criteria string                        `bson:"criteria,omitempty", json:"criteria,omitempty"`
-	Contact  []ContactPoint                `bson:"contact,omitempty", json:"contact,omitempty"`
-	Reason   string                        `bson:"reason,omitempty", json:"reason,omitempty"`
-	Status   string                        `bson:"status,omitempty", json:"status,omitempty"`
-	Error    string                        `bson:"error,omitempty", json:"error,omitempty"`
-	Channel  *SubscriptionChannelComponent `bson:"channel,omitempty", json:"channel,omitempty"`
-	End      *FHIRDateTime                 `bson:"end,omitempty", json:"end,omitempty"`
-	Tag      []SubscriptionTagComponent    `bson:"tag,omitempty", json:"tag,omitempty"`
+	Criteria string                        `bson:"criteria,omitempty" json:"criteria,omitempty"`
+	Contact  []ContactPoint                `bson:"contact,omitempty" json:"contact,omitempty"`
+	Reason   string                        `bson:"reason,omitempty" json:"reason,omitempty"`
+	Status   string                        `bson:"status,omitempty" json:"status,omitempty"`
+	Error    string                        `bson:"error,omitempty" json:"error,omitempty"`
+	Channel  *SubscriptionChannelComponent `bson:"channel,omitempty" json:"channel,omitempty"`
+	End      *FHIRDateTime                 `bson:"end,omitempty" json:"end,omitempty"`
+	Tag      []SubscriptionTagComponent    `bson:"tag,omitempty" json:"tag,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec channel
 type SubscriptionChannelComponent struct {
-	Type    string `bson:"type,omitempty", json:"type,omitempty"`
-	Url     string `bson:"url,omitempty", json:"url,omitempty"`
-	Payload string `bson:"payload,omitempty", json:"payload,omitempty"`
-	Header  string `bson:"header,omitempty", json:"header,omitempty"`
+	Type    string `bson:"type,omitempty" json:"type,omitempty"`
+	Url     string `bson:"url,omitempty" json:"url,omitempty"`
+	Payload string `bson:"payload,omitempty" json:"payload,omitempty"`
+	Header  string `bson:"header,omitempty" json:"header,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec tag
 type SubscriptionTagComponent struct {
-	Term        string `bson:"term,omitempty", json:"term,omitempty"`
-	Scheme      string `bson:"scheme,omitempty", json:"scheme,omitempty"`
-	Description string `bson:"description,omitempty", json:"description,omitempty"`
+	Term        string `bson:"term,omitempty" json:"term,omitempty"`
+	Scheme      string `bson:"scheme,omitempty" json:"scheme,omitempty"`
+	Description string `bson:"description,omitempty" json:"description,omitempty"`
 }
 
 type SubscriptionBundle struct {

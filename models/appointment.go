@@ -30,29 +30,29 @@ import "time"
 
 type Appointment struct {
 	Id             string                            `json:"-" bson:"_id"`
-	Identifier     []Identifier                      `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Priority       float64                           `bson:"priority,omitempty", json:"priority,omitempty"`
-	Status         string                            `bson:"status,omitempty", json:"status,omitempty"`
-	Type           *CodeableConcept                  `bson:"type,omitempty", json:"type,omitempty"`
-	Reason         *CodeableConcept                  `bson:"reason,omitempty", json:"reason,omitempty"`
-	Description    string                            `bson:"description,omitempty", json:"description,omitempty"`
-	Start          *FHIRDateTime                     `bson:"start,omitempty", json:"start,omitempty"`
-	End            *FHIRDateTime                     `bson:"end,omitempty", json:"end,omitempty"`
-	Slot           []Reference                       `bson:"slot,omitempty", json:"slot,omitempty"`
-	Location       *Reference                        `bson:"location,omitempty", json:"location,omitempty"`
-	Comment        string                            `bson:"comment,omitempty", json:"comment,omitempty"`
-	Order          *Reference                        `bson:"order,omitempty", json:"order,omitempty"`
-	Participant    []AppointmentParticipantComponent `bson:"participant,omitempty", json:"participant,omitempty"`
-	LastModifiedBy *Reference                        `bson:"lastModifiedBy,omitempty", json:"lastModifiedBy,omitempty"`
-	LastModified   *FHIRDateTime                     `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
+	Identifier     []Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Priority       float64                           `bson:"priority,omitempty" json:"priority,omitempty"`
+	Status         string                            `bson:"status,omitempty" json:"status,omitempty"`
+	Type           *CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
+	Reason         *CodeableConcept                  `bson:"reason,omitempty" json:"reason,omitempty"`
+	Description    string                            `bson:"description,omitempty" json:"description,omitempty"`
+	Start          *FHIRDateTime                     `bson:"start,omitempty" json:"start,omitempty"`
+	End            *FHIRDateTime                     `bson:"end,omitempty" json:"end,omitempty"`
+	Slot           []Reference                       `bson:"slot,omitempty" json:"slot,omitempty"`
+	Location       *Reference                        `bson:"location,omitempty" json:"location,omitempty"`
+	Comment        string                            `bson:"comment,omitempty" json:"comment,omitempty"`
+	Order          *Reference                        `bson:"order,omitempty" json:"order,omitempty"`
+	Participant    []AppointmentParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	LastModifiedBy *Reference                        `bson:"lastModifiedBy,omitempty" json:"lastModifiedBy,omitempty"`
+	LastModified   *FHIRDateTime                     `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec participant
 type AppointmentParticipantComponent struct {
-	Type     []CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
-	Actor    *Reference        `bson:"actor,omitempty", json:"actor,omitempty"`
-	Required string            `bson:"required,omitempty", json:"required,omitempty"`
-	Status   string            `bson:"status,omitempty", json:"status,omitempty"`
+	Type     []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Actor    *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
+	Required string            `bson:"required,omitempty" json:"required,omitempty"`
+	Status   string            `bson:"status,omitempty" json:"status,omitempty"`
 }
 
 type AppointmentBundle struct {

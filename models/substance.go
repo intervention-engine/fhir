@@ -30,23 +30,23 @@ import "time"
 
 type Substance struct {
 	Id          string                         `json:"-" bson:"_id"`
-	Type        *CodeableConcept               `bson:"type,omitempty", json:"type,omitempty"`
-	Description string                         `bson:"description,omitempty", json:"description,omitempty"`
-	Instance    *SubstanceInstanceComponent    `bson:"instance,omitempty", json:"instance,omitempty"`
-	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty", json:"ingredient,omitempty"`
+	Type        *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
+	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
+	Instance    *SubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`
+	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec instance
 type SubstanceInstanceComponent struct {
-	Identifier *Identifier   `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Expiry     *FHIRDateTime `bson:"expiry,omitempty", json:"expiry,omitempty"`
-	Quantity   *Quantity     `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	Identifier *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Expiry     *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
+	Quantity   *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec ingredient
 type SubstanceIngredientComponent struct {
-	Quantity  *Ratio     `bson:"quantity,omitempty", json:"quantity,omitempty"`
-	Substance *Reference `bson:"substance,omitempty", json:"substance,omitempty"`
+	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
 }
 
 type SubstanceBundle struct {

@@ -30,50 +30,50 @@ import "time"
 
 type MedicationPrescription struct {
 	Id                    string                                             `json:"-" bson:"_id"`
-	Identifier            []Identifier                                       `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	DateWritten           *FHIRDateTime                                      `bson:"dateWritten,omitempty", json:"dateWritten,omitempty"`
-	Status                string                                             `bson:"status,omitempty", json:"status,omitempty"`
-	Patient               *Reference                                         `bson:"patient,omitempty", json:"patient,omitempty"`
-	Prescriber            *Reference                                         `bson:"prescriber,omitempty", json:"prescriber,omitempty"`
-	Encounter             *Reference                                         `bson:"encounter,omitempty", json:"encounter,omitempty"`
-	ReasonCodeableConcept *CodeableConcept                                   `bson:"reasonCodeableConcept,omitempty", json:"reasonCodeableConcept,omitempty"`
-	ReasonReference       *Reference                                         `bson:"reasonReference,omitempty", json:"reasonReference,omitempty"`
-	Medication            *Reference                                         `bson:"medication,omitempty", json:"medication,omitempty"`
-	DosageInstruction     []MedicationPrescriptionDosageInstructionComponent `bson:"dosageInstruction,omitempty", json:"dosageInstruction,omitempty"`
-	Dispense              *MedicationPrescriptionDispenseComponent           `bson:"dispense,omitempty", json:"dispense,omitempty"`
-	Substitution          *MedicationPrescriptionSubstitutionComponent       `bson:"substitution,omitempty", json:"substitution,omitempty"`
+	Identifier            []Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	DateWritten           *FHIRDateTime                                      `bson:"dateWritten,omitempty" json:"dateWritten,omitempty"`
+	Status                string                                             `bson:"status,omitempty" json:"status,omitempty"`
+	Patient               *Reference                                         `bson:"patient,omitempty" json:"patient,omitempty"`
+	Prescriber            *Reference                                         `bson:"prescriber,omitempty" json:"prescriber,omitempty"`
+	Encounter             *Reference                                         `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	ReasonCodeableConcept *CodeableConcept                                   `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
+	ReasonReference       *Reference                                         `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
+	Medication            *Reference                                         `bson:"medication,omitempty" json:"medication,omitempty"`
+	DosageInstruction     []MedicationPrescriptionDosageInstructionComponent `bson:"dosageInstruction,omitempty" json:"dosageInstruction,omitempty"`
+	Dispense              *MedicationPrescriptionDispenseComponent           `bson:"dispense,omitempty" json:"dispense,omitempty"`
+	Substitution          *MedicationPrescriptionSubstitutionComponent       `bson:"substitution,omitempty" json:"substitution,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dosageInstruction
 type MedicationPrescriptionDosageInstructionComponent struct {
-	Text                    string           `bson:"text,omitempty", json:"text,omitempty"`
-	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty", json:"additionalInstructions,omitempty"`
-	ScheduledDateTime       *FHIRDateTime    `bson:"scheduledDateTime,omitempty", json:"scheduledDateTime,omitempty"`
-	ScheduledPeriod         *Period          `bson:"scheduledPeriod,omitempty", json:"scheduledPeriod,omitempty"`
-	ScheduledTiming         *Timing          `bson:"scheduledTiming,omitempty", json:"scheduledTiming,omitempty"`
-	AsNeededBoolean         *bool            `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
-	AsNeededCodeableConcept *CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
-	Site                    *CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
-	Route                   *CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`
-	Method                  *CodeableConcept `bson:"method,omitempty", json:"method,omitempty"`
-	DoseQuantity            *Quantity        `bson:"doseQuantity,omitempty", json:"doseQuantity,omitempty"`
-	Rate                    *Ratio           `bson:"rate,omitempty", json:"rate,omitempty"`
-	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty", json:"maxDosePerPeriod,omitempty"`
+	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
+	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
+	ScheduledDateTime       *FHIRDateTime    `bson:"scheduledDateTime,omitempty" json:"scheduledDateTime,omitempty"`
+	ScheduledPeriod         *Period          `bson:"scheduledPeriod,omitempty" json:"scheduledPeriod,omitempty"`
+	ScheduledTiming         *Timing          `bson:"scheduledTiming,omitempty" json:"scheduledTiming,omitempty"`
+	AsNeededBoolean         *bool            `bson:"asNeededBoolean,omitempty" json:"asNeededBoolean,omitempty"`
+	AsNeededCodeableConcept *CodeableConcept `bson:"asNeededCodeableConcept,omitempty" json:"asNeededCodeableConcept,omitempty"`
+	Site                    *CodeableConcept `bson:"site,omitempty" json:"site,omitempty"`
+	Route                   *CodeableConcept `bson:"route,omitempty" json:"route,omitempty"`
+	Method                  *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
+	DoseQuantity            *Quantity        `bson:"doseQuantity,omitempty" json:"doseQuantity,omitempty"`
+	Rate                    *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
+	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty" json:"maxDosePerPeriod,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dispense
 type MedicationPrescriptionDispenseComponent struct {
-	Medication             *Reference `bson:"medication,omitempty", json:"medication,omitempty"`
-	ValidityPeriod         *Period    `bson:"validityPeriod,omitempty", json:"validityPeriod,omitempty"`
-	NumberOfRepeatsAllowed float64    `bson:"numberOfRepeatsAllowed,omitempty", json:"numberOfRepeatsAllowed,omitempty"`
-	Quantity               *Quantity  `bson:"quantity,omitempty", json:"quantity,omitempty"`
-	ExpectedSupplyDuration *Quantity  `bson:"expectedSupplyDuration,omitempty", json:"expectedSupplyDuration,omitempty"`
+	Medication             *Reference `bson:"medication,omitempty" json:"medication,omitempty"`
+	ValidityPeriod         *Period    `bson:"validityPeriod,omitempty" json:"validityPeriod,omitempty"`
+	NumberOfRepeatsAllowed float64    `bson:"numberOfRepeatsAllowed,omitempty" json:"numberOfRepeatsAllowed,omitempty"`
+	Quantity               *Quantity  `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	ExpectedSupplyDuration *Quantity  `bson:"expectedSupplyDuration,omitempty" json:"expectedSupplyDuration,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec substitution
 type MedicationPrescriptionSubstitutionComponent struct {
-	Type   *CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
-	Reason *CodeableConcept `bson:"reason,omitempty", json:"reason,omitempty"`
+	Type   *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Reason *CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 }
 
 type MedicationPrescriptionBundle struct {

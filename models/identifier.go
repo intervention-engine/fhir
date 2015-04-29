@@ -28,10 +28,10 @@ package models
 
 type Identifier struct {
 	Id       string     `json:"-" bson:"_id"`
-	Use      string     `bson:"use,omitempty", json:"use,omitempty"`
-	Label    string     `bson:"label,omitempty", json:"label,omitempty"`
-	System   string     `bson:"system,omitempty", json:"system,omitempty"`
-	Value    string     `bson:"value,omitempty", json:"value,omitempty"`
-	Period   *Period    `bson:"period,omitempty", json:"period,omitempty"`
-	Assigner *Reference `bson:"assigner,omitempty", json:"assigner,omitempty"`
+	Use      string     `bson:"use,omitempty" json:"use,omitempty"`
+	Label    string     `bson:"label,omitempty" json:"label,omitempty"`
+	System   string     `bson:"system,omitempty" json:"system,omitempty"`
+	Value    string     `bson:"value,omitempty" json:"value,omitempty"`
+	Period   *Period    `bson:"period,omitempty" json:"period,omitempty"`
+	Assigner *Reference `bson:"assigner,omitempty" json:"assigner,omitempty"`
 }

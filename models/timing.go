@@ -28,16 +28,16 @@ package models
 
 type Timing struct {
 	Id     string                 `json:"-" bson:"_id"`
-	Event  []Period               `bson:"event,omitempty", json:"event,omitempty"`
-	Repeat *TimingRepeatComponent `bson:"repeat,omitempty", json:"repeat,omitempty"`
+	Event  []Period               `bson:"event,omitempty" json:"event,omitempty"`
+	Repeat *TimingRepeatComponent `bson:"repeat,omitempty" json:"repeat,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec repeat
 type TimingRepeatComponent struct {
-	Frequency float64       `bson:"frequency,omitempty", json:"frequency,omitempty"`
-	When      string        `bson:"when,omitempty", json:"when,omitempty"`
-	Duration  float64       `bson:"duration,omitempty", json:"duration,omitempty"`
-	Units     string        `bson:"units,omitempty", json:"units,omitempty"`
-	Count     float64       `bson:"count,omitempty", json:"count,omitempty"`
-	End       *FHIRDateTime `bson:"end,omitempty", json:"end,omitempty"`
+	Frequency float64       `bson:"frequency,omitempty" json:"frequency,omitempty"`
+	When      string        `bson:"when,omitempty" json:"when,omitempty"`
+	Duration  float64       `bson:"duration,omitempty" json:"duration,omitempty"`
+	Units     string        `bson:"units,omitempty" json:"units,omitempty"`
+	Count     float64       `bson:"count,omitempty" json:"count,omitempty"`
+	End       *FHIRDateTime `bson:"end,omitempty" json:"end,omitempty"`
 }

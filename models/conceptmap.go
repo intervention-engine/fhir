@@ -30,45 +30,45 @@ import "time"
 
 type ConceptMap struct {
 	Id              string                       `json:"-" bson:"_id"`
-	Identifier      string                       `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Version         string                       `bson:"version,omitempty", json:"version,omitempty"`
-	Name            string                       `bson:"name,omitempty", json:"name,omitempty"`
-	Publisher       string                       `bson:"publisher,omitempty", json:"publisher,omitempty"`
-	Telecom         []ContactPoint               `bson:"telecom,omitempty", json:"telecom,omitempty"`
-	Description     string                       `bson:"description,omitempty", json:"description,omitempty"`
-	Copyright       string                       `bson:"copyright,omitempty", json:"copyright,omitempty"`
-	Status          string                       `bson:"status,omitempty", json:"status,omitempty"`
-	Experimental    *bool                        `bson:"experimental,omitempty", json:"experimental,omitempty"`
-	Date            *FHIRDateTime                `bson:"date,omitempty", json:"date,omitempty"`
-	SourceUri       string                       `bson:"sourceUri,omitempty", json:"sourceUri,omitempty"`
-	SourceReference *Reference                   `bson:"sourceReference,omitempty", json:"sourceReference,omitempty"`
-	TargetUri       string                       `bson:"targetUri,omitempty", json:"targetUri,omitempty"`
-	TargetReference *Reference                   `bson:"targetReference,omitempty", json:"targetReference,omitempty"`
-	Element         []ConceptMapElementComponent `bson:"element,omitempty", json:"element,omitempty"`
+	Identifier      string                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version         string                       `bson:"version,omitempty" json:"version,omitempty"`
+	Name            string                       `bson:"name,omitempty" json:"name,omitempty"`
+	Publisher       string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Telecom         []ContactPoint               `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Description     string                       `bson:"description,omitempty" json:"description,omitempty"`
+	Copyright       string                       `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Status          string                       `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental    *bool                        `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Date            *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
+	SourceUri       string                       `bson:"sourceUri,omitempty" json:"sourceUri,omitempty"`
+	SourceReference *Reference                   `bson:"sourceReference,omitempty" json:"sourceReference,omitempty"`
+	TargetUri       string                       `bson:"targetUri,omitempty" json:"targetUri,omitempty"`
+	TargetReference *Reference                   `bson:"targetReference,omitempty" json:"targetReference,omitempty"`
+	Element         []ConceptMapElementComponent `bson:"element,omitempty" json:"element,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dependsOn
 type OtherElementComponent struct {
-	Element    string `bson:"element,omitempty", json:"element,omitempty"`
-	CodeSystem string `bson:"codeSystem,omitempty", json:"codeSystem,omitempty"`
-	Code       string `bson:"code,omitempty", json:"code,omitempty"`
+	Element    string `bson:"element,omitempty" json:"element,omitempty"`
+	CodeSystem string `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Code       string `bson:"code,omitempty" json:"code,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec map
 type ConceptMapElementMapComponent struct {
-	CodeSystem  string                  `bson:"codeSystem,omitempty", json:"codeSystem,omitempty"`
-	Code        string                  `bson:"code,omitempty", json:"code,omitempty"`
-	Equivalence string                  `bson:"equivalence,omitempty", json:"equivalence,omitempty"`
-	Comments    string                  `bson:"comments,omitempty", json:"comments,omitempty"`
-	Product     []OtherElementComponent `bson:"product,omitempty", json:"product,omitempty"`
+	CodeSystem  string                  `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Code        string                  `bson:"code,omitempty" json:"code,omitempty"`
+	Equivalence string                  `bson:"equivalence,omitempty" json:"equivalence,omitempty"`
+	Comments    string                  `bson:"comments,omitempty" json:"comments,omitempty"`
+	Product     []OtherElementComponent `bson:"product,omitempty" json:"product,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec element
 type ConceptMapElementComponent struct {
-	CodeSystem string                          `bson:"codeSystem,omitempty", json:"codeSystem,omitempty"`
-	Code       string                          `bson:"code,omitempty", json:"code,omitempty"`
-	DependsOn  []OtherElementComponent         `bson:"dependsOn,omitempty", json:"dependsOn,omitempty"`
-	Map        []ConceptMapElementMapComponent `bson:"map,omitempty", json:"map,omitempty"`
+	CodeSystem string                          `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Code       string                          `bson:"code,omitempty" json:"code,omitempty"`
+	DependsOn  []OtherElementComponent         `bson:"dependsOn,omitempty" json:"dependsOn,omitempty"`
+	Map        []ConceptMapElementMapComponent `bson:"map,omitempty" json:"map,omitempty"`
 }
 
 type ConceptMapBundle struct {

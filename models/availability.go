@@ -30,12 +30,12 @@ import "time"
 
 type Availability struct {
 	Id              string            `json:"-" bson:"_id"`
-	Identifier      []Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Type            []CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
-	Actor           *Reference        `bson:"actor,omitempty", json:"actor,omitempty"`
-	PlanningHorizon *Period           `bson:"planningHorizon,omitempty", json:"planningHorizon,omitempty"`
-	Comment         string            `bson:"comment,omitempty", json:"comment,omitempty"`
-	LastModified    *FHIRDateTime     `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
+	Identifier      []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Type            []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Actor           *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
+	PlanningHorizon *Period           `bson:"planningHorizon,omitempty" json:"planningHorizon,omitempty"`
+	Comment         string            `bson:"comment,omitempty" json:"comment,omitempty"`
+	LastModified    *FHIRDateTime     `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
 }
 
 type AvailabilityBundle struct {

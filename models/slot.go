@@ -30,15 +30,15 @@ import "time"
 
 type Slot struct {
 	Id           string           `json:"-" bson:"_id"`
-	Identifier   []Identifier     `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Type         *CodeableConcept `bson:"type,omitempty", json:"type,omitempty"`
-	Availability *Reference       `bson:"availability,omitempty", json:"availability,omitempty"`
-	FreeBusyType string           `bson:"freeBusyType,omitempty", json:"freeBusyType,omitempty"`
-	Start        *FHIRDateTime    `bson:"start,omitempty", json:"start,omitempty"`
-	End          *FHIRDateTime    `bson:"end,omitempty", json:"end,omitempty"`
-	Overbooked   *bool            `bson:"overbooked,omitempty", json:"overbooked,omitempty"`
-	Comment      string           `bson:"comment,omitempty", json:"comment,omitempty"`
-	LastModified *FHIRDateTime    `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
+	Identifier   []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Type         *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Availability *Reference       `bson:"availability,omitempty" json:"availability,omitempty"`
+	FreeBusyType string           `bson:"freeBusyType,omitempty" json:"freeBusyType,omitempty"`
+	Start        *FHIRDateTime    `bson:"start,omitempty" json:"start,omitempty"`
+	End          *FHIRDateTime    `bson:"end,omitempty" json:"end,omitempty"`
+	Overbooked   *bool            `bson:"overbooked,omitempty" json:"overbooked,omitempty"`
+	Comment      string           `bson:"comment,omitempty" json:"comment,omitempty"`
+	LastModified *FHIRDateTime    `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
 }
 
 type SlotBundle struct {

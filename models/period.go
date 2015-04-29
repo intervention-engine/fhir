@@ -28,6 +28,6 @@ package models
 
 type Period struct {
 	Id    string        `json:"-" bson:"_id"`
-	Start *FHIRDateTime `bson:"start,omitempty", json:"start,omitempty"`
-	End   *FHIRDateTime `bson:"end,omitempty", json:"end,omitempty"`
+	Start *FHIRDateTime `bson:"start,omitempty" json:"start,omitempty"`
+	End   *FHIRDateTime `bson:"end,omitempty" json:"end,omitempty"`
 }

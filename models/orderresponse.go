@@ -30,15 +30,15 @@ import "time"
 
 type OrderResponse struct {
 	Id                       string           `json:"-" bson:"_id"`
-	Identifier               []Identifier     `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Request                  *Reference       `bson:"request,omitempty", json:"request,omitempty"`
-	Date                     *FHIRDateTime    `bson:"date,omitempty", json:"date,omitempty"`
-	Who                      *Reference       `bson:"who,omitempty", json:"who,omitempty"`
-	AuthorityCodeableConcept *CodeableConcept `bson:"authorityCodeableConcept,omitempty", json:"authorityCodeableConcept,omitempty"`
-	AuthorityReference       *Reference       `bson:"authorityReference,omitempty", json:"authorityReference,omitempty"`
-	Code                     string           `bson:"code,omitempty", json:"code,omitempty"`
-	Description              string           `bson:"description,omitempty", json:"description,omitempty"`
-	Fulfillment              []Reference      `bson:"fulfillment,omitempty", json:"fulfillment,omitempty"`
+	Identifier               []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Request                  *Reference       `bson:"request,omitempty" json:"request,omitempty"`
+	Date                     *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
+	Who                      *Reference       `bson:"who,omitempty" json:"who,omitempty"`
+	AuthorityCodeableConcept *CodeableConcept `bson:"authorityCodeableConcept,omitempty" json:"authorityCodeableConcept,omitempty"`
+	AuthorityReference       *Reference       `bson:"authorityReference,omitempty" json:"authorityReference,omitempty"`
+	Code                     string           `bson:"code,omitempty" json:"code,omitempty"`
+	Description              string           `bson:"description,omitempty" json:"description,omitempty"`
+	Fulfillment              []Reference      `bson:"fulfillment,omitempty" json:"fulfillment,omitempty"`
 }
 
 type OrderResponseBundle struct {
