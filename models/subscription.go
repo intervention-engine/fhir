@@ -29,15 +29,15 @@ package models
 import "time"
 
 type Subscription struct {
-	Id       string                       `json:"-" bson:"_id"`
-	Criteria string                       `bson:"criteria,omitempty", json:"criteria,omitempty"`
-	Contact  []ContactPoint               `bson:"contact,omitempty", json:"contact,omitempty"`
-	Reason   string                       `bson:"reason,omitempty", json:"reason,omitempty"`
-	Status   string                       `bson:"status,omitempty", json:"status,omitempty"`
-	Error    string                       `bson:"error,omitempty", json:"error,omitempty"`
-	Channel  SubscriptionChannelComponent `bson:"channel,omitempty", json:"channel,omitempty"`
-	End      FHIRDateTime                 `bson:"end,omitempty", json:"end,omitempty"`
-	Tag      []SubscriptionTagComponent   `bson:"tag,omitempty", json:"tag,omitempty"`
+	Id       string                        `json:"-" bson:"_id"`
+	Criteria string                        `bson:"criteria,omitempty", json:"criteria,omitempty"`
+	Contact  []ContactPoint                `bson:"contact,omitempty", json:"contact,omitempty"`
+	Reason   string                        `bson:"reason,omitempty", json:"reason,omitempty"`
+	Status   string                        `bson:"status,omitempty", json:"status,omitempty"`
+	Error    string                        `bson:"error,omitempty", json:"error,omitempty"`
+	Channel  *SubscriptionChannelComponent `bson:"channel,omitempty", json:"channel,omitempty"`
+	End      *FHIRDateTime                 `bson:"end,omitempty", json:"end,omitempty"`
+	Tag      []SubscriptionTagComponent    `bson:"tag,omitempty", json:"tag,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec channel

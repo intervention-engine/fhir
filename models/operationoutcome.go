@@ -36,7 +36,7 @@ type OperationOutcome struct {
 // This is an ugly hack to deal with embedded structures in the spec issue
 type OperationOutcomeIssueComponent struct {
 	Severity string   `bson:"severity,omitempty", json:"severity,omitempty"`
-	Type     Coding   `bson:"type,omitempty", json:"type,omitempty"`
+	Type     *Coding  `bson:"type,omitempty", json:"type,omitempty"`
 	Details  string   `bson:"details,omitempty", json:"details,omitempty"`
 	Location []string `bson:"location,omitempty", json:"location,omitempty"`
 }

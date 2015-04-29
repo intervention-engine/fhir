@@ -35,5 +35,5 @@ type Address struct {
 	State   string   `bson:"state,omitempty", json:"state,omitempty"`
 	Zip     string   `bson:"zip,omitempty", json:"zip,omitempty"`
 	Country string   `bson:"country,omitempty", json:"country,omitempty"`
-	Period  Period   `bson:"period,omitempty", json:"period,omitempty"`
+	Period  *Period  `bson:"period,omitempty", json:"period,omitempty"`
 }

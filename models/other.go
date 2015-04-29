@@ -29,12 +29,12 @@ package models
 import "time"
 
 type Other struct {
-	Id         string          `json:"-" bson:"_id"`
-	Identifier []Identifier    `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Code       CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
-	Subject    Reference       `bson:"subject,omitempty", json:"subject,omitempty"`
-	Author     Reference       `bson:"author,omitempty", json:"author,omitempty"`
-	Created    FHIRDateTime    `bson:"created,omitempty", json:"created,omitempty"`
+	Id         string           `json:"-" bson:"_id"`
+	Identifier []Identifier     `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Code       *CodeableConcept `bson:"code,omitempty", json:"code,omitempty"`
+	Subject    *Reference       `bson:"subject,omitempty", json:"subject,omitempty"`
+	Author     *Reference       `bson:"author,omitempty", json:"author,omitempty"`
+	Created    *FHIRDateTime    `bson:"created,omitempty", json:"created,omitempty"`
 }
 
 type OtherBundle struct {

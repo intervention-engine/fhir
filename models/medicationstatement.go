@@ -31,26 +31,26 @@ import "time"
 type MedicationStatement struct {
 	Id             string                               `json:"-" bson:"_id"`
 	Identifier     []Identifier                         `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Patient        Reference                            `bson:"patient,omitempty", json:"patient,omitempty"`
+	Patient        *Reference                           `bson:"patient,omitempty", json:"patient,omitempty"`
 	WasNotGiven    *bool                                `bson:"wasNotGiven,omitempty", json:"wasNotGiven,omitempty"`
 	ReasonNotGiven []CodeableConcept                    `bson:"reasonNotGiven,omitempty", json:"reasonNotGiven,omitempty"`
-	WhenGiven      Period                               `bson:"whenGiven,omitempty", json:"whenGiven,omitempty"`
-	Medication     Reference                            `bson:"medication,omitempty", json:"medication,omitempty"`
+	WhenGiven      *Period                              `bson:"whenGiven,omitempty", json:"whenGiven,omitempty"`
+	Medication     *Reference                           `bson:"medication,omitempty", json:"medication,omitempty"`
 	Device         []Reference                          `bson:"device,omitempty", json:"device,omitempty"`
 	Dosage         []MedicationStatementDosageComponent `bson:"dosage,omitempty", json:"dosage,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec dosage
 type MedicationStatementDosageComponent struct {
-	Schedule                Timing          `bson:"schedule,omitempty", json:"schedule,omitempty"`
-	AsNeededBoolean         *bool           `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
-	AsNeededCodeableConcept CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
-	Site                    CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
-	Route                   CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`
-	Method                  CodeableConcept `bson:"method,omitempty", json:"method,omitempty"`
-	Quantity                Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
-	Rate                    Ratio           `bson:"rate,omitempty", json:"rate,omitempty"`
-	MaxDosePerPeriod        Ratio           `bson:"maxDosePerPeriod,omitempty", json:"maxDosePerPeriod,omitempty"`
+	Schedule                *Timing          `bson:"schedule,omitempty", json:"schedule,omitempty"`
+	AsNeededBoolean         *bool            `bson:"asNeededBoolean,omitempty", json:"asNeededBoolean,omitempty"`
+	AsNeededCodeableConcept *CodeableConcept `bson:"asNeededCodeableConcept,omitempty", json:"asNeededCodeableConcept,omitempty"`
+	Site                    *CodeableConcept `bson:"site,omitempty", json:"site,omitempty"`
+	Route                   *CodeableConcept `bson:"route,omitempty", json:"route,omitempty"`
+	Method                  *CodeableConcept `bson:"method,omitempty", json:"method,omitempty"`
+	Quantity                *Quantity        `bson:"quantity,omitempty", json:"quantity,omitempty"`
+	Rate                    *Ratio           `bson:"rate,omitempty", json:"rate,omitempty"`
+	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty", json:"maxDosePerPeriod,omitempty"`
 }
 
 type MedicationStatementBundle struct {

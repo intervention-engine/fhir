@@ -31,15 +31,15 @@ import "time"
 type AppointmentResponse struct {
 	Id                string            `json:"-" bson:"_id"`
 	Identifier        []Identifier      `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Appointment       Reference         `bson:"appointment,omitempty", json:"appointment,omitempty"`
+	Appointment       *Reference        `bson:"appointment,omitempty", json:"appointment,omitempty"`
 	ParticipantType   []CodeableConcept `bson:"participantType,omitempty", json:"participantType,omitempty"`
 	Individual        []Reference       `bson:"individual,omitempty", json:"individual,omitempty"`
 	ParticipantStatus string            `bson:"participantStatus,omitempty", json:"participantStatus,omitempty"`
 	Comment           string            `bson:"comment,omitempty", json:"comment,omitempty"`
-	Start             FHIRDateTime      `bson:"start,omitempty", json:"start,omitempty"`
-	End               FHIRDateTime      `bson:"end,omitempty", json:"end,omitempty"`
-	LastModifiedBy    Reference         `bson:"lastModifiedBy,omitempty", json:"lastModifiedBy,omitempty"`
-	LastModified      FHIRDateTime      `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
+	Start             *FHIRDateTime     `bson:"start,omitempty", json:"start,omitempty"`
+	End               *FHIRDateTime     `bson:"end,omitempty", json:"end,omitempty"`
+	LastModifiedBy    *Reference        `bson:"lastModifiedBy,omitempty", json:"lastModifiedBy,omitempty"`
+	LastModified      *FHIRDateTime     `bson:"lastModified,omitempty", json:"lastModified,omitempty"`
 }
 
 type AppointmentResponseBundle struct {

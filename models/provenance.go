@@ -31,10 +31,10 @@ import "time"
 type Provenance struct {
 	Id                 string                      `json:"-" bson:"_id"`
 	Target             []Reference                 `bson:"target,omitempty", json:"target,omitempty"`
-	Period             Period                      `bson:"period,omitempty", json:"period,omitempty"`
-	Recorded           FHIRDateTime                `bson:"recorded,omitempty", json:"recorded,omitempty"`
-	Reason             CodeableConcept             `bson:"reason,omitempty", json:"reason,omitempty"`
-	Location           Reference                   `bson:"location,omitempty", json:"location,omitempty"`
+	Period             *Period                     `bson:"period,omitempty", json:"period,omitempty"`
+	Recorded           *FHIRDateTime               `bson:"recorded,omitempty", json:"recorded,omitempty"`
+	Reason             *CodeableConcept            `bson:"reason,omitempty", json:"reason,omitempty"`
+	Location           *Reference                  `bson:"location,omitempty", json:"location,omitempty"`
 	Policy             []string                    `bson:"policy,omitempty", json:"policy,omitempty"`
 	Agent              []ProvenanceAgentComponent  `bson:"agent,omitempty", json:"agent,omitempty"`
 	Entity             []ProvenanceEntityComponent `bson:"entity,omitempty", json:"entity,omitempty"`
@@ -43,19 +43,19 @@ type Provenance struct {
 
 // This is an ugly hack to deal with embedded structures in the spec agent
 type ProvenanceAgentComponent struct {
-	Role      Coding `bson:"role,omitempty", json:"role,omitempty"`
-	Type      Coding `bson:"type,omitempty", json:"type,omitempty"`
-	Reference string `bson:"reference,omitempty", json:"reference,omitempty"`
-	Display   string `bson:"display,omitempty", json:"display,omitempty"`
+	Role      *Coding `bson:"role,omitempty", json:"role,omitempty"`
+	Type      *Coding `bson:"type,omitempty", json:"type,omitempty"`
+	Reference string  `bson:"reference,omitempty", json:"reference,omitempty"`
+	Display   string  `bson:"display,omitempty", json:"display,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec entity
 type ProvenanceEntityComponent struct {
-	Role      string                   `bson:"role,omitempty", json:"role,omitempty"`
-	Type      Coding                   `bson:"type,omitempty", json:"type,omitempty"`
-	Reference string                   `bson:"reference,omitempty", json:"reference,omitempty"`
-	Display   string                   `bson:"display,omitempty", json:"display,omitempty"`
-	Agent     ProvenanceAgentComponent `bson:"agent,omitempty", json:"agent,omitempty"`
+	Role      string                    `bson:"role,omitempty", json:"role,omitempty"`
+	Type      *Coding                   `bson:"type,omitempty", json:"type,omitempty"`
+	Reference string                    `bson:"reference,omitempty", json:"reference,omitempty"`
+	Display   string                    `bson:"display,omitempty", json:"display,omitempty"`
+	Agent     *ProvenanceAgentComponent `bson:"agent,omitempty", json:"agent,omitempty"`
 }
 
 type ProvenanceBundle struct {

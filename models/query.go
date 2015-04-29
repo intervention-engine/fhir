@@ -29,10 +29,10 @@ package models
 import "time"
 
 type Query struct {
-	Id         string                 `json:"-" bson:"_id"`
-	Identifier string                 `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Parameter  []Extension            `bson:"parameter,omitempty", json:"parameter,omitempty"`
-	Response   QueryResponseComponent `bson:"response,omitempty", json:"response,omitempty"`
+	Id         string                  `json:"-" bson:"_id"`
+	Identifier string                  `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Parameter  []Extension             `bson:"parameter,omitempty", json:"parameter,omitempty"`
+	Response   *QueryResponseComponent `bson:"response,omitempty", json:"response,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec response

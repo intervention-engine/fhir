@@ -30,18 +30,18 @@ import "time"
 
 type SecurityEvent struct {
 	Id          string                              `json:"-" bson:"_id"`
-	Event       SecurityEventEventComponent         `bson:"event,omitempty", json:"event,omitempty"`
+	Event       *SecurityEventEventComponent        `bson:"event,omitempty", json:"event,omitempty"`
 	Participant []SecurityEventParticipantComponent `bson:"participant,omitempty", json:"participant,omitempty"`
-	Source      SecurityEventSourceComponent        `bson:"source,omitempty", json:"source,omitempty"`
+	Source      *SecurityEventSourceComponent       `bson:"source,omitempty", json:"source,omitempty"`
 	Object      []SecurityEventObjectComponent      `bson:"object,omitempty", json:"object,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec event
 type SecurityEventEventComponent struct {
-	Type        CodeableConcept   `bson:"type,omitempty", json:"type,omitempty"`
+	Type        *CodeableConcept  `bson:"type,omitempty", json:"type,omitempty"`
 	Subtype     []CodeableConcept `bson:"subtype,omitempty", json:"subtype,omitempty"`
 	Action      string            `bson:"action,omitempty", json:"action,omitempty"`
-	DateTime    FHIRDateTime      `bson:"dateTime,omitempty", json:"dateTime,omitempty"`
+	DateTime    *FHIRDateTime     `bson:"dateTime,omitempty", json:"dateTime,omitempty"`
 	Outcome     string            `bson:"outcome,omitempty", json:"outcome,omitempty"`
 	OutcomeDesc string            `bson:"outcomeDesc,omitempty", json:"outcomeDesc,omitempty"`
 }
@@ -54,14 +54,14 @@ type SecurityEventParticipantNetworkComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec participant
 type SecurityEventParticipantComponent struct {
-	Role      []CodeableConcept                        `bson:"role,omitempty", json:"role,omitempty"`
-	Reference Reference                                `bson:"reference,omitempty", json:"reference,omitempty"`
-	UserId    string                                   `bson:"userId,omitempty", json:"userId,omitempty"`
-	AltId     string                                   `bson:"altId,omitempty", json:"altId,omitempty"`
-	Name      string                                   `bson:"name,omitempty", json:"name,omitempty"`
-	Requestor *bool                                    `bson:"requestor,omitempty", json:"requestor,omitempty"`
-	Media     Coding                                   `bson:"media,omitempty", json:"media,omitempty"`
-	Network   SecurityEventParticipantNetworkComponent `bson:"network,omitempty", json:"network,omitempty"`
+	Role      []CodeableConcept                         `bson:"role,omitempty", json:"role,omitempty"`
+	Reference *Reference                                `bson:"reference,omitempty", json:"reference,omitempty"`
+	UserId    string                                    `bson:"userId,omitempty", json:"userId,omitempty"`
+	AltId     string                                    `bson:"altId,omitempty", json:"altId,omitempty"`
+	Name      string                                    `bson:"name,omitempty", json:"name,omitempty"`
+	Requestor *bool                                     `bson:"requestor,omitempty", json:"requestor,omitempty"`
+	Media     *Coding                                   `bson:"media,omitempty", json:"media,omitempty"`
+	Network   *SecurityEventParticipantNetworkComponent `bson:"network,omitempty", json:"network,omitempty"`
 }
 
 // This is an ugly hack to deal with embedded structures in the spec source
@@ -79,12 +79,12 @@ type SecurityEventObjectDetailComponent struct {
 
 // This is an ugly hack to deal with embedded structures in the spec object
 type SecurityEventObjectComponent struct {
-	Identifier  Identifier                           `bson:"identifier,omitempty", json:"identifier,omitempty"`
-	Reference   Reference                            `bson:"reference,omitempty", json:"reference,omitempty"`
+	Identifier  *Identifier                          `bson:"identifier,omitempty", json:"identifier,omitempty"`
+	Reference   *Reference                           `bson:"reference,omitempty", json:"reference,omitempty"`
 	Type        string                               `bson:"type,omitempty", json:"type,omitempty"`
 	Role        string                               `bson:"role,omitempty", json:"role,omitempty"`
 	Lifecycle   string                               `bson:"lifecycle,omitempty", json:"lifecycle,omitempty"`
-	Sensitivity CodeableConcept                      `bson:"sensitivity,omitempty", json:"sensitivity,omitempty"`
+	Sensitivity *CodeableConcept                     `bson:"sensitivity,omitempty", json:"sensitivity,omitempty"`
 	Name        string                               `bson:"name,omitempty", json:"name,omitempty"`
 	Description string                               `bson:"description,omitempty", json:"description,omitempty"`
 	Query       string                               `bson:"query,omitempty", json:"query,omitempty"`

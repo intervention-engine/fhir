@@ -34,5 +34,5 @@ type HumanName struct {
 	Given  []string `bson:"given,omitempty", json:"given,omitempty"`
 	Prefix []string `bson:"prefix,omitempty", json:"prefix,omitempty"`
 	Suffix []string `bson:"suffix,omitempty", json:"suffix,omitempty"`
-	Period Period   `bson:"period,omitempty", json:"period,omitempty"`
+	Period *Period  `bson:"period,omitempty", json:"period,omitempty"`
 }
