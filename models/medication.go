@@ -26,7 +26,12 @@
 
 package models
 
-import "time"
+import (
+	"errors"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+	"time"
+)
 
 type Medication struct {
 	Id           string                      `json:"-" bson:"_id"`
@@ -37,6 +42,31 @@ type Medication struct {
 	Kind         string                      `bson:"kind,omitempty" json:"kind,omitempty"`
 	Product      *MedicationProductComponent `bson:"product,omitempty" json:"product,omitempty"`
 	Package      *MedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
+}
+
+type MedicationLookup func(id string) (Medication, error)
+
+func MedicationFinder(database mgo.Database, idString string) (Medication, error) {
+	var id bson.ObjectId
+	if bson.IsObjectIdHex(idString) {
+		id = bson.ObjectIdHex(idString)
+	} else {
+		return Medication{}, errors.New("Invalid id")
+	}
+
+	c := database.C("medications")
+	result := Medication{}
+	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
+	if err != nil {
+		return Medication{}, err
+	}
+	return result, nil
+}
+
+func BindMedicationLookup(database mgo.Database) MedicationLookup {
+	return func(id string) (Medication, error) {
+		return MedicationFinder(database, id)
+	}
 }
 
 // This is an ugly hack to deal with embedded structures in the spec ingredient
