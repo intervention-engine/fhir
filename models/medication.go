@@ -46,7 +46,7 @@ type Medication struct {
 
 type MedicationLookup func(id string) (Medication, error)
 
-func MedicationFinder(database mgo.Database, idString string) (Medication, error) {
+func MedicationFinder(database *mgo.Database, idString string) (Medication, error) {
 	var id bson.ObjectId
 	if bson.IsObjectIdHex(idString) {
 		id = bson.ObjectIdHex(idString)
@@ -63,7 +63,7 @@ func MedicationFinder(database mgo.Database, idString string) (Medication, error
 	return result, nil
 }
 
-func BindMedicationLookup(database mgo.Database) MedicationLookup {
+func BindMedicationLookup(database *mgo.Database) MedicationLookup {
 	return func(id string) (Medication, error) {
 		return MedicationFinder(database, id)
 	}
