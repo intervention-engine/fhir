@@ -1,6 +1,9 @@
 package models
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"errors"
+	"gopkg.in/mgo.v2/bson"
+)
 
 func (q *Query) ToPipeline() []bson.M {
 	pipeline := []bson.M{{"$group": bson.M{"_id": "$targetid", "gender": bson.M{"$max": "$gender"}, "birthdate": bson.M{"$max": "$birthdate"}, "entries": bson.M{"$addToSet": bson.M{"startdate": "$startdate", "enddate": "$enddate", "codes": "$codes", "type": "$type"}}}}}
@@ -18,4 +21,25 @@ func (q *Query) ToPipeline() []bson.M {
 
 	pipeline = append(pipeline, bson.M{"$group": bson.M{"_id": nil, "total": bson.M{"$sum": 1}}})
 	return pipeline
+}
+
+func (q *Query) Validate() error {
+	for _, extension := range q.Parameter {
+
+		switch extension.Url {
+		case "http://interventionengine.org/patientgender":
+			if extension.ValueString == "" {
+				return errors.New("Patient Gender Query Requires a ValueString")
+			}
+		case "http://interventionengine.org/patientage":
+			if extension.ValueRange == nil {
+				return errors.New("Patient Age Query Requires a ValueRange")
+			}
+		default:
+			if extension.ValueCodeableConcept == nil {
+				return errors.New("Query Based on Code requires a ValueCodeableConcept")
+			}
+		}
+	}
+	return nil
 }
