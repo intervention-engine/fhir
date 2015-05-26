@@ -556,4 +556,12 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	other.Methods("PUT").Handler(negroni.New(append(config["OtherUpdate"], negroni.HandlerFunc(OtherUpdateHandler))...))
 	other.Methods("DELETE").Handler(negroni.New(append(config["OtherDelete"], negroni.HandlerFunc(OtherDeleteHandler))...))
 
+	communicationrequestBase := router.Path("/CommunicationRequest").Subrouter()
+	communicationrequestBase.Methods("GET").Handler(negroni.New(append(config["CommunicationRequestIndex"], negroni.HandlerFunc(CommunicationRequestIndexHandler))...))
+	communicationrequestBase.Methods("POST").Handler(negroni.New(append(config["CommunicationRequestCreate"], negroni.HandlerFunc(CommunicationRequestCreateHandler))...))
+
+	communicationrequest := router.Path("/CommunicationRequest/{id}").Subrouter()
+	communicationrequest.Methods("GET").Handler(negroni.New(append(config["CommunicationRequestShow"], negroni.HandlerFunc(CommunicationRequestShowHandler))...))
+	communicationrequest.Methods("PUT").Handler(negroni.New(append(config["CommunicationRequestUpdate"], negroni.HandlerFunc(CommunicationRequestUpdateHandler))...))
+	communicationrequest.Methods("DELETE").Handler(negroni.New(append(config["CommunicationRequestDelete"], negroni.HandlerFunc(CommunicationRequestDeleteHandler))...))
 }
