@@ -12,7 +12,6 @@ import (
 	"testing"
 
 	"github.com/intervention-engine/fhir/models"
-	"github.com/intervention-engine/hdsfhir"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
 )
@@ -24,18 +23,12 @@ type UploadSuite struct {
 // Hook up gocheck into the "go test" runner.
 func Test(t *testing.T) { TestingT(t) }
 
-func (s *UploadSuite) SetUpSuite(c *C) {
-	data, err := ioutil.ReadFile("../fixtures/john_peters_hds.json")
-	util.CheckErr(err)
-	s.JSONBlob = data
-}
+func (s *UploadSuite) SetUpSuite(c *C) {}
 
 var _ = Suite(&UploadSuite{})
 
 func (s *UploadSuite) TestPostToFHIRServer(c *C) {
-	patient := &hdsfhir.Patient{}
-	err := json.Unmarshal(s.JSONBlob, patient)
-	util.CheckErr(err)
+	// Setup the mock server
 	resourceCount, patientCount, encounterCount, conditionCount, immunizationCount, observationCount, procedureCount, diagnosticReportCount, medicationCount, medicationStatementCount := 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		output := "Created"
@@ -91,7 +84,60 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 		resourceCount++
 	}))
 	defer ts.Close()
-	refMap, err := UploadResources(patient.FHIRModels(), ts.URL)
+
+	// Read in the data in FHIR format
+	data, err := ioutil.ReadFile("../fixtures/john_peters.json")
+	util.CheckErr(err)
+
+	// Do a bunch of junk to properly unmarshal all the data
+	// This is needed because:
+	// 1. It's a homogenous array, so go doesn't unmarshal it very well
+	// 2. The id attribute is configure to not be serialized/deserialized
+	type IdAndType struct {
+		Id   string `json:"id"`
+		Type string `json:"_type"`
+	}
+	idsAndTypes := make([]IdAndType, 20)
+	err = json.Unmarshal(data, &idsAndTypes)
+	util.CheckErr(err)
+
+	rawMessages := make([]json.RawMessage, 20)
+	err = json.Unmarshal(data, &rawMessages)
+	util.CheckErr(err)
+
+	fhirmodels := make([]interface{}, 20)
+	for i := range fhirmodels {
+		var y interface{}
+		switch idsAndTypes[i].Type {
+		case "Patient":
+			y = &models.Patient{Id: idsAndTypes[i].Id}
+		case "Encounter":
+			y = &models.Encounter{Id: idsAndTypes[i].Id}
+		case "Condition":
+			y = &models.Condition{Id: idsAndTypes[i].Id}
+		case "Observation":
+			y = &models.Observation{Id: idsAndTypes[i].Id}
+		case "DiagnosticReport":
+			y = &models.DiagnosticReport{Id: idsAndTypes[i].Id}
+		case "Procedure":
+			y = &models.Procedure{Id: idsAndTypes[i].Id}
+		case "Medication":
+			y = &models.Medication{Id: idsAndTypes[i].Id}
+		case "MedicationStatement":
+			y = &models.MedicationStatement{Id: idsAndTypes[i].Id}
+		case "Immunization":
+			y = &models.Immunization{Id: idsAndTypes[i].Id}
+		default:
+			c.Errorf("Unexpected Type: %s", idsAndTypes[i].Type)
+		}
+		json.Unmarshal(rawMessages[i], y)
+		fhirmodels[i] = y
+		fmt.Println("Found something:", y)
+	}
+
+	// Upload the resources and check the counts
+	refMap, err := UploadResources(fhirmodels, ts.URL)
+
 	c.Assert(patientCount, Equals, 1)
 	c.Assert(encounterCount, Equals, 4)
 	c.Assert(conditionCount, Equals, 5)
@@ -104,7 +150,7 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	c.Assert(medicationCount, Equals, 1)
 
 	c.Assert(len(refMap), Equals, 20)
-	c.Assert(refMap[patient.GetTempID()], Equals, "http://localhost/Patient/0")
+	c.Assert(refMap[idsAndTypes[0].Id], Equals, "http://localhost/Patient/0")
 }
 
 func isValid(decoder *json.Decoder, model interface{}) bool {
