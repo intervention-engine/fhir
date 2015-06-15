@@ -3,7 +3,9 @@ Intervention Engine FHIR Server
 
 [![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=master)](https://travis-ci.org/intervention-engine/fhir)
 
-This project is a generic FHIR server implemented in Go, using MongoDB as storage. It contains slight extension of the Reference model in order to more readily support queries in MongoDB.
+This project provides [HL7 FHIR](http://hl7.org/implement/standards/fhir/) models and a generic
+FHIR server implemented in Go. The FHIR server uses MongoDB as storage and contains a small
+extension of the Reference model in order to more readily support queries in MongoDB.
 
 Environment
 -----------
@@ -20,9 +22,16 @@ To get all of the dependencies for this project, run:
 
     go get
 
-In this directory.
+in this directory.
 
-This project also requires MongoDB 2.6.* or higher. To install MongoDB, refer to the [MongoDB installation guide](http://docs.mongodb.org/manual/installation/).
+To run all of the tests for this project, run:
+
+    go test ./...
+
+in this directory.
+
+This project also requires MongoDB 2.6.* or higher. To install MongoDB, refer to the
+[MongoDB installation guide](http://docs.mongodb.org/manual/installation/).
 
 To start the server, simply run server.go:
 
@@ -31,17 +40,19 @@ To start the server, simply run server.go:
 Custom Middleware
 -----------------
 
-Because this project is a generic FHIR server, it only supports simple CRUD methods for FHIR resources as-is. In order to provide extensibility, the FHIRServer type has a method called AddMiddleware that can be called as follows:
+Because this project is a generic FHIR server, it only supports simple CRUD methods for FHIR
+resources as-is. In order to provide extensibility, the FHIRServer type has a method called
+AddMiddleware that can be called as follows:
 
     s := server.NewServer("localhost")
     s.AddMiddleware(negroni.HandlerFunc(MyHandler))
 
-Where MyHandler is the middleware function that you want to add.
+where MyHandler is the middleware function that you want to add.
 
 License
 -------
 
-Copyright 2014 The MITRE Corporation
+Copyright 2015 The MITRE Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
