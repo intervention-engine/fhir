@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"regexp"
 	"strings"
 	"testing"
@@ -92,7 +91,7 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	// Do a bunch of junk to properly unmarshal all the data
 	// This is needed because:
 	// 1. It's a homogenous array, so go doesn't unmarshal it very well
-	// 2. The id attribute is configure to not be serialized/deserialized
+	// 2. The id attribute is configured to not be serialized/deserialized
 	type IdAndType struct {
 		Id   string `json:"id"`
 		Type string `json:"_type"`
@@ -132,7 +131,6 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 		}
 		json.Unmarshal(rawMessages[i], y)
 		fhirmodels[i] = y
-		fmt.Println("Found something:", y)
 	}
 
 	// Upload the resources and check the counts
@@ -151,6 +149,64 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 
 	c.Assert(len(refMap), Equals, 20)
 	c.Assert(refMap[idsAndTypes[0].Id], Equals, "http://localhost/Patient/0")
+	c.Assert(fhirmodels[0].(*models.Patient).Id, Equals, "0")
+}
+
+func (s *UploadSuite) TestExternalReferences(c *C) {
+	// Setup the mock server
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Location", "http://localhost/Condition/abc")
+		fmt.Fprintln(w, "Created")
+	}))
+	defer ts.Close()
+
+	condition := &models.Condition{Id: "123"}
+	condition.Subject = &models.Reference{Reference: "http://localhost/Patient/0"}
+
+	// Upload the resource
+	newId, err := UploadResource(condition, ts.URL)
+	util.CheckErr(err)
+	c.Assert(newId, Equals, "http://localhost/Condition/abc")
+
+	// Upload the resources and check the counts
+	refMap, err := UploadResources([]interface{}{condition}, ts.URL)
+	util.CheckErr(err)
+	c.Assert(len(refMap), Equals, 1)
+}
+
+func (s *UploadSuite) TestUnorderedDependencies(c *C) {
+	// Setup the mock server
+	resourceCount := 0
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		output := "Created"
+		decoder := json.NewDecoder(r.Body)
+		switch {
+		case strings.Contains(r.RequestURI, "Patient"):
+			if isValid(decoder, &models.Patient{}) {
+				w.Header().Add("Location", "http://localhost/Patient/1")
+			}
+		case strings.Contains(r.RequestURI, "Condition"):
+			if isValid(decoder, &models.Condition{}) {
+				w.Header().Add("Location", "http://localhost/Condition/1")
+			}
+		}
+		fmt.Fprintln(w, output)
+		resourceCount++
+	}))
+	defer ts.Close()
+
+	patient := &models.Patient{Id: "a1"}
+	condition := &models.Condition{Id: "b2"}
+	condition.Subject = &models.Reference{Reference: "cid:a1"}
+
+	// Upload the resources in the wrong order
+	refMap, err := UploadResources([]interface{}{condition, patient}, ts.URL)
+	util.CheckErr(err)
+
+	// Assert that it processed all resources
+	c.Assert(len(refMap), Equals, 2)
+	c.Assert(refMap["a1"], Equals, "http://localhost/Patient/1")
+	c.Assert(refMap["b2"], Equals, "http://localhost/Condition/1")
 }
 
 func isValid(decoder *json.Decoder, model interface{}) bool {
@@ -173,20 +229,4 @@ func isValid(decoder *json.Decoder, model interface{}) bool {
 		return len(refs) > 0
 	}
 	return true
-}
-
-func getAllReferences(model interface{}) []*models.Reference {
-	refs := make([]*models.Reference, 0)
-	s := reflect.ValueOf(model).Elem()
-	for i := 0; i < s.NumField(); i++ {
-		f := s.Field(i)
-		if f.Type() == reflect.TypeOf(&models.Reference{}) && !f.IsNil() {
-			refs = append(refs, f.Interface().(*models.Reference))
-		} else if f.Type() == reflect.TypeOf([]models.Reference{}) {
-			for j := 0; j < f.Len(); j++ {
-				refs = append(refs, f.Index(j).Addr().Interface().(*models.Reference))
-			}
-		}
-	}
-	return refs
 }
