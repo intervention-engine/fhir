@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,7 @@ type ReferralRequest struct {
 	Type                  *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Specialty             *CodeableConcept  `bson:"specialty,omitempty" json:"specialty,omitempty"`
 	Priority              *CodeableConcept  `bson:"priority,omitempty" json:"priority,omitempty"`
-	Subject               *Reference        `bson:"subject,omitempty" json:"subject,omitempty"`
+	Patient               *Reference        `bson:"patient,omitempty" json:"patient,omitempty"`
 	Requester             *Reference        `bson:"requester,omitempty" json:"requester,omitempty"`
 	Recipient             []Reference       `bson:"recipient,omitempty" json:"recipient,omitempty"`
 	Encounter             *Reference        `bson:"encounter,omitempty" json:"encounter,omitempty"`

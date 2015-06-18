@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,10 +29,10 @@ package models
 type Extension struct {
 	Id                   string           `json:"-" bson:"_id"`
 	Url                  string           `bson:"url,omitempty" json:"url,omitempty"`
-	ValueString          string           `bson:"valuestring,omitempty" json:"valuestring,omitempty"`
-	ValueInteger         int              `bson:"valueinteger,omitempty" json:"valueinteger,omitempty"`
-	ValueDateTime        *FHIRDateTime    `bson:"valuedatetime,omitempty" json:"valuedatetime,omitempty"`
-	ValueBoolean         *bool            `bson:"valueboolean,omitempty" json:"valueboolean,omitempty"`
-	ValueCodeableConcept *CodeableConcept `bson:"valuecodeableconcept,omitempty" json:"valuecodeableconcept,omitempty"`
-	ValueRange           *Range           `bson:"valuerange,omitempty" json:"valuerange,omitempty"`
+	ValueString          string           `bson:"valueString,omitempty" json:"valueString,omitempty"`
+	ValueInteger         *int32           `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
+	ValueDateTime        *FHIRDateTime    `bson:"valueDateTime,omitempty" json:"valueDateTime,omitempty"`
+	ValueBoolean         *bool            `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
+	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
+	ValueRange           *Range           `bson:"valueRange,omitempty" json:"valueRange,omitempty"`
 }

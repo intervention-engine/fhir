@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,20 +29,23 @@ package models
 import "time"
 
 type Device struct {
-	Id           string           `json:"-" bson:"_id"`
-	Identifier   []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Type         *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Manufacturer string           `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
-	Model        string           `bson:"model,omitempty" json:"model,omitempty"`
-	Version      string           `bson:"version,omitempty" json:"version,omitempty"`
-	Expiry       *FHIRDateTime    `bson:"expiry,omitempty" json:"expiry,omitempty"`
-	Udi          string           `bson:"udi,omitempty" json:"udi,omitempty"`
-	LotNumber    string           `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
-	Owner        *Reference       `bson:"owner,omitempty" json:"owner,omitempty"`
-	Location     *Reference       `bson:"location,omitempty" json:"location,omitempty"`
-	Patient      *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
-	Contact      []ContactPoint   `bson:"contact,omitempty" json:"contact,omitempty"`
-	Url          string           `bson:"url,omitempty" json:"url,omitempty"`
+	Id              string           `json:"-" bson:"_id"`
+	Identifier      []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Note            []string         `bson:"note,omitempty" json:"note,omitempty"`
+	Status          string           `bson:"status,omitempty" json:"status,omitempty"`
+	Manufacturer    string           `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
+	Model           string           `bson:"model,omitempty" json:"model,omitempty"`
+	Version         string           `bson:"version,omitempty" json:"version,omitempty"`
+	ManufactureDate *FHIRDateTime    `bson:"manufactureDate,omitempty" json:"manufactureDate,omitempty"`
+	Expiry          *FHIRDateTime    `bson:"expiry,omitempty" json:"expiry,omitempty"`
+	Udi             string           `bson:"udi,omitempty" json:"udi,omitempty"`
+	LotNumber       string           `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
+	Owner           *Reference       `bson:"owner,omitempty" json:"owner,omitempty"`
+	Location        *Reference       `bson:"location,omitempty" json:"location,omitempty"`
+	Patient         *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
+	Contact         []ContactPoint   `bson:"contact,omitempty" json:"contact,omitempty"`
+	Url             string           `bson:"url,omitempty" json:"url,omitempty"`
 }
 
 type DeviceBundle struct {

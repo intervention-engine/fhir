@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,35 +29,47 @@ package models
 import "time"
 
 type OperationDefinition struct {
-	Id           string                                  `json:"-" bson:"_id"`
-	Identifier   string                                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                                  `bson:"version,omitempty" json:"version,omitempty"`
-	Title        string                                  `bson:"title,omitempty" json:"title,omitempty"`
-	Publisher    string                                  `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Telecom      []ContactPoint                          `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Description  string                                  `bson:"description,omitempty" json:"description,omitempty"`
-	Code         []Coding                                `bson:"code,omitempty" json:"code,omitempty"`
-	Status       string                                  `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                                   `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Date         *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
-	Kind         string                                  `bson:"kind,omitempty" json:"kind,omitempty"`
-	Name         string                                  `bson:"name,omitempty" json:"name,omitempty"`
-	Notes        string                                  `bson:"notes,omitempty" json:"notes,omitempty"`
-	Base         *Reference                              `bson:"base,omitempty" json:"base,omitempty"`
-	System       *bool                                   `bson:"system,omitempty" json:"system,omitempty"`
-	Type         []string                                `bson:"type,omitempty" json:"type,omitempty"`
-	Instance     *bool                                   `bson:"instance,omitempty" json:"instance,omitempty"`
-	Parameter    []OperationDefinitionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
+	Id           string                                                     `json:"-" bson:"_id"`
+	Url          string                                                     `bson:"url,omitempty" json:"url,omitempty"`
+	Version      string                                                     `bson:"version,omitempty" json:"version,omitempty"`
+	Name         string                                                     `bson:"name,omitempty" json:"name,omitempty"`
+	Publisher    string                                                     `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact      []OperationDefinitionOperationDefinitionContactComponent   `bson:"contact,omitempty" json:"contact,omitempty"`
+	Description  string                                                     `bson:"description,omitempty" json:"description,omitempty"`
+	Requirements string                                                     `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Status       string                                                     `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental *bool                                                      `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Date         *FHIRDateTime                                              `bson:"date,omitempty" json:"date,omitempty"`
+	Kind         string                                                     `bson:"kind,omitempty" json:"kind,omitempty"`
+	Idempotent   *bool                                                      `bson:"idempotent,omitempty" json:"idempotent,omitempty"`
+	Code         string                                                     `bson:"code,omitempty" json:"code,omitempty"`
+	Notes        string                                                     `bson:"notes,omitempty" json:"notes,omitempty"`
+	Base         *Reference                                                 `bson:"base,omitempty" json:"base,omitempty"`
+	System       *bool                                                      `bson:"system,omitempty" json:"system,omitempty"`
+	Type         []string                                                   `bson:"type,omitempty" json:"type,omitempty"`
+	Instance     *bool                                                      `bson:"instance,omitempty" json:"instance,omitempty"`
+	Parameter    []OperationDefinitionOperationDefinitionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec parameter
-type OperationDefinitionParameterComponent struct {
+type OperationDefinitionOperationDefinitionContactComponent struct {
+	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+}
+type OperationDefinitionOperationDefinitionParameterComponent struct {
+	Name          string                                                         `bson:"name,omitempty" json:"name,omitempty"`
+	Use           string                                                         `bson:"use,omitempty" json:"use,omitempty"`
+	Min           *int32                                                         `bson:"min,omitempty" json:"min,omitempty"`
+	Max           string                                                         `bson:"max,omitempty" json:"max,omitempty"`
+	Documentation string                                                         `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Type          string                                                         `bson:"type,omitempty" json:"type,omitempty"`
+	Profile       *Reference                                                     `bson:"profile,omitempty" json:"profile,omitempty"`
+	Part          []OperationDefinitionOperationDefinitionParameterPartComponent `bson:"part,omitempty" json:"part,omitempty"`
+}
+type OperationDefinitionOperationDefinitionParameterPartComponent struct {
 	Name          string     `bson:"name,omitempty" json:"name,omitempty"`
-	Use           string     `bson:"use,omitempty" json:"use,omitempty"`
-	Min           float64    `bson:"min,omitempty" json:"min,omitempty"`
+	Min           *uint32    `bson:"min,omitempty" json:"min,omitempty"`
 	Max           string     `bson:"max,omitempty" json:"max,omitempty"`
 	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Type          *Coding    `bson:"type,omitempty" json:"type,omitempty"`
+	Type          string     `bson:"type,omitempty" json:"type,omitempty"`
 	Profile       *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
 }
 

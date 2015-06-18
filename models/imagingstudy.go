@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,49 +29,45 @@ package models
 import "time"
 
 type ImagingStudy struct {
-	Id                  string                        `json:"-" bson:"_id"`
-	DateTime            *FHIRDateTime                 `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
-	Subject             *Reference                    `bson:"subject,omitempty" json:"subject,omitempty"`
-	Uid                 string                        `bson:"uid,omitempty" json:"uid,omitempty"`
-	AccessionNo         *Identifier                   `bson:"accessionNo,omitempty" json:"accessionNo,omitempty"`
-	Identifier          []Identifier                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Order               []Reference                   `bson:"order,omitempty" json:"order,omitempty"`
-	Modality            []string                      `bson:"modality,omitempty" json:"modality,omitempty"`
-	Referrer            *Reference                    `bson:"referrer,omitempty" json:"referrer,omitempty"`
-	Availability        string                        `bson:"availability,omitempty" json:"availability,omitempty"`
-	Url                 string                        `bson:"url,omitempty" json:"url,omitempty"`
-	NumberOfSeries      float64                       `bson:"numberOfSeries,omitempty" json:"numberOfSeries,omitempty"`
-	NumberOfInstances   float64                       `bson:"numberOfInstances,omitempty" json:"numberOfInstances,omitempty"`
-	ClinicalInformation string                        `bson:"clinicalInformation,omitempty" json:"clinicalInformation,omitempty"`
-	Procedure           []Coding                      `bson:"procedure,omitempty" json:"procedure,omitempty"`
-	Interpreter         *Reference                    `bson:"interpreter,omitempty" json:"interpreter,omitempty"`
-	Description         string                        `bson:"description,omitempty" json:"description,omitempty"`
-	Series              []ImagingStudySeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
+	Id                  string                                    `json:"-" bson:"_id"`
+	Started             *FHIRDateTime                             `bson:"started,omitempty" json:"started,omitempty"`
+	Patient             *Reference                                `bson:"patient,omitempty" json:"patient,omitempty"`
+	Uid                 string                                    `bson:"uid,omitempty" json:"uid,omitempty"`
+	Accession           *Identifier                               `bson:"accession,omitempty" json:"accession,omitempty"`
+	Identifier          []Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Order               []Reference                               `bson:"order,omitempty" json:"order,omitempty"`
+	ModalityList        []string                                  `bson:"modalityList,omitempty" json:"modalityList,omitempty"`
+	Referrer            *Reference                                `bson:"referrer,omitempty" json:"referrer,omitempty"`
+	Availability        string                                    `bson:"availability,omitempty" json:"availability,omitempty"`
+	Url                 string                                    `bson:"url,omitempty" json:"url,omitempty"`
+	NumberOfSeries      *uint32                                   `bson:"numberOfSeries,omitempty" json:"numberOfSeries,omitempty"`
+	NumberOfInstances   *uint32                                   `bson:"numberOfInstances,omitempty" json:"numberOfInstances,omitempty"`
+	ClinicalInformation string                                    `bson:"clinicalInformation,omitempty" json:"clinicalInformation,omitempty"`
+	Procedure           []Coding                                  `bson:"procedure,omitempty" json:"procedure,omitempty"`
+	Interpreter         *Reference                                `bson:"interpreter,omitempty" json:"interpreter,omitempty"`
+	Description         string                                    `bson:"description,omitempty" json:"description,omitempty"`
+	Series              []ImagingStudyImagingStudySeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec instance
-type ImagingStudySeriesInstanceComponent struct {
-	Number     float64    `bson:"number,omitempty" json:"number,omitempty"`
-	Uid        string     `bson:"uid,omitempty" json:"uid,omitempty"`
-	Sopclass   string     `bson:"sopclass,omitempty" json:"sopclass,omitempty"`
-	Type       string     `bson:"type,omitempty" json:"type,omitempty"`
-	Title      string     `bson:"title,omitempty" json:"title,omitempty"`
-	Url        string     `bson:"url,omitempty" json:"url,omitempty"`
-	Attachment *Reference `bson:"attachment,omitempty" json:"attachment,omitempty"`
+type ImagingStudyImagingStudySeriesComponent struct {
+	Number            *uint32                                           `bson:"number,omitempty" json:"number,omitempty"`
+	Modality          string                                            `bson:"modality,omitempty" json:"modality,omitempty"`
+	Uid               string                                            `bson:"uid,omitempty" json:"uid,omitempty"`
+	Description       string                                            `bson:"description,omitempty" json:"description,omitempty"`
+	NumberOfInstances *uint32                                           `bson:"numberOfInstances,omitempty" json:"numberOfInstances,omitempty"`
+	Availability      string                                            `bson:"availability,omitempty" json:"availability,omitempty"`
+	Url               string                                            `bson:"url,omitempty" json:"url,omitempty"`
+	BodySite          *Coding                                           `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	Laterality        *Coding                                           `bson:"laterality,omitempty" json:"laterality,omitempty"`
+	DateTime          *FHIRDateTime                                     `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
+	Instance          []ImagingStudyImagingStudySeriesInstanceComponent `bson:"instance,omitempty" json:"instance,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec series
-type ImagingStudySeriesComponent struct {
-	Number            float64                               `bson:"number,omitempty" json:"number,omitempty"`
-	Modality          string                                `bson:"modality,omitempty" json:"modality,omitempty"`
-	Uid               string                                `bson:"uid,omitempty" json:"uid,omitempty"`
-	Description       string                                `bson:"description,omitempty" json:"description,omitempty"`
-	NumberOfInstances float64                               `bson:"numberOfInstances,omitempty" json:"numberOfInstances,omitempty"`
-	Availability      string                                `bson:"availability,omitempty" json:"availability,omitempty"`
-	Url               string                                `bson:"url,omitempty" json:"url,omitempty"`
-	BodySite          *Coding                               `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
-	DateTime          *FHIRDateTime                         `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
-	Instance          []ImagingStudySeriesInstanceComponent `bson:"instance,omitempty" json:"instance,omitempty"`
+type ImagingStudyImagingStudySeriesInstanceComponent struct {
+	Number   *uint32      `bson:"number,omitempty" json:"number,omitempty"`
+	Uid      string       `bson:"uid,omitempty" json:"uid,omitempty"`
+	Sopclass string       `bson:"sopclass,omitempty" json:"sopclass,omitempty"`
+	Type     string       `bson:"type,omitempty" json:"type,omitempty"`
+	Title    string       `bson:"title,omitempty" json:"title,omitempty"`
+	Content  []Attachment `bson:"content,omitempty" json:"content,omitempty"`
 }
 
 type ImagingStudyBundle struct {

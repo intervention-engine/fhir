@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -33,15 +33,14 @@ type Media struct {
 	Type       string           `bson:"type,omitempty" json:"type,omitempty"`
 	Subtype    *CodeableConcept `bson:"subtype,omitempty" json:"subtype,omitempty"`
 	Identifier []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	DateTime   *FHIRDateTime    `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
 	Subject    *Reference       `bson:"subject,omitempty" json:"subject,omitempty"`
 	Operator   *Reference       `bson:"operator,omitempty" json:"operator,omitempty"`
 	View       *CodeableConcept `bson:"view,omitempty" json:"view,omitempty"`
 	DeviceName string           `bson:"deviceName,omitempty" json:"deviceName,omitempty"`
-	Height     float64          `bson:"height,omitempty" json:"height,omitempty"`
-	Width      float64          `bson:"width,omitempty" json:"width,omitempty"`
-	Frames     float64          `bson:"frames,omitempty" json:"frames,omitempty"`
-	Length     float64          `bson:"length,omitempty" json:"length,omitempty"`
+	Height     *uint32          `bson:"height,omitempty" json:"height,omitempty"`
+	Width      *uint32          `bson:"width,omitempty" json:"width,omitempty"`
+	Frames     *uint32          `bson:"frames,omitempty" json:"frames,omitempty"`
+	Duration   *uint32          `bson:"duration,omitempty" json:"duration,omitempty"`
 	Content    *Attachment      `bson:"content,omitempty" json:"content,omitempty"`
 }
 

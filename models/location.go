@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,26 +29,24 @@ package models
 import "time"
 
 type Location struct {
-	Id                   string                     `json:"-" bson:"_id"`
-	Identifier           []Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Name                 string                     `bson:"name,omitempty" json:"name,omitempty"`
-	Description          string                     `bson:"description,omitempty" json:"description,omitempty"`
-	Type                 *CodeableConcept           `bson:"type,omitempty" json:"type,omitempty"`
-	Telecom              []ContactPoint             `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Address              *Address                   `bson:"address,omitempty" json:"address,omitempty"`
-	PhysicalType         *CodeableConcept           `bson:"physicalType,omitempty" json:"physicalType,omitempty"`
-	Position             *LocationPositionComponent `bson:"position,omitempty" json:"position,omitempty"`
-	ManagingOrganization *Reference                 `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
-	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
-	PartOf               *Reference                 `bson:"partOf,omitempty" json:"partOf,omitempty"`
-	Mode                 string                     `bson:"mode,omitempty" json:"mode,omitempty"`
+	Id                   string                             `json:"-" bson:"_id"`
+	Identifier           []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Name                 string                             `bson:"name,omitempty" json:"name,omitempty"`
+	Description          string                             `bson:"description,omitempty" json:"description,omitempty"`
+	Mode                 string                             `bson:"mode,omitempty" json:"mode,omitempty"`
+	Type                 *CodeableConcept                   `bson:"type,omitempty" json:"type,omitempty"`
+	Telecom              []ContactPoint                     `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address              *Address                           `bson:"address,omitempty" json:"address,omitempty"`
+	PhysicalType         *CodeableConcept                   `bson:"physicalType,omitempty" json:"physicalType,omitempty"`
+	Position             *LocationLocationPositionComponent `bson:"position,omitempty" json:"position,omitempty"`
+	ManagingOrganization *Reference                         `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
+	PartOf               *Reference                         `bson:"partOf,omitempty" json:"partOf,omitempty"`
+	Status               string                             `bson:"status,omitempty" json:"status,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec position
-type LocationPositionComponent struct {
-	Longitude float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
-	Latitude  float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
-	Altitude  float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
+type LocationLocationPositionComponent struct {
+	Longitude *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
+	Latitude  *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
+	Altitude  *float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
 }
 
 type LocationBundle struct {

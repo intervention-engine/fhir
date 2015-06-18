@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,22 +29,18 @@ package models
 import "time"
 
 type Substance struct {
-	Id          string                         `json:"-" bson:"_id"`
-	Type        *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
-	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
-	Instance    *SubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`
-	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
+	Id          string                                  `json:"-" bson:"_id"`
+	Type        *CodeableConcept                        `bson:"type,omitempty" json:"type,omitempty"`
+	Description string                                  `bson:"description,omitempty" json:"description,omitempty"`
+	Instance    *SubstanceSubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`
+	Ingredient  []SubstanceSubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec instance
-type SubstanceInstanceComponent struct {
+type SubstanceSubstanceInstanceComponent struct {
 	Identifier *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Expiry     *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
 	Quantity   *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec ingredient
-type SubstanceIngredientComponent struct {
+type SubstanceSubstanceIngredientComponent struct {
 	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -27,17 +27,20 @@
 package models
 
 type Timing struct {
-	Id     string                 `json:"-" bson:"_id"`
-	Event  []Period               `bson:"event,omitempty" json:"event,omitempty"`
-	Repeat *TimingRepeatComponent `bson:"repeat,omitempty" json:"repeat,omitempty"`
+	Id     string                       `json:"-" bson:"_id"`
+	Event  []FHIRDateTime               `bson:"event,omitempty" json:"event,omitempty"`
+	Repeat *TimingTimingRepeatComponent `bson:"repeat,omitempty" json:"repeat,omitempty"`
+	Code   *CodeableConcept             `bson:"code,omitempty" json:"code,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec repeat
-type TimingRepeatComponent struct {
-	Frequency float64       `bson:"frequency,omitempty" json:"frequency,omitempty"`
-	When      string        `bson:"when,omitempty" json:"when,omitempty"`
-	Duration  float64       `bson:"duration,omitempty" json:"duration,omitempty"`
-	Units     string        `bson:"units,omitempty" json:"units,omitempty"`
-	Count     float64       `bson:"count,omitempty" json:"count,omitempty"`
-	End       *FHIRDateTime `bson:"end,omitempty" json:"end,omitempty"`
+type TimingTimingRepeatComponent struct {
+	Bounds        *Period  `bson:"bounds,omitempty" json:"bounds,omitempty"`
+	Count         *int32   `bson:"count,omitempty" json:"count,omitempty"`
+	Duration      *float64 `bson:"duration,omitempty" json:"duration,omitempty"`
+	DurationUnits string   `bson:"durationUnits,omitempty" json:"durationUnits,omitempty"`
+	Frequency     *int32   `bson:"frequency,omitempty" json:"frequency,omitempty"`
+	FrequencyMax  *int32   `bson:"frequencyMax,omitempty" json:"frequencyMax,omitempty"`
+	Period        *float64 `bson:"period,omitempty" json:"period,omitempty"`
+	PeriodMax     *float64 `bson:"periodMax,omitempty" json:"periodMax,omitempty"`
+	PeriodUnits   string   `bson:"periodUnits,omitempty" json:"periodUnits,omitempty"`
+	When          string   `bson:"when,omitempty" json:"when,omitempty"`
 }

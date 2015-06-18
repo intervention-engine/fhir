@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,36 +29,30 @@ package models
 import "time"
 
 type ImmunizationRecommendation struct {
-	Id             string                                              `json:"-" bson:"_id"`
-	Identifier     []Identifier                                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Subject        *Reference                                          `bson:"subject,omitempty" json:"subject,omitempty"`
-	Recommendation []ImmunizationRecommendationRecommendationComponent `bson:"recommendation,omitempty" json:"recommendation,omitempty"`
+	Id             string                                                                        `json:"-" bson:"_id"`
+	Identifier     []Identifier                                                                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient        *Reference                                                                    `bson:"patient,omitempty" json:"patient,omitempty"`
+	Recommendation []ImmunizationRecommendationImmunizationRecommendationRecommendationComponent `bson:"recommendation,omitempty" json:"recommendation,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec dateCriterion
-type ImmunizationRecommendationRecommendationDateCriterionComponent struct {
+type ImmunizationRecommendationImmunizationRecommendationRecommendationComponent struct {
+	Date                         *FHIRDateTime                                                                              `bson:"date,omitempty" json:"date,omitempty"`
+	VaccineType                  *CodeableConcept                                                                           `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
+	DoseNumber                   *uint32                                                                                    `bson:"doseNumber,omitempty" json:"doseNumber,omitempty"`
+	ForecastStatus               *CodeableConcept                                                                           `bson:"forecastStatus,omitempty" json:"forecastStatus,omitempty"`
+	DateCriterion                []ImmunizationRecommendationImmunizationRecommendationRecommendationDateCriterionComponent `bson:"dateCriterion,omitempty" json:"dateCriterion,omitempty"`
+	Protocol                     *ImmunizationRecommendationImmunizationRecommendationRecommendationProtocolComponent       `bson:"protocol,omitempty" json:"protocol,omitempty"`
+	SupportingImmunization       []Reference                                                                                `bson:"supportingImmunization,omitempty" json:"supportingImmunization,omitempty"`
+	SupportingPatientInformation []Reference                                                                                `bson:"supportingPatientInformation,omitempty" json:"supportingPatientInformation,omitempty"`
+}
+type ImmunizationRecommendationImmunizationRecommendationRecommendationDateCriterionComponent struct {
 	Code  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Value *FHIRDateTime    `bson:"value,omitempty" json:"value,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec protocol
-type ImmunizationRecommendationRecommendationProtocolComponent struct {
-	DoseSequence float64    `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
+type ImmunizationRecommendationImmunizationRecommendationRecommendationProtocolComponent struct {
+	DoseSequence *int32     `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
 	Description  string     `bson:"description,omitempty" json:"description,omitempty"`
 	Authority    *Reference `bson:"authority,omitempty" json:"authority,omitempty"`
 	Series       string     `bson:"series,omitempty" json:"series,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec recommendation
-type ImmunizationRecommendationRecommendationComponent struct {
-	Date                         *FHIRDateTime                                                    `bson:"date,omitempty" json:"date,omitempty"`
-	VaccineType                  *CodeableConcept                                                 `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
-	DoseNumber                   float64                                                          `bson:"doseNumber,omitempty" json:"doseNumber,omitempty"`
-	ForecastStatus               *CodeableConcept                                                 `bson:"forecastStatus,omitempty" json:"forecastStatus,omitempty"`
-	DateCriterion                []ImmunizationRecommendationRecommendationDateCriterionComponent `bson:"dateCriterion,omitempty" json:"dateCriterion,omitempty"`
-	Protocol                     *ImmunizationRecommendationRecommendationProtocolComponent       `bson:"protocol,omitempty" json:"protocol,omitempty"`
-	SupportingImmunization       []Reference                                                      `bson:"supportingImmunization,omitempty" json:"supportingImmunization,omitempty"`
-	SupportingPatientInformation []Reference                                                      `bson:"supportingPatientInformation,omitempty" json:"supportingPatientInformation,omitempty"`
 }
 
 type ImmunizationRecommendationBundle struct {

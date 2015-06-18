@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,25 +29,21 @@ package models
 import "time"
 
 type Organization struct {
-	Id         string                         `json:"-" bson:"_id"`
-	Identifier []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Name       string                         `bson:"name,omitempty" json:"name,omitempty"`
-	Type       *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
-	Telecom    []ContactPoint                 `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Address    []Address                      `bson:"address,omitempty" json:"address,omitempty"`
-	PartOf     *Reference                     `bson:"partOf,omitempty" json:"partOf,omitempty"`
-	Contact    []OrganizationContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Location   []Reference                    `bson:"location,omitempty" json:"location,omitempty"`
-	Active     *bool                          `bson:"active,omitempty" json:"active,omitempty"`
+	Id         string                                     `json:"-" bson:"_id"`
+	Identifier []Identifier                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Name       string                                     `bson:"name,omitempty" json:"name,omitempty"`
+	Type       *CodeableConcept                           `bson:"type,omitempty" json:"type,omitempty"`
+	Telecom    []ContactPoint                             `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address    []Address                                  `bson:"address,omitempty" json:"address,omitempty"`
+	PartOf     *Reference                                 `bson:"partOf,omitempty" json:"partOf,omitempty"`
+	Contact    []OrganizationOrganizationContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
+	Active     *bool                                      `bson:"active,omitempty" json:"active,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec contact
-type OrganizationContactComponent struct {
+type OrganizationOrganizationContactComponent struct {
 	Purpose *CodeableConcept `bson:"purpose,omitempty" json:"purpose,omitempty"`
 	Name    *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address *Address         `bson:"address,omitempty" json:"address,omitempty"`
-	Gender  *CodeableConcept `bson:"gender,omitempty" json:"gender,omitempty"`
 }
 
 type OrganizationBundle struct {

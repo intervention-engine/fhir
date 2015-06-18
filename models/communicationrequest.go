@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,25 +29,23 @@ package models
 import "time"
 
 type CommunicationRequest struct {
-	Id            string                                 `json:"-" bson:"_id"`
-	Identifier    []Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Category      *CodeableConcept                       `bson:"category,omitempty" json:"category,omitempty"`
-	Sender        *Reference                             `bson:"sender,omitempty" json:"sender,omitempty"`
-	Recipient     []Reference                            `bson:"recipient,omitempty" json:"recipient,omitempty"`
-	Payload       []CommunicationRequestPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
-	Medium        []CodeableConcept                      `bson:"medium,omitempty" json:"medium,omitempty"`
-	Requester     *Reference                             `bson:"requester,omitempty" json:"requester,omitempty"`
-	Status        string                                 `bson:"status,omitempty" json:"status,omitempty"`
-	Encounter     *Reference                             `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	ScheduledTime *FHIRDateTime                          `bson:"scheduledTime,omitempty" json:"scheduledTime,omitempty"`
-	Reason        []CodeableConcept                      `bson:"reason,omitempty" json:"reason,omitempty"`
-	OrderedOn     *FHIRDateTime                          `bson:"orderedOn,omitempty" json:"orderedOn,omitempty"`
-	Subject       *Reference                             `bson:"subject,omitempty" json:"subject,omitempty"`
-	Priority      *CodeableConcept                       `bson:"priority,omitempty" json:"priority,omitempty"`
+	Id            string                                                     `json:"-" bson:"_id"`
+	Identifier    []Identifier                                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Category      *CodeableConcept                                           `bson:"category,omitempty" json:"category,omitempty"`
+	Sender        *Reference                                                 `bson:"sender,omitempty" json:"sender,omitempty"`
+	Recipient     []Reference                                                `bson:"recipient,omitempty" json:"recipient,omitempty"`
+	Payload       []CommunicationRequestCommunicationRequestPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
+	Medium        []CodeableConcept                                          `bson:"medium,omitempty" json:"medium,omitempty"`
+	Requester     *Reference                                                 `bson:"requester,omitempty" json:"requester,omitempty"`
+	Status        string                                                     `bson:"status,omitempty" json:"status,omitempty"`
+	Encounter     *Reference                                                 `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	ScheduledTime *FHIRDateTime                                              `bson:"scheduledTime,omitempty" json:"scheduledTime,omitempty"`
+	Reason        []CodeableConcept                                          `bson:"reason,omitempty" json:"reason,omitempty"`
+	OrderedOn     *FHIRDateTime                                              `bson:"orderedOn,omitempty" json:"orderedOn,omitempty"`
+	Subject       *Reference                                                 `bson:"subject,omitempty" json:"subject,omitempty"`
+	Priority      *CodeableConcept                                           `bson:"priority,omitempty" json:"priority,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec section
-type CommunicationRequestPayloadComponent struct {
+type CommunicationRequestCommunicationRequestPayloadComponent struct {
 	ContentString     string      `bson:"contentString,omitempty" json:"contentString,omitempty"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`

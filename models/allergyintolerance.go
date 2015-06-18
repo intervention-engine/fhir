@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,17 +29,31 @@ package models
 import "time"
 
 type AllergyIntolerance struct {
-	Id              string        `json:"-" bson:"_id"`
-	Identifier      []Identifier  `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Criticality     string        `bson:"criticality,omitempty" json:"criticality,omitempty"`
-	SensitivityType string        `bson:"sensitivityType,omitempty" json:"sensitivityType,omitempty"`
-	RecordedDate    *FHIRDateTime `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
-	Status          string        `bson:"status,omitempty" json:"status,omitempty"`
-	Subject         *Reference    `bson:"subject,omitempty" json:"subject,omitempty"`
-	Recorder        *Reference    `bson:"recorder,omitempty" json:"recorder,omitempty"`
-	Substance       *Reference    `bson:"substance,omitempty" json:"substance,omitempty"`
-	Reaction        []Reference   `bson:"reaction,omitempty" json:"reaction,omitempty"`
-	SensitivityTest []Reference   `bson:"sensitivityTest,omitempty" json:"sensitivityTest,omitempty"`
+	Id            string                                               `json:"-" bson:"_id"`
+	Identifier    []Identifier                                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	RecordedDate  *FHIRDateTime                                        `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
+	Recorder      *Reference                                           `bson:"recorder,omitempty" json:"recorder,omitempty"`
+	Patient       *Reference                                           `bson:"patient,omitempty" json:"patient,omitempty"`
+	Reporter      *Reference                                           `bson:"reporter,omitempty" json:"reporter,omitempty"`
+	Substance     *CodeableConcept                                     `bson:"substance,omitempty" json:"substance,omitempty"`
+	Status        string                                               `bson:"status,omitempty" json:"status,omitempty"`
+	Criticality   string                                               `bson:"criticality,omitempty" json:"criticality,omitempty"`
+	Type          string                                               `bson:"type,omitempty" json:"type,omitempty"`
+	Category      string                                               `bson:"category,omitempty" json:"category,omitempty"`
+	LastOccurence *FHIRDateTime                                        `bson:"lastOccurence,omitempty" json:"lastOccurence,omitempty"`
+	Comment       string                                               `bson:"comment,omitempty" json:"comment,omitempty"`
+	Event         []AllergyIntoleranceAllergyIntoleranceEventComponent `bson:"event,omitempty" json:"event,omitempty"`
+}
+type AllergyIntoleranceAllergyIntoleranceEventComponent struct {
+	Substance     *CodeableConcept  `bson:"substance,omitempty" json:"substance,omitempty"`
+	Certainty     string            `bson:"certainty,omitempty" json:"certainty,omitempty"`
+	Manifestation []CodeableConcept `bson:"manifestation,omitempty" json:"manifestation,omitempty"`
+	Description   string            `bson:"description,omitempty" json:"description,omitempty"`
+	Onset         *FHIRDateTime     `bson:"onset,omitempty" json:"onset,omitempty"`
+	Duration      *Quantity         `bson:"duration,omitempty" json:"duration,omitempty"`
+	Severity      string            `bson:"severity,omitempty" json:"severity,omitempty"`
+	ExposureRoute *CodeableConcept  `bson:"exposureRoute,omitempty" json:"exposureRoute,omitempty"`
+	Comment       string            `bson:"comment,omitempty" json:"comment,omitempty"`
 }
 
 type AllergyIntoleranceBundle struct {

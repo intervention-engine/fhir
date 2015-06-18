@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,13 +29,34 @@ package models
 import "time"
 
 type Questionnaire struct {
-	Id         string          `json:"-" bson:"_id"`
-	Identifier []Identifier    `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version    string          `bson:"version,omitempty" json:"version,omitempty"`
-	Status     string          `bson:"status,omitempty" json:"status,omitempty"`
-	Date       *FHIRDateTime   `bson:"date,omitempty" json:"date,omitempty"`
-	Publisher  string          `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Group      *GroupComponent `bson:"group,omitempty" json:"group,omitempty"`
+	Id         string                       `json:"-" bson:"_id"`
+	Identifier []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version    string                       `bson:"version,omitempty" json:"version,omitempty"`
+	Status     string                       `bson:"status,omitempty" json:"status,omitempty"`
+	Date       *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
+	Publisher  string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Telecom    []ContactPoint               `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Group      *QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
+}
+type QuestionnaireGroupComponent struct {
+	LinkId   string                           `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Title    string                           `bson:"title,omitempty" json:"title,omitempty"`
+	Concept  []Coding                         `bson:"concept,omitempty" json:"concept,omitempty"`
+	Text     string                           `bson:"text,omitempty" json:"text,omitempty"`
+	Required *bool                            `bson:"required,omitempty" json:"required,omitempty"`
+	Repeats  *bool                            `bson:"repeats,omitempty" json:"repeats,omitempty"`
+	Group    []QuestionnaireGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
+	Question []QuestionnaireQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
+}
+type QuestionnaireQuestionComponent struct {
+	LinkId   string                        `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Concept  []Coding                      `bson:"concept,omitempty" json:"concept,omitempty"`
+	Text     string                        `bson:"text,omitempty" json:"text,omitempty"`
+	Type     string                        `bson:"type,omitempty" json:"type,omitempty"`
+	Required *bool                         `bson:"required,omitempty" json:"required,omitempty"`
+	Repeats  *bool                         `bson:"repeats,omitempty" json:"repeats,omitempty"`
+	Options  *Reference                    `bson:"options,omitempty" json:"options,omitempty"`
+	Group    []QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
 type QuestionnaireBundle struct {

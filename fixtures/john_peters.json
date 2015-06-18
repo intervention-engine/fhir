@@ -21,7 +21,7 @@
 		}],
 		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 	}],
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"period": {
@@ -38,7 +38,7 @@
 		}],
 		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 	}],
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"period": {
@@ -55,7 +55,7 @@
 		}],
 		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 	}],
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"period": {
@@ -72,7 +72,7 @@
 		}],
 		"text": "Encounter, Performed: Alcohol and Drug Dependence Treatment (Code List: 2.16.840.1.113883.3.464.1003.106.12.1005)"
 	}],
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"period": {
@@ -82,7 +82,7 @@
 	"_type": "Encounter"
 }, {
 	"id": "8152735454557708826",
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"code": {
@@ -98,11 +98,11 @@
 		}],
 		"text": "Diagnosis, Active: Heart Failure (Code List: 2.16.840.1.113883.3.526.3.376)"
 	},
-	"onsetDate": "2012-03-01T07:00:00-05:00",
+	"onsetDateTime": "2012-03-01T07:00:00-05:00",
 	"_type": "Condition"
 }, {
 	"id": "6537998722039342602",
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"code": {
@@ -112,11 +112,11 @@
 		}],
 		"text": "Diagnosis, Active: Moderate or Severe LVSD (Code List: 2.16.840.1.113883.3.526.3.1090)"
 	},
-	"onsetDate": "2012-03-01T07:05:00-05:00",
+	"onsetDateTime": "2012-03-01T07:05:00-05:00",
 	"_type": "Condition"
 }, {
 	"id": "4285982094018039831",
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"code": {
@@ -132,11 +132,11 @@
 		}],
 		"text": "Diagnosis, Active: Ischemic Vascular Disease (Code List: 2.16.840.1.113883.3.464.1003.104.12.1003)"
 	},
-	"onsetDate": "2012-03-01T07:05:00-05:00",
+	"onsetDateTime": "2012-03-01T07:05:00-05:00",
 	"_type": "Condition"
 }, {
 	"id": "1426414870600409200",
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"code": {
@@ -152,11 +152,11 @@
 		}],
 		"text": "Diagnosis, Active: Coronary Artery Disease No MI (Code List: 2.16.840.1.113883.3.526.3.369)"
 	},
-	"onsetDate": "2012-03-01T07:05:00-05:00",
+	"onsetDateTime": "2012-03-01T07:05:00-05:00",
 	"_type": "Condition"
 }, {
 	"id": "9136836671584307289",
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"code": {
@@ -169,11 +169,11 @@
 		}],
 		"text": "Diagnosis, Active: Hypertension (Code List: 2.16.840.1.113883.3.464.1003.104.12.1016)"
 	},
-	"onsetDate": "2012-03-01T07:30:00-05:00",
+	"onsetDateTime": "2012-03-01T07:30:00-05:00",
 	"_type": "Condition"
 }, {
 	"id": "629085068732202685",
-	"name": {
+	"code": {
 		"coding": [{
 			"system": "http://loinc.org",
 			"code": "17856-6"
@@ -184,7 +184,7 @@
 		"value": 8,
 		"units": "%"
 	},
-	"appliesPeriod": {
+	"effectivePeriod": {
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T08:16:40-04:00"
 	},
@@ -199,7 +199,7 @@
 	"_type": "Observation"
 }, {
 	"id": "3279177534060383143",
-	"name": {
+	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
 			"code": "116783008"
@@ -213,7 +213,7 @@
 		}],
 		"text": "Colon Distant Metastasis Status M0"
 	},
-	"appliesPeriod": {
+	"effectivePeriod": {
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
@@ -225,7 +225,7 @@
 	"_type": "Observation"
 }, {
 	"id": "6511348019734420772",
-	"name": {
+	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
 			"code": "116783008"
@@ -239,7 +239,7 @@
 		}],
 		"text": "Colon Cancer Regional Lymph Node Status N2b"
 	},
-	"appliesPeriod": {
+	"effectivePeriod": {
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
@@ -251,7 +251,7 @@
 	"_type": "Observation"
 }, {
 	"id": "7319679375939829831",
-	"name": {
+	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
 			"code": "116783008"
@@ -265,7 +265,7 @@
 		}],
 		"text": "Colon Cancer Primary Tumor Size T4a"
 	},
-	"appliesPeriod": {
+	"effectivePeriod": {
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
@@ -290,7 +290,7 @@
 	"_type": "DiagnosticReport"
 }, {
 	"id": "5323486591651338218",
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"type": {
@@ -300,7 +300,7 @@
 		}],
 		"text": "Procedure, Result: Clinical Staging Procedure"
 	},
-	"date": {
+	"performedPeriod": {
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
@@ -314,7 +314,7 @@
 	"_type": "Procedure"
 }, {
 	"id": "4225523793032465678",
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"type": {
@@ -330,7 +330,7 @@
 		}],
 		"text": "Procedure, Performed: Hospital measures-CABG"
 	},
-	"date": {
+	"performedPeriod": {
 		"start": "2013-03-02T10:45:00-05:00",
 		"end": "2013-03-02T11:45:00-05:00"
 	},
@@ -352,11 +352,11 @@
 	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
-	"whenGiven": {
+	"effectivePeriod": {
 		"start": "2012-10-01T08:00:00-04:00",
 		"end": "2012-10-01T08:00:00-04:00"
 	},
-	"medication": {
+	"medicationReference": {
 		"Reference": "cid:4561916044292884655"
 	},
 	"_type": "MedicationStatement"
@@ -370,7 +370,7 @@
 		}],
 		"text": "Medication, Administered: Pneumococcal Vaccine (Code List: 2.16.840.1.113883.3.464.1003.110.12.1027)"
 	},
-	"subject": {
+	"patient": {
 		"Reference": "cid:6023109061163416065"
 	},
 	"_type": "Immunization"

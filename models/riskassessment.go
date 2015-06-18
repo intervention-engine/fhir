@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,25 +29,23 @@ package models
 import "time"
 
 type RiskAssessment struct {
-	Id         string                              `json:"-" bson:"_id"`
-	Subject    *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
-	Date       *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
-	Condition  *Reference                          `bson:"condition,omitempty" json:"condition,omitempty"`
-	Performer  *Reference                          `bson:"performer,omitempty" json:"performer,omitempty"`
-	Identifier *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Method     *CodeableConcept                    `bson:"method,omitempty" json:"method,omitempty"`
-	Basis      []Reference                         `bson:"basis,omitempty" json:"basis,omitempty"`
-	Prediction []RiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
-	Mitigation string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
+	Id         string                                            `json:"-" bson:"_id"`
+	Subject    *Reference                                        `bson:"subject,omitempty" json:"subject,omitempty"`
+	Date       *FHIRDateTime                                     `bson:"date,omitempty" json:"date,omitempty"`
+	Condition  *Reference                                        `bson:"condition,omitempty" json:"condition,omitempty"`
+	Performer  *Reference                                        `bson:"performer,omitempty" json:"performer,omitempty"`
+	Identifier *Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Method     *CodeableConcept                                  `bson:"method,omitempty" json:"method,omitempty"`
+	Basis      []Reference                                       `bson:"basis,omitempty" json:"basis,omitempty"`
+	Prediction []RiskAssessmentRiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
+	Mitigation string                                            `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
-
-// This is an ugly hack to deal with embedded structures in the spec prediction
-type RiskAssessmentPredictionComponent struct {
+type RiskAssessmentRiskAssessmentPredictionComponent struct {
 	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	ProbabilityDecimal         float64          `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
+	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
 	ProbabilityRange           *Range           `bson:"probabilityRange,omitempty" json:"probabilityRange,omitempty"`
 	ProbabilityCodeableConcept *CodeableConcept `bson:"probabilityCodeableConcept,omitempty" json:"probabilityCodeableConcept,omitempty"`
-	RelativeRisk               float64          `bson:"relativeRisk,omitempty" json:"relativeRisk,omitempty"`
+	RelativeRisk               *float64         `bson:"relativeRisk,omitempty" json:"relativeRisk,omitempty"`
 	WhenPeriod                 *Period          `bson:"whenPeriod,omitempty" json:"whenPeriod,omitempty"`
 	WhenRange                  *Range           `bson:"whenRange,omitempty" json:"whenRange,omitempty"`
 	Rationale                  string           `bson:"rationale,omitempty" json:"rationale,omitempty"`

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -27,11 +27,11 @@
 package models
 
 type Identifier struct {
-	Id       string     `json:"-" bson:"_id"`
-	Use      string     `bson:"use,omitempty" json:"use,omitempty"`
-	Label    string     `bson:"label,omitempty" json:"label,omitempty"`
-	System   string     `bson:"system,omitempty" json:"system,omitempty"`
-	Value    string     `bson:"value,omitempty" json:"value,omitempty"`
-	Period   *Period    `bson:"period,omitempty" json:"period,omitempty"`
-	Assigner *Reference `bson:"assigner,omitempty" json:"assigner,omitempty"`
+	Id       string           `json:"-" bson:"_id"`
+	Use      string           `bson:"use,omitempty" json:"use,omitempty"`
+	Type     *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	System   string           `bson:"system,omitempty" json:"system,omitempty"`
+	Value    string           `bson:"value,omitempty" json:"value,omitempty"`
+	Period   *Period          `bson:"period,omitempty" json:"period,omitempty"`
+	Assigner *Reference       `bson:"assigner,omitempty" json:"assigner,omitempty"`
 }

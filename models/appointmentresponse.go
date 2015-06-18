@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -33,13 +33,11 @@ type AppointmentResponse struct {
 	Identifier        []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Appointment       *Reference        `bson:"appointment,omitempty" json:"appointment,omitempty"`
 	ParticipantType   []CodeableConcept `bson:"participantType,omitempty" json:"participantType,omitempty"`
-	Individual        []Reference       `bson:"individual,omitempty" json:"individual,omitempty"`
+	Actor             *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
 	ParticipantStatus string            `bson:"participantStatus,omitempty" json:"participantStatus,omitempty"`
 	Comment           string            `bson:"comment,omitempty" json:"comment,omitempty"`
 	Start             *FHIRDateTime     `bson:"start,omitempty" json:"start,omitempty"`
 	End               *FHIRDateTime     `bson:"end,omitempty" json:"end,omitempty"`
-	LastModifiedBy    *Reference        `bson:"lastModifiedBy,omitempty" json:"lastModifiedBy,omitempty"`
-	LastModified      *FHIRDateTime     `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
 }
 
 type AppointmentResponseBundle struct {

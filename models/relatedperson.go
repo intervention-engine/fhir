@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -38,6 +38,7 @@ type RelatedPerson struct {
 	Gender       *CodeableConcept `bson:"gender,omitempty" json:"gender,omitempty"`
 	Address      *Address         `bson:"address,omitempty" json:"address,omitempty"`
 	Photo        []Attachment     `bson:"photo,omitempty" json:"photo,omitempty"`
+	Period       *Period          `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 type RelatedPersonBundle struct {

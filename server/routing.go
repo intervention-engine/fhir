@@ -43,14 +43,14 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	questionnaire.Methods("PUT").Handler(negroni.New(append(config["QuestionnaireUpdate"], negroni.HandlerFunc(QuestionnaireUpdateHandler))...))
 	questionnaire.Methods("DELETE").Handler(negroni.New(append(config["QuestionnaireDelete"], negroni.HandlerFunc(QuestionnaireDeleteHandler))...))
 
-	queryBase := router.Path("/Query").Subrouter()
-	queryBase.Methods("GET").Handler(negroni.New(append(config["QueryIndex"], negroni.HandlerFunc(QueryIndexHandler))...))
-	queryBase.Methods("POST").Handler(negroni.New(append(config["QueryCreate"], negroni.HandlerFunc(QueryCreateHandler))...))
+	explanationofbenefitBase := router.Path("/ExplanationOfBenefit").Subrouter()
+	explanationofbenefitBase.Methods("GET").Handler(negroni.New(append(config["ExplanationOfBenefitIndex"], negroni.HandlerFunc(ExplanationOfBenefitIndexHandler))...))
+	explanationofbenefitBase.Methods("POST").Handler(negroni.New(append(config["ExplanationOfBenefitCreate"], negroni.HandlerFunc(ExplanationOfBenefitCreateHandler))...))
 
-	query := router.Path("/Query/{id}").Subrouter()
-	query.Methods("GET").Handler(negroni.New(append(config["QueryShow"], negroni.HandlerFunc(QueryShowHandler))...))
-	query.Methods("PUT").Handler(negroni.New(append(config["QueryUpdate"], negroni.HandlerFunc(QueryUpdateHandler))...))
-	query.Methods("DELETE").Handler(negroni.New(append(config["QueryDelete"], negroni.HandlerFunc(QueryDeleteHandler))...))
+	explanationofbenefit := router.Path("/ExplanationOfBenefit/{id}").Subrouter()
+	explanationofbenefit.Methods("GET").Handler(negroni.New(append(config["ExplanationOfBenefitShow"], negroni.HandlerFunc(ExplanationOfBenefitShowHandler))...))
+	explanationofbenefit.Methods("PUT").Handler(negroni.New(append(config["ExplanationOfBenefitUpdate"], negroni.HandlerFunc(ExplanationOfBenefitUpdateHandler))...))
+	explanationofbenefit.Methods("DELETE").Handler(negroni.New(append(config["ExplanationOfBenefitDelete"], negroni.HandlerFunc(ExplanationOfBenefitDeleteHandler))...))
 
 	documentmanifestBase := router.Path("/DocumentManifest").Subrouter()
 	documentmanifestBase.Methods("GET").Handler(negroni.New(append(config["DocumentManifestIndex"], negroni.HandlerFunc(DocumentManifestIndexHandler))...))
@@ -88,6 +88,42 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	careplan.Methods("PUT").Handler(negroni.New(append(config["CarePlanUpdate"], negroni.HandlerFunc(CarePlanUpdateHandler))...))
 	careplan.Methods("DELETE").Handler(negroni.New(append(config["CarePlanDelete"], negroni.HandlerFunc(CarePlanDeleteHandler))...))
 
+	goalBase := router.Path("/Goal").Subrouter()
+	goalBase.Methods("GET").Handler(negroni.New(append(config["GoalIndex"], negroni.HandlerFunc(GoalIndexHandler))...))
+	goalBase.Methods("POST").Handler(negroni.New(append(config["GoalCreate"], negroni.HandlerFunc(GoalCreateHandler))...))
+
+	goal := router.Path("/Goal/{id}").Subrouter()
+	goal.Methods("GET").Handler(negroni.New(append(config["GoalShow"], negroni.HandlerFunc(GoalShowHandler))...))
+	goal.Methods("PUT").Handler(negroni.New(append(config["GoalUpdate"], negroni.HandlerFunc(GoalUpdateHandler))...))
+	goal.Methods("DELETE").Handler(negroni.New(append(config["GoalDelete"], negroni.HandlerFunc(GoalDeleteHandler))...))
+
+	structuredefinitionBase := router.Path("/StructureDefinition").Subrouter()
+	structuredefinitionBase.Methods("GET").Handler(negroni.New(append(config["StructureDefinitionIndex"], negroni.HandlerFunc(StructureDefinitionIndexHandler))...))
+	structuredefinitionBase.Methods("POST").Handler(negroni.New(append(config["StructureDefinitionCreate"], negroni.HandlerFunc(StructureDefinitionCreateHandler))...))
+
+	structuredefinition := router.Path("/StructureDefinition/{id}").Subrouter()
+	structuredefinition.Methods("GET").Handler(negroni.New(append(config["StructureDefinitionShow"], negroni.HandlerFunc(StructureDefinitionShowHandler))...))
+	structuredefinition.Methods("PUT").Handler(negroni.New(append(config["StructureDefinitionUpdate"], negroni.HandlerFunc(StructureDefinitionUpdateHandler))...))
+	structuredefinition.Methods("DELETE").Handler(negroni.New(append(config["StructureDefinitionDelete"], negroni.HandlerFunc(StructureDefinitionDeleteHandler))...))
+
+	enrollmentrequestBase := router.Path("/EnrollmentRequest").Subrouter()
+	enrollmentrequestBase.Methods("GET").Handler(negroni.New(append(config["EnrollmentRequestIndex"], negroni.HandlerFunc(EnrollmentRequestIndexHandler))...))
+	enrollmentrequestBase.Methods("POST").Handler(negroni.New(append(config["EnrollmentRequestCreate"], negroni.HandlerFunc(EnrollmentRequestCreateHandler))...))
+
+	enrollmentrequest := router.Path("/EnrollmentRequest/{id}").Subrouter()
+	enrollmentrequest.Methods("GET").Handler(negroni.New(append(config["EnrollmentRequestShow"], negroni.HandlerFunc(EnrollmentRequestShowHandler))...))
+	enrollmentrequest.Methods("PUT").Handler(negroni.New(append(config["EnrollmentRequestUpdate"], negroni.HandlerFunc(EnrollmentRequestUpdateHandler))...))
+	enrollmentrequest.Methods("DELETE").Handler(negroni.New(append(config["EnrollmentRequestDelete"], negroni.HandlerFunc(EnrollmentRequestDeleteHandler))...))
+
+	episodeofcareBase := router.Path("/EpisodeOfCare").Subrouter()
+	episodeofcareBase.Methods("GET").Handler(negroni.New(append(config["EpisodeOfCareIndex"], negroni.HandlerFunc(EpisodeOfCareIndexHandler))...))
+	episodeofcareBase.Methods("POST").Handler(negroni.New(append(config["EpisodeOfCareCreate"], negroni.HandlerFunc(EpisodeOfCareCreateHandler))...))
+
+	episodeofcare := router.Path("/EpisodeOfCare/{id}").Subrouter()
+	episodeofcare.Methods("GET").Handler(negroni.New(append(config["EpisodeOfCareShow"], negroni.HandlerFunc(EpisodeOfCareShowHandler))...))
+	episodeofcare.Methods("PUT").Handler(negroni.New(append(config["EpisodeOfCareUpdate"], negroni.HandlerFunc(EpisodeOfCareUpdateHandler))...))
+	episodeofcare.Methods("DELETE").Handler(negroni.New(append(config["EpisodeOfCareDelete"], negroni.HandlerFunc(EpisodeOfCareDeleteHandler))...))
+
 	medicationprescriptionBase := router.Path("/MedicationPrescription").Subrouter()
 	medicationprescriptionBase.Methods("GET").Handler(negroni.New(append(config["MedicationPrescriptionIndex"], negroni.HandlerFunc(MedicationPrescriptionIndexHandler))...))
 	medicationprescriptionBase.Methods("POST").Handler(negroni.New(append(config["MedicationPrescriptionCreate"], negroni.HandlerFunc(MedicationPrescriptionCreateHandler))...))
@@ -105,15 +141,6 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	operationoutcome.Methods("GET").Handler(negroni.New(append(config["OperationOutcomeShow"], negroni.HandlerFunc(OperationOutcomeShowHandler))...))
 	operationoutcome.Methods("PUT").Handler(negroni.New(append(config["OperationOutcomeUpdate"], negroni.HandlerFunc(OperationOutcomeUpdateHandler))...))
 	operationoutcome.Methods("DELETE").Handler(negroni.New(append(config["OperationOutcomeDelete"], negroni.HandlerFunc(OperationOutcomeDeleteHandler))...))
-
-	familyhistoryBase := router.Path("/FamilyHistory").Subrouter()
-	familyhistoryBase.Methods("GET").Handler(negroni.New(append(config["FamilyHistoryIndex"], negroni.HandlerFunc(FamilyHistoryIndexHandler))...))
-	familyhistoryBase.Methods("POST").Handler(negroni.New(append(config["FamilyHistoryCreate"], negroni.HandlerFunc(FamilyHistoryCreateHandler))...))
-
-	familyhistory := router.Path("/FamilyHistory/{id}").Subrouter()
-	familyhistory.Methods("GET").Handler(negroni.New(append(config["FamilyHistoryShow"], negroni.HandlerFunc(FamilyHistoryShowHandler))...))
-	familyhistory.Methods("PUT").Handler(negroni.New(append(config["FamilyHistoryUpdate"], negroni.HandlerFunc(FamilyHistoryUpdateHandler))...))
-	familyhistory.Methods("DELETE").Handler(negroni.New(append(config["FamilyHistoryDelete"], negroni.HandlerFunc(FamilyHistoryDeleteHandler))...))
 
 	medicationBase := router.Path("/Medication").Subrouter()
 	medicationBase.Methods("GET").Handler(negroni.New(append(config["MedicationIndex"], negroni.HandlerFunc(MedicationIndexHandler))...))
@@ -196,15 +223,6 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	order.Methods("PUT").Handler(negroni.New(append(config["OrderUpdate"], negroni.HandlerFunc(OrderUpdateHandler))...))
 	order.Methods("DELETE").Handler(negroni.New(append(config["OrderDelete"], negroni.HandlerFunc(OrderDeleteHandler))...))
 
-	availabilityBase := router.Path("/Availability").Subrouter()
-	availabilityBase.Methods("GET").Handler(negroni.New(append(config["AvailabilityIndex"], negroni.HandlerFunc(AvailabilityIndexHandler))...))
-	availabilityBase.Methods("POST").Handler(negroni.New(append(config["AvailabilityCreate"], negroni.HandlerFunc(AvailabilityCreateHandler))...))
-
-	availability := router.Path("/Availability/{id}").Subrouter()
-	availability.Methods("GET").Handler(negroni.New(append(config["AvailabilityShow"], negroni.HandlerFunc(AvailabilityShowHandler))...))
-	availability.Methods("PUT").Handler(negroni.New(append(config["AvailabilityUpdate"], negroni.HandlerFunc(AvailabilityUpdateHandler))...))
-	availability.Methods("DELETE").Handler(negroni.New(append(config["AvailabilityDelete"], negroni.HandlerFunc(AvailabilityDeleteHandler))...))
-
 	immunizationBase := router.Path("/Immunization").Subrouter()
 	immunizationBase.Methods("GET").Handler(negroni.New(append(config["ImmunizationIndex"], negroni.HandlerFunc(ImmunizationIndexHandler))...))
 	immunizationBase.Methods("POST").Handler(negroni.New(append(config["ImmunizationCreate"], negroni.HandlerFunc(ImmunizationCreateHandler))...))
@@ -214,15 +232,6 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	immunization.Methods("PUT").Handler(negroni.New(append(config["ImmunizationUpdate"], negroni.HandlerFunc(ImmunizationUpdateHandler))...))
 	immunization.Methods("DELETE").Handler(negroni.New(append(config["ImmunizationDelete"], negroni.HandlerFunc(ImmunizationDeleteHandler))...))
 
-	securityeventBase := router.Path("/SecurityEvent").Subrouter()
-	securityeventBase.Methods("GET").Handler(negroni.New(append(config["SecurityEventIndex"], negroni.HandlerFunc(SecurityEventIndexHandler))...))
-	securityeventBase.Methods("POST").Handler(negroni.New(append(config["SecurityEventCreate"], negroni.HandlerFunc(SecurityEventCreateHandler))...))
-
-	securityevent := router.Path("/SecurityEvent/{id}").Subrouter()
-	securityevent.Methods("GET").Handler(negroni.New(append(config["SecurityEventShow"], negroni.HandlerFunc(SecurityEventShowHandler))...))
-	securityevent.Methods("PUT").Handler(negroni.New(append(config["SecurityEventUpdate"], negroni.HandlerFunc(SecurityEventUpdateHandler))...))
-	securityevent.Methods("DELETE").Handler(negroni.New(append(config["SecurityEventDelete"], negroni.HandlerFunc(SecurityEventDeleteHandler))...))
-
 	deviceBase := router.Path("/Device").Subrouter()
 	deviceBase.Methods("GET").Handler(negroni.New(append(config["DeviceIndex"], negroni.HandlerFunc(DeviceIndexHandler))...))
 	deviceBase.Methods("POST").Handler(negroni.New(append(config["DeviceCreate"], negroni.HandlerFunc(DeviceCreateHandler))...))
@@ -231,6 +240,15 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	device.Methods("GET").Handler(negroni.New(append(config["DeviceShow"], negroni.HandlerFunc(DeviceShowHandler))...))
 	device.Methods("PUT").Handler(negroni.New(append(config["DeviceUpdate"], negroni.HandlerFunc(DeviceUpdateHandler))...))
 	device.Methods("DELETE").Handler(negroni.New(append(config["DeviceDelete"], negroni.HandlerFunc(DeviceDeleteHandler))...))
+
+	visionprescriptionBase := router.Path("/VisionPrescription").Subrouter()
+	visionprescriptionBase.Methods("GET").Handler(negroni.New(append(config["VisionPrescriptionIndex"], negroni.HandlerFunc(VisionPrescriptionIndexHandler))...))
+	visionprescriptionBase.Methods("POST").Handler(negroni.New(append(config["VisionPrescriptionCreate"], negroni.HandlerFunc(VisionPrescriptionCreateHandler))...))
+
+	visionprescription := router.Path("/VisionPrescription/{id}").Subrouter()
+	visionprescription.Methods("GET").Handler(negroni.New(append(config["VisionPrescriptionShow"], negroni.HandlerFunc(VisionPrescriptionShowHandler))...))
+	visionprescription.Methods("PUT").Handler(negroni.New(append(config["VisionPrescriptionUpdate"], negroni.HandlerFunc(VisionPrescriptionUpdateHandler))...))
+	visionprescription.Methods("DELETE").Handler(negroni.New(append(config["VisionPrescriptionDelete"], negroni.HandlerFunc(VisionPrescriptionDeleteHandler))...))
 
 	mediaBase := router.Path("/Media").Subrouter()
 	mediaBase.Methods("GET").Handler(negroni.New(append(config["MediaIndex"], negroni.HandlerFunc(MediaIndexHandler))...))
@@ -250,6 +268,51 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	conformance.Methods("PUT").Handler(negroni.New(append(config["ConformanceUpdate"], negroni.HandlerFunc(ConformanceUpdateHandler))...))
 	conformance.Methods("DELETE").Handler(negroni.New(append(config["ConformanceDelete"], negroni.HandlerFunc(ConformanceDeleteHandler))...))
 
+	procedurerequestBase := router.Path("/ProcedureRequest").Subrouter()
+	procedurerequestBase.Methods("GET").Handler(negroni.New(append(config["ProcedureRequestIndex"], negroni.HandlerFunc(ProcedureRequestIndexHandler))...))
+	procedurerequestBase.Methods("POST").Handler(negroni.New(append(config["ProcedureRequestCreate"], negroni.HandlerFunc(ProcedureRequestCreateHandler))...))
+
+	procedurerequest := router.Path("/ProcedureRequest/{id}").Subrouter()
+	procedurerequest.Methods("GET").Handler(negroni.New(append(config["ProcedureRequestShow"], negroni.HandlerFunc(ProcedureRequestShowHandler))...))
+	procedurerequest.Methods("PUT").Handler(negroni.New(append(config["ProcedureRequestUpdate"], negroni.HandlerFunc(ProcedureRequestUpdateHandler))...))
+	procedurerequest.Methods("DELETE").Handler(negroni.New(append(config["ProcedureRequestDelete"], negroni.HandlerFunc(ProcedureRequestDeleteHandler))...))
+
+	eligibilityresponseBase := router.Path("/EligibilityResponse").Subrouter()
+	eligibilityresponseBase.Methods("GET").Handler(negroni.New(append(config["EligibilityResponseIndex"], negroni.HandlerFunc(EligibilityResponseIndexHandler))...))
+	eligibilityresponseBase.Methods("POST").Handler(negroni.New(append(config["EligibilityResponseCreate"], negroni.HandlerFunc(EligibilityResponseCreateHandler))...))
+
+	eligibilityresponse := router.Path("/EligibilityResponse/{id}").Subrouter()
+	eligibilityresponse.Methods("GET").Handler(negroni.New(append(config["EligibilityResponseShow"], negroni.HandlerFunc(EligibilityResponseShowHandler))...))
+	eligibilityresponse.Methods("PUT").Handler(negroni.New(append(config["EligibilityResponseUpdate"], negroni.HandlerFunc(EligibilityResponseUpdateHandler))...))
+	eligibilityresponse.Methods("DELETE").Handler(negroni.New(append(config["EligibilityResponseDelete"], negroni.HandlerFunc(EligibilityResponseDeleteHandler))...))
+
+	deviceuserequestBase := router.Path("/DeviceUseRequest").Subrouter()
+	deviceuserequestBase.Methods("GET").Handler(negroni.New(append(config["DeviceUseRequestIndex"], negroni.HandlerFunc(DeviceUseRequestIndexHandler))...))
+	deviceuserequestBase.Methods("POST").Handler(negroni.New(append(config["DeviceUseRequestCreate"], negroni.HandlerFunc(DeviceUseRequestCreateHandler))...))
+
+	deviceuserequest := router.Path("/DeviceUseRequest/{id}").Subrouter()
+	deviceuserequest.Methods("GET").Handler(negroni.New(append(config["DeviceUseRequestShow"], negroni.HandlerFunc(DeviceUseRequestShowHandler))...))
+	deviceuserequest.Methods("PUT").Handler(negroni.New(append(config["DeviceUseRequestUpdate"], negroni.HandlerFunc(DeviceUseRequestUpdateHandler))...))
+	deviceuserequest.Methods("DELETE").Handler(negroni.New(append(config["DeviceUseRequestDelete"], negroni.HandlerFunc(DeviceUseRequestDeleteHandler))...))
+
+	devicemetricBase := router.Path("/DeviceMetric").Subrouter()
+	devicemetricBase.Methods("GET").Handler(negroni.New(append(config["DeviceMetricIndex"], negroni.HandlerFunc(DeviceMetricIndexHandler))...))
+	devicemetricBase.Methods("POST").Handler(negroni.New(append(config["DeviceMetricCreate"], negroni.HandlerFunc(DeviceMetricCreateHandler))...))
+
+	devicemetric := router.Path("/DeviceMetric/{id}").Subrouter()
+	devicemetric.Methods("GET").Handler(negroni.New(append(config["DeviceMetricShow"], negroni.HandlerFunc(DeviceMetricShowHandler))...))
+	devicemetric.Methods("PUT").Handler(negroni.New(append(config["DeviceMetricUpdate"], negroni.HandlerFunc(DeviceMetricUpdateHandler))...))
+	devicemetric.Methods("DELETE").Handler(negroni.New(append(config["DeviceMetricDelete"], negroni.HandlerFunc(DeviceMetricDeleteHandler))...))
+
+	flagBase := router.Path("/Flag").Subrouter()
+	flagBase.Methods("GET").Handler(negroni.New(append(config["FlagIndex"], negroni.HandlerFunc(FlagIndexHandler))...))
+	flagBase.Methods("POST").Handler(negroni.New(append(config["FlagCreate"], negroni.HandlerFunc(FlagCreateHandler))...))
+
+	flag := router.Path("/Flag/{id}").Subrouter()
+	flag.Methods("GET").Handler(negroni.New(append(config["FlagShow"], negroni.HandlerFunc(FlagShowHandler))...))
+	flag.Methods("PUT").Handler(negroni.New(append(config["FlagUpdate"], negroni.HandlerFunc(FlagUpdateHandler))...))
+	flag.Methods("DELETE").Handler(negroni.New(append(config["FlagDelete"], negroni.HandlerFunc(FlagDeleteHandler))...))
+
 	relatedpersonBase := router.Path("/RelatedPerson").Subrouter()
 	relatedpersonBase.Methods("GET").Handler(negroni.New(append(config["RelatedPersonIndex"], negroni.HandlerFunc(RelatedPersonIndexHandler))...))
 	relatedpersonBase.Methods("POST").Handler(negroni.New(append(config["RelatedPersonCreate"], negroni.HandlerFunc(RelatedPersonCreateHandler))...))
@@ -259,14 +322,14 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	relatedperson.Methods("PUT").Handler(negroni.New(append(config["RelatedPersonUpdate"], negroni.HandlerFunc(RelatedPersonUpdateHandler))...))
 	relatedperson.Methods("DELETE").Handler(negroni.New(append(config["RelatedPersonDelete"], negroni.HandlerFunc(RelatedPersonDeleteHandler))...))
 
-	namespaceBase := router.Path("/Namespace").Subrouter()
-	namespaceBase.Methods("GET").Handler(negroni.New(append(config["NamespaceIndex"], negroni.HandlerFunc(NamespaceIndexHandler))...))
-	namespaceBase.Methods("POST").Handler(negroni.New(append(config["NamespaceCreate"], negroni.HandlerFunc(NamespaceCreateHandler))...))
+	supplyrequestBase := router.Path("/SupplyRequest").Subrouter()
+	supplyrequestBase.Methods("GET").Handler(negroni.New(append(config["SupplyRequestIndex"], negroni.HandlerFunc(SupplyRequestIndexHandler))...))
+	supplyrequestBase.Methods("POST").Handler(negroni.New(append(config["SupplyRequestCreate"], negroni.HandlerFunc(SupplyRequestCreateHandler))...))
 
-	namespace := router.Path("/Namespace/{id}").Subrouter()
-	namespace.Methods("GET").Handler(negroni.New(append(config["NamespaceShow"], negroni.HandlerFunc(NamespaceShowHandler))...))
-	namespace.Methods("PUT").Handler(negroni.New(append(config["NamespaceUpdate"], negroni.HandlerFunc(NamespaceUpdateHandler))...))
-	namespace.Methods("DELETE").Handler(negroni.New(append(config["NamespaceDelete"], negroni.HandlerFunc(NamespaceDeleteHandler))...))
+	supplyrequest := router.Path("/SupplyRequest/{id}").Subrouter()
+	supplyrequest.Methods("GET").Handler(negroni.New(append(config["SupplyRequestShow"], negroni.HandlerFunc(SupplyRequestShowHandler))...))
+	supplyrequest.Methods("PUT").Handler(negroni.New(append(config["SupplyRequestUpdate"], negroni.HandlerFunc(SupplyRequestUpdateHandler))...))
+	supplyrequest.Methods("DELETE").Handler(negroni.New(append(config["SupplyRequestDelete"], negroni.HandlerFunc(SupplyRequestDeleteHandler))...))
 
 	practitionerBase := router.Path("/Practitioner").Subrouter()
 	practitionerBase.Methods("GET").Handler(negroni.New(append(config["PractitionerIndex"], negroni.HandlerFunc(PractitionerIndexHandler))...))
@@ -304,15 +367,6 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	medicationadministration.Methods("PUT").Handler(negroni.New(append(config["MedicationAdministrationUpdate"], negroni.HandlerFunc(MedicationAdministrationUpdateHandler))...))
 	medicationadministration.Methods("DELETE").Handler(negroni.New(append(config["MedicationAdministrationDelete"], negroni.HandlerFunc(MedicationAdministrationDeleteHandler))...))
 
-	deviceobservationreportBase := router.Path("/DeviceObservationReport").Subrouter()
-	deviceobservationreportBase.Methods("GET").Handler(negroni.New(append(config["DeviceObservationReportIndex"], negroni.HandlerFunc(DeviceObservationReportIndexHandler))...))
-	deviceobservationreportBase.Methods("POST").Handler(negroni.New(append(config["DeviceObservationReportCreate"], negroni.HandlerFunc(DeviceObservationReportCreateHandler))...))
-
-	deviceobservationreport := router.Path("/DeviceObservationReport/{id}").Subrouter()
-	deviceobservationreport.Methods("GET").Handler(negroni.New(append(config["DeviceObservationReportShow"], negroni.HandlerFunc(DeviceObservationReportShowHandler))...))
-	deviceobservationreport.Methods("PUT").Handler(negroni.New(append(config["DeviceObservationReportUpdate"], negroni.HandlerFunc(DeviceObservationReportUpdateHandler))...))
-	deviceobservationreport.Methods("DELETE").Handler(negroni.New(append(config["DeviceObservationReportDelete"], negroni.HandlerFunc(DeviceObservationReportDeleteHandler))...))
-
 	slotBase := router.Path("/Slot").Subrouter()
 	slotBase.Methods("GET").Handler(negroni.New(append(config["SlotIndex"], negroni.HandlerFunc(SlotIndexHandler))...))
 	slotBase.Methods("POST").Handler(negroni.New(append(config["SlotCreate"], negroni.HandlerFunc(SlotCreateHandler))...))
@@ -331,6 +385,24 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	contraindication.Methods("PUT").Handler(negroni.New(append(config["ContraindicationUpdate"], negroni.HandlerFunc(ContraindicationUpdateHandler))...))
 	contraindication.Methods("DELETE").Handler(negroni.New(append(config["ContraindicationDelete"], negroni.HandlerFunc(ContraindicationDeleteHandler))...))
 
+	enrollmentresponseBase := router.Path("/EnrollmentResponse").Subrouter()
+	enrollmentresponseBase.Methods("GET").Handler(negroni.New(append(config["EnrollmentResponseIndex"], negroni.HandlerFunc(EnrollmentResponseIndexHandler))...))
+	enrollmentresponseBase.Methods("POST").Handler(negroni.New(append(config["EnrollmentResponseCreate"], negroni.HandlerFunc(EnrollmentResponseCreateHandler))...))
+
+	enrollmentresponse := router.Path("/EnrollmentResponse/{id}").Subrouter()
+	enrollmentresponse.Methods("GET").Handler(negroni.New(append(config["EnrollmentResponseShow"], negroni.HandlerFunc(EnrollmentResponseShowHandler))...))
+	enrollmentresponse.Methods("PUT").Handler(negroni.New(append(config["EnrollmentResponseUpdate"], negroni.HandlerFunc(EnrollmentResponseUpdateHandler))...))
+	enrollmentresponse.Methods("DELETE").Handler(negroni.New(append(config["EnrollmentResponseDelete"], negroni.HandlerFunc(EnrollmentResponseDeleteHandler))...))
+
+	binaryBase := router.Path("/Binary").Subrouter()
+	binaryBase.Methods("GET").Handler(negroni.New(append(config["BinaryIndex"], negroni.HandlerFunc(BinaryIndexHandler))...))
+	binaryBase.Methods("POST").Handler(negroni.New(append(config["BinaryCreate"], negroni.HandlerFunc(BinaryCreateHandler))...))
+
+	binary := router.Path("/Binary/{id}").Subrouter()
+	binary.Methods("GET").Handler(negroni.New(append(config["BinaryShow"], negroni.HandlerFunc(BinaryShowHandler))...))
+	binary.Methods("PUT").Handler(negroni.New(append(config["BinaryUpdate"], negroni.HandlerFunc(BinaryUpdateHandler))...))
+	binary.Methods("DELETE").Handler(negroni.New(append(config["BinaryDelete"], negroni.HandlerFunc(BinaryDeleteHandler))...))
+
 	medicationstatementBase := router.Path("/MedicationStatement").Subrouter()
 	medicationstatementBase.Methods("GET").Handler(negroni.New(append(config["MedicationStatementIndex"], negroni.HandlerFunc(MedicationStatementIndexHandler))...))
 	medicationstatementBase.Methods("POST").Handler(negroni.New(append(config["MedicationStatementCreate"], negroni.HandlerFunc(MedicationStatementCreateHandler))...))
@@ -339,6 +411,33 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	medicationstatement.Methods("GET").Handler(negroni.New(append(config["MedicationStatementShow"], negroni.HandlerFunc(MedicationStatementShowHandler))...))
 	medicationstatement.Methods("PUT").Handler(negroni.New(append(config["MedicationStatementUpdate"], negroni.HandlerFunc(MedicationStatementUpdateHandler))...))
 	medicationstatement.Methods("DELETE").Handler(negroni.New(append(config["MedicationStatementDelete"], negroni.HandlerFunc(MedicationStatementDeleteHandler))...))
+
+	contractBase := router.Path("/Contract").Subrouter()
+	contractBase.Methods("GET").Handler(negroni.New(append(config["ContractIndex"], negroni.HandlerFunc(ContractIndexHandler))...))
+	contractBase.Methods("POST").Handler(negroni.New(append(config["ContractCreate"], negroni.HandlerFunc(ContractCreateHandler))...))
+
+	contract := router.Path("/Contract/{id}").Subrouter()
+	contract.Methods("GET").Handler(negroni.New(append(config["ContractShow"], negroni.HandlerFunc(ContractShowHandler))...))
+	contract.Methods("PUT").Handler(negroni.New(append(config["ContractUpdate"], negroni.HandlerFunc(ContractUpdateHandler))...))
+	contract.Methods("DELETE").Handler(negroni.New(append(config["ContractDelete"], negroni.HandlerFunc(ContractDeleteHandler))...))
+
+	personBase := router.Path("/Person").Subrouter()
+	personBase.Methods("GET").Handler(negroni.New(append(config["PersonIndex"], negroni.HandlerFunc(PersonIndexHandler))...))
+	personBase.Methods("POST").Handler(negroni.New(append(config["PersonCreate"], negroni.HandlerFunc(PersonCreateHandler))...))
+
+	person := router.Path("/Person/{id}").Subrouter()
+	person.Methods("GET").Handler(negroni.New(append(config["PersonShow"], negroni.HandlerFunc(PersonShowHandler))...))
+	person.Methods("PUT").Handler(negroni.New(append(config["PersonUpdate"], negroni.HandlerFunc(PersonUpdateHandler))...))
+	person.Methods("DELETE").Handler(negroni.New(append(config["PersonDelete"], negroni.HandlerFunc(PersonDeleteHandler))...))
+
+	communicationrequestBase := router.Path("/CommunicationRequest").Subrouter()
+	communicationrequestBase.Methods("GET").Handler(negroni.New(append(config["CommunicationRequestIndex"], negroni.HandlerFunc(CommunicationRequestIndexHandler))...))
+	communicationrequestBase.Methods("POST").Handler(negroni.New(append(config["CommunicationRequestCreate"], negroni.HandlerFunc(CommunicationRequestCreateHandler))...))
+
+	communicationrequest := router.Path("/CommunicationRequest/{id}").Subrouter()
+	communicationrequest.Methods("GET").Handler(negroni.New(append(config["CommunicationRequestShow"], negroni.HandlerFunc(CommunicationRequestShowHandler))...))
+	communicationrequest.Methods("PUT").Handler(negroni.New(append(config["CommunicationRequestUpdate"], negroni.HandlerFunc(CommunicationRequestUpdateHandler))...))
+	communicationrequest.Methods("DELETE").Handler(negroni.New(append(config["CommunicationRequestDelete"], negroni.HandlerFunc(CommunicationRequestDeleteHandler))...))
 
 	riskassessmentBase := router.Path("/RiskAssessment").Subrouter()
 	riskassessmentBase.Methods("GET").Handler(negroni.New(append(config["RiskAssessmentIndex"], negroni.HandlerFunc(RiskAssessmentIndexHandler))...))
@@ -349,6 +448,24 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	riskassessment.Methods("PUT").Handler(negroni.New(append(config["RiskAssessmentUpdate"], negroni.HandlerFunc(RiskAssessmentUpdateHandler))...))
 	riskassessment.Methods("DELETE").Handler(negroni.New(append(config["RiskAssessmentDelete"], negroni.HandlerFunc(RiskAssessmentDeleteHandler))...))
 
+	testscriptBase := router.Path("/TestScript").Subrouter()
+	testscriptBase.Methods("GET").Handler(negroni.New(append(config["TestScriptIndex"], negroni.HandlerFunc(TestScriptIndexHandler))...))
+	testscriptBase.Methods("POST").Handler(negroni.New(append(config["TestScriptCreate"], negroni.HandlerFunc(TestScriptCreateHandler))...))
+
+	testscript := router.Path("/TestScript/{id}").Subrouter()
+	testscript.Methods("GET").Handler(negroni.New(append(config["TestScriptShow"], negroni.HandlerFunc(TestScriptShowHandler))...))
+	testscript.Methods("PUT").Handler(negroni.New(append(config["TestScriptUpdate"], negroni.HandlerFunc(TestScriptUpdateHandler))...))
+	testscript.Methods("DELETE").Handler(negroni.New(append(config["TestScriptDelete"], negroni.HandlerFunc(TestScriptDeleteHandler))...))
+
+	basicBase := router.Path("/Basic").Subrouter()
+	basicBase.Methods("GET").Handler(negroni.New(append(config["BasicIndex"], negroni.HandlerFunc(BasicIndexHandler))...))
+	basicBase.Methods("POST").Handler(negroni.New(append(config["BasicCreate"], negroni.HandlerFunc(BasicCreateHandler))...))
+
+	basic := router.Path("/Basic/{id}").Subrouter()
+	basic.Methods("GET").Handler(negroni.New(append(config["BasicShow"], negroni.HandlerFunc(BasicShowHandler))...))
+	basic.Methods("PUT").Handler(negroni.New(append(config["BasicUpdate"], negroni.HandlerFunc(BasicUpdateHandler))...))
+	basic.Methods("DELETE").Handler(negroni.New(append(config["BasicDelete"], negroni.HandlerFunc(BasicDeleteHandler))...))
+
 	groupBase := router.Path("/Group").Subrouter()
 	groupBase.Methods("GET").Handler(negroni.New(append(config["GroupIndex"], negroni.HandlerFunc(GroupIndexHandler))...))
 	groupBase.Methods("POST").Handler(negroni.New(append(config["GroupCreate"], negroni.HandlerFunc(GroupCreateHandler))...))
@@ -358,6 +475,15 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	group.Methods("PUT").Handler(negroni.New(append(config["GroupUpdate"], negroni.HandlerFunc(GroupUpdateHandler))...))
 	group.Methods("DELETE").Handler(negroni.New(append(config["GroupDelete"], negroni.HandlerFunc(GroupDeleteHandler))...))
 
+	paymentnoticeBase := router.Path("/PaymentNotice").Subrouter()
+	paymentnoticeBase.Methods("GET").Handler(negroni.New(append(config["PaymentNoticeIndex"], negroni.HandlerFunc(PaymentNoticeIndexHandler))...))
+	paymentnoticeBase.Methods("POST").Handler(negroni.New(append(config["PaymentNoticeCreate"], negroni.HandlerFunc(PaymentNoticeCreateHandler))...))
+
+	paymentnotice := router.Path("/PaymentNotice/{id}").Subrouter()
+	paymentnotice.Methods("GET").Handler(negroni.New(append(config["PaymentNoticeShow"], negroni.HandlerFunc(PaymentNoticeShowHandler))...))
+	paymentnotice.Methods("PUT").Handler(negroni.New(append(config["PaymentNoticeUpdate"], negroni.HandlerFunc(PaymentNoticeUpdateHandler))...))
+	paymentnotice.Methods("DELETE").Handler(negroni.New(append(config["PaymentNoticeDelete"], negroni.HandlerFunc(PaymentNoticeDeleteHandler))...))
+
 	organizationBase := router.Path("/Organization").Subrouter()
 	organizationBase.Methods("GET").Handler(negroni.New(append(config["OrganizationIndex"], negroni.HandlerFunc(OrganizationIndexHandler))...))
 	organizationBase.Methods("POST").Handler(negroni.New(append(config["OrganizationCreate"], negroni.HandlerFunc(OrganizationCreateHandler))...))
@@ -366,6 +492,33 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	organization.Methods("GET").Handler(negroni.New(append(config["OrganizationShow"], negroni.HandlerFunc(OrganizationShowHandler))...))
 	organization.Methods("PUT").Handler(negroni.New(append(config["OrganizationUpdate"], negroni.HandlerFunc(OrganizationUpdateHandler))...))
 	organization.Methods("DELETE").Handler(negroni.New(append(config["OrganizationDelete"], negroni.HandlerFunc(OrganizationDeleteHandler))...))
+
+	claimresponseBase := router.Path("/ClaimResponse").Subrouter()
+	claimresponseBase.Methods("GET").Handler(negroni.New(append(config["ClaimResponseIndex"], negroni.HandlerFunc(ClaimResponseIndexHandler))...))
+	claimresponseBase.Methods("POST").Handler(negroni.New(append(config["ClaimResponseCreate"], negroni.HandlerFunc(ClaimResponseCreateHandler))...))
+
+	claimresponse := router.Path("/ClaimResponse/{id}").Subrouter()
+	claimresponse.Methods("GET").Handler(negroni.New(append(config["ClaimResponseShow"], negroni.HandlerFunc(ClaimResponseShowHandler))...))
+	claimresponse.Methods("PUT").Handler(negroni.New(append(config["ClaimResponseUpdate"], negroni.HandlerFunc(ClaimResponseUpdateHandler))...))
+	claimresponse.Methods("DELETE").Handler(negroni.New(append(config["ClaimResponseDelete"], negroni.HandlerFunc(ClaimResponseDeleteHandler))...))
+
+	eligibilityrequestBase := router.Path("/EligibilityRequest").Subrouter()
+	eligibilityrequestBase.Methods("GET").Handler(negroni.New(append(config["EligibilityRequestIndex"], negroni.HandlerFunc(EligibilityRequestIndexHandler))...))
+	eligibilityrequestBase.Methods("POST").Handler(negroni.New(append(config["EligibilityRequestCreate"], negroni.HandlerFunc(EligibilityRequestCreateHandler))...))
+
+	eligibilityrequest := router.Path("/EligibilityRequest/{id}").Subrouter()
+	eligibilityrequest.Methods("GET").Handler(negroni.New(append(config["EligibilityRequestShow"], negroni.HandlerFunc(EligibilityRequestShowHandler))...))
+	eligibilityrequest.Methods("PUT").Handler(negroni.New(append(config["EligibilityRequestUpdate"], negroni.HandlerFunc(EligibilityRequestUpdateHandler))...))
+	eligibilityrequest.Methods("DELETE").Handler(negroni.New(append(config["EligibilityRequestDelete"], negroni.HandlerFunc(EligibilityRequestDeleteHandler))...))
+
+	processrequestBase := router.Path("/ProcessRequest").Subrouter()
+	processrequestBase.Methods("GET").Handler(negroni.New(append(config["ProcessRequestIndex"], negroni.HandlerFunc(ProcessRequestIndexHandler))...))
+	processrequestBase.Methods("POST").Handler(negroni.New(append(config["ProcessRequestCreate"], negroni.HandlerFunc(ProcessRequestCreateHandler))...))
+
+	processrequest := router.Path("/ProcessRequest/{id}").Subrouter()
+	processrequest.Methods("GET").Handler(negroni.New(append(config["ProcessRequestShow"], negroni.HandlerFunc(ProcessRequestShowHandler))...))
+	processrequest.Methods("PUT").Handler(negroni.New(append(config["ProcessRequestUpdate"], negroni.HandlerFunc(ProcessRequestUpdateHandler))...))
+	processrequest.Methods("DELETE").Handler(negroni.New(append(config["ProcessRequestDelete"], negroni.HandlerFunc(ProcessRequestDeleteHandler))...))
 
 	medicationdispenseBase := router.Path("/MedicationDispense").Subrouter()
 	medicationdispenseBase.Methods("GET").Handler(negroni.New(append(config["MedicationDispenseIndex"], negroni.HandlerFunc(MedicationDispenseIndexHandler))...))
@@ -403,14 +556,23 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	imagingstudy.Methods("PUT").Handler(negroni.New(append(config["ImagingStudyUpdate"], negroni.HandlerFunc(ImagingStudyUpdateHandler))...))
 	imagingstudy.Methods("DELETE").Handler(negroni.New(append(config["ImagingStudyDelete"], negroni.HandlerFunc(ImagingStudyDeleteHandler))...))
 
-	profileBase := router.Path("/Profile").Subrouter()
-	profileBase.Methods("GET").Handler(negroni.New(append(config["ProfileIndex"], negroni.HandlerFunc(ProfileIndexHandler))...))
-	profileBase.Methods("POST").Handler(negroni.New(append(config["ProfileCreate"], negroni.HandlerFunc(ProfileCreateHandler))...))
+	imagingobjectselectionBase := router.Path("/ImagingObjectSelection").Subrouter()
+	imagingobjectselectionBase.Methods("GET").Handler(negroni.New(append(config["ImagingObjectSelectionIndex"], negroni.HandlerFunc(ImagingObjectSelectionIndexHandler))...))
+	imagingobjectselectionBase.Methods("POST").Handler(negroni.New(append(config["ImagingObjectSelectionCreate"], negroni.HandlerFunc(ImagingObjectSelectionCreateHandler))...))
 
-	profile := router.Path("/Profile/{id}").Subrouter()
-	profile.Methods("GET").Handler(negroni.New(append(config["ProfileShow"], negroni.HandlerFunc(ProfileShowHandler))...))
-	profile.Methods("PUT").Handler(negroni.New(append(config["ProfileUpdate"], negroni.HandlerFunc(ProfileUpdateHandler))...))
-	profile.Methods("DELETE").Handler(negroni.New(append(config["ProfileDelete"], negroni.HandlerFunc(ProfileDeleteHandler))...))
+	imagingobjectselection := router.Path("/ImagingObjectSelection/{id}").Subrouter()
+	imagingobjectselection.Methods("GET").Handler(negroni.New(append(config["ImagingObjectSelectionShow"], negroni.HandlerFunc(ImagingObjectSelectionShowHandler))...))
+	imagingobjectselection.Methods("PUT").Handler(negroni.New(append(config["ImagingObjectSelectionUpdate"], negroni.HandlerFunc(ImagingObjectSelectionUpdateHandler))...))
+	imagingobjectselection.Methods("DELETE").Handler(negroni.New(append(config["ImagingObjectSelectionDelete"], negroni.HandlerFunc(ImagingObjectSelectionDeleteHandler))...))
+
+	healthcareserviceBase := router.Path("/HealthcareService").Subrouter()
+	healthcareserviceBase.Methods("GET").Handler(negroni.New(append(config["HealthcareServiceIndex"], negroni.HandlerFunc(HealthcareServiceIndexHandler))...))
+	healthcareserviceBase.Methods("POST").Handler(negroni.New(append(config["HealthcareServiceCreate"], negroni.HandlerFunc(HealthcareServiceCreateHandler))...))
+
+	healthcareservice := router.Path("/HealthcareService/{id}").Subrouter()
+	healthcareservice.Methods("GET").Handler(negroni.New(append(config["HealthcareServiceShow"], negroni.HandlerFunc(HealthcareServiceShowHandler))...))
+	healthcareservice.Methods("PUT").Handler(negroni.New(append(config["HealthcareServiceUpdate"], negroni.HandlerFunc(HealthcareServiceUpdateHandler))...))
+	healthcareservice.Methods("DELETE").Handler(negroni.New(append(config["HealthcareServiceDelete"], negroni.HandlerFunc(HealthcareServiceDeleteHandler))...))
 
 	dataelementBase := router.Path("/DataElement").Subrouter()
 	dataelementBase.Methods("GET").Handler(negroni.New(append(config["DataElementIndex"], negroni.HandlerFunc(DataElementIndexHandler))...))
@@ -421,6 +583,24 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	dataelement.Methods("PUT").Handler(negroni.New(append(config["DataElementUpdate"], negroni.HandlerFunc(DataElementUpdateHandler))...))
 	dataelement.Methods("DELETE").Handler(negroni.New(append(config["DataElementDelete"], negroni.HandlerFunc(DataElementDeleteHandler))...))
 
+	devicecomponentBase := router.Path("/DeviceComponent").Subrouter()
+	devicecomponentBase.Methods("GET").Handler(negroni.New(append(config["DeviceComponentIndex"], negroni.HandlerFunc(DeviceComponentIndexHandler))...))
+	devicecomponentBase.Methods("POST").Handler(negroni.New(append(config["DeviceComponentCreate"], negroni.HandlerFunc(DeviceComponentCreateHandler))...))
+
+	devicecomponent := router.Path("/DeviceComponent/{id}").Subrouter()
+	devicecomponent.Methods("GET").Handler(negroni.New(append(config["DeviceComponentShow"], negroni.HandlerFunc(DeviceComponentShowHandler))...))
+	devicecomponent.Methods("PUT").Handler(negroni.New(append(config["DeviceComponentUpdate"], negroni.HandlerFunc(DeviceComponentUpdateHandler))...))
+	devicecomponent.Methods("DELETE").Handler(negroni.New(append(config["DeviceComponentDelete"], negroni.HandlerFunc(DeviceComponentDeleteHandler))...))
+
+	familymemberhistoryBase := router.Path("/FamilyMemberHistory").Subrouter()
+	familymemberhistoryBase.Methods("GET").Handler(negroni.New(append(config["FamilyMemberHistoryIndex"], negroni.HandlerFunc(FamilyMemberHistoryIndexHandler))...))
+	familymemberhistoryBase.Methods("POST").Handler(negroni.New(append(config["FamilyMemberHistoryCreate"], negroni.HandlerFunc(FamilyMemberHistoryCreateHandler))...))
+
+	familymemberhistory := router.Path("/FamilyMemberHistory/{id}").Subrouter()
+	familymemberhistory.Methods("GET").Handler(negroni.New(append(config["FamilyMemberHistoryShow"], negroni.HandlerFunc(FamilyMemberHistoryShowHandler))...))
+	familymemberhistory.Methods("PUT").Handler(negroni.New(append(config["FamilyMemberHistoryUpdate"], negroni.HandlerFunc(FamilyMemberHistoryUpdateHandler))...))
+	familymemberhistory.Methods("DELETE").Handler(negroni.New(append(config["FamilyMemberHistoryDelete"], negroni.HandlerFunc(FamilyMemberHistoryDeleteHandler))...))
+
 	questionnaireanswersBase := router.Path("/QuestionnaireAnswers").Subrouter()
 	questionnaireanswersBase.Methods("GET").Handler(negroni.New(append(config["QuestionnaireAnswersIndex"], negroni.HandlerFunc(QuestionnaireAnswersIndexHandler))...))
 	questionnaireanswersBase.Methods("POST").Handler(negroni.New(append(config["QuestionnaireAnswersCreate"], negroni.HandlerFunc(QuestionnaireAnswersCreateHandler))...))
@@ -429,15 +609,6 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	questionnaireanswers.Methods("GET").Handler(negroni.New(append(config["QuestionnaireAnswersShow"], negroni.HandlerFunc(QuestionnaireAnswersShowHandler))...))
 	questionnaireanswers.Methods("PUT").Handler(negroni.New(append(config["QuestionnaireAnswersUpdate"], negroni.HandlerFunc(QuestionnaireAnswersUpdateHandler))...))
 	questionnaireanswers.Methods("DELETE").Handler(negroni.New(append(config["QuestionnaireAnswersDelete"], negroni.HandlerFunc(QuestionnaireAnswersDeleteHandler))...))
-
-	adversereactionBase := router.Path("/AdverseReaction").Subrouter()
-	adversereactionBase.Methods("GET").Handler(negroni.New(append(config["AdverseReactionIndex"], negroni.HandlerFunc(AdverseReactionIndexHandler))...))
-	adversereactionBase.Methods("POST").Handler(negroni.New(append(config["AdverseReactionCreate"], negroni.HandlerFunc(AdverseReactionCreateHandler))...))
-
-	adversereaction := router.Path("/AdverseReaction/{id}").Subrouter()
-	adversereaction.Methods("GET").Handler(negroni.New(append(config["AdverseReactionShow"], negroni.HandlerFunc(AdverseReactionShowHandler))...))
-	adversereaction.Methods("PUT").Handler(negroni.New(append(config["AdverseReactionUpdate"], negroni.HandlerFunc(AdverseReactionUpdateHandler))...))
-	adversereaction.Methods("DELETE").Handler(negroni.New(append(config["AdverseReactionDelete"], negroni.HandlerFunc(AdverseReactionDeleteHandler))...))
 
 	nutritionorderBase := router.Path("/NutritionOrder").Subrouter()
 	nutritionorderBase.Methods("GET").Handler(negroni.New(append(config["NutritionOrderIndex"], negroni.HandlerFunc(NutritionOrderIndexHandler))...))
@@ -466,6 +637,42 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	substance.Methods("PUT").Handler(negroni.New(append(config["SubstanceUpdate"], negroni.HandlerFunc(SubstanceUpdateHandler))...))
 	substance.Methods("DELETE").Handler(negroni.New(append(config["SubstanceDelete"], negroni.HandlerFunc(SubstanceDeleteHandler))...))
 
+	auditeventBase := router.Path("/AuditEvent").Subrouter()
+	auditeventBase.Methods("GET").Handler(negroni.New(append(config["AuditEventIndex"], negroni.HandlerFunc(AuditEventIndexHandler))...))
+	auditeventBase.Methods("POST").Handler(negroni.New(append(config["AuditEventCreate"], negroni.HandlerFunc(AuditEventCreateHandler))...))
+
+	auditevent := router.Path("/AuditEvent/{id}").Subrouter()
+	auditevent.Methods("GET").Handler(negroni.New(append(config["AuditEventShow"], negroni.HandlerFunc(AuditEventShowHandler))...))
+	auditevent.Methods("PUT").Handler(negroni.New(append(config["AuditEventUpdate"], negroni.HandlerFunc(AuditEventUpdateHandler))...))
+	auditevent.Methods("DELETE").Handler(negroni.New(append(config["AuditEventDelete"], negroni.HandlerFunc(AuditEventDeleteHandler))...))
+
+	searchparameterBase := router.Path("/SearchParameter").Subrouter()
+	searchparameterBase.Methods("GET").Handler(negroni.New(append(config["SearchParameterIndex"], negroni.HandlerFunc(SearchParameterIndexHandler))...))
+	searchparameterBase.Methods("POST").Handler(negroni.New(append(config["SearchParameterCreate"], negroni.HandlerFunc(SearchParameterCreateHandler))...))
+
+	searchparameter := router.Path("/SearchParameter/{id}").Subrouter()
+	searchparameter.Methods("GET").Handler(negroni.New(append(config["SearchParameterShow"], negroni.HandlerFunc(SearchParameterShowHandler))...))
+	searchparameter.Methods("PUT").Handler(negroni.New(append(config["SearchParameterUpdate"], negroni.HandlerFunc(SearchParameterUpdateHandler))...))
+	searchparameter.Methods("DELETE").Handler(negroni.New(append(config["SearchParameterDelete"], negroni.HandlerFunc(SearchParameterDeleteHandler))...))
+
+	paymentreconciliationBase := router.Path("/PaymentReconciliation").Subrouter()
+	paymentreconciliationBase.Methods("GET").Handler(negroni.New(append(config["PaymentReconciliationIndex"], negroni.HandlerFunc(PaymentReconciliationIndexHandler))...))
+	paymentreconciliationBase.Methods("POST").Handler(negroni.New(append(config["PaymentReconciliationCreate"], negroni.HandlerFunc(PaymentReconciliationCreateHandler))...))
+
+	paymentreconciliation := router.Path("/PaymentReconciliation/{id}").Subrouter()
+	paymentreconciliation.Methods("GET").Handler(negroni.New(append(config["PaymentReconciliationShow"], negroni.HandlerFunc(PaymentReconciliationShowHandler))...))
+	paymentreconciliation.Methods("PUT").Handler(negroni.New(append(config["PaymentReconciliationUpdate"], negroni.HandlerFunc(PaymentReconciliationUpdateHandler))...))
+	paymentreconciliation.Methods("DELETE").Handler(negroni.New(append(config["PaymentReconciliationDelete"], negroni.HandlerFunc(PaymentReconciliationDeleteHandler))...))
+
+	communicationBase := router.Path("/Communication").Subrouter()
+	communicationBase.Methods("GET").Handler(negroni.New(append(config["CommunicationIndex"], negroni.HandlerFunc(CommunicationIndexHandler))...))
+	communicationBase.Methods("POST").Handler(negroni.New(append(config["CommunicationCreate"], negroni.HandlerFunc(CommunicationCreateHandler))...))
+
+	communication := router.Path("/Communication/{id}").Subrouter()
+	communication.Methods("GET").Handler(negroni.New(append(config["CommunicationShow"], negroni.HandlerFunc(CommunicationShowHandler))...))
+	communication.Methods("PUT").Handler(negroni.New(append(config["CommunicationUpdate"], negroni.HandlerFunc(CommunicationUpdateHandler))...))
+	communication.Methods("DELETE").Handler(negroni.New(append(config["CommunicationDelete"], negroni.HandlerFunc(CommunicationDeleteHandler))...))
+
 	conditionBase := router.Path("/Condition").Subrouter()
 	conditionBase.Methods("GET").Handler(negroni.New(append(config["ConditionIndex"], negroni.HandlerFunc(ConditionIndexHandler))...))
 	conditionBase.Methods("POST").Handler(negroni.New(append(config["ConditionCreate"], negroni.HandlerFunc(ConditionCreateHandler))...))
@@ -483,6 +690,15 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	composition.Methods("GET").Handler(negroni.New(append(config["CompositionShow"], negroni.HandlerFunc(CompositionShowHandler))...))
 	composition.Methods("PUT").Handler(negroni.New(append(config["CompositionUpdate"], negroni.HandlerFunc(CompositionUpdateHandler))...))
 	composition.Methods("DELETE").Handler(negroni.New(append(config["CompositionDelete"], negroni.HandlerFunc(CompositionDeleteHandler))...))
+
+	bundleBase := router.Path("/Bundle").Subrouter()
+	bundleBase.Methods("GET").Handler(negroni.New(append(config["BundleIndex"], negroni.HandlerFunc(BundleIndexHandler))...))
+	bundleBase.Methods("POST").Handler(negroni.New(append(config["BundleCreate"], negroni.HandlerFunc(BundleCreateHandler))...))
+
+	bundle := router.Path("/Bundle/{id}").Subrouter()
+	bundle.Methods("GET").Handler(negroni.New(append(config["BundleShow"], negroni.HandlerFunc(BundleShowHandler))...))
+	bundle.Methods("PUT").Handler(negroni.New(append(config["BundleUpdate"], negroni.HandlerFunc(BundleUpdateHandler))...))
+	bundle.Methods("DELETE").Handler(negroni.New(append(config["BundleDelete"], negroni.HandlerFunc(BundleDeleteHandler))...))
 
 	diagnosticorderBase := router.Path("/DiagnosticOrder").Subrouter()
 	diagnosticorderBase.Methods("GET").Handler(negroni.New(append(config["DiagnosticOrderIndex"], negroni.HandlerFunc(DiagnosticOrderIndexHandler))...))
@@ -511,14 +727,68 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	orderresponse.Methods("PUT").Handler(negroni.New(append(config["OrderResponseUpdate"], negroni.HandlerFunc(OrderResponseUpdateHandler))...))
 	orderresponse.Methods("DELETE").Handler(negroni.New(append(config["OrderResponseDelete"], negroni.HandlerFunc(OrderResponseDeleteHandler))...))
 
-	alertBase := router.Path("/Alert").Subrouter()
-	alertBase.Methods("GET").Handler(negroni.New(append(config["AlertIndex"], negroni.HandlerFunc(AlertIndexHandler))...))
-	alertBase.Methods("POST").Handler(negroni.New(append(config["AlertCreate"], negroni.HandlerFunc(AlertCreateHandler))...))
+	coverageBase := router.Path("/Coverage").Subrouter()
+	coverageBase.Methods("GET").Handler(negroni.New(append(config["CoverageIndex"], negroni.HandlerFunc(CoverageIndexHandler))...))
+	coverageBase.Methods("POST").Handler(negroni.New(append(config["CoverageCreate"], negroni.HandlerFunc(CoverageCreateHandler))...))
 
-	alert := router.Path("/Alert/{id}").Subrouter()
-	alert.Methods("GET").Handler(negroni.New(append(config["AlertShow"], negroni.HandlerFunc(AlertShowHandler))...))
-	alert.Methods("PUT").Handler(negroni.New(append(config["AlertUpdate"], negroni.HandlerFunc(AlertUpdateHandler))...))
-	alert.Methods("DELETE").Handler(negroni.New(append(config["AlertDelete"], negroni.HandlerFunc(AlertDeleteHandler))...))
+	coverage := router.Path("/Coverage/{id}").Subrouter()
+	coverage.Methods("GET").Handler(negroni.New(append(config["CoverageShow"], negroni.HandlerFunc(CoverageShowHandler))...))
+	coverage.Methods("PUT").Handler(negroni.New(append(config["CoverageUpdate"], negroni.HandlerFunc(CoverageUpdateHandler))...))
+	coverage.Methods("DELETE").Handler(negroni.New(append(config["CoverageDelete"], negroni.HandlerFunc(CoverageDeleteHandler))...))
+
+	deviceusestatementBase := router.Path("/DeviceUseStatement").Subrouter()
+	deviceusestatementBase.Methods("GET").Handler(negroni.New(append(config["DeviceUseStatementIndex"], negroni.HandlerFunc(DeviceUseStatementIndexHandler))...))
+	deviceusestatementBase.Methods("POST").Handler(negroni.New(append(config["DeviceUseStatementCreate"], negroni.HandlerFunc(DeviceUseStatementCreateHandler))...))
+
+	deviceusestatement := router.Path("/DeviceUseStatement/{id}").Subrouter()
+	deviceusestatement.Methods("GET").Handler(negroni.New(append(config["DeviceUseStatementShow"], negroni.HandlerFunc(DeviceUseStatementShowHandler))...))
+	deviceusestatement.Methods("PUT").Handler(negroni.New(append(config["DeviceUseStatementUpdate"], negroni.HandlerFunc(DeviceUseStatementUpdateHandler))...))
+	deviceusestatement.Methods("DELETE").Handler(negroni.New(append(config["DeviceUseStatementDelete"], negroni.HandlerFunc(DeviceUseStatementDeleteHandler))...))
+
+	processresponseBase := router.Path("/ProcessResponse").Subrouter()
+	processresponseBase.Methods("GET").Handler(negroni.New(append(config["ProcessResponseIndex"], negroni.HandlerFunc(ProcessResponseIndexHandler))...))
+	processresponseBase.Methods("POST").Handler(negroni.New(append(config["ProcessResponseCreate"], negroni.HandlerFunc(ProcessResponseCreateHandler))...))
+
+	processresponse := router.Path("/ProcessResponse/{id}").Subrouter()
+	processresponse.Methods("GET").Handler(negroni.New(append(config["ProcessResponseShow"], negroni.HandlerFunc(ProcessResponseShowHandler))...))
+	processresponse.Methods("PUT").Handler(negroni.New(append(config["ProcessResponseUpdate"], negroni.HandlerFunc(ProcessResponseUpdateHandler))...))
+	processresponse.Methods("DELETE").Handler(negroni.New(append(config["ProcessResponseDelete"], negroni.HandlerFunc(ProcessResponseDeleteHandler))...))
+
+	namingsystemBase := router.Path("/NamingSystem").Subrouter()
+	namingsystemBase.Methods("GET").Handler(negroni.New(append(config["NamingSystemIndex"], negroni.HandlerFunc(NamingSystemIndexHandler))...))
+	namingsystemBase.Methods("POST").Handler(negroni.New(append(config["NamingSystemCreate"], negroni.HandlerFunc(NamingSystemCreateHandler))...))
+
+	namingsystem := router.Path("/NamingSystem/{id}").Subrouter()
+	namingsystem.Methods("GET").Handler(negroni.New(append(config["NamingSystemShow"], negroni.HandlerFunc(NamingSystemShowHandler))...))
+	namingsystem.Methods("PUT").Handler(negroni.New(append(config["NamingSystemUpdate"], negroni.HandlerFunc(NamingSystemUpdateHandler))...))
+	namingsystem.Methods("DELETE").Handler(negroni.New(append(config["NamingSystemDelete"], negroni.HandlerFunc(NamingSystemDeleteHandler))...))
+
+	scheduleBase := router.Path("/Schedule").Subrouter()
+	scheduleBase.Methods("GET").Handler(negroni.New(append(config["ScheduleIndex"], negroni.HandlerFunc(ScheduleIndexHandler))...))
+	scheduleBase.Methods("POST").Handler(negroni.New(append(config["ScheduleCreate"], negroni.HandlerFunc(ScheduleCreateHandler))...))
+
+	schedule := router.Path("/Schedule/{id}").Subrouter()
+	schedule.Methods("GET").Handler(negroni.New(append(config["ScheduleShow"], negroni.HandlerFunc(ScheduleShowHandler))...))
+	schedule.Methods("PUT").Handler(negroni.New(append(config["ScheduleUpdate"], negroni.HandlerFunc(ScheduleUpdateHandler))...))
+	schedule.Methods("DELETE").Handler(negroni.New(append(config["ScheduleDelete"], negroni.HandlerFunc(ScheduleDeleteHandler))...))
+
+	supplydeliveryBase := router.Path("/SupplyDelivery").Subrouter()
+	supplydeliveryBase.Methods("GET").Handler(negroni.New(append(config["SupplyDeliveryIndex"], negroni.HandlerFunc(SupplyDeliveryIndexHandler))...))
+	supplydeliveryBase.Methods("POST").Handler(negroni.New(append(config["SupplyDeliveryCreate"], negroni.HandlerFunc(SupplyDeliveryCreateHandler))...))
+
+	supplydelivery := router.Path("/SupplyDelivery/{id}").Subrouter()
+	supplydelivery.Methods("GET").Handler(negroni.New(append(config["SupplyDeliveryShow"], negroni.HandlerFunc(SupplyDeliveryShowHandler))...))
+	supplydelivery.Methods("PUT").Handler(negroni.New(append(config["SupplyDeliveryUpdate"], negroni.HandlerFunc(SupplyDeliveryUpdateHandler))...))
+	supplydelivery.Methods("DELETE").Handler(negroni.New(append(config["SupplyDeliveryDelete"], negroni.HandlerFunc(SupplyDeliveryDeleteHandler))...))
+
+	clinicalimpressionBase := router.Path("/ClinicalImpression").Subrouter()
+	clinicalimpressionBase.Methods("GET").Handler(negroni.New(append(config["ClinicalImpressionIndex"], negroni.HandlerFunc(ClinicalImpressionIndexHandler))...))
+	clinicalimpressionBase.Methods("POST").Handler(negroni.New(append(config["ClinicalImpressionCreate"], negroni.HandlerFunc(ClinicalImpressionCreateHandler))...))
+
+	clinicalimpression := router.Path("/ClinicalImpression/{id}").Subrouter()
+	clinicalimpression.Methods("GET").Handler(negroni.New(append(config["ClinicalImpressionShow"], negroni.HandlerFunc(ClinicalImpressionShowHandler))...))
+	clinicalimpression.Methods("PUT").Handler(negroni.New(append(config["ClinicalImpressionUpdate"], negroni.HandlerFunc(ClinicalImpressionUpdateHandler))...))
+	clinicalimpression.Methods("DELETE").Handler(negroni.New(append(config["ClinicalImpressionDelete"], negroni.HandlerFunc(ClinicalImpressionDeleteHandler))...))
 
 	messageheaderBase := router.Path("/MessageHeader").Subrouter()
 	messageheaderBase.Methods("GET").Handler(negroni.New(append(config["MessageHeaderIndex"], negroni.HandlerFunc(MessageHeaderIndexHandler))...))
@@ -528,6 +798,15 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	messageheader.Methods("GET").Handler(negroni.New(append(config["MessageHeaderShow"], negroni.HandlerFunc(MessageHeaderShowHandler))...))
 	messageheader.Methods("PUT").Handler(negroni.New(append(config["MessageHeaderUpdate"], negroni.HandlerFunc(MessageHeaderUpdateHandler))...))
 	messageheader.Methods("DELETE").Handler(negroni.New(append(config["MessageHeaderDelete"], negroni.HandlerFunc(MessageHeaderDeleteHandler))...))
+
+	claimBase := router.Path("/Claim").Subrouter()
+	claimBase.Methods("GET").Handler(negroni.New(append(config["ClaimIndex"], negroni.HandlerFunc(ClaimIndexHandler))...))
+	claimBase.Methods("POST").Handler(negroni.New(append(config["ClaimCreate"], negroni.HandlerFunc(ClaimCreateHandler))...))
+
+	claim := router.Path("/Claim/{id}").Subrouter()
+	claim.Methods("GET").Handler(negroni.New(append(config["ClaimShow"], negroni.HandlerFunc(ClaimShowHandler))...))
+	claim.Methods("PUT").Handler(negroni.New(append(config["ClaimUpdate"], negroni.HandlerFunc(ClaimUpdateHandler))...))
+	claim.Methods("DELETE").Handler(negroni.New(append(config["ClaimDelete"], negroni.HandlerFunc(ClaimDeleteHandler))...))
 
 	immunizationrecommendationBase := router.Path("/ImmunizationRecommendation").Subrouter()
 	immunizationrecommendationBase.Methods("GET").Handler(negroni.New(append(config["ImmunizationRecommendationIndex"], negroni.HandlerFunc(ImmunizationRecommendationIndexHandler))...))
@@ -547,21 +826,13 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	location.Methods("PUT").Handler(negroni.New(append(config["LocationUpdate"], negroni.HandlerFunc(LocationUpdateHandler))...))
 	location.Methods("DELETE").Handler(negroni.New(append(config["LocationDelete"], negroni.HandlerFunc(LocationDeleteHandler))...))
 
-	otherBase := router.Path("/Other").Subrouter()
-	otherBase.Methods("GET").Handler(negroni.New(append(config["OtherIndex"], negroni.HandlerFunc(OtherIndexHandler))...))
-	otherBase.Methods("POST").Handler(negroni.New(append(config["OtherCreate"], negroni.HandlerFunc(OtherCreateHandler))...))
+	bodysiteBase := router.Path("/BodySite").Subrouter()
+	bodysiteBase.Methods("GET").Handler(negroni.New(append(config["BodySiteIndex"], negroni.HandlerFunc(BodySiteIndexHandler))...))
+	bodysiteBase.Methods("POST").Handler(negroni.New(append(config["BodySiteCreate"], negroni.HandlerFunc(BodySiteCreateHandler))...))
 
-	other := router.Path("/Other/{id}").Subrouter()
-	other.Methods("GET").Handler(negroni.New(append(config["OtherShow"], negroni.HandlerFunc(OtherShowHandler))...))
-	other.Methods("PUT").Handler(negroni.New(append(config["OtherUpdate"], negroni.HandlerFunc(OtherUpdateHandler))...))
-	other.Methods("DELETE").Handler(negroni.New(append(config["OtherDelete"], negroni.HandlerFunc(OtherDeleteHandler))...))
+	bodysite := router.Path("/BodySite/{id}").Subrouter()
+	bodysite.Methods("GET").Handler(negroni.New(append(config["BodySiteShow"], negroni.HandlerFunc(BodySiteShowHandler))...))
+	bodysite.Methods("PUT").Handler(negroni.New(append(config["BodySiteUpdate"], negroni.HandlerFunc(BodySiteUpdateHandler))...))
+	bodysite.Methods("DELETE").Handler(negroni.New(append(config["BodySiteDelete"], negroni.HandlerFunc(BodySiteDeleteHandler))...))
 
-	communicationrequestBase := router.Path("/CommunicationRequest").Subrouter()
-	communicationrequestBase.Methods("GET").Handler(negroni.New(append(config["CommunicationRequestIndex"], negroni.HandlerFunc(CommunicationRequestIndexHandler))...))
-	communicationrequestBase.Methods("POST").Handler(negroni.New(append(config["CommunicationRequestCreate"], negroni.HandlerFunc(CommunicationRequestCreateHandler))...))
-
-	communicationrequest := router.Path("/CommunicationRequest/{id}").Subrouter()
-	communicationrequest.Methods("GET").Handler(negroni.New(append(config["CommunicationRequestShow"], negroni.HandlerFunc(CommunicationRequestShowHandler))...))
-	communicationrequest.Methods("PUT").Handler(negroni.New(append(config["CommunicationRequestUpdate"], negroni.HandlerFunc(CommunicationRequestUpdateHandler))...))
-	communicationrequest.Methods("DELETE").Handler(negroni.New(append(config["CommunicationRequestDelete"], negroni.HandlerFunc(CommunicationRequestDeleteHandler))...))
 }
