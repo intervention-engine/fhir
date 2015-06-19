@@ -29,33 +29,33 @@ package models
 import "time"
 
 type Medication struct {
-	Id           string                                `json:"-" bson:"_id"`
-	Name         string                                `bson:"name,omitempty" json:"name,omitempty"`
-	Code         *CodeableConcept                      `bson:"code,omitempty" json:"code,omitempty"`
-	IsBrand      *bool                                 `bson:"isBrand,omitempty" json:"isBrand,omitempty"`
-	Manufacturer *Reference                            `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
-	Kind         string                                `bson:"kind,omitempty" json:"kind,omitempty"`
-	Product      *MedicationMedicationProductComponent `bson:"product,omitempty" json:"product,omitempty"`
-	Package      *MedicationMedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
+	Id           string                      `json:"-" bson:"_id"`
+	Name         string                      `bson:"name,omitempty" json:"name,omitempty"`
+	Code         *CodeableConcept            `bson:"code,omitempty" json:"code,omitempty"`
+	IsBrand      *bool                       `bson:"isBrand,omitempty" json:"isBrand,omitempty"`
+	Manufacturer *Reference                  `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
+	Kind         string                      `bson:"kind,omitempty" json:"kind,omitempty"`
+	Product      *MedicationProductComponent `bson:"product,omitempty" json:"product,omitempty"`
+	Package      *MedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
 }
-type MedicationMedicationProductComponent struct {
-	Form       *CodeableConcept                                 `bson:"form,omitempty" json:"form,omitempty"`
-	Ingredient []MedicationMedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
-	Batch      []MedicationMedicationProductBatchComponent      `bson:"batch,omitempty" json:"batch,omitempty"`
+type MedicationProductComponent struct {
+	Form       *CodeableConcept                       `bson:"form,omitempty" json:"form,omitempty"`
+	Ingredient []MedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
+	Batch      []MedicationProductBatchComponent      `bson:"batch,omitempty" json:"batch,omitempty"`
 }
-type MedicationMedicationProductIngredientComponent struct {
+type MedicationProductIngredientComponent struct {
 	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
 	Amount *Ratio     `bson:"amount,omitempty" json:"amount,omitempty"`
 }
-type MedicationMedicationProductBatchComponent struct {
+type MedicationProductBatchComponent struct {
 	LotNumber      string        `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
 	ExpirationDate *FHIRDateTime `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
 }
-type MedicationMedicationPackageComponent struct {
-	Container *CodeableConcept                              `bson:"container,omitempty" json:"container,omitempty"`
-	Content   []MedicationMedicationPackageContentComponent `bson:"content,omitempty" json:"content,omitempty"`
+type MedicationPackageComponent struct {
+	Container *CodeableConcept                    `bson:"container,omitempty" json:"container,omitempty"`
+	Content   []MedicationPackageContentComponent `bson:"content,omitempty" json:"content,omitempty"`
 }
-type MedicationMedicationPackageContentComponent struct {
+type MedicationPackageContentComponent struct {
 	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
 	Amount *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
 }

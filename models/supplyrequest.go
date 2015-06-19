@@ -29,20 +29,20 @@ package models
 import "time"
 
 type SupplyRequest struct {
-	Id                    string                                   `json:"-" bson:"_id"`
-	Patient               *Reference                               `bson:"patient,omitempty" json:"patient,omitempty"`
-	Source                *Reference                               `bson:"source,omitempty" json:"source,omitempty"`
-	Date                  *FHIRDateTime                            `bson:"date,omitempty" json:"date,omitempty"`
-	Identifier            *Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status                string                                   `bson:"status,omitempty" json:"status,omitempty"`
-	Kind                  *CodeableConcept                         `bson:"kind,omitempty" json:"kind,omitempty"`
-	OrderedItem           *Reference                               `bson:"orderedItem,omitempty" json:"orderedItem,omitempty"`
-	Supplier              []Reference                              `bson:"supplier,omitempty" json:"supplier,omitempty"`
-	ReasonCodeableConcept *CodeableConcept                         `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
-	ReasonReference       *Reference                               `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
-	When                  *SupplyRequestSupplyRequestWhenComponent `bson:"when,omitempty" json:"when,omitempty"`
+	Id                    string                      `json:"-" bson:"_id"`
+	Patient               *Reference                  `bson:"patient,omitempty" json:"patient,omitempty"`
+	Source                *Reference                  `bson:"source,omitempty" json:"source,omitempty"`
+	Date                  *FHIRDateTime               `bson:"date,omitempty" json:"date,omitempty"`
+	Identifier            *Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status                string                      `bson:"status,omitempty" json:"status,omitempty"`
+	Kind                  *CodeableConcept            `bson:"kind,omitempty" json:"kind,omitempty"`
+	OrderedItem           *Reference                  `bson:"orderedItem,omitempty" json:"orderedItem,omitempty"`
+	Supplier              []Reference                 `bson:"supplier,omitempty" json:"supplier,omitempty"`
+	ReasonCodeableConcept *CodeableConcept            `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
+	ReasonReference       *Reference                  `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
+	When                  *SupplyRequestWhenComponent `bson:"when,omitempty" json:"when,omitempty"`
 }
-type SupplyRequestSupplyRequestWhenComponent struct {
+type SupplyRequestWhenComponent struct {
 	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
 }

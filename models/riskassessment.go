@@ -29,18 +29,18 @@ package models
 import "time"
 
 type RiskAssessment struct {
-	Id         string                                            `json:"-" bson:"_id"`
-	Subject    *Reference                                        `bson:"subject,omitempty" json:"subject,omitempty"`
-	Date       *FHIRDateTime                                     `bson:"date,omitempty" json:"date,omitempty"`
-	Condition  *Reference                                        `bson:"condition,omitempty" json:"condition,omitempty"`
-	Performer  *Reference                                        `bson:"performer,omitempty" json:"performer,omitempty"`
-	Identifier *Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Method     *CodeableConcept                                  `bson:"method,omitempty" json:"method,omitempty"`
-	Basis      []Reference                                       `bson:"basis,omitempty" json:"basis,omitempty"`
-	Prediction []RiskAssessmentRiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
-	Mitigation string                                            `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
+	Id         string                              `json:"-" bson:"_id"`
+	Subject    *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
+	Date       *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
+	Condition  *Reference                          `bson:"condition,omitempty" json:"condition,omitempty"`
+	Performer  *Reference                          `bson:"performer,omitempty" json:"performer,omitempty"`
+	Identifier *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Method     *CodeableConcept                    `bson:"method,omitempty" json:"method,omitempty"`
+	Basis      []Reference                         `bson:"basis,omitempty" json:"basis,omitempty"`
+	Prediction []RiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
+	Mitigation string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
-type RiskAssessmentRiskAssessmentPredictionComponent struct {
+type RiskAssessmentPredictionComponent struct {
 	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
 	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
 	ProbabilityRange           *Range           `bson:"probabilityRange,omitempty" json:"probabilityRange,omitempty"`

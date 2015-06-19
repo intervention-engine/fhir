@@ -29,17 +29,17 @@ package models
 import "time"
 
 type Organization struct {
-	Id         string                                     `json:"-" bson:"_id"`
-	Identifier []Identifier                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Name       string                                     `bson:"name,omitempty" json:"name,omitempty"`
-	Type       *CodeableConcept                           `bson:"type,omitempty" json:"type,omitempty"`
-	Telecom    []ContactPoint                             `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Address    []Address                                  `bson:"address,omitempty" json:"address,omitempty"`
-	PartOf     *Reference                                 `bson:"partOf,omitempty" json:"partOf,omitempty"`
-	Contact    []OrganizationOrganizationContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Active     *bool                                      `bson:"active,omitempty" json:"active,omitempty"`
+	Id         string                         `json:"-" bson:"_id"`
+	Identifier []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Name       string                         `bson:"name,omitempty" json:"name,omitempty"`
+	Type       *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
+	Telecom    []ContactPoint                 `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address    []Address                      `bson:"address,omitempty" json:"address,omitempty"`
+	PartOf     *Reference                     `bson:"partOf,omitempty" json:"partOf,omitempty"`
+	Contact    []OrganizationContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
+	Active     *bool                          `bson:"active,omitempty" json:"active,omitempty"`
 }
-type OrganizationOrganizationContactComponent struct {
+type OrganizationContactComponent struct {
 	Purpose *CodeableConcept `bson:"purpose,omitempty" json:"purpose,omitempty"`
 	Name    *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`

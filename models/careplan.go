@@ -29,32 +29,32 @@ package models
 import "time"
 
 type CarePlan struct {
-	Id          string                                 `json:"-" bson:"_id"`
-	Identifier  []Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient     *Reference                             `bson:"patient,omitempty" json:"patient,omitempty"`
-	Status      string                                 `bson:"status,omitempty" json:"status,omitempty"`
-	Period      *Period                                `bson:"period,omitempty" json:"period,omitempty"`
-	Author      []Reference                            `bson:"author,omitempty" json:"author,omitempty"`
-	Modified    *FHIRDateTime                          `bson:"modified,omitempty" json:"modified,omitempty"`
-	Category    []CodeableConcept                      `bson:"category,omitempty" json:"category,omitempty"`
-	Concern     []Reference                            `bson:"concern,omitempty" json:"concern,omitempty"`
-	Support     []Reference                            `bson:"support,omitempty" json:"support,omitempty"`
-	Participant []CarePlanCarePlanParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
-	Goal        []Reference                            `bson:"goal,omitempty" json:"goal,omitempty"`
-	Activity    []CarePlanCarePlanActivityComponent    `bson:"activity,omitempty" json:"activity,omitempty"`
-	Notes       string                                 `bson:"notes,omitempty" json:"notes,omitempty"`
+	Id          string                         `json:"-" bson:"_id"`
+	Identifier  []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient     *Reference                     `bson:"patient,omitempty" json:"patient,omitempty"`
+	Status      string                         `bson:"status,omitempty" json:"status,omitempty"`
+	Period      *Period                        `bson:"period,omitempty" json:"period,omitempty"`
+	Author      []Reference                    `bson:"author,omitempty" json:"author,omitempty"`
+	Modified    *FHIRDateTime                  `bson:"modified,omitempty" json:"modified,omitempty"`
+	Category    []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
+	Concern     []Reference                    `bson:"concern,omitempty" json:"concern,omitempty"`
+	Support     []Reference                    `bson:"support,omitempty" json:"support,omitempty"`
+	Participant []CarePlanParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	Goal        []Reference                    `bson:"goal,omitempty" json:"goal,omitempty"`
+	Activity    []CarePlanActivityComponent    `bson:"activity,omitempty" json:"activity,omitempty"`
+	Notes       string                         `bson:"notes,omitempty" json:"notes,omitempty"`
 }
-type CarePlanCarePlanParticipantComponent struct {
+type CarePlanParticipantComponent struct {
 	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 	Member *Reference       `bson:"member,omitempty" json:"member,omitempty"`
 }
-type CarePlanCarePlanActivityComponent struct {
-	ActionResulting []Reference                              `bson:"actionResulting,omitempty" json:"actionResulting,omitempty"`
-	Notes           string                                   `bson:"notes,omitempty" json:"notes,omitempty"`
-	Reference       *Reference                               `bson:"reference,omitempty" json:"reference,omitempty"`
-	Detail          *CarePlanCarePlanActivityDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
+type CarePlanActivityComponent struct {
+	ActionResulting []Reference                      `bson:"actionResulting,omitempty" json:"actionResulting,omitempty"`
+	Notes           string                           `bson:"notes,omitempty" json:"notes,omitempty"`
+	Reference       *Reference                       `bson:"reference,omitempty" json:"reference,omitempty"`
+	Detail          *CarePlanActivityDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
 }
-type CarePlanCarePlanActivityDetailComponent struct {
+type CarePlanActivityDetailComponent struct {
 	Category              string           `bson:"category,omitempty" json:"category,omitempty"`
 	Code                  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	ReasonCodeableConcept *CodeableConcept `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`

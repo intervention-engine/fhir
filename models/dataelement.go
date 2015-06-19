@@ -29,27 +29,27 @@ package models
 import "time"
 
 type DataElement struct {
-	Id           string                                   `json:"-" bson:"_id"`
-	Url          string                                   `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier   *Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                                   `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                                   `bson:"name,omitempty" json:"name,omitempty"`
-	UseContext   []CodeableConcept                        `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Experimental *bool                                    `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Status       string                                   `bson:"status,omitempty" json:"status,omitempty"`
-	Date         *FHIRDateTime                            `bson:"date,omitempty" json:"date,omitempty"`
-	Copyright    string                                   `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Publisher    string                                   `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []DataElementDataElementContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Specificity  string                                   `bson:"specificity,omitempty" json:"specificity,omitempty"`
-	Mapping      []DataElementDataElementMappingComponent `bson:"mapping,omitempty" json:"mapping,omitempty"`
-	Element      []ElementDefinition                      `bson:"element,omitempty" json:"element,omitempty"`
+	Id           string                        `json:"-" bson:"_id"`
+	Url          string                        `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier   *Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version      string                        `bson:"version,omitempty" json:"version,omitempty"`
+	Name         string                        `bson:"name,omitempty" json:"name,omitempty"`
+	UseContext   []CodeableConcept             `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Experimental *bool                         `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Status       string                        `bson:"status,omitempty" json:"status,omitempty"`
+	Date         *FHIRDateTime                 `bson:"date,omitempty" json:"date,omitempty"`
+	Copyright    string                        `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Publisher    string                        `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact      []DataElementContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
+	Specificity  string                        `bson:"specificity,omitempty" json:"specificity,omitempty"`
+	Mapping      []DataElementMappingComponent `bson:"mapping,omitempty" json:"mapping,omitempty"`
+	Element      []ElementDefinition           `bson:"element,omitempty" json:"element,omitempty"`
 }
-type DataElementDataElementContactComponent struct {
+type DataElementContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
-type DataElementDataElementMappingComponent struct {
+type DataElementMappingComponent struct {
 	Identity string `bson:"identity,omitempty" json:"identity,omitempty"`
 	Uri      string `bson:"uri,omitempty" json:"uri,omitempty"`
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`

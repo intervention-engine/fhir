@@ -29,41 +29,41 @@ package models
 import "time"
 
 type Procedure struct {
-	Id                string                                   `json:"-" bson:"_id"`
-	Identifier        []Identifier                             `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient           *Reference                               `bson:"patient,omitempty" json:"patient,omitempty"`
-	Status            string                                   `bson:"status,omitempty" json:"status,omitempty"`
-	Category          *CodeableConcept                         `bson:"category,omitempty" json:"category,omitempty"`
-	Type              *CodeableConcept                         `bson:"type,omitempty" json:"type,omitempty"`
-	BodySite          []ProcedureProcedureBodySiteComponent    `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
-	Indication        []CodeableConcept                        `bson:"indication,omitempty" json:"indication,omitempty"`
-	Performer         []ProcedureProcedurePerformerComponent   `bson:"performer,omitempty" json:"performer,omitempty"`
-	PerformedDateTime *FHIRDateTime                            `bson:"performedDateTime,omitempty" json:"performedDateTime,omitempty"`
-	PerformedPeriod   *Period                                  `bson:"performedPeriod,omitempty" json:"performedPeriod,omitempty"`
-	Encounter         *Reference                               `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Location          *Reference                               `bson:"location,omitempty" json:"location,omitempty"`
-	Outcome           *CodeableConcept                         `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	Report            []Reference                              `bson:"report,omitempty" json:"report,omitempty"`
-	Complication      []CodeableConcept                        `bson:"complication,omitempty" json:"complication,omitempty"`
-	FollowUp          []CodeableConcept                        `bson:"followUp,omitempty" json:"followUp,omitempty"`
-	RelatedItem       []ProcedureProcedureRelatedItemComponent `bson:"relatedItem,omitempty" json:"relatedItem,omitempty"`
-	Notes             string                                   `bson:"notes,omitempty" json:"notes,omitempty"`
-	Device            []ProcedureProcedureDeviceComponent      `bson:"device,omitempty" json:"device,omitempty"`
-	Used              []Reference                              `bson:"used,omitempty" json:"used,omitempty"`
+	Id                string                          `json:"-" bson:"_id"`
+	Identifier        []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient           *Reference                      `bson:"patient,omitempty" json:"patient,omitempty"`
+	Status            string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Category          *CodeableConcept                `bson:"category,omitempty" json:"category,omitempty"`
+	Type              *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
+	BodySite          []ProcedureBodySiteComponent    `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	Indication        []CodeableConcept               `bson:"indication,omitempty" json:"indication,omitempty"`
+	Performer         []ProcedurePerformerComponent   `bson:"performer,omitempty" json:"performer,omitempty"`
+	PerformedDateTime *FHIRDateTime                   `bson:"performedDateTime,omitempty" json:"performedDateTime,omitempty"`
+	PerformedPeriod   *Period                         `bson:"performedPeriod,omitempty" json:"performedPeriod,omitempty"`
+	Encounter         *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Location          *Reference                      `bson:"location,omitempty" json:"location,omitempty"`
+	Outcome           *CodeableConcept                `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	Report            []Reference                     `bson:"report,omitempty" json:"report,omitempty"`
+	Complication      []CodeableConcept               `bson:"complication,omitempty" json:"complication,omitempty"`
+	FollowUp          []CodeableConcept               `bson:"followUp,omitempty" json:"followUp,omitempty"`
+	RelatedItem       []ProcedureRelatedItemComponent `bson:"relatedItem,omitempty" json:"relatedItem,omitempty"`
+	Notes             string                          `bson:"notes,omitempty" json:"notes,omitempty"`
+	Device            []ProcedureDeviceComponent      `bson:"device,omitempty" json:"device,omitempty"`
+	Used              []Reference                     `bson:"used,omitempty" json:"used,omitempty"`
 }
-type ProcedureProcedureBodySiteComponent struct {
+type ProcedureBodySiteComponent struct {
 	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
 	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
 }
-type ProcedureProcedurePerformerComponent struct {
+type ProcedurePerformerComponent struct {
 	Person *Reference       `bson:"person,omitempty" json:"person,omitempty"`
 	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
-type ProcedureProcedureRelatedItemComponent struct {
+type ProcedureRelatedItemComponent struct {
 	Type   string     `bson:"type,omitempty" json:"type,omitempty"`
 	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
-type ProcedureProcedureDeviceComponent struct {
+type ProcedureDeviceComponent struct {
 	Action      *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
 	Manipulated *Reference       `bson:"manipulated,omitempty" json:"manipulated,omitempty"`
 }

@@ -29,37 +29,37 @@ package models
 import "time"
 
 type Immunization struct {
-	Id                  string                                                 `json:"-" bson:"_id"`
-	Identifier          []Identifier                                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Date                *FHIRDateTime                                          `bson:"date,omitempty" json:"date,omitempty"`
-	VaccineType         *CodeableConcept                                       `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
-	Patient             *Reference                                             `bson:"patient,omitempty" json:"patient,omitempty"`
-	WasNotGiven         *bool                                                  `bson:"wasNotGiven,omitempty" json:"wasNotGiven,omitempty"`
-	Reported            *bool                                                  `bson:"reported,omitempty" json:"reported,omitempty"`
-	Performer           *Reference                                             `bson:"performer,omitempty" json:"performer,omitempty"`
-	Requester           *Reference                                             `bson:"requester,omitempty" json:"requester,omitempty"`
-	Encounter           *Reference                                             `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Manufacturer        *Reference                                             `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
-	Location            *Reference                                             `bson:"location,omitempty" json:"location,omitempty"`
-	LotNumber           string                                                 `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
-	ExpirationDate      *FHIRDateTime                                          `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
-	Site                *CodeableConcept                                       `bson:"site,omitempty" json:"site,omitempty"`
-	Route               *CodeableConcept                                       `bson:"route,omitempty" json:"route,omitempty"`
-	DoseQuantity        *Quantity                                              `bson:"doseQuantity,omitempty" json:"doseQuantity,omitempty"`
-	Explanation         *ImmunizationImmunizationExplanationComponent          `bson:"explanation,omitempty" json:"explanation,omitempty"`
-	Reaction            []ImmunizationImmunizationReactionComponent            `bson:"reaction,omitempty" json:"reaction,omitempty"`
-	VaccinationProtocol []ImmunizationImmunizationVaccinationProtocolComponent `bson:"vaccinationProtocol,omitempty" json:"vaccinationProtocol,omitempty"`
+	Id                  string                                     `json:"-" bson:"_id"`
+	Identifier          []Identifier                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Date                *FHIRDateTime                              `bson:"date,omitempty" json:"date,omitempty"`
+	VaccineType         *CodeableConcept                           `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
+	Patient             *Reference                                 `bson:"patient,omitempty" json:"patient,omitempty"`
+	WasNotGiven         *bool                                      `bson:"wasNotGiven,omitempty" json:"wasNotGiven,omitempty"`
+	Reported            *bool                                      `bson:"reported,omitempty" json:"reported,omitempty"`
+	Performer           *Reference                                 `bson:"performer,omitempty" json:"performer,omitempty"`
+	Requester           *Reference                                 `bson:"requester,omitempty" json:"requester,omitempty"`
+	Encounter           *Reference                                 `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Manufacturer        *Reference                                 `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
+	Location            *Reference                                 `bson:"location,omitempty" json:"location,omitempty"`
+	LotNumber           string                                     `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
+	ExpirationDate      *FHIRDateTime                              `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
+	Site                *CodeableConcept                           `bson:"site,omitempty" json:"site,omitempty"`
+	Route               *CodeableConcept                           `bson:"route,omitempty" json:"route,omitempty"`
+	DoseQuantity        *Quantity                                  `bson:"doseQuantity,omitempty" json:"doseQuantity,omitempty"`
+	Explanation         *ImmunizationExplanationComponent          `bson:"explanation,omitempty" json:"explanation,omitempty"`
+	Reaction            []ImmunizationReactionComponent            `bson:"reaction,omitempty" json:"reaction,omitempty"`
+	VaccinationProtocol []ImmunizationVaccinationProtocolComponent `bson:"vaccinationProtocol,omitempty" json:"vaccinationProtocol,omitempty"`
 }
-type ImmunizationImmunizationExplanationComponent struct {
+type ImmunizationExplanationComponent struct {
 	Reason         []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 	ReasonNotGiven []CodeableConcept `bson:"reasonNotGiven,omitempty" json:"reasonNotGiven,omitempty"`
 }
-type ImmunizationImmunizationReactionComponent struct {
+type ImmunizationReactionComponent struct {
 	Date     *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
 	Detail   *Reference    `bson:"detail,omitempty" json:"detail,omitempty"`
 	Reported *bool         `bson:"reported,omitempty" json:"reported,omitempty"`
 }
-type ImmunizationImmunizationVaccinationProtocolComponent struct {
+type ImmunizationVaccinationProtocolComponent struct {
 	DoseSequence     *uint32          `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
 	Description      string           `bson:"description,omitempty" json:"description,omitempty"`
 	Authority        *Reference       `bson:"authority,omitempty" json:"authority,omitempty"`

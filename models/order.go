@@ -29,18 +29,18 @@ package models
 import "time"
 
 type Order struct {
-	Id                    string                   `json:"-" bson:"_id"`
-	Identifier            []Identifier             `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Date                  *FHIRDateTime            `bson:"date,omitempty" json:"date,omitempty"`
-	Subject               *Reference               `bson:"subject,omitempty" json:"subject,omitempty"`
-	Source                *Reference               `bson:"source,omitempty" json:"source,omitempty"`
-	Target                *Reference               `bson:"target,omitempty" json:"target,omitempty"`
-	ReasonCodeableConcept *CodeableConcept         `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
-	ReasonReference       *Reference               `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
-	When                  *OrderOrderWhenComponent `bson:"when,omitempty" json:"when,omitempty"`
-	Detail                []Reference              `bson:"detail,omitempty" json:"detail,omitempty"`
+	Id                    string              `json:"-" bson:"_id"`
+	Identifier            []Identifier        `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Date                  *FHIRDateTime       `bson:"date,omitempty" json:"date,omitempty"`
+	Subject               *Reference          `bson:"subject,omitempty" json:"subject,omitempty"`
+	Source                *Reference          `bson:"source,omitempty" json:"source,omitempty"`
+	Target                *Reference          `bson:"target,omitempty" json:"target,omitempty"`
+	ReasonCodeableConcept *CodeableConcept    `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
+	ReasonReference       *Reference          `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
+	When                  *OrderWhenComponent `bson:"when,omitempty" json:"when,omitempty"`
+	Detail                []Reference         `bson:"detail,omitempty" json:"detail,omitempty"`
 }
-type OrderOrderWhenComponent struct {
+type OrderWhenComponent struct {
 	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
 }

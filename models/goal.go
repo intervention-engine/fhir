@@ -29,20 +29,20 @@ package models
 import "time"
 
 type Goal struct {
-	Id          string                     `json:"-" bson:"_id"`
-	Identifier  []Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient     *Reference                 `bson:"patient,omitempty" json:"patient,omitempty"`
-	TargetDate  *FHIRDateTime              `bson:"targetDate,omitempty" json:"targetDate,omitempty"`
-	Description string                     `bson:"description,omitempty" json:"description,omitempty"`
-	Status      string                     `bson:"status,omitempty" json:"status,omitempty"`
-	StatusDate  *FHIRDateTime              `bson:"statusDate,omitempty" json:"statusDate,omitempty"`
-	Author      *Reference                 `bson:"author,omitempty" json:"author,omitempty"`
-	Priority    *CodeableConcept           `bson:"priority,omitempty" json:"priority,omitempty"`
-	Concern     []Reference                `bson:"concern,omitempty" json:"concern,omitempty"`
-	Notes       string                     `bson:"notes,omitempty" json:"notes,omitempty"`
-	Outcome     []GoalGoalOutcomeComponent `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	Id          string                 `json:"-" bson:"_id"`
+	Identifier  []Identifier           `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient     *Reference             `bson:"patient,omitempty" json:"patient,omitempty"`
+	TargetDate  *FHIRDateTime          `bson:"targetDate,omitempty" json:"targetDate,omitempty"`
+	Description string                 `bson:"description,omitempty" json:"description,omitempty"`
+	Status      string                 `bson:"status,omitempty" json:"status,omitempty"`
+	StatusDate  *FHIRDateTime          `bson:"statusDate,omitempty" json:"statusDate,omitempty"`
+	Author      *Reference             `bson:"author,omitempty" json:"author,omitempty"`
+	Priority    *CodeableConcept       `bson:"priority,omitempty" json:"priority,omitempty"`
+	Concern     []Reference            `bson:"concern,omitempty" json:"concern,omitempty"`
+	Notes       string                 `bson:"notes,omitempty" json:"notes,omitempty"`
+	Outcome     []GoalOutcomeComponent `bson:"outcome,omitempty" json:"outcome,omitempty"`
 }
-type GoalGoalOutcomeComponent struct {
+type GoalOutcomeComponent struct {
 	ResultCodeableConcept *CodeableConcept `bson:"resultCodeableConcept,omitempty" json:"resultCodeableConcept,omitempty"`
 	ResultReference       *Reference       `bson:"resultReference,omitempty" json:"resultReference,omitempty"`
 }

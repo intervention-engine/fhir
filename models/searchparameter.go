@@ -29,22 +29,22 @@ package models
 import "time"
 
 type SearchParameter struct {
-	Id           string                                           `json:"-" bson:"_id"`
-	Url          string                                           `bson:"url,omitempty" json:"url,omitempty"`
-	Name         string                                           `bson:"name,omitempty" json:"name,omitempty"`
-	Publisher    string                                           `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []SearchParameterSearchParameterContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Requirements string                                           `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Status       string                                           `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                                            `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Date         *FHIRDateTime                                    `bson:"date,omitempty" json:"date,omitempty"`
-	Base         string                                           `bson:"base,omitempty" json:"base,omitempty"`
-	Type         string                                           `bson:"type,omitempty" json:"type,omitempty"`
-	Description  string                                           `bson:"description,omitempty" json:"description,omitempty"`
-	Xpath        string                                           `bson:"xpath,omitempty" json:"xpath,omitempty"`
-	Target       []string                                         `bson:"target,omitempty" json:"target,omitempty"`
+	Id           string                            `json:"-" bson:"_id"`
+	Url          string                            `bson:"url,omitempty" json:"url,omitempty"`
+	Name         string                            `bson:"name,omitempty" json:"name,omitempty"`
+	Publisher    string                            `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact      []SearchParameterContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
+	Requirements string                            `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Status       string                            `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental *bool                             `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Date         *FHIRDateTime                     `bson:"date,omitempty" json:"date,omitempty"`
+	Base         string                            `bson:"base,omitempty" json:"base,omitempty"`
+	Type         string                            `bson:"type,omitempty" json:"type,omitempty"`
+	Description  string                            `bson:"description,omitempty" json:"description,omitempty"`
+	Xpath        string                            `bson:"xpath,omitempty" json:"xpath,omitempty"`
+	Target       []string                          `bson:"target,omitempty" json:"target,omitempty"`
 }
-type SearchParameterSearchParameterContactComponent struct {
+type SearchParameterContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }

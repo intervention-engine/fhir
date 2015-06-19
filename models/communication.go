@@ -29,21 +29,21 @@ package models
 import "time"
 
 type Communication struct {
-	Id         string                                       `json:"-" bson:"_id"`
-	Identifier []Identifier                                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Category   *CodeableConcept                             `bson:"category,omitempty" json:"category,omitempty"`
-	Sender     *Reference                                   `bson:"sender,omitempty" json:"sender,omitempty"`
-	Recipient  []Reference                                  `bson:"recipient,omitempty" json:"recipient,omitempty"`
-	Payload    []CommunicationCommunicationPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
-	Medium     []CodeableConcept                            `bson:"medium,omitempty" json:"medium,omitempty"`
-	Status     string                                       `bson:"status,omitempty" json:"status,omitempty"`
-	Encounter  *Reference                                   `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Sent       *FHIRDateTime                                `bson:"sent,omitempty" json:"sent,omitempty"`
-	Received   *FHIRDateTime                                `bson:"received,omitempty" json:"received,omitempty"`
-	Reason     []CodeableConcept                            `bson:"reason,omitempty" json:"reason,omitempty"`
-	Subject    *Reference                                   `bson:"subject,omitempty" json:"subject,omitempty"`
+	Id         string                          `json:"-" bson:"_id"`
+	Identifier []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Category   *CodeableConcept                `bson:"category,omitempty" json:"category,omitempty"`
+	Sender     *Reference                      `bson:"sender,omitempty" json:"sender,omitempty"`
+	Recipient  []Reference                     `bson:"recipient,omitempty" json:"recipient,omitempty"`
+	Payload    []CommunicationPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
+	Medium     []CodeableConcept               `bson:"medium,omitempty" json:"medium,omitempty"`
+	Status     string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Encounter  *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Sent       *FHIRDateTime                   `bson:"sent,omitempty" json:"sent,omitempty"`
+	Received   *FHIRDateTime                   `bson:"received,omitempty" json:"received,omitempty"`
+	Reason     []CodeableConcept               `bson:"reason,omitempty" json:"reason,omitempty"`
+	Subject    *Reference                      `bson:"subject,omitempty" json:"subject,omitempty"`
 }
-type CommunicationCommunicationPayloadComponent struct {
+type CommunicationPayloadComponent struct {
 	ContentString     string      `bson:"contentString,omitempty" json:"contentString,omitempty"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`

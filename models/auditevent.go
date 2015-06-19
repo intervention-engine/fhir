@@ -29,13 +29,13 @@ package models
 import "time"
 
 type AuditEvent struct {
-	Id          string                                     `json:"-" bson:"_id"`
-	Event       *AuditEventAuditEventEventComponent        `bson:"event,omitempty" json:"event,omitempty"`
-	Participant []AuditEventAuditEventParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
-	Source      *AuditEventAuditEventSourceComponent       `bson:"source,omitempty" json:"source,omitempty"`
-	Object      []AuditEventAuditEventObjectComponent      `bson:"object,omitempty" json:"object,omitempty"`
+	Id          string                           `json:"-" bson:"_id"`
+	Event       *AuditEventEventComponent        `bson:"event,omitempty" json:"event,omitempty"`
+	Participant []AuditEventParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	Source      *AuditEventSourceComponent       `bson:"source,omitempty" json:"source,omitempty"`
+	Object      []AuditEventObjectComponent      `bson:"object,omitempty" json:"object,omitempty"`
 }
-type AuditEventAuditEventEventComponent struct {
+type AuditEventEventComponent struct {
 	Type           *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Subtype        []CodeableConcept `bson:"subtype,omitempty" json:"subtype,omitempty"`
 	Action         string            `bson:"action,omitempty" json:"action,omitempty"`
@@ -44,41 +44,41 @@ type AuditEventAuditEventEventComponent struct {
 	OutcomeDesc    string            `bson:"outcomeDesc,omitempty" json:"outcomeDesc,omitempty"`
 	PurposeOfEvent []Coding          `bson:"purposeOfEvent,omitempty" json:"purposeOfEvent,omitempty"`
 }
-type AuditEventAuditEventParticipantComponent struct {
-	Role         []CodeableConcept                                `bson:"role,omitempty" json:"role,omitempty"`
-	Reference    *Reference                                       `bson:"reference,omitempty" json:"reference,omitempty"`
-	UserId       string                                           `bson:"userId,omitempty" json:"userId,omitempty"`
-	AltId        string                                           `bson:"altId,omitempty" json:"altId,omitempty"`
-	Name         string                                           `bson:"name,omitempty" json:"name,omitempty"`
-	Requestor    *bool                                            `bson:"requestor,omitempty" json:"requestor,omitempty"`
-	Location     *Reference                                       `bson:"location,omitempty" json:"location,omitempty"`
-	Policy       []string                                         `bson:"policy,omitempty" json:"policy,omitempty"`
-	Media        *Coding                                          `bson:"media,omitempty" json:"media,omitempty"`
-	Network      *AuditEventAuditEventParticipantNetworkComponent `bson:"network,omitempty" json:"network,omitempty"`
-	PurposeOfUse []Coding                                         `bson:"purposeOfUse,omitempty" json:"purposeOfUse,omitempty"`
+type AuditEventParticipantComponent struct {
+	Role         []CodeableConcept                      `bson:"role,omitempty" json:"role,omitempty"`
+	Reference    *Reference                             `bson:"reference,omitempty" json:"reference,omitempty"`
+	UserId       string                                 `bson:"userId,omitempty" json:"userId,omitempty"`
+	AltId        string                                 `bson:"altId,omitempty" json:"altId,omitempty"`
+	Name         string                                 `bson:"name,omitempty" json:"name,omitempty"`
+	Requestor    *bool                                  `bson:"requestor,omitempty" json:"requestor,omitempty"`
+	Location     *Reference                             `bson:"location,omitempty" json:"location,omitempty"`
+	Policy       []string                               `bson:"policy,omitempty" json:"policy,omitempty"`
+	Media        *Coding                                `bson:"media,omitempty" json:"media,omitempty"`
+	Network      *AuditEventParticipantNetworkComponent `bson:"network,omitempty" json:"network,omitempty"`
+	PurposeOfUse []Coding                               `bson:"purposeOfUse,omitempty" json:"purposeOfUse,omitempty"`
 }
-type AuditEventAuditEventParticipantNetworkComponent struct {
+type AuditEventParticipantNetworkComponent struct {
 	Identifier string `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type       string `bson:"type,omitempty" json:"type,omitempty"`
 }
-type AuditEventAuditEventSourceComponent struct {
+type AuditEventSourceComponent struct {
 	Site       string   `bson:"site,omitempty" json:"site,omitempty"`
 	Identifier string   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type       []Coding `bson:"type,omitempty" json:"type,omitempty"`
 }
-type AuditEventAuditEventObjectComponent struct {
-	Identifier  *Identifier                                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Reference   *Reference                                  `bson:"reference,omitempty" json:"reference,omitempty"`
-	Type        string                                      `bson:"type,omitempty" json:"type,omitempty"`
-	Role        string                                      `bson:"role,omitempty" json:"role,omitempty"`
-	Lifecycle   string                                      `bson:"lifecycle,omitempty" json:"lifecycle,omitempty"`
-	Sensitivity *CodeableConcept                            `bson:"sensitivity,omitempty" json:"sensitivity,omitempty"`
-	Name        string                                      `bson:"name,omitempty" json:"name,omitempty"`
-	Description string                                      `bson:"description,omitempty" json:"description,omitempty"`
-	Query       string                                      `bson:"query,omitempty" json:"query,omitempty"`
-	Detail      []AuditEventAuditEventObjectDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
+type AuditEventObjectComponent struct {
+	Identifier  *Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Reference   *Reference                        `bson:"reference,omitempty" json:"reference,omitempty"`
+	Type        string                            `bson:"type,omitempty" json:"type,omitempty"`
+	Role        string                            `bson:"role,omitempty" json:"role,omitempty"`
+	Lifecycle   string                            `bson:"lifecycle,omitempty" json:"lifecycle,omitempty"`
+	Sensitivity *CodeableConcept                  `bson:"sensitivity,omitempty" json:"sensitivity,omitempty"`
+	Name        string                            `bson:"name,omitempty" json:"name,omitempty"`
+	Description string                            `bson:"description,omitempty" json:"description,omitempty"`
+	Query       string                            `bson:"query,omitempty" json:"query,omitempty"`
+	Detail      []AuditEventObjectDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
 }
-type AuditEventAuditEventObjectDetailComponent struct {
+type AuditEventObjectDetailComponent struct {
 	Type  string `bson:"type,omitempty" json:"type,omitempty"`
 	Value string `bson:"value,omitempty" json:"value,omitempty"`
 }

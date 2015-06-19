@@ -29,46 +29,46 @@ package models
 import "time"
 
 type StructureDefinition struct {
-	Id           string                                                       `json:"-" bson:"_id"`
-	Url          string                                                       `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier   []Identifier                                                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                                                       `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                                                       `bson:"name,omitempty" json:"name,omitempty"`
-	UseContext   []CodeableConcept                                            `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Display      string                                                       `bson:"display,omitempty" json:"display,omitempty"`
-	Publisher    string                                                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []StructureDefinitionStructureDefinitionContactComponent     `bson:"contact,omitempty" json:"contact,omitempty"`
-	Description  string                                                       `bson:"description,omitempty" json:"description,omitempty"`
-	Requirements string                                                       `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright    string                                                       `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Code         []Coding                                                     `bson:"code,omitempty" json:"code,omitempty"`
-	Status       string                                                       `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                                                        `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Date         *FHIRDateTime                                                `bson:"date,omitempty" json:"date,omitempty"`
-	FhirVersion  string                                                       `bson:"fhirVersion,omitempty" json:"fhirVersion,omitempty"`
-	Mapping      []StructureDefinitionStructureDefinitionMappingComponent     `bson:"mapping,omitempty" json:"mapping,omitempty"`
-	Type         string                                                       `bson:"type,omitempty" json:"type,omitempty"`
-	Abstract     *bool                                                        `bson:"abstract,omitempty" json:"abstract,omitempty"`
-	ContextType  string                                                       `bson:"contextType,omitempty" json:"contextType,omitempty"`
-	Context      []string                                                     `bson:"context,omitempty" json:"context,omitempty"`
-	Base         string                                                       `bson:"base,omitempty" json:"base,omitempty"`
-	Snapshot     *StructureDefinitionStructureDefinitionSnapshotComponent     `bson:"snapshot,omitempty" json:"snapshot,omitempty"`
-	Differential *StructureDefinitionStructureDefinitionDifferentialComponent `bson:"differential,omitempty" json:"differential,omitempty"`
+	Id           string                                    `json:"-" bson:"_id"`
+	Url          string                                    `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier   []Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version      string                                    `bson:"version,omitempty" json:"version,omitempty"`
+	Name         string                                    `bson:"name,omitempty" json:"name,omitempty"`
+	UseContext   []CodeableConcept                         `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Display      string                                    `bson:"display,omitempty" json:"display,omitempty"`
+	Publisher    string                                    `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact      []StructureDefinitionContactComponent     `bson:"contact,omitempty" json:"contact,omitempty"`
+	Description  string                                    `bson:"description,omitempty" json:"description,omitempty"`
+	Requirements string                                    `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright    string                                    `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Code         []Coding                                  `bson:"code,omitempty" json:"code,omitempty"`
+	Status       string                                    `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental *bool                                     `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Date         *FHIRDateTime                             `bson:"date,omitempty" json:"date,omitempty"`
+	FhirVersion  string                                    `bson:"fhirVersion,omitempty" json:"fhirVersion,omitempty"`
+	Mapping      []StructureDefinitionMappingComponent     `bson:"mapping,omitempty" json:"mapping,omitempty"`
+	Type         string                                    `bson:"type,omitempty" json:"type,omitempty"`
+	Abstract     *bool                                     `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	ContextType  string                                    `bson:"contextType,omitempty" json:"contextType,omitempty"`
+	Context      []string                                  `bson:"context,omitempty" json:"context,omitempty"`
+	Base         string                                    `bson:"base,omitempty" json:"base,omitempty"`
+	Snapshot     *StructureDefinitionSnapshotComponent     `bson:"snapshot,omitempty" json:"snapshot,omitempty"`
+	Differential *StructureDefinitionDifferentialComponent `bson:"differential,omitempty" json:"differential,omitempty"`
 }
-type StructureDefinitionStructureDefinitionContactComponent struct {
+type StructureDefinitionContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
-type StructureDefinitionStructureDefinitionMappingComponent struct {
+type StructureDefinitionMappingComponent struct {
 	Identity string `bson:"identity,omitempty" json:"identity,omitempty"`
 	Uri      string `bson:"uri,omitempty" json:"uri,omitempty"`
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`
 	Comments string `bson:"comments,omitempty" json:"comments,omitempty"`
 }
-type StructureDefinitionStructureDefinitionSnapshotComponent struct {
+type StructureDefinitionSnapshotComponent struct {
 	Element []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
 }
-type StructureDefinitionStructureDefinitionDifferentialComponent struct {
+type StructureDefinitionDifferentialComponent struct {
 	Element []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
 }
 

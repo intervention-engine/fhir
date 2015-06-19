@@ -29,18 +29,18 @@ package models
 import "time"
 
 type Substance struct {
-	Id          string                                  `json:"-" bson:"_id"`
-	Type        *CodeableConcept                        `bson:"type,omitempty" json:"type,omitempty"`
-	Description string                                  `bson:"description,omitempty" json:"description,omitempty"`
-	Instance    *SubstanceSubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`
-	Ingredient  []SubstanceSubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
+	Id          string                         `json:"-" bson:"_id"`
+	Type        *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
+	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
+	Instance    *SubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`
+	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 }
-type SubstanceSubstanceInstanceComponent struct {
+type SubstanceInstanceComponent struct {
 	Identifier *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Expiry     *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
 	Quantity   *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 }
-type SubstanceSubstanceIngredientComponent struct {
+type SubstanceIngredientComponent struct {
 	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
 }

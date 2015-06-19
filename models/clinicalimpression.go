@@ -29,35 +29,35 @@ package models
 import "time"
 
 type ClinicalImpression struct {
-	Id                     string                                                        `json:"-" bson:"_id"`
-	Patient                *Reference                                                    `bson:"patient,omitempty" json:"patient,omitempty"`
-	Assessor               *Reference                                                    `bson:"assessor,omitempty" json:"assessor,omitempty"`
-	Status                 string                                                        `bson:"status,omitempty" json:"status,omitempty"`
-	Date                   *FHIRDateTime                                                 `bson:"date,omitempty" json:"date,omitempty"`
-	Description            string                                                        `bson:"description,omitempty" json:"description,omitempty"`
-	Previous               *Reference                                                    `bson:"previous,omitempty" json:"previous,omitempty"`
-	Problem                []Reference                                                   `bson:"problem,omitempty" json:"problem,omitempty"`
-	TriggerCodeableConcept *CodeableConcept                                              `bson:"triggerCodeableConcept,omitempty" json:"triggerCodeableConcept,omitempty"`
-	TriggerReference       *Reference                                                    `bson:"triggerReference,omitempty" json:"triggerReference,omitempty"`
-	Investigations         []ClinicalImpressionClinicalImpressionInvestigationsComponent `bson:"investigations,omitempty" json:"investigations,omitempty"`
-	Protocol               string                                                        `bson:"protocol,omitempty" json:"protocol,omitempty"`
-	Summary                string                                                        `bson:"summary,omitempty" json:"summary,omitempty"`
-	Finding                []ClinicalImpressionClinicalImpressionFindingComponent        `bson:"finding,omitempty" json:"finding,omitempty"`
-	Resolved               []CodeableConcept                                             `bson:"resolved,omitempty" json:"resolved,omitempty"`
-	RuledOut               []ClinicalImpressionClinicalImpressionRuledOutComponent       `bson:"ruledOut,omitempty" json:"ruledOut,omitempty"`
-	Prognosis              string                                                        `bson:"prognosis,omitempty" json:"prognosis,omitempty"`
-	Plan                   []Reference                                                   `bson:"plan,omitempty" json:"plan,omitempty"`
-	Action                 []Reference                                                   `bson:"action,omitempty" json:"action,omitempty"`
+	Id                     string                                      `json:"-" bson:"_id"`
+	Patient                *Reference                                  `bson:"patient,omitempty" json:"patient,omitempty"`
+	Assessor               *Reference                                  `bson:"assessor,omitempty" json:"assessor,omitempty"`
+	Status                 string                                      `bson:"status,omitempty" json:"status,omitempty"`
+	Date                   *FHIRDateTime                               `bson:"date,omitempty" json:"date,omitempty"`
+	Description            string                                      `bson:"description,omitempty" json:"description,omitempty"`
+	Previous               *Reference                                  `bson:"previous,omitempty" json:"previous,omitempty"`
+	Problem                []Reference                                 `bson:"problem,omitempty" json:"problem,omitempty"`
+	TriggerCodeableConcept *CodeableConcept                            `bson:"triggerCodeableConcept,omitempty" json:"triggerCodeableConcept,omitempty"`
+	TriggerReference       *Reference                                  `bson:"triggerReference,omitempty" json:"triggerReference,omitempty"`
+	Investigations         []ClinicalImpressionInvestigationsComponent `bson:"investigations,omitempty" json:"investigations,omitempty"`
+	Protocol               string                                      `bson:"protocol,omitempty" json:"protocol,omitempty"`
+	Summary                string                                      `bson:"summary,omitempty" json:"summary,omitempty"`
+	Finding                []ClinicalImpressionFindingComponent        `bson:"finding,omitempty" json:"finding,omitempty"`
+	Resolved               []CodeableConcept                           `bson:"resolved,omitempty" json:"resolved,omitempty"`
+	RuledOut               []ClinicalImpressionRuledOutComponent       `bson:"ruledOut,omitempty" json:"ruledOut,omitempty"`
+	Prognosis              string                                      `bson:"prognosis,omitempty" json:"prognosis,omitempty"`
+	Plan                   []Reference                                 `bson:"plan,omitempty" json:"plan,omitempty"`
+	Action                 []Reference                                 `bson:"action,omitempty" json:"action,omitempty"`
 }
-type ClinicalImpressionClinicalImpressionInvestigationsComponent struct {
+type ClinicalImpressionInvestigationsComponent struct {
 	Code *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Item []Reference      `bson:"item,omitempty" json:"item,omitempty"`
 }
-type ClinicalImpressionClinicalImpressionFindingComponent struct {
+type ClinicalImpressionFindingComponent struct {
 	Item  *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
 	Cause string           `bson:"cause,omitempty" json:"cause,omitempty"`
 }
-type ClinicalImpressionClinicalImpressionRuledOutComponent struct {
+type ClinicalImpressionRuledOutComponent struct {
 	Item   *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
 	Reason string           `bson:"reason,omitempty" json:"reason,omitempty"`
 }

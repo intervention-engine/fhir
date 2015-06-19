@@ -29,26 +29,26 @@ package models
 import "time"
 
 type ImmunizationRecommendation struct {
-	Id             string                                                                        `json:"-" bson:"_id"`
-	Identifier     []Identifier                                                                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient        *Reference                                                                    `bson:"patient,omitempty" json:"patient,omitempty"`
-	Recommendation []ImmunizationRecommendationImmunizationRecommendationRecommendationComponent `bson:"recommendation,omitempty" json:"recommendation,omitempty"`
+	Id             string                                              `json:"-" bson:"_id"`
+	Identifier     []Identifier                                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient        *Reference                                          `bson:"patient,omitempty" json:"patient,omitempty"`
+	Recommendation []ImmunizationRecommendationRecommendationComponent `bson:"recommendation,omitempty" json:"recommendation,omitempty"`
 }
-type ImmunizationRecommendationImmunizationRecommendationRecommendationComponent struct {
-	Date                         *FHIRDateTime                                                                              `bson:"date,omitempty" json:"date,omitempty"`
-	VaccineType                  *CodeableConcept                                                                           `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
-	DoseNumber                   *uint32                                                                                    `bson:"doseNumber,omitempty" json:"doseNumber,omitempty"`
-	ForecastStatus               *CodeableConcept                                                                           `bson:"forecastStatus,omitempty" json:"forecastStatus,omitempty"`
-	DateCriterion                []ImmunizationRecommendationImmunizationRecommendationRecommendationDateCriterionComponent `bson:"dateCriterion,omitempty" json:"dateCriterion,omitempty"`
-	Protocol                     *ImmunizationRecommendationImmunizationRecommendationRecommendationProtocolComponent       `bson:"protocol,omitempty" json:"protocol,omitempty"`
-	SupportingImmunization       []Reference                                                                                `bson:"supportingImmunization,omitempty" json:"supportingImmunization,omitempty"`
-	SupportingPatientInformation []Reference                                                                                `bson:"supportingPatientInformation,omitempty" json:"supportingPatientInformation,omitempty"`
+type ImmunizationRecommendationRecommendationComponent struct {
+	Date                         *FHIRDateTime                                                    `bson:"date,omitempty" json:"date,omitempty"`
+	VaccineType                  *CodeableConcept                                                 `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
+	DoseNumber                   *uint32                                                          `bson:"doseNumber,omitempty" json:"doseNumber,omitempty"`
+	ForecastStatus               *CodeableConcept                                                 `bson:"forecastStatus,omitempty" json:"forecastStatus,omitempty"`
+	DateCriterion                []ImmunizationRecommendationRecommendationDateCriterionComponent `bson:"dateCriterion,omitempty" json:"dateCriterion,omitempty"`
+	Protocol                     *ImmunizationRecommendationRecommendationProtocolComponent       `bson:"protocol,omitempty" json:"protocol,omitempty"`
+	SupportingImmunization       []Reference                                                      `bson:"supportingImmunization,omitempty" json:"supportingImmunization,omitempty"`
+	SupportingPatientInformation []Reference                                                      `bson:"supportingPatientInformation,omitempty" json:"supportingPatientInformation,omitempty"`
 }
-type ImmunizationRecommendationImmunizationRecommendationRecommendationDateCriterionComponent struct {
+type ImmunizationRecommendationRecommendationDateCriterionComponent struct {
 	Code  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Value *FHIRDateTime    `bson:"value,omitempty" json:"value,omitempty"`
 }
-type ImmunizationRecommendationImmunizationRecommendationRecommendationProtocolComponent struct {
+type ImmunizationRecommendationRecommendationProtocolComponent struct {
 	DoseSequence *int32     `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
 	Description  string     `bson:"description,omitempty" json:"description,omitempty"`
 	Authority    *Reference `bson:"authority,omitempty" json:"authority,omitempty"`

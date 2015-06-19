@@ -29,27 +29,27 @@ package models
 import "time"
 
 type ConceptMap struct {
-	Id              string                                 `json:"-" bson:"_id"`
-	Url             string                                 `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier      *Identifier                            `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version         string                                 `bson:"version,omitempty" json:"version,omitempty"`
-	Name            string                                 `bson:"name,omitempty" json:"name,omitempty"`
-	UseContext      []CodeableConcept                      `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Publisher       string                                 `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact         []ConceptMapConceptMapContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Description     string                                 `bson:"description,omitempty" json:"description,omitempty"`
-	Requirements    string                                 `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright       string                                 `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Status          string                                 `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental    *bool                                  `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Date            *FHIRDateTime                          `bson:"date,omitempty" json:"date,omitempty"`
-	SourceUri       string                                 `bson:"sourceUri,omitempty" json:"sourceUri,omitempty"`
-	SourceReference *Reference                             `bson:"sourceReference,omitempty" json:"sourceReference,omitempty"`
-	TargetUri       string                                 `bson:"targetUri,omitempty" json:"targetUri,omitempty"`
-	TargetReference *Reference                             `bson:"targetReference,omitempty" json:"targetReference,omitempty"`
-	Element         []ConceptMapSourceElementComponent     `bson:"element,omitempty" json:"element,omitempty"`
+	Id              string                             `json:"-" bson:"_id"`
+	Url             string                             `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier      *Identifier                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version         string                             `bson:"version,omitempty" json:"version,omitempty"`
+	Name            string                             `bson:"name,omitempty" json:"name,omitempty"`
+	UseContext      []CodeableConcept                  `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Publisher       string                             `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact         []ConceptMapContactComponent       `bson:"contact,omitempty" json:"contact,omitempty"`
+	Description     string                             `bson:"description,omitempty" json:"description,omitempty"`
+	Requirements    string                             `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright       string                             `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Status          string                             `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental    *bool                              `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Date            *FHIRDateTime                      `bson:"date,omitempty" json:"date,omitempty"`
+	SourceUri       string                             `bson:"sourceUri,omitempty" json:"sourceUri,omitempty"`
+	SourceReference *Reference                         `bson:"sourceReference,omitempty" json:"sourceReference,omitempty"`
+	TargetUri       string                             `bson:"targetUri,omitempty" json:"targetUri,omitempty"`
+	TargetReference *Reference                         `bson:"targetReference,omitempty" json:"targetReference,omitempty"`
+	Element         []ConceptMapSourceElementComponent `bson:"element,omitempty" json:"element,omitempty"`
 }
-type ConceptMapConceptMapContactComponent struct {
+type ConceptMapContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }

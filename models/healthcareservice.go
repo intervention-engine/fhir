@@ -29,41 +29,41 @@ package models
 import "time"
 
 type HealthcareService struct {
-	Id                     string                                                     `json:"-" bson:"_id"`
-	Identifier             []Identifier                                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	ProvidedBy             *Reference                                                 `bson:"providedBy,omitempty" json:"providedBy,omitempty"`
-	Location               *Reference                                                 `bson:"location,omitempty" json:"location,omitempty"`
-	ServiceCategory        *CodeableConcept                                           `bson:"serviceCategory,omitempty" json:"serviceCategory,omitempty"`
-	ServiceType            []HealthcareServiceServiceTypeComponent                    `bson:"serviceType,omitempty" json:"serviceType,omitempty"`
-	ServiceName            string                                                     `bson:"serviceName,omitempty" json:"serviceName,omitempty"`
-	Comment                string                                                     `bson:"comment,omitempty" json:"comment,omitempty"`
-	ExtraDetails           string                                                     `bson:"extraDetails,omitempty" json:"extraDetails,omitempty"`
-	Photo                  *Attachment                                                `bson:"photo,omitempty" json:"photo,omitempty"`
-	Telecom                []ContactPoint                                             `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	CoverageArea           []Reference                                                `bson:"coverageArea,omitempty" json:"coverageArea,omitempty"`
-	ServiceProvisionCode   []CodeableConcept                                          `bson:"serviceProvisionCode,omitempty" json:"serviceProvisionCode,omitempty"`
-	Eligibility            *CodeableConcept                                           `bson:"eligibility,omitempty" json:"eligibility,omitempty"`
-	EligibilityNote        string                                                     `bson:"eligibilityNote,omitempty" json:"eligibilityNote,omitempty"`
-	ProgramName            []string                                                   `bson:"programName,omitempty" json:"programName,omitempty"`
-	Characteristic         []CodeableConcept                                          `bson:"characteristic,omitempty" json:"characteristic,omitempty"`
-	ReferralMethod         []CodeableConcept                                          `bson:"referralMethod,omitempty" json:"referralMethod,omitempty"`
-	PublicKey              string                                                     `bson:"publicKey,omitempty" json:"publicKey,omitempty"`
-	AppointmentRequired    *bool                                                      `bson:"appointmentRequired,omitempty" json:"appointmentRequired,omitempty"`
-	AvailableTime          []HealthcareServiceHealthcareServiceAvailableTimeComponent `bson:"availableTime,omitempty" json:"availableTime,omitempty"`
-	NotAvailable           []HealthcareServiceHealthcareServiceNotAvailableComponent  `bson:"notAvailable,omitempty" json:"notAvailable,omitempty"`
-	AvailabilityExceptions string                                                     `bson:"availabilityExceptions,omitempty" json:"availabilityExceptions,omitempty"`
+	Id                     string                                    `json:"-" bson:"_id"`
+	Identifier             []Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	ProvidedBy             *Reference                                `bson:"providedBy,omitempty" json:"providedBy,omitempty"`
+	Location               *Reference                                `bson:"location,omitempty" json:"location,omitempty"`
+	ServiceCategory        *CodeableConcept                          `bson:"serviceCategory,omitempty" json:"serviceCategory,omitempty"`
+	ServiceType            []HealthcareServiceServiceTypeComponent   `bson:"serviceType,omitempty" json:"serviceType,omitempty"`
+	ServiceName            string                                    `bson:"serviceName,omitempty" json:"serviceName,omitempty"`
+	Comment                string                                    `bson:"comment,omitempty" json:"comment,omitempty"`
+	ExtraDetails           string                                    `bson:"extraDetails,omitempty" json:"extraDetails,omitempty"`
+	Photo                  *Attachment                               `bson:"photo,omitempty" json:"photo,omitempty"`
+	Telecom                []ContactPoint                            `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	CoverageArea           []Reference                               `bson:"coverageArea,omitempty" json:"coverageArea,omitempty"`
+	ServiceProvisionCode   []CodeableConcept                         `bson:"serviceProvisionCode,omitempty" json:"serviceProvisionCode,omitempty"`
+	Eligibility            *CodeableConcept                          `bson:"eligibility,omitempty" json:"eligibility,omitempty"`
+	EligibilityNote        string                                    `bson:"eligibilityNote,omitempty" json:"eligibilityNote,omitempty"`
+	ProgramName            []string                                  `bson:"programName,omitempty" json:"programName,omitempty"`
+	Characteristic         []CodeableConcept                         `bson:"characteristic,omitempty" json:"characteristic,omitempty"`
+	ReferralMethod         []CodeableConcept                         `bson:"referralMethod,omitempty" json:"referralMethod,omitempty"`
+	PublicKey              string                                    `bson:"publicKey,omitempty" json:"publicKey,omitempty"`
+	AppointmentRequired    *bool                                     `bson:"appointmentRequired,omitempty" json:"appointmentRequired,omitempty"`
+	AvailableTime          []HealthcareServiceAvailableTimeComponent `bson:"availableTime,omitempty" json:"availableTime,omitempty"`
+	NotAvailable           []HealthcareServiceNotAvailableComponent  `bson:"notAvailable,omitempty" json:"notAvailable,omitempty"`
+	AvailabilityExceptions string                                    `bson:"availabilityExceptions,omitempty" json:"availabilityExceptions,omitempty"`
 }
 type HealthcareServiceServiceTypeComponent struct {
 	Type      *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Specialty []CodeableConcept `bson:"specialty,omitempty" json:"specialty,omitempty"`
 }
-type HealthcareServiceHealthcareServiceAvailableTimeComponent struct {
+type HealthcareServiceAvailableTimeComponent struct {
 	DaysOfWeek         []string      `bson:"daysOfWeek,omitempty" json:"daysOfWeek,omitempty"`
 	AllDay             *bool         `bson:"allDay,omitempty" json:"allDay,omitempty"`
 	AvailableStartTime *FHIRDateTime `bson:"availableStartTime,omitempty" json:"availableStartTime,omitempty"`
 	AvailableEndTime   *FHIRDateTime `bson:"availableEndTime,omitempty" json:"availableEndTime,omitempty"`
 }
-type HealthcareServiceHealthcareServiceNotAvailableComponent struct {
+type HealthcareServiceNotAvailableComponent struct {
 	Description string  `bson:"description,omitempty" json:"description,omitempty"`
 	During      *Period `bson:"during,omitempty" json:"during,omitempty"`
 }

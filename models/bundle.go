@@ -29,31 +29,31 @@ package models
 import "time"
 
 type Bundle struct {
-	Id        string                       `json:"-" bson:"_id"`
-	Type      string                       `bson:"type,omitempty" json:"type,omitempty"`
-	Base      string                       `bson:"base,omitempty" json:"base,omitempty"`
-	Total     *uint32                      `bson:"total,omitempty" json:"total,omitempty"`
-	Link      []BundleBundleLinkComponent  `bson:"link,omitempty" json:"link,omitempty"`
-	Entry     []BundleBundleEntryComponent `bson:"entry,omitempty" json:"entry,omitempty"`
-	Signature string                       `bson:"signature,omitempty" json:"signature,omitempty"`
+	Id        string                 `json:"-" bson:"_id"`
+	Type      string                 `bson:"type,omitempty" json:"type,omitempty"`
+	Base      string                 `bson:"base,omitempty" json:"base,omitempty"`
+	Total     *uint32                `bson:"total,omitempty" json:"total,omitempty"`
+	Link      []BundleLinkComponent  `bson:"link,omitempty" json:"link,omitempty"`
+	Entry     []BundleEntryComponent `bson:"entry,omitempty" json:"entry,omitempty"`
+	Signature string                 `bson:"signature,omitempty" json:"signature,omitempty"`
 }
-type BundleBundleLinkComponent struct {
+type BundleLinkComponent struct {
 	Relation string `bson:"relation,omitempty" json:"relation,omitempty"`
 	Url      string `bson:"url,omitempty" json:"url,omitempty"`
 }
-type BundleBundleEntryComponent struct {
-	Base                string                                         `bson:"base,omitempty" json:"base,omitempty"`
-	Link                []BundleBundleLinkComponent                    `bson:"link,omitempty" json:"link,omitempty"`
-	Resource            *Reference                                     `bson:"resource,omitempty" json:"resource,omitempty"`
-	Search              *BundleBundleEntrySearchComponent              `bson:"search,omitempty" json:"search,omitempty"`
-	Transaction         *BundleBundleEntryTransactionComponent         `bson:"transaction,omitempty" json:"transaction,omitempty"`
-	TransactionResponse *BundleBundleEntryTransactionResponseComponent `bson:"transactionResponse,omitempty" json:"transactionResponse,omitempty"`
+type BundleEntryComponent struct {
+	Base                string                                   `bson:"base,omitempty" json:"base,omitempty"`
+	Link                []BundleLinkComponent                    `bson:"link,omitempty" json:"link,omitempty"`
+	Resource            *Reference                               `bson:"resource,omitempty" json:"resource,omitempty"`
+	Search              *BundleEntrySearchComponent              `bson:"search,omitempty" json:"search,omitempty"`
+	Transaction         *BundleEntryTransactionComponent         `bson:"transaction,omitempty" json:"transaction,omitempty"`
+	TransactionResponse *BundleEntryTransactionResponseComponent `bson:"transactionResponse,omitempty" json:"transactionResponse,omitempty"`
 }
-type BundleBundleEntrySearchComponent struct {
+type BundleEntrySearchComponent struct {
 	Mode  string   `bson:"mode,omitempty" json:"mode,omitempty"`
 	Score *float64 `bson:"score,omitempty" json:"score,omitempty"`
 }
-type BundleBundleEntryTransactionComponent struct {
+type BundleEntryTransactionComponent struct {
 	Method          string        `bson:"method,omitempty" json:"method,omitempty"`
 	Url             string        `bson:"url,omitempty" json:"url,omitempty"`
 	IfNoneMatch     string        `bson:"ifNoneMatch,omitempty" json:"ifNoneMatch,omitempty"`
@@ -61,7 +61,7 @@ type BundleBundleEntryTransactionComponent struct {
 	IfModifiedSince *FHIRDateTime `bson:"ifModifiedSince,omitempty" json:"ifModifiedSince,omitempty"`
 	IfNoneExist     string        `bson:"ifNoneExist,omitempty" json:"ifNoneExist,omitempty"`
 }
-type BundleBundleEntryTransactionResponseComponent struct {
+type BundleEntryTransactionResponseComponent struct {
 	Status       string        `bson:"status,omitempty" json:"status,omitempty"`
 	Location     string        `bson:"location,omitempty" json:"location,omitempty"`
 	Etag         string        `bson:"etag,omitempty" json:"etag,omitempty"`

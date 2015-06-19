@@ -27,12 +27,12 @@
 package models
 
 type Timing struct {
-	Id     string                       `json:"-" bson:"_id"`
-	Event  []FHIRDateTime               `bson:"event,omitempty" json:"event,omitempty"`
-	Repeat *TimingTimingRepeatComponent `bson:"repeat,omitempty" json:"repeat,omitempty"`
-	Code   *CodeableConcept             `bson:"code,omitempty" json:"code,omitempty"`
+	Id     string                 `json:"-" bson:"_id"`
+	Event  []FHIRDateTime         `bson:"event,omitempty" json:"event,omitempty"`
+	Repeat *TimingRepeatComponent `bson:"repeat,omitempty" json:"repeat,omitempty"`
+	Code   *CodeableConcept       `bson:"code,omitempty" json:"code,omitempty"`
 }
-type TimingTimingRepeatComponent struct {
+type TimingRepeatComponent struct {
 	Bounds        *Period  `bson:"bounds,omitempty" json:"bounds,omitempty"`
 	Count         *int32   `bson:"count,omitempty" json:"count,omitempty"`
 	Duration      *float64 `bson:"duration,omitempty" json:"duration,omitempty"`

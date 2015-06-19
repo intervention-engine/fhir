@@ -29,19 +29,19 @@ package models
 import "time"
 
 type Person struct {
-	Id                   string                      `json:"-" bson:"_id"`
-	Identifier           []Identifier                `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Name                 []HumanName                 `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom              []ContactPoint              `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Gender               *CodeableConcept            `bson:"gender,omitempty" json:"gender,omitempty"`
-	BirthDate            *FHIRDateTime               `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
-	Address              []Address                   `bson:"address,omitempty" json:"address,omitempty"`
-	Photo                *Attachment                 `bson:"photo,omitempty" json:"photo,omitempty"`
-	ManagingOrganization *Reference                  `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
-	Active               *bool                       `bson:"active,omitempty" json:"active,omitempty"`
-	Link                 []PersonPersonLinkComponent `bson:"link,omitempty" json:"link,omitempty"`
+	Id                   string                `json:"-" bson:"_id"`
+	Identifier           []Identifier          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Name                 []HumanName           `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom              []ContactPoint        `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Gender               *CodeableConcept      `bson:"gender,omitempty" json:"gender,omitempty"`
+	BirthDate            *FHIRDateTime         `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
+	Address              []Address             `bson:"address,omitempty" json:"address,omitempty"`
+	Photo                *Attachment           `bson:"photo,omitempty" json:"photo,omitempty"`
+	ManagingOrganization *Reference            `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
+	Active               *bool                 `bson:"active,omitempty" json:"active,omitempty"`
+	Link                 []PersonLinkComponent `bson:"link,omitempty" json:"link,omitempty"`
 }
-type PersonPersonLinkComponent struct {
+type PersonLinkComponent struct {
 	Target    *Reference `bson:"target,omitempty" json:"target,omitempty"`
 	Assurance string     `bson:"assurance,omitempty" json:"assurance,omitempty"`
 }

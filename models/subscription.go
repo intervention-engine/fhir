@@ -29,17 +29,17 @@ package models
 import "time"
 
 type Subscription struct {
-	Id       string                                    `json:"-" bson:"_id"`
-	Criteria string                                    `bson:"criteria,omitempty" json:"criteria,omitempty"`
-	Contact  []ContactPoint                            `bson:"contact,omitempty" json:"contact,omitempty"`
-	Reason   string                                    `bson:"reason,omitempty" json:"reason,omitempty"`
-	Status   string                                    `bson:"status,omitempty" json:"status,omitempty"`
-	Error    string                                    `bson:"error,omitempty" json:"error,omitempty"`
-	Channel  *SubscriptionSubscriptionChannelComponent `bson:"channel,omitempty" json:"channel,omitempty"`
-	End      *FHIRDateTime                             `bson:"end,omitempty" json:"end,omitempty"`
-	Tag      []Coding                                  `bson:"tag,omitempty" json:"tag,omitempty"`
+	Id       string                        `json:"-" bson:"_id"`
+	Criteria string                        `bson:"criteria,omitempty" json:"criteria,omitempty"`
+	Contact  []ContactPoint                `bson:"contact,omitempty" json:"contact,omitempty"`
+	Reason   string                        `bson:"reason,omitempty" json:"reason,omitempty"`
+	Status   string                        `bson:"status,omitempty" json:"status,omitempty"`
+	Error    string                        `bson:"error,omitempty" json:"error,omitempty"`
+	Channel  *SubscriptionChannelComponent `bson:"channel,omitempty" json:"channel,omitempty"`
+	End      *FHIRDateTime                 `bson:"end,omitempty" json:"end,omitempty"`
+	Tag      []Coding                      `bson:"tag,omitempty" json:"tag,omitempty"`
 }
-type SubscriptionSubscriptionChannelComponent struct {
+type SubscriptionChannelComponent struct {
 	Type     string `bson:"type,omitempty" json:"type,omitempty"`
 	Endpoint string `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
 	Payload  string `bson:"payload,omitempty" json:"payload,omitempty"`

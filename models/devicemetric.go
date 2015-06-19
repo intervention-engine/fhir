@@ -29,19 +29,19 @@ package models
 import "time"
 
 type DeviceMetric struct {
-	Id                string                                         `json:"-" bson:"_id"`
-	Type              *CodeableConcept                               `bson:"type,omitempty" json:"type,omitempty"`
-	Identifier        *Identifier                                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Unit              *CodeableConcept                               `bson:"unit,omitempty" json:"unit,omitempty"`
-	Source            *Reference                                     `bson:"source,omitempty" json:"source,omitempty"`
-	Parent            *Reference                                     `bson:"parent,omitempty" json:"parent,omitempty"`
-	OperationalStatus string                                         `bson:"operationalStatus,omitempty" json:"operationalStatus,omitempty"`
-	Color             string                                         `bson:"color,omitempty" json:"color,omitempty"`
-	Category          string                                         `bson:"category,omitempty" json:"category,omitempty"`
-	MeasurementPeriod *Timing                                        `bson:"measurementPeriod,omitempty" json:"measurementPeriod,omitempty"`
-	Calibration       []DeviceMetricDeviceMetricCalibrationComponent `bson:"calibration,omitempty" json:"calibration,omitempty"`
+	Id                string                             `json:"-" bson:"_id"`
+	Type              *CodeableConcept                   `bson:"type,omitempty" json:"type,omitempty"`
+	Identifier        *Identifier                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Unit              *CodeableConcept                   `bson:"unit,omitempty" json:"unit,omitempty"`
+	Source            *Reference                         `bson:"source,omitempty" json:"source,omitempty"`
+	Parent            *Reference                         `bson:"parent,omitempty" json:"parent,omitempty"`
+	OperationalStatus string                             `bson:"operationalStatus,omitempty" json:"operationalStatus,omitempty"`
+	Color             string                             `bson:"color,omitempty" json:"color,omitempty"`
+	Category          string                             `bson:"category,omitempty" json:"category,omitempty"`
+	MeasurementPeriod *Timing                            `bson:"measurementPeriod,omitempty" json:"measurementPeriod,omitempty"`
+	Calibration       []DeviceMetricCalibrationComponent `bson:"calibration,omitempty" json:"calibration,omitempty"`
 }
-type DeviceMetricDeviceMetricCalibrationComponent struct {
+type DeviceMetricCalibrationComponent struct {
 	Type  string        `bson:"type,omitempty" json:"type,omitempty"`
 	State string        `bson:"state,omitempty" json:"state,omitempty"`
 	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`

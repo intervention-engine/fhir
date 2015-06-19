@@ -29,19 +29,19 @@ package models
 import "time"
 
 type DeviceComponent struct {
-	Id                      string                                                           `json:"-" bson:"_id"`
-	Type                    *CodeableConcept                                                 `bson:"type,omitempty" json:"type,omitempty"`
-	Identifier              *Identifier                                                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	LastSystemChange        *FHIRDateTime                                                    `bson:"lastSystemChange,omitempty" json:"lastSystemChange,omitempty"`
-	Source                  *Reference                                                       `bson:"source,omitempty" json:"source,omitempty"`
-	Parent                  *Reference                                                       `bson:"parent,omitempty" json:"parent,omitempty"`
-	OperationalStatus       []CodeableConcept                                                `bson:"operationalStatus,omitempty" json:"operationalStatus,omitempty"`
-	ParameterGroup          *CodeableConcept                                                 `bson:"parameterGroup,omitempty" json:"parameterGroup,omitempty"`
-	MeasurementPrinciple    string                                                           `bson:"measurementPrinciple,omitempty" json:"measurementPrinciple,omitempty"`
-	ProductionSpecification []DeviceComponentDeviceComponentProductionSpecificationComponent `bson:"productionSpecification,omitempty" json:"productionSpecification,omitempty"`
-	LanguageCode            *CodeableConcept                                                 `bson:"languageCode,omitempty" json:"languageCode,omitempty"`
+	Id                      string                                            `json:"-" bson:"_id"`
+	Type                    *CodeableConcept                                  `bson:"type,omitempty" json:"type,omitempty"`
+	Identifier              *Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	LastSystemChange        *FHIRDateTime                                     `bson:"lastSystemChange,omitempty" json:"lastSystemChange,omitempty"`
+	Source                  *Reference                                        `bson:"source,omitempty" json:"source,omitempty"`
+	Parent                  *Reference                                        `bson:"parent,omitempty" json:"parent,omitempty"`
+	OperationalStatus       []CodeableConcept                                 `bson:"operationalStatus,omitempty" json:"operationalStatus,omitempty"`
+	ParameterGroup          *CodeableConcept                                  `bson:"parameterGroup,omitempty" json:"parameterGroup,omitempty"`
+	MeasurementPrinciple    string                                            `bson:"measurementPrinciple,omitempty" json:"measurementPrinciple,omitempty"`
+	ProductionSpecification []DeviceComponentProductionSpecificationComponent `bson:"productionSpecification,omitempty" json:"productionSpecification,omitempty"`
+	LanguageCode            *CodeableConcept                                  `bson:"languageCode,omitempty" json:"languageCode,omitempty"`
 }
-type DeviceComponentDeviceComponentProductionSpecificationComponent struct {
+type DeviceComponentProductionSpecificationComponent struct {
 	SpecType       *CodeableConcept `bson:"specType,omitempty" json:"specType,omitempty"`
 	ComponentId    *Identifier      `bson:"componentId,omitempty" json:"componentId,omitempty"`
 	ProductionSpec string           `bson:"productionSpec,omitempty" json:"productionSpec,omitempty"`

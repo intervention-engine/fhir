@@ -29,24 +29,24 @@ package models
 import "time"
 
 type EpisodeOfCare struct {
-	Id                   string                                             `json:"-" bson:"_id"`
-	Identifier           []Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status               string                                             `bson:"status,omitempty" json:"status,omitempty"`
-	StatusHistory        []EpisodeOfCareEpisodeOfCareStatusHistoryComponent `bson:"statusHistory,omitempty" json:"statusHistory,omitempty"`
-	Type                 []CodeableConcept                                  `bson:"type,omitempty" json:"type,omitempty"`
-	Patient              *Reference                                         `bson:"patient,omitempty" json:"patient,omitempty"`
-	ManagingOrganization *Reference                                         `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
-	Period               *Period                                            `bson:"period,omitempty" json:"period,omitempty"`
-	Condition            []Reference                                        `bson:"condition,omitempty" json:"condition,omitempty"`
-	ReferralRequest      []Reference                                        `bson:"referralRequest,omitempty" json:"referralRequest,omitempty"`
-	CareManager          *Reference                                         `bson:"careManager,omitempty" json:"careManager,omitempty"`
-	CareTeam             []EpisodeOfCareEpisodeOfCareCareTeamComponent      `bson:"careTeam,omitempty" json:"careTeam,omitempty"`
+	Id                   string                                `json:"-" bson:"_id"`
+	Identifier           []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status               string                                `bson:"status,omitempty" json:"status,omitempty"`
+	StatusHistory        []EpisodeOfCareStatusHistoryComponent `bson:"statusHistory,omitempty" json:"statusHistory,omitempty"`
+	Type                 []CodeableConcept                     `bson:"type,omitempty" json:"type,omitempty"`
+	Patient              *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
+	ManagingOrganization *Reference                            `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
+	Period               *Period                               `bson:"period,omitempty" json:"period,omitempty"`
+	Condition            []Reference                           `bson:"condition,omitempty" json:"condition,omitempty"`
+	ReferralRequest      []Reference                           `bson:"referralRequest,omitempty" json:"referralRequest,omitempty"`
+	CareManager          *Reference                            `bson:"careManager,omitempty" json:"careManager,omitempty"`
+	CareTeam             []EpisodeOfCareCareTeamComponent      `bson:"careTeam,omitempty" json:"careTeam,omitempty"`
 }
-type EpisodeOfCareEpisodeOfCareStatusHistoryComponent struct {
+type EpisodeOfCareStatusHistoryComponent struct {
 	Status string  `bson:"status,omitempty" json:"status,omitempty"`
 	Period *Period `bson:"period,omitempty" json:"period,omitempty"`
 }
-type EpisodeOfCareEpisodeOfCareCareTeamComponent struct {
+type EpisodeOfCareCareTeamComponent struct {
 	Member *Reference        `bson:"member,omitempty" json:"member,omitempty"`
 	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`

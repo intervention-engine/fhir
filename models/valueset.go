@@ -29,32 +29,32 @@ package models
 import "time"
 
 type ValueSet struct {
-	Id           string                              `json:"-" bson:"_id"`
-	Url          string                              `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier   *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                              `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                              `bson:"name,omitempty" json:"name,omitempty"`
-	UseContext   []CodeableConcept                   `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Immutable    *bool                               `bson:"immutable,omitempty" json:"immutable,omitempty"`
-	Publisher    string                              `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []ValueSetValueSetContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
-	Description  string                              `bson:"description,omitempty" json:"description,omitempty"`
-	Requirements string                              `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright    string                              `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Status       string                              `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                               `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Extensible   *bool                               `bson:"extensible,omitempty" json:"extensible,omitempty"`
-	Date         *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
-	LockedDate   *FHIRDateTime                       `bson:"lockedDate,omitempty" json:"lockedDate,omitempty"`
-	Define       *ValueSetValueSetDefineComponent    `bson:"define,omitempty" json:"define,omitempty"`
-	Compose      *ValueSetValueSetComposeComponent   `bson:"compose,omitempty" json:"compose,omitempty"`
-	Expansion    *ValueSetValueSetExpansionComponent `bson:"expansion,omitempty" json:"expansion,omitempty"`
+	Id           string                      `json:"-" bson:"_id"`
+	Url          string                      `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier   *Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version      string                      `bson:"version,omitempty" json:"version,omitempty"`
+	Name         string                      `bson:"name,omitempty" json:"name,omitempty"`
+	UseContext   []CodeableConcept           `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Immutable    *bool                       `bson:"immutable,omitempty" json:"immutable,omitempty"`
+	Publisher    string                      `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact      []ValueSetContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
+	Description  string                      `bson:"description,omitempty" json:"description,omitempty"`
+	Requirements string                      `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright    string                      `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Status       string                      `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental *bool                       `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Extensible   *bool                       `bson:"extensible,omitempty" json:"extensible,omitempty"`
+	Date         *FHIRDateTime               `bson:"date,omitempty" json:"date,omitempty"`
+	LockedDate   *FHIRDateTime               `bson:"lockedDate,omitempty" json:"lockedDate,omitempty"`
+	Define       *ValueSetDefineComponent    `bson:"define,omitempty" json:"define,omitempty"`
+	Compose      *ValueSetComposeComponent   `bson:"compose,omitempty" json:"compose,omitempty"`
+	Expansion    *ValueSetExpansionComponent `bson:"expansion,omitempty" json:"expansion,omitempty"`
 }
-type ValueSetValueSetContactComponent struct {
+type ValueSetContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
-type ValueSetValueSetDefineComponent struct {
+type ValueSetDefineComponent struct {
 	System        string                               `bson:"system,omitempty" json:"system,omitempty"`
 	Version       string                               `bson:"version,omitempty" json:"version,omitempty"`
 	CaseSensitive *bool                                `bson:"caseSensitive,omitempty" json:"caseSensitive,omitempty"`
@@ -73,7 +73,7 @@ type ValueSetConceptDefinitionDesignationComponent struct {
 	Use      *Coding `bson:"use,omitempty" json:"use,omitempty"`
 	Value    string  `bson:"value,omitempty" json:"value,omitempty"`
 }
-type ValueSetValueSetComposeComponent struct {
+type ValueSetComposeComponent struct {
 	Import  []string                      `bson:"import,omitempty" json:"import,omitempty"`
 	Include []ValueSetConceptSetComponent `bson:"include,omitempty" json:"include,omitempty"`
 	Exclude []ValueSetConceptSetComponent `bson:"exclude,omitempty" json:"exclude,omitempty"`
@@ -94,13 +94,13 @@ type ValueSetConceptSetFilterComponent struct {
 	Op       string `bson:"op,omitempty" json:"op,omitempty"`
 	Value    string `bson:"value,omitempty" json:"value,omitempty"`
 }
-type ValueSetValueSetExpansionComponent struct {
-	Identifier string                                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Timestamp  *FHIRDateTime                                 `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
-	Parameter  []ValueSetValueSetExpansionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
-	Contains   []ValueSetValueSetExpansionContainsComponent  `bson:"contains,omitempty" json:"contains,omitempty"`
+type ValueSetExpansionComponent struct {
+	Identifier string                                `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Timestamp  *FHIRDateTime                         `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
+	Parameter  []ValueSetExpansionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
+	Contains   []ValueSetExpansionContainsComponent  `bson:"contains,omitempty" json:"contains,omitempty"`
 }
-type ValueSetValueSetExpansionParameterComponent struct {
+type ValueSetExpansionParameterComponent struct {
 	Name         string   `bson:"name,omitempty" json:"name,omitempty"`
 	ValueString  string   `bson:"valueString,omitempty" json:"valueString,omitempty"`
 	ValueBoolean *bool    `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
@@ -109,13 +109,13 @@ type ValueSetValueSetExpansionParameterComponent struct {
 	ValueUri     string   `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
 	ValueCode    string   `bson:"valueCode,omitempty" json:"valueCode,omitempty"`
 }
-type ValueSetValueSetExpansionContainsComponent struct {
-	System   string                                       `bson:"system,omitempty" json:"system,omitempty"`
-	Abstract *bool                                        `bson:"abstract,omitempty" json:"abstract,omitempty"`
-	Version  string                                       `bson:"version,omitempty" json:"version,omitempty"`
-	Code     string                                       `bson:"code,omitempty" json:"code,omitempty"`
-	Display  string                                       `bson:"display,omitempty" json:"display,omitempty"`
-	Contains []ValueSetValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
+type ValueSetExpansionContainsComponent struct {
+	System   string                               `bson:"system,omitempty" json:"system,omitempty"`
+	Abstract *bool                                `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	Version  string                               `bson:"version,omitempty" json:"version,omitempty"`
+	Code     string                               `bson:"code,omitempty" json:"code,omitempty"`
+	Display  string                               `bson:"display,omitempty" json:"display,omitempty"`
+	Contains []ValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
 }
 
 type ValueSetBundle struct {

@@ -29,21 +29,21 @@ package models
 import "time"
 
 type MessageHeader struct {
-	Id          string                                       `json:"-" bson:"_id"`
-	Identifier  string                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Timestamp   *FHIRDateTime                                `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
-	Event       *Coding                                      `bson:"event,omitempty" json:"event,omitempty"`
-	Response    *MessageHeaderMessageHeaderResponseComponent `bson:"response,omitempty" json:"response,omitempty"`
-	Source      *MessageHeaderMessageSourceComponent         `bson:"source,omitempty" json:"source,omitempty"`
-	Destination []MessageHeaderMessageDestinationComponent   `bson:"destination,omitempty" json:"destination,omitempty"`
-	Enterer     *Reference                                   `bson:"enterer,omitempty" json:"enterer,omitempty"`
-	Author      *Reference                                   `bson:"author,omitempty" json:"author,omitempty"`
-	Receiver    *Reference                                   `bson:"receiver,omitempty" json:"receiver,omitempty"`
-	Responsible *Reference                                   `bson:"responsible,omitempty" json:"responsible,omitempty"`
-	Reason      *CodeableConcept                             `bson:"reason,omitempty" json:"reason,omitempty"`
-	Data        []Reference                                  `bson:"data,omitempty" json:"data,omitempty"`
+	Id          string                                     `json:"-" bson:"_id"`
+	Identifier  string                                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Timestamp   *FHIRDateTime                              `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
+	Event       *Coding                                    `bson:"event,omitempty" json:"event,omitempty"`
+	Response    *MessageHeaderResponseComponent            `bson:"response,omitempty" json:"response,omitempty"`
+	Source      *MessageHeaderMessageSourceComponent       `bson:"source,omitempty" json:"source,omitempty"`
+	Destination []MessageHeaderMessageDestinationComponent `bson:"destination,omitempty" json:"destination,omitempty"`
+	Enterer     *Reference                                 `bson:"enterer,omitempty" json:"enterer,omitempty"`
+	Author      *Reference                                 `bson:"author,omitempty" json:"author,omitempty"`
+	Receiver    *Reference                                 `bson:"receiver,omitempty" json:"receiver,omitempty"`
+	Responsible *Reference                                 `bson:"responsible,omitempty" json:"responsible,omitempty"`
+	Reason      *CodeableConcept                           `bson:"reason,omitempty" json:"reason,omitempty"`
+	Data        []Reference                                `bson:"data,omitempty" json:"data,omitempty"`
 }
-type MessageHeaderMessageHeaderResponseComponent struct {
+type MessageHeaderResponseComponent struct {
 	Identifier string     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Code       string     `bson:"code,omitempty" json:"code,omitempty"`
 	Details    *Reference `bson:"details,omitempty" json:"details,omitempty"`

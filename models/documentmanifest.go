@@ -29,25 +29,25 @@ package models
 import "time"
 
 type DocumentManifest struct {
-	Id               string                                             `json:"-" bson:"_id"`
-	MasterIdentifier *Identifier                                        `bson:"masterIdentifier,omitempty" json:"masterIdentifier,omitempty"`
-	Identifier       []Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Subject          *Reference                                         `bson:"subject,omitempty" json:"subject,omitempty"`
-	Recipient        []Reference                                        `bson:"recipient,omitempty" json:"recipient,omitempty"`
-	Type             *CodeableConcept                                   `bson:"type,omitempty" json:"type,omitempty"`
-	Author           []Reference                                        `bson:"author,omitempty" json:"author,omitempty"`
-	Created          *FHIRDateTime                                      `bson:"created,omitempty" json:"created,omitempty"`
-	Source           string                                             `bson:"source,omitempty" json:"source,omitempty"`
-	Status           string                                             `bson:"status,omitempty" json:"status,omitempty"`
-	Description      string                                             `bson:"description,omitempty" json:"description,omitempty"`
-	Content          []DocumentManifestDocumentManifestContentComponent `bson:"content,omitempty" json:"content,omitempty"`
-	Related          []DocumentManifestDocumentManifestRelatedComponent `bson:"related,omitempty" json:"related,omitempty"`
+	Id               string                             `json:"-" bson:"_id"`
+	MasterIdentifier *Identifier                        `bson:"masterIdentifier,omitempty" json:"masterIdentifier,omitempty"`
+	Identifier       []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Subject          *Reference                         `bson:"subject,omitempty" json:"subject,omitempty"`
+	Recipient        []Reference                        `bson:"recipient,omitempty" json:"recipient,omitempty"`
+	Type             *CodeableConcept                   `bson:"type,omitempty" json:"type,omitempty"`
+	Author           []Reference                        `bson:"author,omitempty" json:"author,omitempty"`
+	Created          *FHIRDateTime                      `bson:"created,omitempty" json:"created,omitempty"`
+	Source           string                             `bson:"source,omitempty" json:"source,omitempty"`
+	Status           string                             `bson:"status,omitempty" json:"status,omitempty"`
+	Description      string                             `bson:"description,omitempty" json:"description,omitempty"`
+	Content          []DocumentManifestContentComponent `bson:"content,omitempty" json:"content,omitempty"`
+	Related          []DocumentManifestRelatedComponent `bson:"related,omitempty" json:"related,omitempty"`
 }
-type DocumentManifestDocumentManifestContentComponent struct {
+type DocumentManifestContentComponent struct {
 	PAttachment *Attachment `bson:"pAttachment,omitempty" json:"pAttachment,omitempty"`
 	PReference  *Reference  `bson:"pReference,omitempty" json:"pReference,omitempty"`
 }
-type DocumentManifestDocumentManifestRelatedComponent struct {
+type DocumentManifestRelatedComponent struct {
 	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
 }

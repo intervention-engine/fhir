@@ -29,22 +29,22 @@ package models
 import "time"
 
 type ProcessResponse struct {
-	Id                  string                                         `json:"-" bson:"_id"`
-	Identifier          []Identifier                                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Request             *Reference                                     `bson:"request,omitempty" json:"request,omitempty"`
-	Outcome             *Coding                                        `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	Disposition         string                                         `bson:"disposition,omitempty" json:"disposition,omitempty"`
-	Ruleset             *Coding                                        `bson:"ruleset,omitempty" json:"ruleset,omitempty"`
-	OriginalRuleset     *Coding                                        `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`
-	Created             *FHIRDateTime                                  `bson:"created,omitempty" json:"created,omitempty"`
-	Organization        *Reference                                     `bson:"organization,omitempty" json:"organization,omitempty"`
-	RequestProvider     *Reference                                     `bson:"requestProvider,omitempty" json:"requestProvider,omitempty"`
-	RequestOrganization *Reference                                     `bson:"requestOrganization,omitempty" json:"requestOrganization,omitempty"`
-	Form                *Coding                                        `bson:"form,omitempty" json:"form,omitempty"`
-	Notes               []ProcessResponseProcessResponseNotesComponent `bson:"notes,omitempty" json:"notes,omitempty"`
-	Error               []Coding                                       `bson:"error,omitempty" json:"error,omitempty"`
+	Id                  string                          `json:"-" bson:"_id"`
+	Identifier          []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Request             *Reference                      `bson:"request,omitempty" json:"request,omitempty"`
+	Outcome             *Coding                         `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	Disposition         string                          `bson:"disposition,omitempty" json:"disposition,omitempty"`
+	Ruleset             *Coding                         `bson:"ruleset,omitempty" json:"ruleset,omitempty"`
+	OriginalRuleset     *Coding                         `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`
+	Created             *FHIRDateTime                   `bson:"created,omitempty" json:"created,omitempty"`
+	Organization        *Reference                      `bson:"organization,omitempty" json:"organization,omitempty"`
+	RequestProvider     *Reference                      `bson:"requestProvider,omitempty" json:"requestProvider,omitempty"`
+	RequestOrganization *Reference                      `bson:"requestOrganization,omitempty" json:"requestOrganization,omitempty"`
+	Form                *Coding                         `bson:"form,omitempty" json:"form,omitempty"`
+	Notes               []ProcessResponseNotesComponent `bson:"notes,omitempty" json:"notes,omitempty"`
+	Error               []Coding                        `bson:"error,omitempty" json:"error,omitempty"`
 }
-type ProcessResponseProcessResponseNotesComponent struct {
+type ProcessResponseNotesComponent struct {
 	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text string  `bson:"text,omitempty" json:"text,omitempty"`
 }

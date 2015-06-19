@@ -29,22 +29,22 @@ package models
 import "time"
 
 type AllergyIntolerance struct {
-	Id            string                                               `json:"-" bson:"_id"`
-	Identifier    []Identifier                                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	RecordedDate  *FHIRDateTime                                        `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
-	Recorder      *Reference                                           `bson:"recorder,omitempty" json:"recorder,omitempty"`
-	Patient       *Reference                                           `bson:"patient,omitempty" json:"patient,omitempty"`
-	Reporter      *Reference                                           `bson:"reporter,omitempty" json:"reporter,omitempty"`
-	Substance     *CodeableConcept                                     `bson:"substance,omitempty" json:"substance,omitempty"`
-	Status        string                                               `bson:"status,omitempty" json:"status,omitempty"`
-	Criticality   string                                               `bson:"criticality,omitempty" json:"criticality,omitempty"`
-	Type          string                                               `bson:"type,omitempty" json:"type,omitempty"`
-	Category      string                                               `bson:"category,omitempty" json:"category,omitempty"`
-	LastOccurence *FHIRDateTime                                        `bson:"lastOccurence,omitempty" json:"lastOccurence,omitempty"`
-	Comment       string                                               `bson:"comment,omitempty" json:"comment,omitempty"`
-	Event         []AllergyIntoleranceAllergyIntoleranceEventComponent `bson:"event,omitempty" json:"event,omitempty"`
+	Id            string                             `json:"-" bson:"_id"`
+	Identifier    []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	RecordedDate  *FHIRDateTime                      `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
+	Recorder      *Reference                         `bson:"recorder,omitempty" json:"recorder,omitempty"`
+	Patient       *Reference                         `bson:"patient,omitempty" json:"patient,omitempty"`
+	Reporter      *Reference                         `bson:"reporter,omitempty" json:"reporter,omitempty"`
+	Substance     *CodeableConcept                   `bson:"substance,omitempty" json:"substance,omitempty"`
+	Status        string                             `bson:"status,omitempty" json:"status,omitempty"`
+	Criticality   string                             `bson:"criticality,omitempty" json:"criticality,omitempty"`
+	Type          string                             `bson:"type,omitempty" json:"type,omitempty"`
+	Category      string                             `bson:"category,omitempty" json:"category,omitempty"`
+	LastOccurence *FHIRDateTime                      `bson:"lastOccurence,omitempty" json:"lastOccurence,omitempty"`
+	Comment       string                             `bson:"comment,omitempty" json:"comment,omitempty"`
+	Event         []AllergyIntoleranceEventComponent `bson:"event,omitempty" json:"event,omitempty"`
 }
-type AllergyIntoleranceAllergyIntoleranceEventComponent struct {
+type AllergyIntoleranceEventComponent struct {
 	Substance     *CodeableConcept  `bson:"substance,omitempty" json:"substance,omitempty"`
 	Certainty     string            `bson:"certainty,omitempty" json:"certainty,omitempty"`
 	Manifestation []CodeableConcept `bson:"manifestation,omitempty" json:"manifestation,omitempty"`

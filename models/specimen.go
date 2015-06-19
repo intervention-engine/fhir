@@ -29,18 +29,18 @@ package models
 import "time"
 
 type Specimen struct {
-	Id                  string                               `json:"-" bson:"_id"`
-	Identifier          []Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Type                *CodeableConcept                     `bson:"type,omitempty" json:"type,omitempty"`
-	Parent              []Reference                          `bson:"parent,omitempty" json:"parent,omitempty"`
-	Subject             *Reference                           `bson:"subject,omitempty" json:"subject,omitempty"`
-	AccessionIdentifier *Identifier                          `bson:"accessionIdentifier,omitempty" json:"accessionIdentifier,omitempty"`
-	ReceivedTime        *FHIRDateTime                        `bson:"receivedTime,omitempty" json:"receivedTime,omitempty"`
-	Collection          *SpecimenSpecimenCollectionComponent `bson:"collection,omitempty" json:"collection,omitempty"`
-	Treatment           []SpecimenSpecimenTreatmentComponent `bson:"treatment,omitempty" json:"treatment,omitempty"`
-	Container           []SpecimenSpecimenContainerComponent `bson:"container,omitempty" json:"container,omitempty"`
+	Id                  string                       `json:"-" bson:"_id"`
+	Identifier          []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Type                *CodeableConcept             `bson:"type,omitempty" json:"type,omitempty"`
+	Parent              []Reference                  `bson:"parent,omitempty" json:"parent,omitempty"`
+	Subject             *Reference                   `bson:"subject,omitempty" json:"subject,omitempty"`
+	AccessionIdentifier *Identifier                  `bson:"accessionIdentifier,omitempty" json:"accessionIdentifier,omitempty"`
+	ReceivedTime        *FHIRDateTime                `bson:"receivedTime,omitempty" json:"receivedTime,omitempty"`
+	Collection          *SpecimenCollectionComponent `bson:"collection,omitempty" json:"collection,omitempty"`
+	Treatment           []SpecimenTreatmentComponent `bson:"treatment,omitempty" json:"treatment,omitempty"`
+	Container           []SpecimenContainerComponent `bson:"container,omitempty" json:"container,omitempty"`
 }
-type SpecimenSpecimenCollectionComponent struct {
+type SpecimenCollectionComponent struct {
 	Collector               *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
 	Comment                 []string         `bson:"comment,omitempty" json:"comment,omitempty"`
 	CollectedDateTime       *FHIRDateTime    `bson:"collectedDateTime,omitempty" json:"collectedDateTime,omitempty"`
@@ -50,12 +50,12 @@ type SpecimenSpecimenCollectionComponent struct {
 	BodySiteCodeableConcept *CodeableConcept `bson:"bodySiteCodeableConcept,omitempty" json:"bodySiteCodeableConcept,omitempty"`
 	BodySiteReference       *Reference       `bson:"bodySiteReference,omitempty" json:"bodySiteReference,omitempty"`
 }
-type SpecimenSpecimenTreatmentComponent struct {
+type SpecimenTreatmentComponent struct {
 	Description string           `bson:"description,omitempty" json:"description,omitempty"`
 	Procedure   *CodeableConcept `bson:"procedure,omitempty" json:"procedure,omitempty"`
 	Additive    []Reference      `bson:"additive,omitempty" json:"additive,omitempty"`
 }
-type SpecimenSpecimenContainerComponent struct {
+type SpecimenContainerComponent struct {
 	Identifier              []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Description             string           `bson:"description,omitempty" json:"description,omitempty"`
 	Type                    *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`

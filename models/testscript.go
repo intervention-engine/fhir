@@ -29,25 +29,25 @@ package models
 import "time"
 
 type TestScript struct {
-	Id          string                                 `json:"-" bson:"_id"`
-	Name        string                                 `bson:"name,omitempty" json:"name,omitempty"`
-	Description string                                 `bson:"description,omitempty" json:"description,omitempty"`
-	Multiserver *bool                                  `bson:"multiserver,omitempty" json:"multiserver,omitempty"`
-	Fixture     []TestScriptTestScriptFixtureComponent `bson:"fixture,omitempty" json:"fixture,omitempty"`
-	Setup       *TestScriptTestScriptSetupComponent    `bson:"setup,omitempty" json:"setup,omitempty"`
-	Test        []TestScriptTestScriptTestComponent    `bson:"test,omitempty" json:"test,omitempty"`
-	Teardown    *TestScriptTestScriptTeardownComponent `bson:"teardown,omitempty" json:"teardown,omitempty"`
+	Id          string                       `json:"-" bson:"_id"`
+	Name        string                       `bson:"name,omitempty" json:"name,omitempty"`
+	Description string                       `bson:"description,omitempty" json:"description,omitempty"`
+	Multiserver *bool                        `bson:"multiserver,omitempty" json:"multiserver,omitempty"`
+	Fixture     []TestScriptFixtureComponent `bson:"fixture,omitempty" json:"fixture,omitempty"`
+	Setup       *TestScriptSetupComponent    `bson:"setup,omitempty" json:"setup,omitempty"`
+	Test        []TestScriptTestComponent    `bson:"test,omitempty" json:"test,omitempty"`
+	Teardown    *TestScriptTeardownComponent `bson:"teardown,omitempty" json:"teardown,omitempty"`
 }
-type TestScriptTestScriptFixtureComponent struct {
+type TestScriptFixtureComponent struct {
 	Uri        string     `bson:"uri,omitempty" json:"uri,omitempty"`
 	Resource   *Reference `bson:"resource,omitempty" json:"resource,omitempty"`
 	Autocreate *bool      `bson:"autocreate,omitempty" json:"autocreate,omitempty"`
 	Autodelete *bool      `bson:"autodelete,omitempty" json:"autodelete,omitempty"`
 }
-type TestScriptTestScriptSetupComponent struct {
-	Operation []TestScriptTestScriptSetupOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+type TestScriptSetupComponent struct {
+	Operation []TestScriptSetupOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
-type TestScriptTestScriptSetupOperationComponent struct {
+type TestScriptSetupOperationComponent struct {
 	Type        string   `bson:"type,omitempty" json:"type,omitempty"`
 	Source      string   `bson:"source,omitempty" json:"source,omitempty"`
 	Target      string   `bson:"target,omitempty" json:"target,omitempty"`
@@ -56,32 +56,32 @@ type TestScriptTestScriptSetupOperationComponent struct {
 	ResponseId  string   `bson:"responseId,omitempty" json:"responseId,omitempty"`
 	ContentType string   `bson:"contentType,omitempty" json:"contentType,omitempty"`
 }
-type TestScriptTestScriptTestComponent struct {
-	Name        string                                       `bson:"name,omitempty" json:"name,omitempty"`
-	Description string                                       `bson:"description,omitempty" json:"description,omitempty"`
-	Metadata    *TestScriptTestScriptTestMetadataComponent   `bson:"metadata,omitempty" json:"metadata,omitempty"`
-	Operation   []TestScriptTestScriptTestOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+type TestScriptTestComponent struct {
+	Name        string                             `bson:"name,omitempty" json:"name,omitempty"`
+	Description string                             `bson:"description,omitempty" json:"description,omitempty"`
+	Metadata    *TestScriptTestMetadataComponent   `bson:"metadata,omitempty" json:"metadata,omitempty"`
+	Operation   []TestScriptTestOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
-type TestScriptTestScriptTestMetadataComponent struct {
-	Link      []TestScriptTestScriptTestMetadataLinkComponent      `bson:"link,omitempty" json:"link,omitempty"`
-	Requires  []TestScriptTestScriptTestMetadataRequiresComponent  `bson:"requires,omitempty" json:"requires,omitempty"`
-	Validates []TestScriptTestScriptTestMetadataValidatesComponent `bson:"validates,omitempty" json:"validates,omitempty"`
+type TestScriptTestMetadataComponent struct {
+	Link      []TestScriptTestMetadataLinkComponent      `bson:"link,omitempty" json:"link,omitempty"`
+	Requires  []TestScriptTestMetadataRequiresComponent  `bson:"requires,omitempty" json:"requires,omitempty"`
+	Validates []TestScriptTestMetadataValidatesComponent `bson:"validates,omitempty" json:"validates,omitempty"`
 }
-type TestScriptTestScriptTestMetadataLinkComponent struct {
+type TestScriptTestMetadataLinkComponent struct {
 	Url         string `bson:"url,omitempty" json:"url,omitempty"`
 	Description string `bson:"description,omitempty" json:"description,omitempty"`
 }
-type TestScriptTestScriptTestMetadataRequiresComponent struct {
+type TestScriptTestMetadataRequiresComponent struct {
 	Type        string `bson:"type,omitempty" json:"type,omitempty"`
 	Operations  string `bson:"operations,omitempty" json:"operations,omitempty"`
 	Destination *int32 `bson:"destination,omitempty" json:"destination,omitempty"`
 }
-type TestScriptTestScriptTestMetadataValidatesComponent struct {
+type TestScriptTestMetadataValidatesComponent struct {
 	Type        string `bson:"type,omitempty" json:"type,omitempty"`
 	Operations  string `bson:"operations,omitempty" json:"operations,omitempty"`
 	Destination *int32 `bson:"destination,omitempty" json:"destination,omitempty"`
 }
-type TestScriptTestScriptTestOperationComponent struct {
+type TestScriptTestOperationComponent struct {
 	Type        string   `bson:"type,omitempty" json:"type,omitempty"`
 	Source      string   `bson:"source,omitempty" json:"source,omitempty"`
 	Target      string   `bson:"target,omitempty" json:"target,omitempty"`
@@ -90,10 +90,10 @@ type TestScriptTestScriptTestOperationComponent struct {
 	ResponseId  string   `bson:"responseId,omitempty" json:"responseId,omitempty"`
 	ContentType string   `bson:"contentType,omitempty" json:"contentType,omitempty"`
 }
-type TestScriptTestScriptTeardownComponent struct {
-	Operation []TestScriptTestScriptTeardownOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+type TestScriptTeardownComponent struct {
+	Operation []TestScriptTeardownOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
-type TestScriptTestScriptTeardownOperationComponent struct {
+type TestScriptTeardownOperationComponent struct {
 	Type        string   `bson:"type,omitempty" json:"type,omitempty"`
 	Source      string   `bson:"source,omitempty" json:"source,omitempty"`
 	Target      string   `bson:"target,omitempty" json:"target,omitempty"`

@@ -29,25 +29,25 @@ package models
 import "time"
 
 type MedicationAdministration struct {
-	Id                        string                                                           `json:"-" bson:"_id"`
-	Identifier                []Identifier                                                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status                    string                                                           `bson:"status,omitempty" json:"status,omitempty"`
-	Patient                   *Reference                                                       `bson:"patient,omitempty" json:"patient,omitempty"`
-	Practitioner              *Reference                                                       `bson:"practitioner,omitempty" json:"practitioner,omitempty"`
-	Encounter                 *Reference                                                       `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Prescription              *Reference                                                       `bson:"prescription,omitempty" json:"prescription,omitempty"`
-	WasNotGiven               *bool                                                            `bson:"wasNotGiven,omitempty" json:"wasNotGiven,omitempty"`
-	ReasonNotGiven            []CodeableConcept                                                `bson:"reasonNotGiven,omitempty" json:"reasonNotGiven,omitempty"`
-	ReasonGiven               []CodeableConcept                                                `bson:"reasonGiven,omitempty" json:"reasonGiven,omitempty"`
-	EffectiveTimeDateTime     *FHIRDateTime                                                    `bson:"effectiveTimeDateTime,omitempty" json:"effectiveTimeDateTime,omitempty"`
-	EffectiveTimePeriod       *Period                                                          `bson:"effectiveTimePeriod,omitempty" json:"effectiveTimePeriod,omitempty"`
-	MedicationCodeableConcept *CodeableConcept                                                 `bson:"medicationCodeableConcept,omitempty" json:"medicationCodeableConcept,omitempty"`
-	MedicationReference       *Reference                                                       `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
-	Device                    []Reference                                                      `bson:"device,omitempty" json:"device,omitempty"`
-	Note                      string                                                           `bson:"note,omitempty" json:"note,omitempty"`
-	Dosage                    *MedicationAdministrationMedicationAdministrationDosageComponent `bson:"dosage,omitempty" json:"dosage,omitempty"`
+	Id                        string                                   `json:"-" bson:"_id"`
+	Identifier                []Identifier                             `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status                    string                                   `bson:"status,omitempty" json:"status,omitempty"`
+	Patient                   *Reference                               `bson:"patient,omitempty" json:"patient,omitempty"`
+	Practitioner              *Reference                               `bson:"practitioner,omitempty" json:"practitioner,omitempty"`
+	Encounter                 *Reference                               `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Prescription              *Reference                               `bson:"prescription,omitempty" json:"prescription,omitempty"`
+	WasNotGiven               *bool                                    `bson:"wasNotGiven,omitempty" json:"wasNotGiven,omitempty"`
+	ReasonNotGiven            []CodeableConcept                        `bson:"reasonNotGiven,omitempty" json:"reasonNotGiven,omitempty"`
+	ReasonGiven               []CodeableConcept                        `bson:"reasonGiven,omitempty" json:"reasonGiven,omitempty"`
+	EffectiveTimeDateTime     *FHIRDateTime                            `bson:"effectiveTimeDateTime,omitempty" json:"effectiveTimeDateTime,omitempty"`
+	EffectiveTimePeriod       *Period                                  `bson:"effectiveTimePeriod,omitempty" json:"effectiveTimePeriod,omitempty"`
+	MedicationCodeableConcept *CodeableConcept                         `bson:"medicationCodeableConcept,omitempty" json:"medicationCodeableConcept,omitempty"`
+	MedicationReference       *Reference                               `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
+	Device                    []Reference                              `bson:"device,omitempty" json:"device,omitempty"`
+	Note                      string                                   `bson:"note,omitempty" json:"note,omitempty"`
+	Dosage                    *MedicationAdministrationDosageComponent `bson:"dosage,omitempty" json:"dosage,omitempty"`
 }
-type MedicationAdministrationMedicationAdministrationDosageComponent struct {
+type MedicationAdministrationDosageComponent struct {
 	Text     string           `bson:"text,omitempty" json:"text,omitempty"`
 	Site     *CodeableConcept `bson:"site,omitempty" json:"site,omitempty"`
 	Route    *CodeableConcept `bson:"route,omitempty" json:"route,omitempty"`

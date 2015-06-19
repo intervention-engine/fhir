@@ -29,26 +29,26 @@ package models
 import "time"
 
 type ProcedureRequest struct {
-	Id                      string                                              `json:"-" bson:"_id"`
-	Identifier              []Identifier                                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Subject                 *Reference                                          `bson:"subject,omitempty" json:"subject,omitempty"`
-	Type                    *CodeableConcept                                    `bson:"type,omitempty" json:"type,omitempty"`
-	BodySite                []ProcedureRequestProcedureRequestBodySiteComponent `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
-	Indication              []CodeableConcept                                   `bson:"indication,omitempty" json:"indication,omitempty"`
-	TimingDateTime          *FHIRDateTime                                       `bson:"timingDateTime,omitempty" json:"timingDateTime,omitempty"`
-	TimingPeriod            *Period                                             `bson:"timingPeriod,omitempty" json:"timingPeriod,omitempty"`
-	TimingTiming            *Timing                                             `bson:"timingTiming,omitempty" json:"timingTiming,omitempty"`
-	Encounter               *Reference                                          `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Performer               *Reference                                          `bson:"performer,omitempty" json:"performer,omitempty"`
-	Status                  string                                              `bson:"status,omitempty" json:"status,omitempty"`
-	Notes                   []string                                            `bson:"notes,omitempty" json:"notes,omitempty"`
-	AsNeededBoolean         *bool                                               `bson:"asNeededBoolean,omitempty" json:"asNeededBoolean,omitempty"`
-	AsNeededCodeableConcept *CodeableConcept                                    `bson:"asNeededCodeableConcept,omitempty" json:"asNeededCodeableConcept,omitempty"`
-	OrderedOn               *FHIRDateTime                                       `bson:"orderedOn,omitempty" json:"orderedOn,omitempty"`
-	Orderer                 *Reference                                          `bson:"orderer,omitempty" json:"orderer,omitempty"`
-	Priority                string                                              `bson:"priority,omitempty" json:"priority,omitempty"`
+	Id                      string                              `json:"-" bson:"_id"`
+	Identifier              []Identifier                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Subject                 *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
+	Type                    *CodeableConcept                    `bson:"type,omitempty" json:"type,omitempty"`
+	BodySite                []ProcedureRequestBodySiteComponent `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	Indication              []CodeableConcept                   `bson:"indication,omitempty" json:"indication,omitempty"`
+	TimingDateTime          *FHIRDateTime                       `bson:"timingDateTime,omitempty" json:"timingDateTime,omitempty"`
+	TimingPeriod            *Period                             `bson:"timingPeriod,omitempty" json:"timingPeriod,omitempty"`
+	TimingTiming            *Timing                             `bson:"timingTiming,omitempty" json:"timingTiming,omitempty"`
+	Encounter               *Reference                          `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Performer               *Reference                          `bson:"performer,omitempty" json:"performer,omitempty"`
+	Status                  string                              `bson:"status,omitempty" json:"status,omitempty"`
+	Notes                   []string                            `bson:"notes,omitempty" json:"notes,omitempty"`
+	AsNeededBoolean         *bool                               `bson:"asNeededBoolean,omitempty" json:"asNeededBoolean,omitempty"`
+	AsNeededCodeableConcept *CodeableConcept                    `bson:"asNeededCodeableConcept,omitempty" json:"asNeededCodeableConcept,omitempty"`
+	OrderedOn               *FHIRDateTime                       `bson:"orderedOn,omitempty" json:"orderedOn,omitempty"`
+	Orderer                 *Reference                          `bson:"orderer,omitempty" json:"orderer,omitempty"`
+	Priority                string                              `bson:"priority,omitempty" json:"priority,omitempty"`
 }
-type ProcedureRequestProcedureRequestBodySiteComponent struct {
+type ProcedureRequestBodySiteComponent struct {
 	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
 	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
 }

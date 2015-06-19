@@ -29,10 +29,10 @@ package models
 import "time"
 
 type OperationOutcome struct {
-	Id    string                                           `json:"-" bson:"_id"`
-	Issue []OperationOutcomeOperationOutcomeIssueComponent `bson:"issue,omitempty" json:"issue,omitempty"`
+	Id    string                           `json:"-" bson:"_id"`
+	Issue []OperationOutcomeIssueComponent `bson:"issue,omitempty" json:"issue,omitempty"`
 }
-type OperationOutcomeOperationOutcomeIssueComponent struct {
+type OperationOutcomeIssueComponent struct {
 	Severity string           `bson:"severity,omitempty" json:"severity,omitempty"`
 	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Details  string           `bson:"details,omitempty" json:"details,omitempty"`

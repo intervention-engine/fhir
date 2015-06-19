@@ -29,26 +29,26 @@ package models
 import "time"
 
 type MedicationDispense struct {
-	Id                        string                                                           `json:"-" bson:"_id"`
-	Identifier                *Identifier                                                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status                    string                                                           `bson:"status,omitempty" json:"status,omitempty"`
-	Patient                   *Reference                                                       `bson:"patient,omitempty" json:"patient,omitempty"`
-	Dispenser                 *Reference                                                       `bson:"dispenser,omitempty" json:"dispenser,omitempty"`
-	AuthorizingPrescription   []Reference                                                      `bson:"authorizingPrescription,omitempty" json:"authorizingPrescription,omitempty"`
-	Type                      *CodeableConcept                                                 `bson:"type,omitempty" json:"type,omitempty"`
-	Quantity                  *Quantity                                                        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	DaysSupply                *Quantity                                                        `bson:"daysSupply,omitempty" json:"daysSupply,omitempty"`
-	MedicationCodeableConcept *CodeableConcept                                                 `bson:"medicationCodeableConcept,omitempty" json:"medicationCodeableConcept,omitempty"`
-	MedicationReference       *Reference                                                       `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
-	WhenPrepared              *FHIRDateTime                                                    `bson:"whenPrepared,omitempty" json:"whenPrepared,omitempty"`
-	WhenHandedOver            *FHIRDateTime                                                    `bson:"whenHandedOver,omitempty" json:"whenHandedOver,omitempty"`
-	Destination               *Reference                                                       `bson:"destination,omitempty" json:"destination,omitempty"`
-	Receiver                  []Reference                                                      `bson:"receiver,omitempty" json:"receiver,omitempty"`
-	Note                      string                                                           `bson:"note,omitempty" json:"note,omitempty"`
-	DosageInstruction         []MedicationDispenseMedicationDispenseDosageInstructionComponent `bson:"dosageInstruction,omitempty" json:"dosageInstruction,omitempty"`
-	Substitution              *MedicationDispenseMedicationDispenseSubstitutionComponent       `bson:"substitution,omitempty" json:"substitution,omitempty"`
+	Id                        string                                         `json:"-" bson:"_id"`
+	Identifier                *Identifier                                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status                    string                                         `bson:"status,omitempty" json:"status,omitempty"`
+	Patient                   *Reference                                     `bson:"patient,omitempty" json:"patient,omitempty"`
+	Dispenser                 *Reference                                     `bson:"dispenser,omitempty" json:"dispenser,omitempty"`
+	AuthorizingPrescription   []Reference                                    `bson:"authorizingPrescription,omitempty" json:"authorizingPrescription,omitempty"`
+	Type                      *CodeableConcept                               `bson:"type,omitempty" json:"type,omitempty"`
+	Quantity                  *Quantity                                      `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	DaysSupply                *Quantity                                      `bson:"daysSupply,omitempty" json:"daysSupply,omitempty"`
+	MedicationCodeableConcept *CodeableConcept                               `bson:"medicationCodeableConcept,omitempty" json:"medicationCodeableConcept,omitempty"`
+	MedicationReference       *Reference                                     `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
+	WhenPrepared              *FHIRDateTime                                  `bson:"whenPrepared,omitempty" json:"whenPrepared,omitempty"`
+	WhenHandedOver            *FHIRDateTime                                  `bson:"whenHandedOver,omitempty" json:"whenHandedOver,omitempty"`
+	Destination               *Reference                                     `bson:"destination,omitempty" json:"destination,omitempty"`
+	Receiver                  []Reference                                    `bson:"receiver,omitempty" json:"receiver,omitempty"`
+	Note                      string                                         `bson:"note,omitempty" json:"note,omitempty"`
+	DosageInstruction         []MedicationDispenseDosageInstructionComponent `bson:"dosageInstruction,omitempty" json:"dosageInstruction,omitempty"`
+	Substitution              *MedicationDispenseSubstitutionComponent       `bson:"substitution,omitempty" json:"substitution,omitempty"`
 }
-type MedicationDispenseMedicationDispenseDosageInstructionComponent struct {
+type MedicationDispenseDosageInstructionComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
 	ScheduleDateTime        *FHIRDateTime    `bson:"scheduleDateTime,omitempty" json:"scheduleDateTime,omitempty"`
@@ -64,7 +64,7 @@ type MedicationDispenseMedicationDispenseDosageInstructionComponent struct {
 	Rate                    *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
 	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty" json:"maxDosePerPeriod,omitempty"`
 }
-type MedicationDispenseMedicationDispenseSubstitutionComponent struct {
+type MedicationDispenseSubstitutionComponent struct {
 	Type             *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Reason           []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 	ResponsibleParty []Reference       `bson:"responsibleParty,omitempty" json:"responsibleParty,omitempty"`

@@ -29,17 +29,17 @@ package models
 import "time"
 
 type VisionPrescription struct {
-	Id                    string                                                  `json:"-" bson:"_id"`
-	Identifier            []Identifier                                            `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	DateWritten           *FHIRDateTime                                           `bson:"dateWritten,omitempty" json:"dateWritten,omitempty"`
-	Patient               *Reference                                              `bson:"patient,omitempty" json:"patient,omitempty"`
-	Prescriber            *Reference                                              `bson:"prescriber,omitempty" json:"prescriber,omitempty"`
-	Encounter             *Reference                                              `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	ReasonCodeableConcept *CodeableConcept                                        `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
-	ReasonReference       *Reference                                              `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
-	Dispense              []VisionPrescriptionVisionPrescriptionDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
+	Id                    string                                `json:"-" bson:"_id"`
+	Identifier            []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	DateWritten           *FHIRDateTime                         `bson:"dateWritten,omitempty" json:"dateWritten,omitempty"`
+	Patient               *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
+	Prescriber            *Reference                            `bson:"prescriber,omitempty" json:"prescriber,omitempty"`
+	Encounter             *Reference                            `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	ReasonCodeableConcept *CodeableConcept                      `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
+	ReasonReference       *Reference                            `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
+	Dispense              []VisionPrescriptionDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
 }
-type VisionPrescriptionVisionPrescriptionDispenseComponent struct {
+type VisionPrescriptionDispenseComponent struct {
 	Product   *Coding   `bson:"product,omitempty" json:"product,omitempty"`
 	Eye       string    `bson:"eye,omitempty" json:"eye,omitempty"`
 	Sphere    *float64  `bson:"sphere,omitempty" json:"sphere,omitempty"`

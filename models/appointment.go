@@ -29,21 +29,21 @@ package models
 import "time"
 
 type Appointment struct {
-	Id          string                                       `json:"-" bson:"_id"`
-	Identifier  []Identifier                                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status      string                                       `bson:"status,omitempty" json:"status,omitempty"`
-	Type        *CodeableConcept                             `bson:"type,omitempty" json:"type,omitempty"`
-	Reason      *CodeableConcept                             `bson:"reason,omitempty" json:"reason,omitempty"`
-	Priority    *uint32                                      `bson:"priority,omitempty" json:"priority,omitempty"`
-	Description string                                       `bson:"description,omitempty" json:"description,omitempty"`
-	Start       *FHIRDateTime                                `bson:"start,omitempty" json:"start,omitempty"`
-	End         *FHIRDateTime                                `bson:"end,omitempty" json:"end,omitempty"`
-	Slot        []Reference                                  `bson:"slot,omitempty" json:"slot,omitempty"`
-	Comment     string                                       `bson:"comment,omitempty" json:"comment,omitempty"`
-	Order       *Reference                                   `bson:"order,omitempty" json:"order,omitempty"`
-	Participant []AppointmentAppointmentParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	Id          string                            `json:"-" bson:"_id"`
+	Identifier  []Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status      string                            `bson:"status,omitempty" json:"status,omitempty"`
+	Type        *CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
+	Reason      *CodeableConcept                  `bson:"reason,omitempty" json:"reason,omitempty"`
+	Priority    *uint32                           `bson:"priority,omitempty" json:"priority,omitempty"`
+	Description string                            `bson:"description,omitempty" json:"description,omitempty"`
+	Start       *FHIRDateTime                     `bson:"start,omitempty" json:"start,omitempty"`
+	End         *FHIRDateTime                     `bson:"end,omitempty" json:"end,omitempty"`
+	Slot        []Reference                       `bson:"slot,omitempty" json:"slot,omitempty"`
+	Comment     string                            `bson:"comment,omitempty" json:"comment,omitempty"`
+	Order       *Reference                        `bson:"order,omitempty" json:"order,omitempty"`
+	Participant []AppointmentParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
 }
-type AppointmentAppointmentParticipantComponent struct {
+type AppointmentParticipantComponent struct {
 	Type     []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Actor    *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
 	Required string            `bson:"required,omitempty" json:"required,omitempty"`

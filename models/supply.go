@@ -29,15 +29,15 @@ package models
 import "time"
 
 type Supply struct {
-	Id          string                          `json:"-" bson:"_id"`
-	Kind        *CodeableConcept                `bson:"kind,omitempty" json:"kind,omitempty"`
-	Identifier  *Identifier                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status      string                          `bson:"status,omitempty" json:"status,omitempty"`
-	OrderedItem *Reference                      `bson:"orderedItem,omitempty" json:"orderedItem,omitempty"`
-	Patient     *Reference                      `bson:"patient,omitempty" json:"patient,omitempty"`
-	Dispense    []SupplySupplyDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
+	Id          string                    `json:"-" bson:"_id"`
+	Kind        *CodeableConcept          `bson:"kind,omitempty" json:"kind,omitempty"`
+	Identifier  *Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status      string                    `bson:"status,omitempty" json:"status,omitempty"`
+	OrderedItem *Reference                `bson:"orderedItem,omitempty" json:"orderedItem,omitempty"`
+	Patient     *Reference                `bson:"patient,omitempty" json:"patient,omitempty"`
+	Dispense    []SupplyDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
 }
-type SupplySupplyDispenseComponent struct {
+type SupplyDispenseComponent struct {
 	Identifier     *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Status         string           `bson:"status,omitempty" json:"status,omitempty"`
 	Type           *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`

@@ -29,28 +29,28 @@ package models
 import "time"
 
 type FamilyMemberHistory struct {
-	Id              string                                                     `json:"-" bson:"_id"`
-	Identifier      []Identifier                                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient         *Reference                                                 `bson:"patient,omitempty" json:"patient,omitempty"`
-	Date            *FHIRDateTime                                              `bson:"date,omitempty" json:"date,omitempty"`
-	Name            string                                                     `bson:"name,omitempty" json:"name,omitempty"`
-	Relationship    *CodeableConcept                                           `bson:"relationship,omitempty" json:"relationship,omitempty"`
-	Gender          *CodeableConcept                                           `bson:"gender,omitempty" json:"gender,omitempty"`
-	BornPeriod      *Period                                                    `bson:"bornPeriod,omitempty" json:"bornPeriod,omitempty"`
-	BornDate        *FHIRDateTime                                              `bson:"bornDate,omitempty" json:"bornDate,omitempty"`
-	BornString      string                                                     `bson:"bornString,omitempty" json:"bornString,omitempty"`
-	AgeAge          *Quantity                                                  `bson:"ageAge,omitempty" json:"ageAge,omitempty"`
-	AgeRange        *Range                                                     `bson:"ageRange,omitempty" json:"ageRange,omitempty"`
-	AgeString       string                                                     `bson:"ageString,omitempty" json:"ageString,omitempty"`
-	DeceasedBoolean *bool                                                      `bson:"deceasedBoolean,omitempty" json:"deceasedBoolean,omitempty"`
-	DeceasedAge     *Quantity                                                  `bson:"deceasedAge,omitempty" json:"deceasedAge,omitempty"`
-	DeceasedRange   *Range                                                     `bson:"deceasedRange,omitempty" json:"deceasedRange,omitempty"`
-	DeceasedDate    *FHIRDateTime                                              `bson:"deceasedDate,omitempty" json:"deceasedDate,omitempty"`
-	DeceasedString  string                                                     `bson:"deceasedString,omitempty" json:"deceasedString,omitempty"`
-	Note            string                                                     `bson:"note,omitempty" json:"note,omitempty"`
-	Condition       []FamilyMemberHistoryFamilyMemberHistoryConditionComponent `bson:"condition,omitempty" json:"condition,omitempty"`
+	Id              string                                  `json:"-" bson:"_id"`
+	Identifier      []Identifier                            `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient         *Reference                              `bson:"patient,omitempty" json:"patient,omitempty"`
+	Date            *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
+	Name            string                                  `bson:"name,omitempty" json:"name,omitempty"`
+	Relationship    *CodeableConcept                        `bson:"relationship,omitempty" json:"relationship,omitempty"`
+	Gender          *CodeableConcept                        `bson:"gender,omitempty" json:"gender,omitempty"`
+	BornPeriod      *Period                                 `bson:"bornPeriod,omitempty" json:"bornPeriod,omitempty"`
+	BornDate        *FHIRDateTime                           `bson:"bornDate,omitempty" json:"bornDate,omitempty"`
+	BornString      string                                  `bson:"bornString,omitempty" json:"bornString,omitempty"`
+	AgeAge          *Quantity                               `bson:"ageAge,omitempty" json:"ageAge,omitempty"`
+	AgeRange        *Range                                  `bson:"ageRange,omitempty" json:"ageRange,omitempty"`
+	AgeString       string                                  `bson:"ageString,omitempty" json:"ageString,omitempty"`
+	DeceasedBoolean *bool                                   `bson:"deceasedBoolean,omitempty" json:"deceasedBoolean,omitempty"`
+	DeceasedAge     *Quantity                               `bson:"deceasedAge,omitempty" json:"deceasedAge,omitempty"`
+	DeceasedRange   *Range                                  `bson:"deceasedRange,omitempty" json:"deceasedRange,omitempty"`
+	DeceasedDate    *FHIRDateTime                           `bson:"deceasedDate,omitempty" json:"deceasedDate,omitempty"`
+	DeceasedString  string                                  `bson:"deceasedString,omitempty" json:"deceasedString,omitempty"`
+	Note            string                                  `bson:"note,omitempty" json:"note,omitempty"`
+	Condition       []FamilyMemberHistoryConditionComponent `bson:"condition,omitempty" json:"condition,omitempty"`
 }
-type FamilyMemberHistoryFamilyMemberHistoryConditionComponent struct {
+type FamilyMemberHistoryConditionComponent struct {
 	Type        *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Outcome     *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
 	OnsetAge    *Quantity        `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
