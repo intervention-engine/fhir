@@ -835,12 +835,4 @@ func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 	bodysite.Methods("PUT").Handler(negroni.New(append(config["BodySiteUpdate"], negroni.HandlerFunc(BodySiteUpdateHandler))...))
 	bodysite.Methods("DELETE").Handler(negroni.New(append(config["BodySiteDelete"], negroni.HandlerFunc(BodySiteDeleteHandler))...))
 
-	queryBase := router.Path("/Query").Subrouter()
-	queryBase.Methods("GET").Handler(negroni.New(append(config["QueryIndex"], negroni.HandlerFunc(QueryIndexHandler))...))
-	queryBase.Methods("POST").Handler(negroni.New(append(config["QueryCreate"], negroni.HandlerFunc(QueryCreateHandler))...))
-
-	query := router.Path("/Query/{id}").Subrouter()
-	query.Methods("GET").Handler(negroni.New(append(config["QueryShow"], negroni.HandlerFunc(QueryShowHandler))...))
-	query.Methods("PUT").Handler(negroni.New(append(config["QueryUpdate"], negroni.HandlerFunc(QueryUpdateHandler))...))
-	query.Methods("DELETE").Handler(negroni.New(append(config["QueryDelete"], negroni.HandlerFunc(QueryDeleteHandler))...))
 }

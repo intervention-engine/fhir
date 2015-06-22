@@ -29,8 +29,8 @@ func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
-				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
+			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
 				}
