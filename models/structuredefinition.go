@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type StructureDefinition struct {
 	Id           string                                    `json:"-" bson:"_id"`
@@ -55,19 +58,23 @@ type StructureDefinition struct {
 	Snapshot     *StructureDefinitionSnapshotComponent     `bson:"snapshot,omitempty" json:"snapshot,omitempty"`
 	Differential *StructureDefinitionDifferentialComponent `bson:"differential,omitempty" json:"differential,omitempty"`
 }
+
 type StructureDefinitionContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
+
 type StructureDefinitionMappingComponent struct {
 	Identity string `bson:"identity,omitempty" json:"identity,omitempty"`
 	Uri      string `bson:"uri,omitempty" json:"uri,omitempty"`
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`
 	Comments string `bson:"comments,omitempty" json:"comments,omitempty"`
 }
+
 type StructureDefinitionSnapshotComponent struct {
 	Element []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
 }
+
 type StructureDefinitionDifferentialComponent struct {
 	Element []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
 }
@@ -93,4 +100,15 @@ type StructureDefinitionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *StructureDefinition) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		StructureDefinition
+	}{
+		ResourceType:        "StructureDefinition",
+		StructureDefinition: *resource,
+	}
+	return json.Marshal(x)
 }

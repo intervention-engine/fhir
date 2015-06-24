@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Slot struct {
 	Id           string           `json:"-" bson:"_id"`
@@ -61,4 +64,15 @@ type SlotCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Slot) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Slot
+	}{
+		ResourceType: "Slot",
+		Slot:         *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Substance struct {
 	Id          string                         `json:"-" bson:"_id"`
@@ -35,11 +38,13 @@ type Substance struct {
 	Instance    *SubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`
 	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 }
+
 type SubstanceInstanceComponent struct {
 	Identifier *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Expiry     *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
 	Quantity   *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 }
+
 type SubstanceIngredientComponent struct {
 	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
@@ -66,4 +71,15 @@ type SubstanceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Substance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Substance
+	}{
+		ResourceType: "Substance",
+		Substance:    *resource,
+	}
+	return json.Marshal(x)
 }

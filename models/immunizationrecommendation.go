@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ImmunizationRecommendation struct {
 	Id             string                                              `json:"-" bson:"_id"`
@@ -34,6 +37,7 @@ type ImmunizationRecommendation struct {
 	Patient        *Reference                                          `bson:"patient,omitempty" json:"patient,omitempty"`
 	Recommendation []ImmunizationRecommendationRecommendationComponent `bson:"recommendation,omitempty" json:"recommendation,omitempty"`
 }
+
 type ImmunizationRecommendationRecommendationComponent struct {
 	Date                         *FHIRDateTime                                                    `bson:"date,omitempty" json:"date,omitempty"`
 	VaccineType                  *CodeableConcept                                                 `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
@@ -44,10 +48,12 @@ type ImmunizationRecommendationRecommendationComponent struct {
 	SupportingImmunization       []Reference                                                      `bson:"supportingImmunization,omitempty" json:"supportingImmunization,omitempty"`
 	SupportingPatientInformation []Reference                                                      `bson:"supportingPatientInformation,omitempty" json:"supportingPatientInformation,omitempty"`
 }
+
 type ImmunizationRecommendationRecommendationDateCriterionComponent struct {
 	Code  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Value *FHIRDateTime    `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ImmunizationRecommendationRecommendationProtocolComponent struct {
 	DoseSequence *int32     `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
 	Description  string     `bson:"description,omitempty" json:"description,omitempty"`
@@ -76,4 +82,15 @@ type ImmunizationRecommendationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ImmunizationRecommendation) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ImmunizationRecommendation
+	}{
+		ResourceType:               "ImmunizationRecommendation",
+		ImmunizationRecommendation: *resource,
+	}
+	return json.Marshal(x)
 }

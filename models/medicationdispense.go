@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type MedicationDispense struct {
 	Id                        string                                         `json:"-" bson:"_id"`
@@ -48,6 +51,7 @@ type MedicationDispense struct {
 	DosageInstruction         []MedicationDispenseDosageInstructionComponent `bson:"dosageInstruction,omitempty" json:"dosageInstruction,omitempty"`
 	Substitution              *MedicationDispenseSubstitutionComponent       `bson:"substitution,omitempty" json:"substitution,omitempty"`
 }
+
 type MedicationDispenseDosageInstructionComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
@@ -64,6 +68,7 @@ type MedicationDispenseDosageInstructionComponent struct {
 	Rate                    *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
 	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty" json:"maxDosePerPeriod,omitempty"`
 }
+
 type MedicationDispenseSubstitutionComponent struct {
 	Type             *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Reason           []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
@@ -91,4 +96,15 @@ type MedicationDispenseCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *MedicationDispense) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MedicationDispense
+	}{
+		ResourceType:       "MedicationDispense",
+		MedicationDispense: *resource,
+	}
+	return json.Marshal(x)
 }

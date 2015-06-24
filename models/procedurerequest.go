@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ProcedureRequest struct {
 	Id                      string                              `json:"-" bson:"_id"`
@@ -48,6 +51,7 @@ type ProcedureRequest struct {
 	Orderer                 *Reference                          `bson:"orderer,omitempty" json:"orderer,omitempty"`
 	Priority                string                              `bson:"priority,omitempty" json:"priority,omitempty"`
 }
+
 type ProcedureRequestBodySiteComponent struct {
 	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
 	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
@@ -74,4 +78,15 @@ type ProcedureRequestCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ProcedureRequest) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ProcedureRequest
+	}{
+		ResourceType:     "ProcedureRequest",
+		ProcedureRequest: *resource,
+	}
+	return json.Marshal(x)
 }

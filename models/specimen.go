@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Specimen struct {
 	Id                  string                       `json:"-" bson:"_id"`
@@ -40,6 +43,7 @@ type Specimen struct {
 	Treatment           []SpecimenTreatmentComponent `bson:"treatment,omitempty" json:"treatment,omitempty"`
 	Container           []SpecimenContainerComponent `bson:"container,omitempty" json:"container,omitempty"`
 }
+
 type SpecimenCollectionComponent struct {
 	Collector               *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
 	Comment                 []string         `bson:"comment,omitempty" json:"comment,omitempty"`
@@ -50,11 +54,13 @@ type SpecimenCollectionComponent struct {
 	BodySiteCodeableConcept *CodeableConcept `bson:"bodySiteCodeableConcept,omitempty" json:"bodySiteCodeableConcept,omitempty"`
 	BodySiteReference       *Reference       `bson:"bodySiteReference,omitempty" json:"bodySiteReference,omitempty"`
 }
+
 type SpecimenTreatmentComponent struct {
 	Description string           `bson:"description,omitempty" json:"description,omitempty"`
 	Procedure   *CodeableConcept `bson:"procedure,omitempty" json:"procedure,omitempty"`
 	Additive    []Reference      `bson:"additive,omitempty" json:"additive,omitempty"`
 }
+
 type SpecimenContainerComponent struct {
 	Identifier              []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Description             string           `bson:"description,omitempty" json:"description,omitempty"`
@@ -86,4 +92,15 @@ type SpecimenCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Specimen) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Specimen
+	}{
+		ResourceType: "Specimen",
+		Specimen:     *resource,
+	}
+	return json.Marshal(x)
 }

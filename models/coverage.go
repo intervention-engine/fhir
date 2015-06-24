@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Coverage struct {
 	Id           string       `json:"-" bson:"_id"`
@@ -67,4 +70,15 @@ type CoverageCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Coverage) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Coverage
+	}{
+		ResourceType: "Coverage",
+		Coverage:     *resource,
+	}
+	return json.Marshal(x)
 }

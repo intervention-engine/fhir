@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Device struct {
 	Id              string           `json:"-" bson:"_id"`
@@ -69,4 +72,15 @@ type DeviceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Device) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Device
+	}{
+		ResourceType: "Device",
+		Device:       *resource,
+	}
+	return json.Marshal(x)
 }

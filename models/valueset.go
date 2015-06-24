@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ValueSet struct {
 	Id           string                      `json:"-" bson:"_id"`
@@ -50,16 +53,19 @@ type ValueSet struct {
 	Compose      *ValueSetComposeComponent   `bson:"compose,omitempty" json:"compose,omitempty"`
 	Expansion    *ValueSetExpansionComponent `bson:"expansion,omitempty" json:"expansion,omitempty"`
 }
+
 type ValueSetContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
+
 type ValueSetDefineComponent struct {
 	System        string                               `bson:"system,omitempty" json:"system,omitempty"`
 	Version       string                               `bson:"version,omitempty" json:"version,omitempty"`
 	CaseSensitive *bool                                `bson:"caseSensitive,omitempty" json:"caseSensitive,omitempty"`
 	Concept       []ValueSetConceptDefinitionComponent `bson:"concept,omitempty" json:"concept,omitempty"`
 }
+
 type ValueSetConceptDefinitionComponent struct {
 	Code        string                                          `bson:"code,omitempty" json:"code,omitempty"`
 	Abstract    *bool                                           `bson:"abstract,omitempty" json:"abstract,omitempty"`
@@ -68,38 +74,45 @@ type ValueSetConceptDefinitionComponent struct {
 	Designation []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
 	Concept     []ValueSetConceptDefinitionComponent            `bson:"concept,omitempty" json:"concept,omitempty"`
 }
+
 type ValueSetConceptDefinitionDesignationComponent struct {
 	Language string  `bson:"language,omitempty" json:"language,omitempty"`
 	Use      *Coding `bson:"use,omitempty" json:"use,omitempty"`
 	Value    string  `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ValueSetComposeComponent struct {
 	Import  []string                      `bson:"import,omitempty" json:"import,omitempty"`
 	Include []ValueSetConceptSetComponent `bson:"include,omitempty" json:"include,omitempty"`
 	Exclude []ValueSetConceptSetComponent `bson:"exclude,omitempty" json:"exclude,omitempty"`
 }
+
 type ValueSetConceptSetComponent struct {
 	System  string                              `bson:"system,omitempty" json:"system,omitempty"`
 	Version string                              `bson:"version,omitempty" json:"version,omitempty"`
 	Concept []ValueSetConceptReferenceComponent `bson:"concept,omitempty" json:"concept,omitempty"`
 	Filter  []ValueSetConceptSetFilterComponent `bson:"filter,omitempty" json:"filter,omitempty"`
 }
+
 type ValueSetConceptReferenceComponent struct {
 	Code        string                                          `bson:"code,omitempty" json:"code,omitempty"`
 	Display     string                                          `bson:"display,omitempty" json:"display,omitempty"`
 	Designation []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
 }
+
 type ValueSetConceptSetFilterComponent struct {
 	Property string `bson:"property,omitempty" json:"property,omitempty"`
 	Op       string `bson:"op,omitempty" json:"op,omitempty"`
 	Value    string `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ValueSetExpansionComponent struct {
 	Identifier string                                `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Timestamp  *FHIRDateTime                         `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
 	Parameter  []ValueSetExpansionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
 	Contains   []ValueSetExpansionContainsComponent  `bson:"contains,omitempty" json:"contains,omitempty"`
 }
+
 type ValueSetExpansionParameterComponent struct {
 	Name         string   `bson:"name,omitempty" json:"name,omitempty"`
 	ValueString  string   `bson:"valueString,omitempty" json:"valueString,omitempty"`
@@ -109,6 +122,7 @@ type ValueSetExpansionParameterComponent struct {
 	ValueUri     string   `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
 	ValueCode    string   `bson:"valueCode,omitempty" json:"valueCode,omitempty"`
 }
+
 type ValueSetExpansionContainsComponent struct {
 	System   string                               `bson:"system,omitempty" json:"system,omitempty"`
 	Abstract *bool                                `bson:"abstract,omitempty" json:"abstract,omitempty"`
@@ -139,4 +153,15 @@ type ValueSetCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ValueSet) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ValueSet
+	}{
+		ResourceType: "ValueSet",
+		ValueSet:     *resource,
+	}
+	return json.Marshal(x)
 }

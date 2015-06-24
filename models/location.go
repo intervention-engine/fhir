@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Location struct {
 	Id                   string                     `json:"-" bson:"_id"`
@@ -43,6 +46,7 @@ type Location struct {
 	PartOf               *Reference                 `bson:"partOf,omitempty" json:"partOf,omitempty"`
 	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
 }
+
 type LocationPositionComponent struct {
 	Longitude *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
 	Latitude  *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
@@ -70,4 +74,15 @@ type LocationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Location) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Location
+	}{
+		ResourceType: "Location",
+		Location:     *resource,
+	}
+	return json.Marshal(x)
 }

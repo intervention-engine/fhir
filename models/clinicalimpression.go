@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ClinicalImpression struct {
 	Id                     string                                      `json:"-" bson:"_id"`
@@ -49,14 +52,17 @@ type ClinicalImpression struct {
 	Plan                   []Reference                                 `bson:"plan,omitempty" json:"plan,omitempty"`
 	Action                 []Reference                                 `bson:"action,omitempty" json:"action,omitempty"`
 }
+
 type ClinicalImpressionInvestigationsComponent struct {
 	Code *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Item []Reference      `bson:"item,omitempty" json:"item,omitempty"`
 }
+
 type ClinicalImpressionFindingComponent struct {
 	Item  *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
 	Cause string           `bson:"cause,omitempty" json:"cause,omitempty"`
 }
+
 type ClinicalImpressionRuledOutComponent struct {
 	Item   *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
 	Reason string           `bson:"reason,omitempty" json:"reason,omitempty"`
@@ -83,4 +89,15 @@ type ClinicalImpressionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ClinicalImpression) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ClinicalImpression
+	}{
+		ResourceType:       "ClinicalImpression",
+		ClinicalImpression: *resource,
+	}
+	return json.Marshal(x)
 }

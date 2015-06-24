@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type CarePlan struct {
 	Id          string                         `json:"-" bson:"_id"`
@@ -44,16 +47,19 @@ type CarePlan struct {
 	Activity    []CarePlanActivityComponent    `bson:"activity,omitempty" json:"activity,omitempty"`
 	Notes       string                         `bson:"notes,omitempty" json:"notes,omitempty"`
 }
+
 type CarePlanParticipantComponent struct {
 	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 	Member *Reference       `bson:"member,omitempty" json:"member,omitempty"`
 }
+
 type CarePlanActivityComponent struct {
 	ActionResulting []Reference                      `bson:"actionResulting,omitempty" json:"actionResulting,omitempty"`
 	Notes           string                           `bson:"notes,omitempty" json:"notes,omitempty"`
 	Reference       *Reference                       `bson:"reference,omitempty" json:"reference,omitempty"`
 	Detail          *CarePlanActivityDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
 }
+
 type CarePlanActivityDetailComponent struct {
 	Category              string           `bson:"category,omitempty" json:"category,omitempty"`
 	Code                  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
@@ -95,4 +101,15 @@ type CarePlanCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *CarePlan) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		CarePlan
+	}{
+		ResourceType: "CarePlan",
+		CarePlan:     *resource,
+	}
+	return json.Marshal(x)
 }

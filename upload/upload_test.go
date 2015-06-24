@@ -94,7 +94,7 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	// 2. The id attribute is configured to not be serialized/deserialized
 	type IdAndType struct {
 		Id   string `json:"id"`
-		Type string `json:"_type"`
+		Type string `json:"resourceType"`
 	}
 	idsAndTypes := make([]IdAndType, 20)
 	err = json.Unmarshal(data, &idsAndTypes)

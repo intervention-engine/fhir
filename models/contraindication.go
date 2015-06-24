@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Contraindication struct {
 	Id         string                                `json:"-" bson:"_id"`
@@ -41,6 +44,7 @@ type Contraindication struct {
 	Reference  string                                `bson:"reference,omitempty" json:"reference,omitempty"`
 	Mitigation []ContraindicationMitigationComponent `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
+
 type ContraindicationMitigationComponent struct {
 	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
 	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
@@ -68,4 +72,15 @@ type ContraindicationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Contraindication) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Contraindication
+	}{
+		ResourceType:     "Contraindication",
+		Contraindication: *resource,
+	}
+	return json.Marshal(x)
 }

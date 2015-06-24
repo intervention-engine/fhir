@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type MedicationPrescription struct {
 	Id                        string                                             `json:"-" bson:"_id"`
@@ -45,6 +48,7 @@ type MedicationPrescription struct {
 	Dispense                  *MedicationPrescriptionDispenseComponent           `bson:"dispense,omitempty" json:"dispense,omitempty"`
 	Substitution              *MedicationPrescriptionSubstitutionComponent       `bson:"substitution,omitempty" json:"substitution,omitempty"`
 }
+
 type MedicationPrescriptionDosageInstructionComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
@@ -61,6 +65,7 @@ type MedicationPrescriptionDosageInstructionComponent struct {
 	Rate                    *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
 	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty" json:"maxDosePerPeriod,omitempty"`
 }
+
 type MedicationPrescriptionDispenseComponent struct {
 	MedicationCodeableConcept *CodeableConcept `bson:"medicationCodeableConcept,omitempty" json:"medicationCodeableConcept,omitempty"`
 	MedicationReference       *Reference       `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
@@ -69,6 +74,7 @@ type MedicationPrescriptionDispenseComponent struct {
 	Quantity                  *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	ExpectedSupplyDuration    *Quantity        `bson:"expectedSupplyDuration,omitempty" json:"expectedSupplyDuration,omitempty"`
 }
+
 type MedicationPrescriptionSubstitutionComponent struct {
 	Type   *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Reason *CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
@@ -95,4 +101,15 @@ type MedicationPrescriptionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *MedicationPrescription) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MedicationPrescription
+	}{
+		ResourceType:           "MedicationPrescription",
+		MedicationPrescription: *resource,
+	}
+	return json.Marshal(x)
 }

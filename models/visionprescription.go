@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type VisionPrescription struct {
 	Id                    string                                `json:"-" bson:"_id"`
@@ -39,6 +42,7 @@ type VisionPrescription struct {
 	ReasonReference       *Reference                            `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
 	Dispense              []VisionPrescriptionDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
 }
+
 type VisionPrescriptionDispenseComponent struct {
 	Product   *Coding   `bson:"product,omitempty" json:"product,omitempty"`
 	Eye       string    `bson:"eye,omitempty" json:"eye,omitempty"`
@@ -78,4 +82,15 @@ type VisionPrescriptionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *VisionPrescription) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		VisionPrescription
+	}{
+		ResourceType:       "VisionPrescription",
+		VisionPrescription: *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type RiskAssessment struct {
 	Id         string                              `json:"-" bson:"_id"`
@@ -40,6 +43,7 @@ type RiskAssessment struct {
 	Prediction []RiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
 	Mitigation string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
+
 type RiskAssessmentPredictionComponent struct {
 	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
 	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
@@ -72,4 +76,15 @@ type RiskAssessmentCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *RiskAssessment) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		RiskAssessment
+	}{
+		ResourceType:   "RiskAssessment",
+		RiskAssessment: *resource,
+	}
+	return json.Marshal(x)
 }

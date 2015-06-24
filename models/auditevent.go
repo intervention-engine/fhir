@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type AuditEvent struct {
 	Id          string                           `json:"-" bson:"_id"`
@@ -35,6 +38,7 @@ type AuditEvent struct {
 	Source      *AuditEventSourceComponent       `bson:"source,omitempty" json:"source,omitempty"`
 	Object      []AuditEventObjectComponent      `bson:"object,omitempty" json:"object,omitempty"`
 }
+
 type AuditEventEventComponent struct {
 	Type           *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Subtype        []CodeableConcept `bson:"subtype,omitempty" json:"subtype,omitempty"`
@@ -44,6 +48,7 @@ type AuditEventEventComponent struct {
 	OutcomeDesc    string            `bson:"outcomeDesc,omitempty" json:"outcomeDesc,omitempty"`
 	PurposeOfEvent []Coding          `bson:"purposeOfEvent,omitempty" json:"purposeOfEvent,omitempty"`
 }
+
 type AuditEventParticipantComponent struct {
 	Role         []CodeableConcept                      `bson:"role,omitempty" json:"role,omitempty"`
 	Reference    *Reference                             `bson:"reference,omitempty" json:"reference,omitempty"`
@@ -57,15 +62,18 @@ type AuditEventParticipantComponent struct {
 	Network      *AuditEventParticipantNetworkComponent `bson:"network,omitempty" json:"network,omitempty"`
 	PurposeOfUse []Coding                               `bson:"purposeOfUse,omitempty" json:"purposeOfUse,omitempty"`
 }
+
 type AuditEventParticipantNetworkComponent struct {
 	Identifier string `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type       string `bson:"type,omitempty" json:"type,omitempty"`
 }
+
 type AuditEventSourceComponent struct {
 	Site       string   `bson:"site,omitempty" json:"site,omitempty"`
 	Identifier string   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type       []Coding `bson:"type,omitempty" json:"type,omitempty"`
 }
+
 type AuditEventObjectComponent struct {
 	Identifier  *Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Reference   *Reference                        `bson:"reference,omitempty" json:"reference,omitempty"`
@@ -78,6 +86,7 @@ type AuditEventObjectComponent struct {
 	Query       string                            `bson:"query,omitempty" json:"query,omitempty"`
 	Detail      []AuditEventObjectDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
 }
+
 type AuditEventObjectDetailComponent struct {
 	Type  string `bson:"type,omitempty" json:"type,omitempty"`
 	Value string `bson:"value,omitempty" json:"value,omitempty"`
@@ -104,4 +113,15 @@ type AuditEventCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *AuditEvent) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		AuditEvent
+	}{
+		ResourceType: "AuditEvent",
+		AuditEvent:   *resource,
+	}
+	return json.Marshal(x)
 }

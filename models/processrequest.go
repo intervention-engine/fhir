@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ProcessRequest struct {
 	Id              string                         `json:"-" bson:"_id"`
@@ -47,6 +50,7 @@ type ProcessRequest struct {
 	Exclude         []string                       `bson:"exclude,omitempty" json:"exclude,omitempty"`
 	Period          *Period                        `bson:"period,omitempty" json:"period,omitempty"`
 }
+
 type ProcessRequestItemsComponent struct {
 	SequenceLinkId *int32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 }
@@ -72,4 +76,15 @@ type ProcessRequestCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ProcessRequest) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ProcessRequest
+	}{
+		ResourceType:   "ProcessRequest",
+		ProcessRequest: *resource,
+	}
+	return json.Marshal(x)
 }

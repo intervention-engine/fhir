@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Composition struct {
 	Id              string                         `json:"-" bson:"_id"`
@@ -45,16 +48,19 @@ type Composition struct {
 	Encounter       *Reference                     `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Section         []CompositionSectionComponent  `bson:"section,omitempty" json:"section,omitempty"`
 }
+
 type CompositionAttesterComponent struct {
 	Mode  []string      `bson:"mode,omitempty" json:"mode,omitempty"`
 	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
 	Party *Reference    `bson:"party,omitempty" json:"party,omitempty"`
 }
+
 type CompositionEventComponent struct {
 	Code   []CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`
 	Detail []Reference       `bson:"detail,omitempty" json:"detail,omitempty"`
 }
+
 type CompositionSectionComponent struct {
 	Title   string                        `bson:"title,omitempty" json:"title,omitempty"`
 	Code    *CodeableConcept              `bson:"code,omitempty" json:"code,omitempty"`
@@ -83,4 +89,15 @@ type CompositionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Composition) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Composition
+	}{
+		ResourceType: "Composition",
+		Composition:  *resource,
+	}
+	return json.Marshal(x)
 }

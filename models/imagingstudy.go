@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ImagingStudy struct {
 	Id                  string                        `json:"-" bson:"_id"`
@@ -48,6 +51,7 @@ type ImagingStudy struct {
 	Description         string                        `bson:"description,omitempty" json:"description,omitempty"`
 	Series              []ImagingStudySeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
 }
+
 type ImagingStudySeriesComponent struct {
 	Number            *uint32                               `bson:"number,omitempty" json:"number,omitempty"`
 	Modality          string                                `bson:"modality,omitempty" json:"modality,omitempty"`
@@ -61,6 +65,7 @@ type ImagingStudySeriesComponent struct {
 	DateTime          *FHIRDateTime                         `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
 	Instance          []ImagingStudySeriesInstanceComponent `bson:"instance,omitempty" json:"instance,omitempty"`
 }
+
 type ImagingStudySeriesInstanceComponent struct {
 	Number   *uint32      `bson:"number,omitempty" json:"number,omitempty"`
 	Uid      string       `bson:"uid,omitempty" json:"uid,omitempty"`
@@ -91,4 +96,15 @@ type ImagingStudyCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ImagingStudy) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ImagingStudy
+	}{
+		ResourceType: "ImagingStudy",
+		ImagingStudy: *resource,
+	}
+	return json.Marshal(x)
 }

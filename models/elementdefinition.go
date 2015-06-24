@@ -77,17 +77,20 @@ type ElementDefinition struct {
 	Binding                     *ElementDefinitionBindingComponent     `bson:"binding,omitempty" json:"binding,omitempty"`
 	Mapping                     []ElementDefinitionMappingComponent    `bson:"mapping,omitempty" json:"mapping,omitempty"`
 }
+
 type ElementDefinitionSlicingComponent struct {
 	Discriminator []string `bson:"discriminator,omitempty" json:"discriminator,omitempty"`
 	Description   string   `bson:"description,omitempty" json:"description,omitempty"`
 	Ordered       *bool    `bson:"ordered,omitempty" json:"ordered,omitempty"`
 	Rules         string   `bson:"rules,omitempty" json:"rules,omitempty"`
 }
+
 type ElementDefinitionTypeRefComponent struct {
 	Code        string   `bson:"code,omitempty" json:"code,omitempty"`
 	Profile     []string `bson:"profile,omitempty" json:"profile,omitempty"`
 	Aggregation []string `bson:"aggregation,omitempty" json:"aggregation,omitempty"`
 }
+
 type ElementDefinitionConstraintComponent struct {
 	Key      string `bson:"key,omitempty" json:"key,omitempty"`
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`
@@ -95,6 +98,7 @@ type ElementDefinitionConstraintComponent struct {
 	Human    string `bson:"human,omitempty" json:"human,omitempty"`
 	Xpath    string `bson:"xpath,omitempty" json:"xpath,omitempty"`
 }
+
 type ElementDefinitionBindingComponent struct {
 	Name              string     `bson:"name,omitempty" json:"name,omitempty"`
 	Strength          string     `bson:"strength,omitempty" json:"strength,omitempty"`
@@ -102,6 +106,7 @@ type ElementDefinitionBindingComponent struct {
 	ValueSetUri       string     `bson:"valueSetUri,omitempty" json:"valueSetUri,omitempty"`
 	ValueSetReference *Reference `bson:"valueSetReference,omitempty" json:"valueSetReference,omitempty"`
 }
+
 type ElementDefinitionMappingComponent struct {
 	Identity string `bson:"identity,omitempty" json:"identity,omitempty"`
 	Language string `bson:"language,omitempty" json:"language,omitempty"`

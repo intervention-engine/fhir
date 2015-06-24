@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Provenance struct {
 	Id        string                      `json:"-" bson:"_id"`
@@ -40,6 +43,7 @@ type Provenance struct {
 	Entity    []ProvenanceEntityComponent `bson:"entity,omitempty" json:"entity,omitempty"`
 	Signature []Signature                 `bson:"signature,omitempty" json:"signature,omitempty"`
 }
+
 type ProvenanceAgentComponent struct {
 	Role               *Coding    `bson:"role,omitempty" json:"role,omitempty"`
 	Type               *Coding    `bson:"type,omitempty" json:"type,omitempty"`
@@ -47,6 +51,7 @@ type ProvenanceAgentComponent struct {
 	ReferenceReference *Reference `bson:"referenceReference,omitempty" json:"referenceReference,omitempty"`
 	Display            string     `bson:"display,omitempty" json:"display,omitempty"`
 }
+
 type ProvenanceEntityComponent struct {
 	Role      string                    `bson:"role,omitempty" json:"role,omitempty"`
 	Type      *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
@@ -76,4 +81,15 @@ type ProvenanceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Provenance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Provenance
+	}{
+		ResourceType: "Provenance",
+		Provenance:   *resource,
+	}
+	return json.Marshal(x)
 }

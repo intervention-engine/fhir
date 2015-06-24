@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type FamilyMemberHistory struct {
 	Id              string                                  `json:"-" bson:"_id"`
@@ -50,6 +53,7 @@ type FamilyMemberHistory struct {
 	Note            string                                  `bson:"note,omitempty" json:"note,omitempty"`
 	Condition       []FamilyMemberHistoryConditionComponent `bson:"condition,omitempty" json:"condition,omitempty"`
 }
+
 type FamilyMemberHistoryConditionComponent struct {
 	Type        *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Outcome     *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
@@ -80,4 +84,15 @@ type FamilyMemberHistoryCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *FamilyMemberHistory) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		FamilyMemberHistory
+	}{
+		ResourceType:        "FamilyMemberHistory",
+		FamilyMemberHistory: *resource,
+	}
+	return json.Marshal(x)
 }

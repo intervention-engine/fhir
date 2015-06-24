@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type QuestionnaireAnswers struct {
 	Id            string                              `json:"-" bson:"_id"`
@@ -40,6 +43,7 @@ type QuestionnaireAnswers struct {
 	Encounter     *Reference                          `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Group         *QuestionnaireAnswersGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
+
 type QuestionnaireAnswersGroupComponent struct {
 	LinkId   string                                  `bson:"linkId,omitempty" json:"linkId,omitempty"`
 	Title    string                                  `bson:"title,omitempty" json:"title,omitempty"`
@@ -48,12 +52,14 @@ type QuestionnaireAnswersGroupComponent struct {
 	Group    []QuestionnaireAnswersGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
 	Question []QuestionnaireAnswersQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
 }
+
 type QuestionnaireAnswersQuestionComponent struct {
 	LinkId string                                        `bson:"linkId,omitempty" json:"linkId,omitempty"`
 	Text   string                                        `bson:"text,omitempty" json:"text,omitempty"`
 	Answer []QuestionnaireAnswersQuestionAnswerComponent `bson:"answer,omitempty" json:"answer,omitempty"`
 	Group  []QuestionnaireAnswersGroupComponent          `bson:"group,omitempty" json:"group,omitempty"`
 }
+
 type QuestionnaireAnswersQuestionAnswerComponent struct {
 	ValueBoolean    *bool         `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
 	ValueDecimal    *float64      `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
@@ -91,4 +97,15 @@ type QuestionnaireAnswersCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *QuestionnaireAnswers) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		QuestionnaireAnswers
+	}{
+		ResourceType:         "QuestionnaireAnswers",
+		QuestionnaireAnswers: *resource,
+	}
+	return json.Marshal(x)
 }

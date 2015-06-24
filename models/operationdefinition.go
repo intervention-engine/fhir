@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type OperationDefinition struct {
 	Id           string                                  `json:"-" bson:"_id"`
@@ -50,10 +53,12 @@ type OperationDefinition struct {
 	Instance     *bool                                   `bson:"instance,omitempty" json:"instance,omitempty"`
 	Parameter    []OperationDefinitionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
 }
+
 type OperationDefinitionContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
+
 type OperationDefinitionParameterComponent struct {
 	Name          string                                      `bson:"name,omitempty" json:"name,omitempty"`
 	Use           string                                      `bson:"use,omitempty" json:"use,omitempty"`
@@ -64,6 +69,7 @@ type OperationDefinitionParameterComponent struct {
 	Profile       *Reference                                  `bson:"profile,omitempty" json:"profile,omitempty"`
 	Part          []OperationDefinitionParameterPartComponent `bson:"part,omitempty" json:"part,omitempty"`
 }
+
 type OperationDefinitionParameterPartComponent struct {
 	Name          string     `bson:"name,omitempty" json:"name,omitempty"`
 	Min           *uint32    `bson:"min,omitempty" json:"min,omitempty"`
@@ -94,4 +100,15 @@ type OperationDefinitionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *OperationDefinition) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		OperationDefinition
+	}{
+		ResourceType:        "OperationDefinition",
+		OperationDefinition: *resource,
+	}
+	return json.Marshal(x)
 }

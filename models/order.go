@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Order struct {
 	Id                    string              `json:"-" bson:"_id"`
@@ -40,6 +43,7 @@ type Order struct {
 	When                  *OrderWhenComponent `bson:"when,omitempty" json:"when,omitempty"`
 	Detail                []Reference         `bson:"detail,omitempty" json:"detail,omitempty"`
 }
+
 type OrderWhenComponent struct {
 	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
@@ -66,4 +70,15 @@ type OrderCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Order) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Order
+	}{
+		ResourceType: "Order",
+		Order:        *resource,
+	}
+	return json.Marshal(x)
 }

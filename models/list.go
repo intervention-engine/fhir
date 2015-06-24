@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type List struct {
 	Id          string               `json:"-" bson:"_id"`
@@ -43,6 +46,7 @@ type List struct {
 	Entry       []ListEntryComponent `bson:"entry,omitempty" json:"entry,omitempty"`
 	EmptyReason *CodeableConcept     `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
 }
+
 type ListEntryComponent struct {
 	Flag    []CodeableConcept `bson:"flag,omitempty" json:"flag,omitempty"`
 	Deleted *bool             `bson:"deleted,omitempty" json:"deleted,omitempty"`
@@ -71,4 +75,15 @@ type ListCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *List) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		List
+	}{
+		ResourceType: "List",
+		List:         *resource,
+	}
+	return json.Marshal(x)
 }

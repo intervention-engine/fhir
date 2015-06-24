@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Encounter struct {
 	Id                      string                             `json:"-" bson:"_id"`
@@ -50,15 +53,18 @@ type Encounter struct {
 	ServiceProvider         *Reference                         `bson:"serviceProvider,omitempty" json:"serviceProvider,omitempty"`
 	PartOf                  *Reference                         `bson:"partOf,omitempty" json:"partOf,omitempty"`
 }
+
 type EncounterStatusHistoryComponent struct {
 	Status string  `bson:"status,omitempty" json:"status,omitempty"`
 	Period *Period `bson:"period,omitempty" json:"period,omitempty"`
 }
+
 type EncounterParticipantComponent struct {
 	Type       []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Period     *Period           `bson:"period,omitempty" json:"period,omitempty"`
 	Individual *Reference        `bson:"individual,omitempty" json:"individual,omitempty"`
 }
+
 type EncounterHospitalizationComponent struct {
 	PreAdmissionIdentifier *Identifier       `bson:"preAdmissionIdentifier,omitempty" json:"preAdmissionIdentifier,omitempty"`
 	Origin                 *Reference        `bson:"origin,omitempty" json:"origin,omitempty"`
@@ -71,6 +77,7 @@ type EncounterHospitalizationComponent struct {
 	DischargeDiagnosis     *Reference        `bson:"dischargeDiagnosis,omitempty" json:"dischargeDiagnosis,omitempty"`
 	ReAdmission            *bool             `bson:"reAdmission,omitempty" json:"reAdmission,omitempty"`
 }
+
 type EncounterLocationComponent struct {
 	Location *Reference `bson:"location,omitempty" json:"location,omitempty"`
 	Status   string     `bson:"status,omitempty" json:"status,omitempty"`
@@ -98,4 +105,15 @@ type EncounterCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Encounter) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Encounter
+	}{
+		ResourceType: "Encounter",
+		Encounter:    *resource,
+	}
+	return json.Marshal(x)
 }

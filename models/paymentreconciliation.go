@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type PaymentReconciliation struct {
 	Id                  string                                  `json:"-" bson:"_id"`
@@ -46,6 +49,7 @@ type PaymentReconciliation struct {
 	Total               *Quantity                               `bson:"total,omitempty" json:"total,omitempty"`
 	Note                []PaymentReconciliationNotesComponent   `bson:"note,omitempty" json:"note,omitempty"`
 }
+
 type PaymentReconciliationDetailsComponent struct {
 	Type      *Coding       `bson:"type,omitempty" json:"type,omitempty"`
 	Request   *Reference    `bson:"request,omitempty" json:"request,omitempty"`
@@ -55,6 +59,7 @@ type PaymentReconciliationDetailsComponent struct {
 	Date      *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
 	Amount    *Quantity     `bson:"amount,omitempty" json:"amount,omitempty"`
 }
+
 type PaymentReconciliationNotesComponent struct {
 	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text string  `bson:"text,omitempty" json:"text,omitempty"`
@@ -81,4 +86,15 @@ type PaymentReconciliationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *PaymentReconciliation) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		PaymentReconciliation
+	}{
+		ResourceType:          "PaymentReconciliation",
+		PaymentReconciliation: *resource,
+	}
+	return json.Marshal(x)
 }

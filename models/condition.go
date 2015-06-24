@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Condition struct {
 	Id                string                                `json:"-" bson:"_id"`
@@ -57,22 +60,27 @@ type Condition struct {
 	OccurredFollowing []ConditionOccurredFollowingComponent `bson:"occurredFollowing,omitempty" json:"occurredFollowing,omitempty"`
 	Notes             string                                `bson:"notes,omitempty" json:"notes,omitempty"`
 }
+
 type ConditionStageComponent struct {
 	Summary    *CodeableConcept `bson:"summary,omitempty" json:"summary,omitempty"`
 	Assessment []Reference      `bson:"assessment,omitempty" json:"assessment,omitempty"`
 }
+
 type ConditionEvidenceComponent struct {
 	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Detail []Reference      `bson:"detail,omitempty" json:"detail,omitempty"`
 }
+
 type ConditionLocationComponent struct {
 	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
 	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
 }
+
 type ConditionDueToComponent struct {
 	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Target *Reference       `bson:"target,omitempty" json:"target,omitempty"`
 }
+
 type ConditionOccurredFollowingComponent struct {
 	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Target *Reference       `bson:"target,omitempty" json:"target,omitempty"`
@@ -99,4 +107,15 @@ type ConditionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Condition) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Condition
+	}{
+		ResourceType: "Condition",
+		Condition:    *resource,
+	}
+	return json.Marshal(x)
 }

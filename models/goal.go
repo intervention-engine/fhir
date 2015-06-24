@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Goal struct {
 	Id          string                 `json:"-" bson:"_id"`
@@ -42,6 +45,7 @@ type Goal struct {
 	Notes       string                 `bson:"notes,omitempty" json:"notes,omitempty"`
 	Outcome     []GoalOutcomeComponent `bson:"outcome,omitempty" json:"outcome,omitempty"`
 }
+
 type GoalOutcomeComponent struct {
 	ResultCodeableConcept *CodeableConcept `bson:"resultCodeableConcept,omitempty" json:"resultCodeableConcept,omitempty"`
 	ResultReference       *Reference       `bson:"resultReference,omitempty" json:"resultReference,omitempty"`
@@ -68,4 +72,15 @@ type GoalCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Goal) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Goal
+	}{
+		ResourceType: "Goal",
+		Goal:         *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ImagingObjectSelection struct {
 	Id            string                                 `json:"-" bson:"_id"`
@@ -38,22 +41,26 @@ type ImagingObjectSelection struct {
 	AuthoringTime *FHIRDateTime                          `bson:"authoringTime,omitempty" json:"authoringTime,omitempty"`
 	Study         []ImagingObjectSelectionStudyComponent `bson:"study,omitempty" json:"study,omitempty"`
 }
+
 type ImagingObjectSelectionStudyComponent struct {
 	Uid    string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
 	Url    string                                  `bson:"url,omitempty" json:"url,omitempty"`
 	Series []ImagingObjectSelectionSeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
 }
+
 type ImagingObjectSelectionSeriesComponent struct {
 	Uid      string                                    `bson:"uid,omitempty" json:"uid,omitempty"`
 	Url      string                                    `bson:"url,omitempty" json:"url,omitempty"`
 	Instance []ImagingObjectSelectionInstanceComponent `bson:"instance,omitempty" json:"instance,omitempty"`
 }
+
 type ImagingObjectSelectionInstanceComponent struct {
 	SopClass string                                  `bson:"sopClass,omitempty" json:"sopClass,omitempty"`
 	Uid      string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
 	Url      string                                  `bson:"url,omitempty" json:"url,omitempty"`
 	Frames   []ImagingObjectSelectionFramesComponent `bson:"frames,omitempty" json:"frames,omitempty"`
 }
+
 type ImagingObjectSelectionFramesComponent struct {
 	FrameNumbers []uint32 `bson:"frameNumbers,omitempty" json:"frameNumbers,omitempty"`
 	Url          string   `bson:"url,omitempty" json:"url,omitempty"`
@@ -80,4 +87,15 @@ type ImagingObjectSelectionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ImagingObjectSelection) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ImagingObjectSelection
+	}{
+		ResourceType:           "ImagingObjectSelection",
+		ImagingObjectSelection: *resource,
+	}
+	return json.Marshal(x)
 }

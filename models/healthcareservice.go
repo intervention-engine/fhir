@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type HealthcareService struct {
 	Id                     string                                    `json:"-" bson:"_id"`
@@ -53,16 +56,19 @@ type HealthcareService struct {
 	NotAvailable           []HealthcareServiceNotAvailableComponent  `bson:"notAvailable,omitempty" json:"notAvailable,omitempty"`
 	AvailabilityExceptions string                                    `bson:"availabilityExceptions,omitempty" json:"availabilityExceptions,omitempty"`
 }
+
 type HealthcareServiceServiceTypeComponent struct {
 	Type      *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Specialty []CodeableConcept `bson:"specialty,omitempty" json:"specialty,omitempty"`
 }
+
 type HealthcareServiceAvailableTimeComponent struct {
 	DaysOfWeek         []string      `bson:"daysOfWeek,omitempty" json:"daysOfWeek,omitempty"`
 	AllDay             *bool         `bson:"allDay,omitempty" json:"allDay,omitempty"`
 	AvailableStartTime *FHIRDateTime `bson:"availableStartTime,omitempty" json:"availableStartTime,omitempty"`
 	AvailableEndTime   *FHIRDateTime `bson:"availableEndTime,omitempty" json:"availableEndTime,omitempty"`
 }
+
 type HealthcareServiceNotAvailableComponent struct {
 	Description string  `bson:"description,omitempty" json:"description,omitempty"`
 	During      *Period `bson:"during,omitempty" json:"during,omitempty"`
@@ -89,4 +95,15 @@ type HealthcareServiceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *HealthcareService) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		HealthcareService
+	}{
+		ResourceType:      "HealthcareService",
+		HealthcareService: *resource,
+	}
+	return json.Marshal(x)
 }

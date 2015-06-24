@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ClaimResponse struct {
 	Id                      string                            `json:"-" bson:"_id"`
@@ -57,36 +60,43 @@ type ClaimResponse struct {
 	Note                    []ClaimResponseNotesComponent     `bson:"note,omitempty" json:"note,omitempty"`
 	Coverage                []ClaimResponseCoverageComponent  `bson:"coverage,omitempty" json:"coverage,omitempty"`
 }
+
 type ClaimResponseItemsComponent struct {
 	SequenceLinkId *uint32                                  `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 	NoteNumber     []uint32                                 `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
 	Adjudication   []ClaimResponseItemAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
 	Detail         []ClaimResponseItemDetailComponent       `bson:"detail,omitempty" json:"detail,omitempty"`
 }
+
 type ClaimResponseItemAdjudicationComponent struct {
 	Code   *Coding   `bson:"code,omitempty" json:"code,omitempty"`
 	Amount *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
 	Value  *float64  `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ClaimResponseItemDetailComponent struct {
 	SequenceLinkId *uint32                                    `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 	Adjudication   []ClaimResponseDetailAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
 	SubDetail      []ClaimResponseSubDetailComponent          `bson:"subDetail,omitempty" json:"subDetail,omitempty"`
 }
+
 type ClaimResponseDetailAdjudicationComponent struct {
 	Code   *Coding   `bson:"code,omitempty" json:"code,omitempty"`
 	Amount *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
 	Value  *float64  `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ClaimResponseSubDetailComponent struct {
 	SequenceLinkId *uint32                                       `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 	Adjudication   []ClaimResponseSubdetailAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
 }
+
 type ClaimResponseSubdetailAdjudicationComponent struct {
 	Code   *Coding   `bson:"code,omitempty" json:"code,omitempty"`
 	Amount *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
 	Value  *float64  `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ClaimResponseAddedItemComponent struct {
 	SequenceLinkId   []uint32                                      `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 	Service          *Coding                                       `bson:"service,omitempty" json:"service,omitempty"`
@@ -95,32 +105,38 @@ type ClaimResponseAddedItemComponent struct {
 	Adjudication     []ClaimResponseAddedItemAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
 	Detail           []ClaimResponseAddedItemsDetailComponent      `bson:"detail,omitempty" json:"detail,omitempty"`
 }
+
 type ClaimResponseAddedItemAdjudicationComponent struct {
 	Code   *Coding   `bson:"code,omitempty" json:"code,omitempty"`
 	Amount *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
 	Value  *float64  `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ClaimResponseAddedItemsDetailComponent struct {
 	Service      *Coding                                             `bson:"service,omitempty" json:"service,omitempty"`
 	Fee          *Quantity                                           `bson:"fee,omitempty" json:"fee,omitempty"`
 	Adjudication []ClaimResponseAddedItemDetailAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
 }
+
 type ClaimResponseAddedItemDetailAdjudicationComponent struct {
 	Code   *Coding   `bson:"code,omitempty" json:"code,omitempty"`
 	Amount *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
 	Value  *float64  `bson:"value,omitempty" json:"value,omitempty"`
 }
+
 type ClaimResponseErrorsComponent struct {
 	SequenceLinkId          *uint32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 	DetailSequenceLinkId    *uint32 `bson:"detailSequenceLinkId,omitempty" json:"detailSequenceLinkId,omitempty"`
 	SubdetailSequenceLinkId *uint32 `bson:"subdetailSequenceLinkId,omitempty" json:"subdetailSequenceLinkId,omitempty"`
 	Code                    *Coding `bson:"code,omitempty" json:"code,omitempty"`
 }
+
 type ClaimResponseNotesComponent struct {
 	Number *uint32 `bson:"number,omitempty" json:"number,omitempty"`
 	Type   *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text   string  `bson:"text,omitempty" json:"text,omitempty"`
 }
+
 type ClaimResponseCoverageComponent struct {
 	Sequence            *uint32    `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Focal               *bool      `bson:"focal,omitempty" json:"focal,omitempty"`
@@ -153,4 +169,15 @@ type ClaimResponseCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ClaimResponse) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ClaimResponse
+	}{
+		ResourceType:  "ClaimResponse",
+		ClaimResponse: *resource,
+	}
+	return json.Marshal(x)
 }

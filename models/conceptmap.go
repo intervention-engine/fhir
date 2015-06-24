@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ConceptMap struct {
 	Id              string                             `json:"-" bson:"_id"`
@@ -49,15 +52,18 @@ type ConceptMap struct {
 	TargetReference *Reference                         `bson:"targetReference,omitempty" json:"targetReference,omitempty"`
 	Element         []ConceptMapSourceElementComponent `bson:"element,omitempty" json:"element,omitempty"`
 }
+
 type ConceptMapContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
+
 type ConceptMapSourceElementComponent struct {
 	CodeSystem string                             `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
 	Code       string                             `bson:"code,omitempty" json:"code,omitempty"`
 	Target     []ConceptMapTargetElementComponent `bson:"target,omitempty" json:"target,omitempty"`
 }
+
 type ConceptMapTargetElementComponent struct {
 	CodeSystem  string                            `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
 	Code        string                            `bson:"code,omitempty" json:"code,omitempty"`
@@ -66,6 +72,7 @@ type ConceptMapTargetElementComponent struct {
 	DependsOn   []ConceptMapOtherElementComponent `bson:"dependsOn,omitempty" json:"dependsOn,omitempty"`
 	Product     []ConceptMapOtherElementComponent `bson:"product,omitempty" json:"product,omitempty"`
 }
+
 type ConceptMapOtherElementComponent struct {
 	Element    string `bson:"element,omitempty" json:"element,omitempty"`
 	CodeSystem string `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
@@ -93,4 +100,15 @@ type ConceptMapCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ConceptMap) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ConceptMap
+	}{
+		ResourceType: "ConceptMap",
+		ConceptMap:   *resource,
+	}
+	return json.Marshal(x)
 }

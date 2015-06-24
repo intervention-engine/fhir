@@ -32,6 +32,7 @@ type Timing struct {
 	Repeat *TimingRepeatComponent `bson:"repeat,omitempty" json:"repeat,omitempty"`
 	Code   *CodeableConcept       `bson:"code,omitempty" json:"code,omitempty"`
 }
+
 type TimingRepeatComponent struct {
 	Bounds        *Period  `bson:"bounds,omitempty" json:"bounds,omitempty"`
 	Count         *int32   `bson:"count,omitempty" json:"count,omitempty"`

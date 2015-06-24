@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type DocumentReference struct {
 	Id               string                                `json:"-" bson:"_id"`
@@ -49,10 +52,12 @@ type DocumentReference struct {
 	Content          []Attachment                          `bson:"content,omitempty" json:"content,omitempty"`
 	Context          *DocumentReferenceContextComponent    `bson:"context,omitempty" json:"context,omitempty"`
 }
+
 type DocumentReferenceRelatesToComponent struct {
 	Code   string     `bson:"code,omitempty" json:"code,omitempty"`
 	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
+
 type DocumentReferenceContextComponent struct {
 	Event             []CodeableConcept                          `bson:"event,omitempty" json:"event,omitempty"`
 	Period            *Period                                    `bson:"period,omitempty" json:"period,omitempty"`
@@ -61,6 +66,7 @@ type DocumentReferenceContextComponent struct {
 	SourcePatientInfo *Reference                                 `bson:"sourcePatientInfo,omitempty" json:"sourcePatientInfo,omitempty"`
 	Related           []DocumentReferenceContextRelatedComponent `bson:"related,omitempty" json:"related,omitempty"`
 }
+
 type DocumentReferenceContextRelatedComponent struct {
 	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
@@ -87,4 +93,15 @@ type DocumentReferenceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *DocumentReference) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DocumentReference
+	}{
+		ResourceType:      "DocumentReference",
+		DocumentReference: *resource,
+	}
+	return json.Marshal(x)
 }

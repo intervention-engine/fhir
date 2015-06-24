@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Medication struct {
 	Id           string                      `json:"-" bson:"_id"`
@@ -38,23 +41,28 @@ type Medication struct {
 	Product      *MedicationProductComponent `bson:"product,omitempty" json:"product,omitempty"`
 	Package      *MedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
 }
+
 type MedicationProductComponent struct {
 	Form       *CodeableConcept                       `bson:"form,omitempty" json:"form,omitempty"`
 	Ingredient []MedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 	Batch      []MedicationProductBatchComponent      `bson:"batch,omitempty" json:"batch,omitempty"`
 }
+
 type MedicationProductIngredientComponent struct {
 	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
 	Amount *Ratio     `bson:"amount,omitempty" json:"amount,omitempty"`
 }
+
 type MedicationProductBatchComponent struct {
 	LotNumber      string        `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
 	ExpirationDate *FHIRDateTime `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
 }
+
 type MedicationPackageComponent struct {
 	Container *CodeableConcept                    `bson:"container,omitempty" json:"container,omitempty"`
 	Content   []MedicationPackageContentComponent `bson:"content,omitempty" json:"content,omitempty"`
 }
+
 type MedicationPackageContentComponent struct {
 	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
 	Amount *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
@@ -81,4 +89,15 @@ type MedicationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Medication) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Medication
+	}{
+		ResourceType: "Medication",
+		Medication:   *resource,
+	}
+	return json.Marshal(x)
 }

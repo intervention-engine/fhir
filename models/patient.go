@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Patient struct {
 	Id                   string                          `json:"-" bson:"_id"`
@@ -50,6 +53,7 @@ type Patient struct {
 	Link                 []PatientLinkComponent          `bson:"link,omitempty" json:"link,omitempty"`
 	Active               *bool                           `bson:"active,omitempty" json:"active,omitempty"`
 }
+
 type PatientContactComponent struct {
 	Relationship []CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
 	Name         *HumanName        `bson:"name,omitempty" json:"name,omitempty"`
@@ -59,15 +63,18 @@ type PatientContactComponent struct {
 	Organization *Reference        `bson:"organization,omitempty" json:"organization,omitempty"`
 	Period       *Period           `bson:"period,omitempty" json:"period,omitempty"`
 }
+
 type PatientAnimalComponent struct {
 	Species      *CodeableConcept `bson:"species,omitempty" json:"species,omitempty"`
 	Breed        *CodeableConcept `bson:"breed,omitempty" json:"breed,omitempty"`
 	GenderStatus *CodeableConcept `bson:"genderStatus,omitempty" json:"genderStatus,omitempty"`
 }
+
 type PatientCommunicationComponent struct {
 	Language  *CodeableConcept `bson:"language,omitempty" json:"language,omitempty"`
 	Preferred *bool            `bson:"preferred,omitempty" json:"preferred,omitempty"`
 }
+
 type PatientLinkComponent struct {
 	Other *Reference `bson:"other,omitempty" json:"other,omitempty"`
 	Type  string     `bson:"type,omitempty" json:"type,omitempty"`
@@ -94,4 +101,15 @@ type PatientCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Patient) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Patient
+	}{
+		ResourceType: "Patient",
+		Patient:      *resource,
+	}
+	return json.Marshal(x)
 }

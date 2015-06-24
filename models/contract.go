@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Contract struct {
 	Id                string                                `json:"-" bson:"_id"`
@@ -50,10 +53,12 @@ type Contract struct {
 	Legal             []ContractLegalLanguageComponent      `bson:"legal,omitempty" json:"legal,omitempty"`
 	Rule              []ContractComputableLanguageComponent `bson:"rule,omitempty" json:"rule,omitempty"`
 }
+
 type ContractActorComponent struct {
 	Entity *Reference        `bson:"entity,omitempty" json:"entity,omitempty"`
 	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
+
 type ContractValuedItemComponent struct {
 	EntityCodeableConcept *CodeableConcept `bson:"entityCodeableConcept,omitempty" json:"entityCodeableConcept,omitempty"`
 	EntityReference       *Reference       `bson:"entityReference,omitempty" json:"entityReference,omitempty"`
@@ -65,11 +70,13 @@ type ContractValuedItemComponent struct {
 	Points                *float64         `bson:"points,omitempty" json:"points,omitempty"`
 	Net                   *Quantity        `bson:"net,omitempty" json:"net,omitempty"`
 }
+
 type ContractSignatoryComponent struct {
 	Type      *Coding    `bson:"type,omitempty" json:"type,omitempty"`
 	Party     *Reference `bson:"party,omitempty" json:"party,omitempty"`
 	Signature string     `bson:"signature,omitempty" json:"signature,omitempty"`
 }
+
 type ContractTermComponent struct {
 	Identifier   *Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Issued       *FHIRDateTime                     `bson:"issued,omitempty" json:"issued,omitempty"`
@@ -84,10 +91,12 @@ type ContractTermComponent struct {
 	ValuedItem   []ContractTermValuedItemComponent `bson:"valuedItem,omitempty" json:"valuedItem,omitempty"`
 	Group        []ContractTermComponent           `bson:"group,omitempty" json:"group,omitempty"`
 }
+
 type ContractTermActorComponent struct {
 	Entity *Reference        `bson:"entity,omitempty" json:"entity,omitempty"`
 	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
+
 type ContractTermValuedItemComponent struct {
 	EntityCodeableConcept *CodeableConcept `bson:"entityCodeableConcept,omitempty" json:"entityCodeableConcept,omitempty"`
 	EntityReference       *Reference       `bson:"entityReference,omitempty" json:"entityReference,omitempty"`
@@ -99,14 +108,17 @@ type ContractTermValuedItemComponent struct {
 	Points                *float64         `bson:"points,omitempty" json:"points,omitempty"`
 	Net                   *Quantity        `bson:"net,omitempty" json:"net,omitempty"`
 }
+
 type ContractFriendlyLanguageComponent struct {
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
 }
+
 type ContractLegalLanguageComponent struct {
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
 }
+
 type ContractComputableLanguageComponent struct {
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
@@ -133,4 +145,15 @@ type ContractCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Contract) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Contract
+	}{
+		ResourceType: "Contract",
+		Contract:     *resource,
+	}
+	return json.Marshal(x)
 }

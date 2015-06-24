@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Practitioner struct {
 	Id               string                                  `json:"-" bson:"_id"`
@@ -41,6 +44,7 @@ type Practitioner struct {
 	Qualification    []PractitionerQualificationComponent    `bson:"qualification,omitempty" json:"qualification,omitempty"`
 	Communication    []CodeableConcept                       `bson:"communication,omitempty" json:"communication,omitempty"`
 }
+
 type PractitionerPractitionerRoleComponent struct {
 	ManagingOrganization *Reference        `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
 	Role                 *CodeableConcept  `bson:"role,omitempty" json:"role,omitempty"`
@@ -49,6 +53,7 @@ type PractitionerPractitionerRoleComponent struct {
 	Location             []Reference       `bson:"location,omitempty" json:"location,omitempty"`
 	HealthcareService    []Reference       `bson:"healthcareService,omitempty" json:"healthcareService,omitempty"`
 }
+
 type PractitionerQualificationComponent struct {
 	Identifier []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
@@ -77,4 +82,15 @@ type PractitionerCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Practitioner) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Practitioner
+	}{
+		ResourceType: "Practitioner",
+		Practitioner: *resource,
+	}
+	return json.Marshal(x)
 }

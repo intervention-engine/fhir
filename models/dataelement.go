@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type DataElement struct {
 	Id           string                        `json:"-" bson:"_id"`
@@ -45,10 +48,12 @@ type DataElement struct {
 	Mapping      []DataElementMappingComponent `bson:"mapping,omitempty" json:"mapping,omitempty"`
 	Element      []ElementDefinition           `bson:"element,omitempty" json:"element,omitempty"`
 }
+
 type DataElementContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
+
 type DataElementMappingComponent struct {
 	Identity string `bson:"identity,omitempty" json:"identity,omitempty"`
 	Uri      string `bson:"uri,omitempty" json:"uri,omitempty"`
@@ -77,4 +82,15 @@ type DataElementCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *DataElement) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DataElement
+	}{
+		ResourceType: "DataElement",
+		DataElement:  *resource,
+	}
+	return json.Marshal(x)
 }

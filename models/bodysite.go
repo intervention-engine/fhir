@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type BodySite struct {
 	Id          string            `json:"-" bson:"_id"`
@@ -59,4 +62,15 @@ type BodySiteCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *BodySite) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		BodySite
+	}{
+		ResourceType: "BodySite",
+		BodySite:     *resource,
+	}
+	return json.Marshal(x)
 }

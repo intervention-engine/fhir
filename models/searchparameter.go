@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type SearchParameter struct {
 	Id           string                            `json:"-" bson:"_id"`
@@ -44,6 +47,7 @@ type SearchParameter struct {
 	Xpath        string                            `bson:"xpath,omitempty" json:"xpath,omitempty"`
 	Target       []string                          `bson:"target,omitempty" json:"target,omitempty"`
 }
+
 type SearchParameterContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
@@ -70,4 +74,15 @@ type SearchParameterCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *SearchParameter) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		SearchParameter
+	}{
+		ResourceType:    "SearchParameter",
+		SearchParameter: *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Subscription struct {
 	Id       string                        `json:"-" bson:"_id"`
@@ -39,6 +42,7 @@ type Subscription struct {
 	End      *FHIRDateTime                 `bson:"end,omitempty" json:"end,omitempty"`
 	Tag      []Coding                      `bson:"tag,omitempty" json:"tag,omitempty"`
 }
+
 type SubscriptionChannelComponent struct {
 	Type     string `bson:"type,omitempty" json:"type,omitempty"`
 	Endpoint string `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
@@ -67,4 +71,15 @@ type SubscriptionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Subscription) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Subscription
+	}{
+		ResourceType: "Subscription",
+		Subscription: *resource,
+	}
+	return json.Marshal(x)
 }

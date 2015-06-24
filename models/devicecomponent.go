@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type DeviceComponent struct {
 	Id                      string                                            `json:"-" bson:"_id"`
@@ -41,6 +44,7 @@ type DeviceComponent struct {
 	ProductionSpecification []DeviceComponentProductionSpecificationComponent `bson:"productionSpecification,omitempty" json:"productionSpecification,omitempty"`
 	LanguageCode            *CodeableConcept                                  `bson:"languageCode,omitempty" json:"languageCode,omitempty"`
 }
+
 type DeviceComponentProductionSpecificationComponent struct {
 	SpecType       *CodeableConcept `bson:"specType,omitempty" json:"specType,omitempty"`
 	ComponentId    *Identifier      `bson:"componentId,omitempty" json:"componentId,omitempty"`
@@ -68,4 +72,15 @@ type DeviceComponentCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *DeviceComponent) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DeviceComponent
+	}{
+		ResourceType:    "DeviceComponent",
+		DeviceComponent: *resource,
+	}
+	return json.Marshal(x)
 }

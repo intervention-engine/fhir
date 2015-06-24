@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ReferralRequest struct {
 	Id                    string            `json:"-" bson:"_id"`
@@ -68,4 +71,15 @@ type ReferralRequestCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ReferralRequest) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ReferralRequest
+	}{
+		ResourceType:    "ReferralRequest",
+		ReferralRequest: *resource,
+	}
+	return json.Marshal(x)
 }

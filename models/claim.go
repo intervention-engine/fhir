@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Claim struct {
 	Id                    string                       `json:"-" bson:"_id"`
@@ -60,16 +63,19 @@ type Claim struct {
 	AdditionalMaterials   []Coding                     `bson:"additionalMaterials,omitempty" json:"additionalMaterials,omitempty"`
 	MissingTeeth          []ClaimMissingTeethComponent `bson:"missingTeeth,omitempty" json:"missingTeeth,omitempty"`
 }
+
 type ClaimPayeeComponent struct {
 	Type         *Coding    `bson:"type,omitempty" json:"type,omitempty"`
 	Provider     *Reference `bson:"provider,omitempty" json:"provider,omitempty"`
 	Organization *Reference `bson:"organization,omitempty" json:"organization,omitempty"`
 	Person       *Reference `bson:"person,omitempty" json:"person,omitempty"`
 }
+
 type ClaimDiagnosisComponent struct {
 	Sequence  *uint32 `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Diagnosis *Coding `bson:"diagnosis,omitempty" json:"diagnosis,omitempty"`
 }
+
 type ClaimCoverageComponent struct {
 	Sequence            *uint32    `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Focal               *bool      `bson:"focal,omitempty" json:"focal,omitempty"`
@@ -80,6 +86,7 @@ type ClaimCoverageComponent struct {
 	ClaimResponse       *Reference `bson:"claimResponse,omitempty" json:"claimResponse,omitempty"`
 	OriginalRuleset     *Coding    `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`
 }
+
 type ClaimItemsComponent struct {
 	Sequence        *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Type            *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
@@ -99,6 +106,7 @@ type ClaimItemsComponent struct {
 	Detail          []ClaimDetailComponent    `bson:"detail,omitempty" json:"detail,omitempty"`
 	Prosthesis      *ClaimProsthesisComponent `bson:"prosthesis,omitempty" json:"prosthesis,omitempty"`
 }
+
 type ClaimDetailComponent struct {
 	Sequence  *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Type      *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
@@ -111,6 +119,7 @@ type ClaimDetailComponent struct {
 	Udi       *Coding                   `bson:"udi,omitempty" json:"udi,omitempty"`
 	SubDetail []ClaimSubDetailComponent `bson:"subDetail,omitempty" json:"subDetail,omitempty"`
 }
+
 type ClaimSubDetailComponent struct {
 	Sequence  *uint32   `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Type      *Coding   `bson:"type,omitempty" json:"type,omitempty"`
@@ -122,11 +131,13 @@ type ClaimSubDetailComponent struct {
 	Net       *Quantity `bson:"net,omitempty" json:"net,omitempty"`
 	Udi       *Coding   `bson:"udi,omitempty" json:"udi,omitempty"`
 }
+
 type ClaimProsthesisComponent struct {
 	Initial       *bool         `bson:"initial,omitempty" json:"initial,omitempty"`
 	PriorDate     *FHIRDateTime `bson:"priorDate,omitempty" json:"priorDate,omitempty"`
 	PriorMaterial *Coding       `bson:"priorMaterial,omitempty" json:"priorMaterial,omitempty"`
 }
+
 type ClaimMissingTeethComponent struct {
 	Tooth          *Coding       `bson:"tooth,omitempty" json:"tooth,omitempty"`
 	Reason         *Coding       `bson:"reason,omitempty" json:"reason,omitempty"`
@@ -154,4 +165,15 @@ type ClaimCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Claim) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Claim
+	}{
+		ResourceType: "Claim",
+		Claim:        *resource,
+	}
+	return json.Marshal(x)
 }

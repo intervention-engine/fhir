@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type NutritionOrder struct {
 	Id                     string                                 `json:"-" bson:"_id"`
@@ -43,6 +46,7 @@ type NutritionOrder struct {
 	Supplement             []NutritionOrderSupplementComponent    `bson:"supplement,omitempty" json:"supplement,omitempty"`
 	EnteralFormula         *NutritionOrderEnteralFormulaComponent `bson:"enteralFormula,omitempty" json:"enteralFormula,omitempty"`
 }
+
 type NutritionOrderOralDietComponent struct {
 	Type                 []CodeableConcept                         `bson:"type,omitempty" json:"type,omitempty"`
 	Schedule             []Timing                                  `bson:"schedule,omitempty" json:"schedule,omitempty"`
@@ -51,14 +55,17 @@ type NutritionOrderOralDietComponent struct {
 	FluidConsistencyType []CodeableConcept                         `bson:"fluidConsistencyType,omitempty" json:"fluidConsistencyType,omitempty"`
 	Instruction          string                                    `bson:"instruction,omitempty" json:"instruction,omitempty"`
 }
+
 type NutritionOrderOralDietNutrientComponent struct {
 	Modifier *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
 	Amount   *Quantity        `bson:"amount,omitempty" json:"amount,omitempty"`
 }
+
 type NutritionOrderOralDietTextureComponent struct {
 	Modifier *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
 	FoodType *CodeableConcept `bson:"foodType,omitempty" json:"foodType,omitempty"`
 }
+
 type NutritionOrderSupplementComponent struct {
 	Type        *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	ProductName string           `bson:"productName,omitempty" json:"productName,omitempty"`
@@ -66,6 +73,7 @@ type NutritionOrderSupplementComponent struct {
 	Quantity    *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Instruction string           `bson:"instruction,omitempty" json:"instruction,omitempty"`
 }
+
 type NutritionOrderEnteralFormulaComponent struct {
 	BaseFormulaType           *CodeableConcept                                      `bson:"baseFormulaType,omitempty" json:"baseFormulaType,omitempty"`
 	BaseFormulaProductName    string                                                `bson:"baseFormulaProductName,omitempty" json:"baseFormulaProductName,omitempty"`
@@ -77,6 +85,7 @@ type NutritionOrderEnteralFormulaComponent struct {
 	MaxVolumeToDeliver        *Quantity                                             `bson:"maxVolumeToDeliver,omitempty" json:"maxVolumeToDeliver,omitempty"`
 	AdministrationInstruction string                                                `bson:"administrationInstruction,omitempty" json:"administrationInstruction,omitempty"`
 }
+
 type NutritionOrderEnteralFormulaAdministrationComponent struct {
 	Schedule     *Timing   `bson:"schedule,omitempty" json:"schedule,omitempty"`
 	Quantity     *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
@@ -105,4 +114,15 @@ type NutritionOrderCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *NutritionOrder) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		NutritionOrder
+	}{
+		ResourceType:   "NutritionOrder",
+		NutritionOrder: *resource,
+	}
+	return json.Marshal(x)
 }

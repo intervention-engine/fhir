@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type MedicationStatement struct {
 	Id                          string                               `json:"-" bson:"_id"`
@@ -46,6 +49,7 @@ type MedicationStatement struct {
 	MedicationReference         *Reference                           `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
 	Dosage                      []MedicationStatementDosageComponent `bson:"dosage,omitempty" json:"dosage,omitempty"`
 }
+
 type MedicationStatementDosageComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	Schedule                *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
@@ -80,4 +84,15 @@ type MedicationStatementCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *MedicationStatement) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MedicationStatement
+	}{
+		ResourceType:        "MedicationStatement",
+		MedicationStatement: *resource,
+	}
+	return json.Marshal(x)
 }

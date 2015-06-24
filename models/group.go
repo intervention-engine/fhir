@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Group struct {
 	Id             string                         `json:"-" bson:"_id"`
@@ -39,6 +42,7 @@ type Group struct {
 	Characteristic []GroupCharacteristicComponent `bson:"characteristic,omitempty" json:"characteristic,omitempty"`
 	Member         []Reference                    `bson:"member,omitempty" json:"member,omitempty"`
 }
+
 type GroupCharacteristicComponent struct {
 	Code                 *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
@@ -69,4 +73,15 @@ type GroupCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Group) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Group
+	}{
+		ResourceType: "Group",
+		Group:        *resource,
+	}
+	return json.Marshal(x)
 }

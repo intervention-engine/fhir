@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type MessageHeader struct {
 	Id          string                                     `json:"-" bson:"_id"`
@@ -43,11 +46,13 @@ type MessageHeader struct {
 	Reason      *CodeableConcept                           `bson:"reason,omitempty" json:"reason,omitempty"`
 	Data        []Reference                                `bson:"data,omitempty" json:"data,omitempty"`
 }
+
 type MessageHeaderResponseComponent struct {
 	Identifier string     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Code       string     `bson:"code,omitempty" json:"code,omitempty"`
 	Details    *Reference `bson:"details,omitempty" json:"details,omitempty"`
 }
+
 type MessageHeaderMessageSourceComponent struct {
 	Name     string        `bson:"name,omitempty" json:"name,omitempty"`
 	Software string        `bson:"software,omitempty" json:"software,omitempty"`
@@ -55,6 +60,7 @@ type MessageHeaderMessageSourceComponent struct {
 	Contact  *ContactPoint `bson:"contact,omitempty" json:"contact,omitempty"`
 	Endpoint string        `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
 }
+
 type MessageHeaderMessageDestinationComponent struct {
 	Name     string     `bson:"name,omitempty" json:"name,omitempty"`
 	Target   *Reference `bson:"target,omitempty" json:"target,omitempty"`
@@ -82,4 +88,15 @@ type MessageHeaderCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *MessageHeader) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MessageHeader
+	}{
+		ResourceType:  "MessageHeader",
+		MessageHeader: *resource,
+	}
+	return json.Marshal(x)
 }

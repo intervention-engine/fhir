@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Flag struct {
 	Id         string           `json:"-" bson:"_id"`
@@ -60,4 +63,15 @@ type FlagCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Flag) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Flag
+	}{
+		ResourceType: "Flag",
+		Flag:         *resource,
+	}
+	return json.Marshal(x)
 }

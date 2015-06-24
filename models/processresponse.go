@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ProcessResponse struct {
 	Id                  string                          `json:"-" bson:"_id"`
@@ -44,6 +47,7 @@ type ProcessResponse struct {
 	Notes               []ProcessResponseNotesComponent `bson:"notes,omitempty" json:"notes,omitempty"`
 	Error               []Coding                        `bson:"error,omitempty" json:"error,omitempty"`
 }
+
 type ProcessResponseNotesComponent struct {
 	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text string  `bson:"text,omitempty" json:"text,omitempty"`
@@ -70,4 +74,15 @@ type ProcessResponseCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ProcessResponse) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ProcessResponse
+	}{
+		ResourceType:    "ProcessResponse",
+		ProcessResponse: *resource,
+	}
+	return json.Marshal(x)
 }

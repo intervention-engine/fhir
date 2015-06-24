@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type AllergyIntolerance struct {
 	Id            string                             `json:"-" bson:"_id"`
@@ -44,6 +47,7 @@ type AllergyIntolerance struct {
 	Comment       string                             `bson:"comment,omitempty" json:"comment,omitempty"`
 	Event         []AllergyIntoleranceEventComponent `bson:"event,omitempty" json:"event,omitempty"`
 }
+
 type AllergyIntoleranceEventComponent struct {
 	Substance     *CodeableConcept  `bson:"substance,omitempty" json:"substance,omitempty"`
 	Certainty     string            `bson:"certainty,omitempty" json:"certainty,omitempty"`
@@ -77,4 +81,15 @@ type AllergyIntoleranceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *AllergyIntolerance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		AllergyIntolerance
+	}{
+		ResourceType:       "AllergyIntolerance",
+		AllergyIntolerance: *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Conformance struct {
 	Id             string                              `json:"-" bson:"_id"`
@@ -51,19 +54,23 @@ type Conformance struct {
 	Messaging      []ConformanceMessagingComponent     `bson:"messaging,omitempty" json:"messaging,omitempty"`
 	Document       []ConformanceDocumentComponent      `bson:"document,omitempty" json:"document,omitempty"`
 }
+
 type ConformanceContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
+
 type ConformanceSoftwareComponent struct {
 	Name        string        `bson:"name,omitempty" json:"name,omitempty"`
 	Version     string        `bson:"version,omitempty" json:"version,omitempty"`
 	ReleaseDate *FHIRDateTime `bson:"releaseDate,omitempty" json:"releaseDate,omitempty"`
 }
+
 type ConformanceImplementationComponent struct {
 	Description string `bson:"description,omitempty" json:"description,omitempty"`
 	Url         string `bson:"url,omitempty" json:"url,omitempty"`
 }
+
 type ConformanceRestComponent struct {
 	Mode            string                                  `bson:"mode,omitempty" json:"mode,omitempty"`
 	Documentation   string                                  `bson:"documentation,omitempty" json:"documentation,omitempty"`
@@ -74,16 +81,19 @@ type ConformanceRestComponent struct {
 	DocumentMailbox []string                                `bson:"documentMailbox,omitempty" json:"documentMailbox,omitempty"`
 	Compartment     []string                                `bson:"compartment,omitempty" json:"compartment,omitempty"`
 }
+
 type ConformanceRestSecurityComponent struct {
 	Cors        *bool                                         `bson:"cors,omitempty" json:"cors,omitempty"`
 	Service     []CodeableConcept                             `bson:"service,omitempty" json:"service,omitempty"`
 	Description string                                        `bson:"description,omitempty" json:"description,omitempty"`
 	Certificate []ConformanceRestSecurityCertificateComponent `bson:"certificate,omitempty" json:"certificate,omitempty"`
 }
+
 type ConformanceRestSecurityCertificateComponent struct {
 	Type string `bson:"type,omitempty" json:"type,omitempty"`
 	Blob string `bson:"blob,omitempty" json:"blob,omitempty"`
 }
+
 type ConformanceRestResourceComponent struct {
 	Type              string                                        `bson:"type,omitempty" json:"type,omitempty"`
 	Profile           *Reference                                    `bson:"profile,omitempty" json:"profile,omitempty"`
@@ -97,10 +107,12 @@ type ConformanceRestResourceComponent struct {
 	SearchInclude     []string                                      `bson:"searchInclude,omitempty" json:"searchInclude,omitempty"`
 	SearchParam       []ConformanceRestResourceSearchParamComponent `bson:"searchParam,omitempty" json:"searchParam,omitempty"`
 }
+
 type ConformanceResourceInteractionComponent struct {
 	Code          string `bson:"code,omitempty" json:"code,omitempty"`
 	Documentation string `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
+
 type ConformanceRestResourceSearchParamComponent struct {
 	Name          string   `bson:"name,omitempty" json:"name,omitempty"`
 	Definition    string   `bson:"definition,omitempty" json:"definition,omitempty"`
@@ -109,20 +121,24 @@ type ConformanceRestResourceSearchParamComponent struct {
 	Target        []string `bson:"target,omitempty" json:"target,omitempty"`
 	Chain         []string `bson:"chain,omitempty" json:"chain,omitempty"`
 }
+
 type ConformanceSystemInteractionComponent struct {
 	Code          string `bson:"code,omitempty" json:"code,omitempty"`
 	Documentation string `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
+
 type ConformanceRestOperationComponent struct {
 	Name       string     `bson:"name,omitempty" json:"name,omitempty"`
 	Definition *Reference `bson:"definition,omitempty" json:"definition,omitempty"`
 }
+
 type ConformanceMessagingComponent struct {
 	Endpoint      string                               `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
 	ReliableCache *uint32                              `bson:"reliableCache,omitempty" json:"reliableCache,omitempty"`
 	Documentation string                               `bson:"documentation,omitempty" json:"documentation,omitempty"`
 	Event         []ConformanceMessagingEventComponent `bson:"event,omitempty" json:"event,omitempty"`
 }
+
 type ConformanceMessagingEventComponent struct {
 	Code          *Coding    `bson:"code,omitempty" json:"code,omitempty"`
 	Category      string     `bson:"category,omitempty" json:"category,omitempty"`
@@ -133,6 +149,7 @@ type ConformanceMessagingEventComponent struct {
 	Response      *Reference `bson:"response,omitempty" json:"response,omitempty"`
 	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
+
 type ConformanceDocumentComponent struct {
 	Mode          string     `bson:"mode,omitempty" json:"mode,omitempty"`
 	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
@@ -160,4 +177,15 @@ type ConformanceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Conformance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Conformance
+	}{
+		ResourceType: "Conformance",
+		Conformance:  *resource,
+	}
+	return json.Marshal(x)
 }

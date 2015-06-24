@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type CommunicationRequest struct {
 	Id            string                                 `json:"-" bson:"_id"`
@@ -45,6 +48,7 @@ type CommunicationRequest struct {
 	Subject       *Reference                             `bson:"subject,omitempty" json:"subject,omitempty"`
 	Priority      *CodeableConcept                       `bson:"priority,omitempty" json:"priority,omitempty"`
 }
+
 type CommunicationRequestPayloadComponent struct {
 	ContentString     string      `bson:"contentString,omitempty" json:"contentString,omitempty"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
@@ -72,4 +76,15 @@ type CommunicationRequestCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *CommunicationRequest) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		CommunicationRequest
+	}{
+		ResourceType:         "CommunicationRequest",
+		CommunicationRequest: *resource,
+	}
+	return json.Marshal(x)
 }

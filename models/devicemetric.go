@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type DeviceMetric struct {
 	Id                string                             `json:"-" bson:"_id"`
@@ -41,6 +44,7 @@ type DeviceMetric struct {
 	MeasurementPeriod *Timing                            `bson:"measurementPeriod,omitempty" json:"measurementPeriod,omitempty"`
 	Calibration       []DeviceMetricCalibrationComponent `bson:"calibration,omitempty" json:"calibration,omitempty"`
 }
+
 type DeviceMetricCalibrationComponent struct {
 	Type  string        `bson:"type,omitempty" json:"type,omitempty"`
 	State string        `bson:"state,omitempty" json:"state,omitempty"`
@@ -68,4 +72,15 @@ type DeviceMetricCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *DeviceMetric) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DeviceMetric
+	}{
+		ResourceType: "DeviceMetric",
+		DeviceMetric: *resource,
+	}
+	return json.Marshal(x)
 }

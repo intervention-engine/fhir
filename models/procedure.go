@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Procedure struct {
 	Id                string                          `json:"-" bson:"_id"`
@@ -51,18 +54,22 @@ type Procedure struct {
 	Device            []ProcedureDeviceComponent      `bson:"device,omitempty" json:"device,omitempty"`
 	Used              []Reference                     `bson:"used,omitempty" json:"used,omitempty"`
 }
+
 type ProcedureBodySiteComponent struct {
 	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
 	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
 }
+
 type ProcedurePerformerComponent struct {
 	Person *Reference       `bson:"person,omitempty" json:"person,omitempty"`
 	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
+
 type ProcedureRelatedItemComponent struct {
 	Type   string     `bson:"type,omitempty" json:"type,omitempty"`
 	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
+
 type ProcedureDeviceComponent struct {
 	Action      *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
 	Manipulated *Reference       `bson:"manipulated,omitempty" json:"manipulated,omitempty"`
@@ -89,4 +96,15 @@ type ProcedureCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Procedure) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Procedure
+	}{
+		ResourceType: "Procedure",
+		Procedure:    *resource,
+	}
+	return json.Marshal(x)
 }

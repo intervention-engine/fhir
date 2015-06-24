@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Observation struct {
 	Id                      string                               `json:"-" bson:"_id"`
@@ -64,6 +67,7 @@ type Observation struct {
 	Related                 []ObservationRelatedComponent        `bson:"related,omitempty" json:"related,omitempty"`
 	Component               []ObservationComponentComponent      `bson:"component,omitempty" json:"component,omitempty"`
 }
+
 type ObservationReferenceRangeComponent struct {
 	Low     *Quantity        `bson:"low,omitempty" json:"low,omitempty"`
 	High    *Quantity        `bson:"high,omitempty" json:"high,omitempty"`
@@ -71,10 +75,12 @@ type ObservationReferenceRangeComponent struct {
 	Age     *Range           `bson:"age,omitempty" json:"age,omitempty"`
 	Text    string           `bson:"text,omitempty" json:"text,omitempty"`
 }
+
 type ObservationRelatedComponent struct {
 	Type   string     `bson:"type,omitempty" json:"type,omitempty"`
 	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
+
 type ObservationComponentComponent struct {
 	Code                 *CodeableConcept                     `bson:"code,omitempty" json:"code,omitempty"`
 	ValueQuantity        *Quantity                            `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
@@ -112,4 +118,15 @@ type ObservationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Observation) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Observation
+	}{
+		ResourceType: "Observation",
+		Observation:  *resource,
+	}
+	return json.Marshal(x)
 }

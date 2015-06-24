@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type TestScript struct {
 	Id          string                       `json:"-" bson:"_id"`
@@ -38,15 +41,18 @@ type TestScript struct {
 	Test        []TestScriptTestComponent    `bson:"test,omitempty" json:"test,omitempty"`
 	Teardown    *TestScriptTeardownComponent `bson:"teardown,omitempty" json:"teardown,omitempty"`
 }
+
 type TestScriptFixtureComponent struct {
 	Uri        string     `bson:"uri,omitempty" json:"uri,omitempty"`
 	Resource   *Reference `bson:"resource,omitempty" json:"resource,omitempty"`
 	Autocreate *bool      `bson:"autocreate,omitempty" json:"autocreate,omitempty"`
 	Autodelete *bool      `bson:"autodelete,omitempty" json:"autodelete,omitempty"`
 }
+
 type TestScriptSetupComponent struct {
 	Operation []TestScriptSetupOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
+
 type TestScriptSetupOperationComponent struct {
 	Type        string   `bson:"type,omitempty" json:"type,omitempty"`
 	Source      string   `bson:"source,omitempty" json:"source,omitempty"`
@@ -56,31 +62,37 @@ type TestScriptSetupOperationComponent struct {
 	ResponseId  string   `bson:"responseId,omitempty" json:"responseId,omitempty"`
 	ContentType string   `bson:"contentType,omitempty" json:"contentType,omitempty"`
 }
+
 type TestScriptTestComponent struct {
 	Name        string                             `bson:"name,omitempty" json:"name,omitempty"`
 	Description string                             `bson:"description,omitempty" json:"description,omitempty"`
 	Metadata    *TestScriptTestMetadataComponent   `bson:"metadata,omitempty" json:"metadata,omitempty"`
 	Operation   []TestScriptTestOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
+
 type TestScriptTestMetadataComponent struct {
 	Link      []TestScriptTestMetadataLinkComponent      `bson:"link,omitempty" json:"link,omitempty"`
 	Requires  []TestScriptTestMetadataRequiresComponent  `bson:"requires,omitempty" json:"requires,omitempty"`
 	Validates []TestScriptTestMetadataValidatesComponent `bson:"validates,omitempty" json:"validates,omitempty"`
 }
+
 type TestScriptTestMetadataLinkComponent struct {
 	Url         string `bson:"url,omitempty" json:"url,omitempty"`
 	Description string `bson:"description,omitempty" json:"description,omitempty"`
 }
+
 type TestScriptTestMetadataRequiresComponent struct {
 	Type        string `bson:"type,omitempty" json:"type,omitempty"`
 	Operations  string `bson:"operations,omitempty" json:"operations,omitempty"`
 	Destination *int32 `bson:"destination,omitempty" json:"destination,omitempty"`
 }
+
 type TestScriptTestMetadataValidatesComponent struct {
 	Type        string `bson:"type,omitempty" json:"type,omitempty"`
 	Operations  string `bson:"operations,omitempty" json:"operations,omitempty"`
 	Destination *int32 `bson:"destination,omitempty" json:"destination,omitempty"`
 }
+
 type TestScriptTestOperationComponent struct {
 	Type        string   `bson:"type,omitempty" json:"type,omitempty"`
 	Source      string   `bson:"source,omitempty" json:"source,omitempty"`
@@ -90,9 +102,11 @@ type TestScriptTestOperationComponent struct {
 	ResponseId  string   `bson:"responseId,omitempty" json:"responseId,omitempty"`
 	ContentType string   `bson:"contentType,omitempty" json:"contentType,omitempty"`
 }
+
 type TestScriptTeardownComponent struct {
 	Operation []TestScriptTeardownOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
+
 type TestScriptTeardownOperationComponent struct {
 	Type        string   `bson:"type,omitempty" json:"type,omitempty"`
 	Source      string   `bson:"source,omitempty" json:"source,omitempty"`
@@ -124,4 +138,15 @@ type TestScriptCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *TestScript) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		TestScript
+	}{
+		ResourceType: "TestScript",
+		TestScript:   *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type NamingSystem struct {
 	Id          string                          `json:"-" bson:"_id"`
@@ -44,12 +47,14 @@ type NamingSystem struct {
 	Contact     []NamingSystemContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
 	ReplacedBy  *Reference                      `bson:"replacedBy,omitempty" json:"replacedBy,omitempty"`
 }
+
 type NamingSystemUniqueIdComponent struct {
 	Type      string  `bson:"type,omitempty" json:"type,omitempty"`
 	Value     string  `bson:"value,omitempty" json:"value,omitempty"`
 	Preferred *bool   `bson:"preferred,omitempty" json:"preferred,omitempty"`
 	Period    *Period `bson:"period,omitempty" json:"period,omitempty"`
 }
+
 type NamingSystemContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
@@ -76,4 +81,15 @@ type NamingSystemCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *NamingSystem) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		NamingSystem
+	}{
+		ResourceType: "NamingSystem",
+		NamingSystem: *resource,
+	}
+	return json.Marshal(x)
 }

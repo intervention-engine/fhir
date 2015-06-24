@@ -26,12 +26,16 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type OperationOutcome struct {
 	Id    string                           `json:"-" bson:"_id"`
 	Issue []OperationOutcomeIssueComponent `bson:"issue,omitempty" json:"issue,omitempty"`
 }
+
 type OperationOutcomeIssueComponent struct {
 	Severity string           `bson:"severity,omitempty" json:"severity,omitempty"`
 	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
@@ -60,4 +64,15 @@ type OperationOutcomeCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *OperationOutcome) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		OperationOutcome
+	}{
+		ResourceType:     "OperationOutcome",
+		OperationOutcome: *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Questionnaire struct {
 	Id         string                       `json:"-" bson:"_id"`
@@ -38,6 +41,7 @@ type Questionnaire struct {
 	Telecom    []ContactPoint               `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Group      *QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
+
 type QuestionnaireGroupComponent struct {
 	LinkId   string                           `bson:"linkId,omitempty" json:"linkId,omitempty"`
 	Title    string                           `bson:"title,omitempty" json:"title,omitempty"`
@@ -48,6 +52,7 @@ type QuestionnaireGroupComponent struct {
 	Group    []QuestionnaireGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
 	Question []QuestionnaireQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
 }
+
 type QuestionnaireQuestionComponent struct {
 	LinkId   string                        `bson:"linkId,omitempty" json:"linkId,omitempty"`
 	Concept  []Coding                      `bson:"concept,omitempty" json:"concept,omitempty"`
@@ -80,4 +85,15 @@ type QuestionnaireCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Questionnaire) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Questionnaire
+	}{
+		ResourceType:  "Questionnaire",
+		Questionnaire: *resource,
+	}
+	return json.Marshal(x)
 }

@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type DocumentManifest struct {
 	Id               string                             `json:"-" bson:"_id"`
@@ -43,10 +46,12 @@ type DocumentManifest struct {
 	Content          []DocumentManifestContentComponent `bson:"content,omitempty" json:"content,omitempty"`
 	Related          []DocumentManifestRelatedComponent `bson:"related,omitempty" json:"related,omitempty"`
 }
+
 type DocumentManifestContentComponent struct {
 	PAttachment *Attachment `bson:"pAttachment,omitempty" json:"pAttachment,omitempty"`
 	PReference  *Reference  `bson:"pReference,omitempty" json:"pReference,omitempty"`
 }
+
 type DocumentManifestRelatedComponent struct {
 	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
@@ -73,4 +78,15 @@ type DocumentManifestCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *DocumentManifest) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DocumentManifest
+	}{
+		ResourceType:     "DocumentManifest",
+		DocumentManifest: *resource,
+	}
+	return json.Marshal(x)
 }

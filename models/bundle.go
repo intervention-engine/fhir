@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Bundle struct {
 	Id        string                 `json:"-" bson:"_id"`
@@ -37,10 +40,12 @@ type Bundle struct {
 	Entry     []BundleEntryComponent `bson:"entry,omitempty" json:"entry,omitempty"`
 	Signature string                 `bson:"signature,omitempty" json:"signature,omitempty"`
 }
+
 type BundleLinkComponent struct {
 	Relation string `bson:"relation,omitempty" json:"relation,omitempty"`
 	Url      string `bson:"url,omitempty" json:"url,omitempty"`
 }
+
 type BundleEntryComponent struct {
 	Base                string                                   `bson:"base,omitempty" json:"base,omitempty"`
 	Link                []BundleLinkComponent                    `bson:"link,omitempty" json:"link,omitempty"`
@@ -49,10 +54,12 @@ type BundleEntryComponent struct {
 	Transaction         *BundleEntryTransactionComponent         `bson:"transaction,omitempty" json:"transaction,omitempty"`
 	TransactionResponse *BundleEntryTransactionResponseComponent `bson:"transactionResponse,omitempty" json:"transactionResponse,omitempty"`
 }
+
 type BundleEntrySearchComponent struct {
 	Mode  string   `bson:"mode,omitempty" json:"mode,omitempty"`
 	Score *float64 `bson:"score,omitempty" json:"score,omitempty"`
 }
+
 type BundleEntryTransactionComponent struct {
 	Method          string        `bson:"method,omitempty" json:"method,omitempty"`
 	Url             string        `bson:"url,omitempty" json:"url,omitempty"`
@@ -61,6 +68,7 @@ type BundleEntryTransactionComponent struct {
 	IfModifiedSince *FHIRDateTime `bson:"ifModifiedSince,omitempty" json:"ifModifiedSince,omitempty"`
 	IfNoneExist     string        `bson:"ifNoneExist,omitempty" json:"ifNoneExist,omitempty"`
 }
+
 type BundleEntryTransactionResponseComponent struct {
 	Status       string        `bson:"status,omitempty" json:"status,omitempty"`
 	Location     string        `bson:"location,omitempty" json:"location,omitempty"`
@@ -89,4 +97,15 @@ type BundleCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Bundle) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Bundle
+	}{
+		ResourceType: "Bundle",
+		Bundle:       *resource,
+	}
+	return json.Marshal(x)
 }
