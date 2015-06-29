@@ -28,7 +28,7 @@ var _ = Suite(&UploadSuite{})
 
 func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	// Setup the mock server
-	resourceCount, patientCount, encounterCount, conditionCount, immunizationCount, observationCount, procedureCount, diagnosticReportCount, medicationCount, medicationStatementCount := 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	resourceCount, patientCount, encounterCount, conditionCount, immunizationCount, observationCount, procedureCount, diagnosticReportCount, medicationStatementCount := 0, 0, 0, 0, 0, 0, 0, 0, 0
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		output := "Created"
 		decoder := json.NewDecoder(r.Body)
@@ -73,11 +73,6 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 				w.Header().Add("Location", fmt.Sprintf("http://localhost/MedicationStatement/%d/_history/1", resourceCount))
 				medicationStatementCount++
 			}
-		case strings.Contains(r.RequestURI, "Medication"):
-			if isValid(decoder, &models.Medication{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Medication/%d/_history/1", resourceCount))
-				medicationCount++
-			}
 		}
 		fmt.Fprintln(w, output)
 		resourceCount++
@@ -96,15 +91,15 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 		Id   string `json:"id"`
 		Type string `json:"resourceType"`
 	}
-	idsAndTypes := make([]IdAndType, 20)
+	idsAndTypes := make([]IdAndType, 19)
 	err = json.Unmarshal(data, &idsAndTypes)
 	util.CheckErr(err)
 
-	rawMessages := make([]json.RawMessage, 20)
+	rawMessages := make([]json.RawMessage, 19)
 	err = json.Unmarshal(data, &rawMessages)
 	util.CheckErr(err)
 
-	fhirmodels := make([]interface{}, 20)
+	fhirmodels := make([]interface{}, 19)
 	for i := range fhirmodels {
 		var y interface{}
 		switch idsAndTypes[i].Type {
@@ -120,8 +115,6 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 			y = &models.DiagnosticReport{Id: idsAndTypes[i].Id}
 		case "Procedure":
 			y = &models.Procedure{Id: idsAndTypes[i].Id}
-		case "Medication":
-			y = &models.Medication{Id: idsAndTypes[i].Id}
 		case "MedicationStatement":
 			y = &models.MedicationStatement{Id: idsAndTypes[i].Id}
 		case "Immunization":
@@ -143,11 +136,10 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	c.Assert(observationCount, Equals, 4)
 	c.Assert(procedureCount, Equals, 2)
 	c.Assert(diagnosticReportCount, Equals, 1)
-	c.Assert(resourceCount, Equals, 20)
 	c.Assert(medicationStatementCount, Equals, 1)
-	c.Assert(medicationCount, Equals, 1)
 
-	c.Assert(len(refMap), Equals, 20)
+	c.Assert(resourceCount, Equals, 19)
+	c.Assert(len(refMap), Equals, 19)
 
 	c.Assert(refMap[idsAndTypes[0].Id], Equals, "http://localhost/Patient/0")
 	c.Assert(fhirmodels[0].(*models.Patient).Id, Equals, "0")

@@ -332,17 +332,6 @@
 	},
 	"notes": "Procedure, Performed: Hospital measures-CABG"
 }, {
-	"resourceType": "Medication",
-	"id": "8762459427974724645",
-	"name": "Medication, Order: BH Antidepressant medication (Code List: 2.16.840.1.113883.3.1257.1.972)",
-	"code": {
-		"coding": [{
-			"system": "http://www.nlm.nih.gov/research/umls/rxnorm/",
-			"code": "1000048"
-		}],
-		"text": "Medication, Order: BH Antidepressant medication (Code List: 2.16.840.1.113883.3.1257.1.972)"
-	}
-}, {
 	"resourceType": "MedicationStatement",
 	"id": "3284098338643216325",
 	"patient": {
@@ -352,8 +341,12 @@
 		"start": "2012-10-01T08:00:00-04:00",
 		"end": "2012-10-01T08:00:00-04:00"
 	},
-	"medicationReference": {
-		"reference": "cid:8762459427974724645"
+	"medicationCodeableConcept": {
+		"coding": [{
+			"system": "http://www.nlm.nih.gov/research/umls/rxnorm/",
+			"code": "1000048"
+		}],
+		"text": "Medication, Order: BH Antidepressant medication (Code List: 2.16.840.1.113883.3.1257.1.972)"
 	}
 }, {
 	"resourceType": "Immunization",
