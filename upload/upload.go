@@ -36,9 +36,9 @@ func UploadResources(resources []interface{}, baseURL string) (map[string]string
 			return refMap, err
 		}
 
-		// Add entry to map from the old ID to the new location
+		// Add entry to map from the old ID to the new location (stripping history component if necessary)
 		if oldId != "" {
-			refMap[oldId] = newLoc
+			refMap[oldId] = strings.Split(newLoc, "/_history/")[0]
 		}
 	}
 

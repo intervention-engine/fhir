@@ -35,47 +35,47 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 		switch {
 		case strings.Contains(r.RequestURI, "Patient"):
 			if isValid(decoder, &models.Patient{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Patient/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Patient/%d/_history/1", resourceCount))
 				patientCount++
 			}
 		case strings.Contains(r.RequestURI, "Encounter"):
 			if isValid(decoder, &models.Encounter{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Encounter/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Encounter/%d/_history/1", resourceCount))
 				encounterCount++
 			}
 		case strings.Contains(r.RequestURI, "Condition"):
 			if isValid(decoder, &models.Condition{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Condition/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Condition/%d/_history/1", resourceCount))
 				conditionCount++
 			}
 		case strings.Contains(r.RequestURI, "Immunization"):
 			if isValid(decoder, &models.Immunization{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Immunization/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Immunization/%d/_history/1", resourceCount))
 				immunizationCount++
 			}
 		case strings.Contains(r.RequestURI, "Observation"):
 			if isValid(decoder, &models.Observation{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Observation/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Observation/%d/_history/1", resourceCount))
 				observationCount++
 			}
 		case strings.Contains(r.RequestURI, "Procedure"):
 			if isValid(decoder, &models.Procedure{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Procedure/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Procedure/%d/_history/1", resourceCount))
 				procedureCount++
 			}
 		case strings.Contains(r.RequestURI, "DiagnosticReport"):
 			if isValid(decoder, &models.DiagnosticReport{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/DiagnosticReport/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/DiagnosticReport/%d/_history/1", resourceCount))
 				diagnosticReportCount++
 			}
 		case strings.Contains(r.RequestURI, "MedicationStatement"):
 			if isValid(decoder, &models.MedicationStatement{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/MedicationStatement/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/MedicationStatement/%d/_history/1", resourceCount))
 				medicationStatementCount++
 			}
 		case strings.Contains(r.RequestURI, "Medication"):
 			if isValid(decoder, &models.Medication{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Medication/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Medication/%d/_history/1", resourceCount))
 				medicationCount++
 			}
 		}
@@ -148,6 +148,7 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	c.Assert(medicationCount, Equals, 1)
 
 	c.Assert(len(refMap), Equals, 20)
+
 	c.Assert(refMap[idsAndTypes[0].Id], Equals, "http://localhost/Patient/0")
 	c.Assert(fhirmodels[0].(*models.Patient).Id, Equals, "0")
 }
@@ -183,11 +184,11 @@ func (s *UploadSuite) TestUnorderedDependencies(c *C) {
 		switch {
 		case strings.Contains(r.RequestURI, "Patient"):
 			if isValid(decoder, &models.Patient{}) {
-				w.Header().Add("Location", "http://localhost/Patient/1")
+				w.Header().Add("Location", "http://localhost/Patient/1/_history/1")
 			}
 		case strings.Contains(r.RequestURI, "Condition"):
 			if isValid(decoder, &models.Condition{}) {
-				w.Header().Add("Location", "http://localhost/Condition/1")
+				w.Header().Add("Location", "http://localhost/Condition/1") // Purposefully no _history to test this use case
 			}
 		}
 		fmt.Fprintln(w, output)
@@ -203,7 +204,7 @@ func (s *UploadSuite) TestUnorderedDependencies(c *C) {
 	refMap, err := UploadResources([]interface{}{condition, patient}, ts.URL)
 	util.CheckErr(err)
 
-	// Assert that it processed all resources
+	// Assert that it processed all resources and correctly mapped refs
 	c.Assert(len(refMap), Equals, 2)
 	c.Assert(refMap["a1"], Equals, "http://localhost/Patient/1")
 	c.Assert(refMap["b2"], Equals, "http://localhost/Condition/1")
@@ -223,6 +224,9 @@ func isValid(decoder *json.Decoder, model interface{}) bool {
 			match, _ := regexp.MatchString("\\Ahttp://localhost/[^/]+/[0-9a-f]+\\z", ref.Reference)
 			if !match {
 				fmt.Printf("Invalid reference: %s", ref.Reference)
+				return false
+			} else if strings.Contains(ref.Reference, "/_history/") {
+				fmt.Printf("Invalid reference (contains _history component): %s", ref.Reference)
 				return false
 			}
 		}
