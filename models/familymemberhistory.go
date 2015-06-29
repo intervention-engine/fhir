@@ -38,7 +38,7 @@ type FamilyMemberHistory struct {
 	Date            *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
 	Name            string                                  `bson:"name,omitempty" json:"name,omitempty"`
 	Relationship    *CodeableConcept                        `bson:"relationship,omitempty" json:"relationship,omitempty"`
-	Gender          *CodeableConcept                        `bson:"gender,omitempty" json:"gender,omitempty"`
+	Gender          string                                  `bson:"gender,omitempty" json:"gender,omitempty"`
 	BornPeriod      *Period                                 `bson:"bornPeriod,omitempty" json:"bornPeriod,omitempty"`
 	BornDate        *FHIRDateTime                           `bson:"bornDate,omitempty" json:"bornDate,omitempty"`
 	BornString      string                                  `bson:"bornString,omitempty" json:"bornString,omitempty"`

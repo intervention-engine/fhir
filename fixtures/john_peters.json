@@ -5,12 +5,7 @@
 		"family": ["Peters"],
 		"given": ["John"]
 	}],
-	"gender": {
-		"coding": [{
-			"system": "http://hl7.org/fhir/v3/AdministrativeGender",
-			"code": "M"
-		}]
-	},
+	"gender": "male",
 	"birthDate": "1991-02-01T10:00:00-05:00"
 }, {
 	"resourceType": "Encounter",

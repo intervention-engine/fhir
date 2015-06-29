@@ -37,7 +37,7 @@ type Practitioner struct {
 	Name             *HumanName                              `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom          []ContactPoint                          `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address          []Address                               `bson:"address,omitempty" json:"address,omitempty"`
-	Gender           *CodeableConcept                        `bson:"gender,omitempty" json:"gender,omitempty"`
+	Gender           string                                  `bson:"gender,omitempty" json:"gender,omitempty"`
 	BirthDate        *FHIRDateTime                           `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
 	Photo            []Attachment                            `bson:"photo,omitempty" json:"photo,omitempty"`
 	PractitionerRole []PractitionerPractitionerRoleComponent `bson:"practitionerRole,omitempty" json:"practitionerRole,omitempty"`

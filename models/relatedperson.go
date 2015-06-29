@@ -38,7 +38,7 @@ type RelatedPerson struct {
 	Relationship *CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
 	Name         *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom      []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Gender       *CodeableConcept `bson:"gender,omitempty" json:"gender,omitempty"`
+	Gender       string           `bson:"gender,omitempty" json:"gender,omitempty"`
 	Address      *Address         `bson:"address,omitempty" json:"address,omitempty"`
 	Photo        []Attachment     `bson:"photo,omitempty" json:"photo,omitempty"`
 	Period       *Period          `bson:"period,omitempty" json:"period,omitempty"`

@@ -36,7 +36,7 @@ type Patient struct {
 	Identifier           []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Name                 []HumanName                     `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom              []ContactPoint                  `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Gender               *CodeableConcept                `bson:"gender,omitempty" json:"gender,omitempty"`
+	Gender               string                          `bson:"gender,omitempty" json:"gender,omitempty"`
 	BirthDate            *FHIRDateTime                   `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
 	DeceasedBoolean      *bool                           `bson:"deceasedBoolean,omitempty" json:"deceasedBoolean,omitempty"`
 	DeceasedDateTime     *FHIRDateTime                   `bson:"deceasedDateTime,omitempty" json:"deceasedDateTime,omitempty"`
@@ -59,7 +59,7 @@ type PatientContactComponent struct {
 	Name         *HumanName        `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom      []ContactPoint    `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address      *Address          `bson:"address,omitempty" json:"address,omitempty"`
-	Gender       *CodeableConcept  `bson:"gender,omitempty" json:"gender,omitempty"`
+	Gender       string            `bson:"gender,omitempty" json:"gender,omitempty"`
 	Organization *Reference        `bson:"organization,omitempty" json:"organization,omitempty"`
 	Period       *Period           `bson:"period,omitempty" json:"period,omitempty"`
 }
