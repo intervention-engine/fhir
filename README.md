@@ -7,6 +7,11 @@ This project provides [HL7 FHIR](http://hl7.org/implement/standards/fhir/) model
 FHIR server implemented in Go. The FHIR server uses MongoDB as storage and contains a small
 extension of the Reference model in order to more readily support queries in MongoDB.
 
+Current Status
+----------
+
+Intervention Engine is currently transitioning to use [SMART on FHIR](https://github.com/smart-on-fhir) as its back end FHIR server, which will entail a change in support for this project. The FHIR resources defined under `fhir/models` will continue to be supported and maintained for use by Intervention Engine and its related tools. The FHIR controllers defined under `fhir/server` will no longer be officially supported, but will remain available.
+
 Environment
 -----------
 
