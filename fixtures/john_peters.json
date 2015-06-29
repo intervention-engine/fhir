@@ -6,7 +6,7 @@
 		"given": ["John"]
 	}],
 	"gender": "male",
-	"birthDate": "1991-02-01T10:00:00-05:00"
+	"birthDate": "1991-02-01"
 }, {
 	"resourceType": "Encounter",
 	"id": "6648204100111387580",
