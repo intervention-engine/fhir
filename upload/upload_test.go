@@ -141,7 +141,7 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	c.Assert(resourceCount, Equals, 19)
 	c.Assert(len(refMap), Equals, 19)
 
-	c.Assert(refMap[idsAndTypes[0].Id], Equals, "http://localhost/Patient/0")
+	c.Assert(refMap[idsAndTypes[0].Id], Equals, "Patient/0")
 	c.Assert(fhirmodels[0].(*models.Patient).Id, Equals, "0")
 }
 
@@ -154,7 +154,7 @@ func (s *UploadSuite) TestExternalReferences(c *C) {
 	defer ts.Close()
 
 	condition := &models.Condition{Id: "123"}
-	condition.Patient = &models.Reference{Reference: "http://localhost/Patient/0"}
+	condition.Patient = &models.Reference{Reference: "Patient/0"}
 
 	// Upload the resource
 	newId, err := UploadResource(condition, ts.URL)
@@ -198,8 +198,8 @@ func (s *UploadSuite) TestUnorderedDependencies(c *C) {
 
 	// Assert that it processed all resources and correctly mapped refs
 	c.Assert(len(refMap), Equals, 2)
-	c.Assert(refMap["a1"], Equals, "http://localhost/Patient/1")
-	c.Assert(refMap["b2"], Equals, "http://localhost/Condition/1")
+	c.Assert(refMap["a1"], Equals, "Patient/1")
+	c.Assert(refMap["b2"], Equals, "Condition/1")
 }
 
 func isValid(decoder *json.Decoder, model interface{}) bool {
@@ -213,7 +213,7 @@ func isValid(decoder *json.Decoder, model interface{}) bool {
 	if !isPatient && !isMedication {
 		refs := getAllReferences(model)
 		for _, ref := range refs {
-			match, _ := regexp.MatchString("\\Ahttp://localhost/[^/]+/[0-9a-f]+\\z", ref.Reference)
+			match, _ := regexp.MatchString("\\A[^/]+/[0-9a-f]+\\z", ref.Reference)
 			if !match {
 				fmt.Printf("Invalid reference: %s", ref.Reference)
 				return false

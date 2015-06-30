@@ -31,14 +31,14 @@ func UploadResources(resources []interface{}, baseURL string) (map[string]string
 		oldId := getId(t)
 
 		// Upload the resource and get the new location
-		newLoc, err := UploadResource(t, baseURL)
+		_, err = UploadResource(t, baseURL)
 		if err != nil {
 			return refMap, err
 		}
 
-		// Add entry to map from the old ID to the new location (stripping history component if necessary)
+		// Add entry to map from the old ID to the new relative path
 		if oldId != "" {
-			refMap[oldId] = strings.Split(newLoc, "/_history/")[0]
+			refMap[oldId] = reflect.TypeOf(t).Elem().Name() + "/" + getId(t)
 		}
 	}
 
