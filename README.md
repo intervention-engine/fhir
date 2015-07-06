@@ -7,15 +7,10 @@ This project provides [HL7 FHIR](http://hl7.org/implement/standards/fhir/) model
 FHIR server implemented in Go. The FHIR server uses MongoDB as storage and contains a small
 extension of the Reference model in order to more readily support queries in MongoDB.
 
-Current Status
-----------
-
-Intervention Engine is currently transitioning to use [SMART on FHIR](https://github.com/smart-on-fhir) as its back end FHIR server, which will entail a change in support for this project. The FHIR resources defined under `fhir/models` will continue to be supported and maintained for use by Intervention Engine and its related tools. The FHIR controllers defined under `fhir/server` will no longer be officially supported, but will remain available.
-
 Environment
 -----------
 
-This project currently uses Go 1.3.3 and is built using the Go toolchain.
+This project currently uses Go 1.4.2 and is built using the Go toolchain.
 
 To install Go, follow the instructions found at the [Go Website](http://golang.org/doc/install).
 
@@ -35,7 +30,7 @@ To run all of the tests for this project, run:
 
 in this directory.
 
-This project also requires MongoDB 2.6.* or higher. To install MongoDB, refer to the
+This project also requires MongoDB 3.0.* or higher. To install MongoDB, refer to the
 [MongoDB installation guide](http://docs.mongodb.org/manual/installation/).
 
 To start the server, simply run server.go:
