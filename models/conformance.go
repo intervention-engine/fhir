@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,16 +26,21 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Conformance struct {
 	Id             string                              `json:"-" bson:"_id"`
-	Identifier     string                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Url            string                              `bson:"url,omitempty" json:"url,omitempty"`
 	Version        string                              `bson:"version,omitempty" json:"version,omitempty"`
 	Name           string                              `bson:"name,omitempty" json:"name,omitempty"`
 	Publisher      string                              `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Telecom        []ContactPoint                      `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Contact        []ConformanceContactComponent       `bson:"contact,omitempty" json:"contact,omitempty"`
 	Description    string                              `bson:"description,omitempty" json:"description,omitempty"`
+	Requirements   string                              `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright      string                              `bson:"copyright,omitempty" json:"copyright,omitempty"`
 	Status         string                              `bson:"status,omitempty" json:"status,omitempty"`
 	Experimental   *bool                               `bson:"experimental,omitempty" json:"experimental,omitempty"`
 	Date           *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
@@ -50,26 +55,33 @@ type Conformance struct {
 	Document       []ConformanceDocumentComponent      `bson:"document,omitempty" json:"document,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec software
+type ConformanceContactComponent struct {
+	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+}
+
 type ConformanceSoftwareComponent struct {
 	Name        string        `bson:"name,omitempty" json:"name,omitempty"`
 	Version     string        `bson:"version,omitempty" json:"version,omitempty"`
 	ReleaseDate *FHIRDateTime `bson:"releaseDate,omitempty" json:"releaseDate,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec implementation
 type ConformanceImplementationComponent struct {
 	Description string `bson:"description,omitempty" json:"description,omitempty"`
 	Url         string `bson:"url,omitempty" json:"url,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec certificate
-type ConformanceRestSecurityCertificateComponent struct {
-	Type string `bson:"type,omitempty" json:"type,omitempty"`
-	Blob string `bson:"blob,omitempty" json:"blob,omitempty"`
+type ConformanceRestComponent struct {
+	Mode            string                                  `bson:"mode,omitempty" json:"mode,omitempty"`
+	Documentation   string                                  `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Security        *ConformanceRestSecurityComponent       `bson:"security,omitempty" json:"security,omitempty"`
+	Resource        []ConformanceRestResourceComponent      `bson:"resource,omitempty" json:"resource,omitempty"`
+	Interaction     []ConformanceSystemInteractionComponent `bson:"interaction,omitempty" json:"interaction,omitempty"`
+	Operation       []ConformanceRestOperationComponent     `bson:"operation,omitempty" json:"operation,omitempty"`
+	DocumentMailbox []string                                `bson:"documentMailbox,omitempty" json:"documentMailbox,omitempty"`
+	Compartment     []string                                `bson:"compartment,omitempty" json:"compartment,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec security
 type ConformanceRestSecurityComponent struct {
 	Cors        *bool                                         `bson:"cors,omitempty" json:"cors,omitempty"`
 	Service     []CodeableConcept                             `bson:"service,omitempty" json:"service,omitempty"`
@@ -77,13 +89,30 @@ type ConformanceRestSecurityComponent struct {
 	Certificate []ConformanceRestSecurityCertificateComponent `bson:"certificate,omitempty" json:"certificate,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec interaction
-type ResourceInteractionComponent struct {
+type ConformanceRestSecurityCertificateComponent struct {
+	Type string `bson:"type,omitempty" json:"type,omitempty"`
+	Blob string `bson:"blob,omitempty" json:"blob,omitempty"`
+}
+
+type ConformanceRestResourceComponent struct {
+	Type              string                                        `bson:"type,omitempty" json:"type,omitempty"`
+	Profile           *Reference                                    `bson:"profile,omitempty" json:"profile,omitempty"`
+	Interaction       []ConformanceResourceInteractionComponent     `bson:"interaction,omitempty" json:"interaction,omitempty"`
+	Versioning        string                                        `bson:"versioning,omitempty" json:"versioning,omitempty"`
+	ReadHistory       *bool                                         `bson:"readHistory,omitempty" json:"readHistory,omitempty"`
+	UpdateCreate      *bool                                         `bson:"updateCreate,omitempty" json:"updateCreate,omitempty"`
+	ConditionalCreate *bool                                         `bson:"conditionalCreate,omitempty" json:"conditionalCreate,omitempty"`
+	ConditionalUpdate *bool                                         `bson:"conditionalUpdate,omitempty" json:"conditionalUpdate,omitempty"`
+	ConditionalDelete *bool                                         `bson:"conditionalDelete,omitempty" json:"conditionalDelete,omitempty"`
+	SearchInclude     []string                                      `bson:"searchInclude,omitempty" json:"searchInclude,omitempty"`
+	SearchParam       []ConformanceRestResourceSearchParamComponent `bson:"searchParam,omitempty" json:"searchParam,omitempty"`
+}
+
+type ConformanceResourceInteractionComponent struct {
 	Code          string `bson:"code,omitempty" json:"code,omitempty"`
 	Documentation string `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec searchParam
 type ConformanceRestResourceSearchParamComponent struct {
 	Name          string   `bson:"name,omitempty" json:"name,omitempty"`
 	Definition    string   `bson:"definition,omitempty" json:"definition,omitempty"`
@@ -93,41 +122,23 @@ type ConformanceRestResourceSearchParamComponent struct {
 	Chain         []string `bson:"chain,omitempty" json:"chain,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec resource
-type ConformanceRestResourceComponent struct {
-	Type          string                                        `bson:"type,omitempty" json:"type,omitempty"`
-	Profile       *Reference                                    `bson:"profile,omitempty" json:"profile,omitempty"`
-	Interaction   []ResourceInteractionComponent                `bson:"interaction,omitempty" json:"interaction,omitempty"`
-	ReadHistory   *bool                                         `bson:"readHistory,omitempty" json:"readHistory,omitempty"`
-	UpdateCreate  *bool                                         `bson:"updateCreate,omitempty" json:"updateCreate,omitempty"`
-	SearchInclude []string                                      `bson:"searchInclude,omitempty" json:"searchInclude,omitempty"`
-	SearchParam   []ConformanceRestResourceSearchParamComponent `bson:"searchParam,omitempty" json:"searchParam,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec interaction
-type SystemInteractionComponent struct {
+type ConformanceSystemInteractionComponent struct {
 	Code          string `bson:"code,omitempty" json:"code,omitempty"`
 	Documentation string `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec operation
 type ConformanceRestOperationComponent struct {
 	Name       string     `bson:"name,omitempty" json:"name,omitempty"`
 	Definition *Reference `bson:"definition,omitempty" json:"definition,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec rest
-type ConformanceRestComponent struct {
-	Mode            string                              `bson:"mode,omitempty" json:"mode,omitempty"`
-	Documentation   string                              `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Security        *ConformanceRestSecurityComponent   `bson:"security,omitempty" json:"security,omitempty"`
-	Resource        []ConformanceRestResourceComponent  `bson:"resource,omitempty" json:"resource,omitempty"`
-	Interaction     []SystemInteractionComponent        `bson:"interaction,omitempty" json:"interaction,omitempty"`
-	Operation       []ConformanceRestOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
-	DocumentMailbox []string                            `bson:"documentMailbox,omitempty" json:"documentMailbox,omitempty"`
+type ConformanceMessagingComponent struct {
+	Endpoint      string                               `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	ReliableCache *uint32                              `bson:"reliableCache,omitempty" json:"reliableCache,omitempty"`
+	Documentation string                               `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Event         []ConformanceMessagingEventComponent `bson:"event,omitempty" json:"event,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec event
 type ConformanceMessagingEventComponent struct {
 	Code          *Coding    `bson:"code,omitempty" json:"code,omitempty"`
 	Category      string     `bson:"category,omitempty" json:"category,omitempty"`
@@ -139,15 +150,6 @@ type ConformanceMessagingEventComponent struct {
 	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec messaging
-type ConformanceMessagingComponent struct {
-	Endpoint      string                               `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
-	ReliableCache float64                              `bson:"reliableCache,omitempty" json:"reliableCache,omitempty"`
-	Documentation string                               `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Event         []ConformanceMessagingEventComponent `bson:"event,omitempty" json:"event,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec document
 type ConformanceDocumentComponent struct {
 	Mode          string     `bson:"mode,omitempty" json:"mode,omitempty"`
 	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
@@ -175,4 +177,15 @@ type ConformanceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Conformance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Conformance
+	}{
+		ResourceType: "Conformance",
+		Conformance:  *resource,
+	}
+	return json.Marshal(x)
 }

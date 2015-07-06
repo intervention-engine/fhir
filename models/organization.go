@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Organization struct {
 	Id         string                         `json:"-" bson:"_id"`
@@ -37,17 +40,14 @@ type Organization struct {
 	Address    []Address                      `bson:"address,omitempty" json:"address,omitempty"`
 	PartOf     *Reference                     `bson:"partOf,omitempty" json:"partOf,omitempty"`
 	Contact    []OrganizationContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Location   []Reference                    `bson:"location,omitempty" json:"location,omitempty"`
 	Active     *bool                          `bson:"active,omitempty" json:"active,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec contact
 type OrganizationContactComponent struct {
 	Purpose *CodeableConcept `bson:"purpose,omitempty" json:"purpose,omitempty"`
 	Name    *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address *Address         `bson:"address,omitempty" json:"address,omitempty"`
-	Gender  *CodeableConcept `bson:"gender,omitempty" json:"gender,omitempty"`
 }
 
 type OrganizationBundle struct {
@@ -71,4 +71,15 @@ type OrganizationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Organization) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Organization
+	}{
+		ResourceType: "Organization",
+		Organization: *resource,
+	}
+	return json.Marshal(x)
 }

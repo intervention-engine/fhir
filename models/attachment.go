@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -27,12 +27,13 @@
 package models
 
 type Attachment struct {
-	Id          string  `json:"-" bson:"_id"`
-	ContentType string  `bson:"contentType,omitempty" json:"contentType,omitempty"`
-	Language    string  `bson:"language,omitempty" json:"language,omitempty"`
-	Data        string  `bson:"data,omitempty" json:"data,omitempty"`
-	Url         string  `bson:"url,omitempty" json:"url,omitempty"`
-	Size        float64 `bson:"size,omitempty" json:"size,omitempty"`
-	Hash        string  `bson:"hash,omitempty" json:"hash,omitempty"`
-	Title       string  `bson:"title,omitempty" json:"title,omitempty"`
+	Id          string        `json:"-" bson:"_id"`
+	ContentType string        `bson:"contentType,omitempty" json:"contentType,omitempty"`
+	Language    string        `bson:"language,omitempty" json:"language,omitempty"`
+	Data        string        `bson:"data,omitempty" json:"data,omitempty"`
+	Url         string        `bson:"url,omitempty" json:"url,omitempty"`
+	Size        *uint32       `bson:"size,omitempty" json:"size,omitempty"`
+	Hash        string        `bson:"hash,omitempty" json:"hash,omitempty"`
+	Title       string        `bson:"title,omitempty" json:"title,omitempty"`
+	Creation    *FHIRDateTime `bson:"creation,omitempty" json:"creation,omitempty"`
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,22 +26,24 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Media struct {
 	Id         string           `json:"-" bson:"_id"`
 	Type       string           `bson:"type,omitempty" json:"type,omitempty"`
 	Subtype    *CodeableConcept `bson:"subtype,omitempty" json:"subtype,omitempty"`
 	Identifier []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	DateTime   *FHIRDateTime    `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
 	Subject    *Reference       `bson:"subject,omitempty" json:"subject,omitempty"`
 	Operator   *Reference       `bson:"operator,omitempty" json:"operator,omitempty"`
 	View       *CodeableConcept `bson:"view,omitempty" json:"view,omitempty"`
 	DeviceName string           `bson:"deviceName,omitempty" json:"deviceName,omitempty"`
-	Height     float64          `bson:"height,omitempty" json:"height,omitempty"`
-	Width      float64          `bson:"width,omitempty" json:"width,omitempty"`
-	Frames     float64          `bson:"frames,omitempty" json:"frames,omitempty"`
-	Length     float64          `bson:"length,omitempty" json:"length,omitempty"`
+	Height     *uint32          `bson:"height,omitempty" json:"height,omitempty"`
+	Width      *uint32          `bson:"width,omitempty" json:"width,omitempty"`
+	Frames     *uint32          `bson:"frames,omitempty" json:"frames,omitempty"`
+	Duration   *uint32          `bson:"duration,omitempty" json:"duration,omitempty"`
 	Content    *Attachment      `bson:"content,omitempty" json:"content,omitempty"`
 }
 
@@ -66,4 +68,15 @@ type MediaCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Media) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Media
+	}{
+		ResourceType: "Media",
+		Media:        *resource,
+	}
+	return json.Marshal(x)
 }

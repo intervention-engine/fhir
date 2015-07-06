@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type RelatedPerson struct {
 	Id           string           `json:"-" bson:"_id"`
@@ -35,9 +38,10 @@ type RelatedPerson struct {
 	Relationship *CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
 	Name         *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom      []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Gender       *CodeableConcept `bson:"gender,omitempty" json:"gender,omitempty"`
+	Gender       string           `bson:"gender,omitempty" json:"gender,omitempty"`
 	Address      *Address         `bson:"address,omitempty" json:"address,omitempty"`
 	Photo        []Attachment     `bson:"photo,omitempty" json:"photo,omitempty"`
+	Period       *Period          `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 type RelatedPersonBundle struct {
@@ -61,4 +65,15 @@ type RelatedPersonCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *RelatedPerson) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		RelatedPerson
+	}{
+		ResourceType:  "RelatedPerson",
+		RelatedPerson: *resource,
+	}
+	return json.Marshal(x)
 }

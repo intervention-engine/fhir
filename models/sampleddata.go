@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,10 +29,10 @@ package models
 type SampledData struct {
 	Id         string    `json:"-" bson:"_id"`
 	Origin     *Quantity `bson:"origin,omitempty" json:"origin,omitempty"`
-	Period     float64   `bson:"period,omitempty" json:"period,omitempty"`
-	Factor     float64   `bson:"factor,omitempty" json:"factor,omitempty"`
-	LowerLimit float64   `bson:"lowerLimit,omitempty" json:"lowerLimit,omitempty"`
-	UpperLimit float64   `bson:"upperLimit,omitempty" json:"upperLimit,omitempty"`
-	Dimensions float64   `bson:"dimensions,omitempty" json:"dimensions,omitempty"`
+	Period     *float64  `bson:"period,omitempty" json:"period,omitempty"`
+	Factor     *float64  `bson:"factor,omitempty" json:"factor,omitempty"`
+	LowerLimit *float64  `bson:"lowerLimit,omitempty" json:"lowerLimit,omitempty"`
+	UpperLimit *float64  `bson:"upperLimit,omitempty" json:"upperLimit,omitempty"`
+	Dimensions *uint32   `bson:"dimensions,omitempty" json:"dimensions,omitempty"`
 	Data       string    `bson:"data,omitempty" json:"data,omitempty"`
 }

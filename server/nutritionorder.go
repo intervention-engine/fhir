@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gorilla/context"
@@ -17,10 +18,24 @@ import (
 func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.NutritionOrder
 	c := Database.C("nutritionorders")
-	iter := c.Find(nil).Limit(100).Iter()
-	err := iter.All(&result)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+
+	r.ParseForm()
+	if len(r.Form) == 0 {
+		iter := c.Find(nil).Limit(100).Iter()
+		err := iter.All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		for key, value := range r.Form {
+			splitKey := strings.Split(key, ":")
+			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
+				if err != nil {
+					http.Error(rw, err.Error(), http.StatusInternalServerError)
+				}
+			}
+		}
 	}
 
 	var nutritionorderEntryList []models.NutritionOrderBundleEntry

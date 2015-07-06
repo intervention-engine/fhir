@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gorilla/context"
@@ -17,10 +18,24 @@ import (
 func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.OperationDefinition
 	c := Database.C("operationdefinitions")
-	iter := c.Find(nil).Limit(100).Iter()
-	err := iter.All(&result)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	r.ParseForm()
+	if len(r.Form) == 0 {
+		iter := c.Find(nil).Limit(100).Iter()
+		err := iter.All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		codeValue := r.Form.Get("code")
+		splitCode := strings.Split(codeValue, "|")
+		if len(splitCode) > 1 {
+			codeSystem := splitCode[0]
+			code := splitCode[1]
+			err := c.Find(bson.M{"code.coding.system": codeSystem, "code.coding.code": code}).All(&result)
+			if err != nil {
+				http.Error(rw, err.Error(), http.StatusInternalServerError)
+			}
+		}
 	}
 
 	var operationdefinitionEntryList []models.OperationDefinitionBundleEntry

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type CommunicationRequest struct {
 	Id            string                                 `json:"-" bson:"_id"`
@@ -46,7 +49,6 @@ type CommunicationRequest struct {
 	Priority      *CodeableConcept                       `bson:"priority,omitempty" json:"priority,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec section
 type CommunicationRequestPayloadComponent struct {
 	ContentString     string      `bson:"contentString,omitempty" json:"contentString,omitempty"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
@@ -74,4 +76,15 @@ type CommunicationRequestCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *CommunicationRequest) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		CommunicationRequest
+	}{
+		ResourceType:         "CommunicationRequest",
+		CommunicationRequest: *resource,
+	}
+	return json.Marshal(x)
 }

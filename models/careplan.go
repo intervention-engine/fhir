@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type CarePlan struct {
 	Id          string                         `json:"-" bson:"_id"`
@@ -34,52 +37,47 @@ type CarePlan struct {
 	Patient     *Reference                     `bson:"patient,omitempty" json:"patient,omitempty"`
 	Status      string                         `bson:"status,omitempty" json:"status,omitempty"`
 	Period      *Period                        `bson:"period,omitempty" json:"period,omitempty"`
+	Author      []Reference                    `bson:"author,omitempty" json:"author,omitempty"`
 	Modified    *FHIRDateTime                  `bson:"modified,omitempty" json:"modified,omitempty"`
+	Category    []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
 	Concern     []Reference                    `bson:"concern,omitempty" json:"concern,omitempty"`
+	Support     []Reference                    `bson:"support,omitempty" json:"support,omitempty"`
 	Participant []CarePlanParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
-	Goal        []CarePlanGoalComponent        `bson:"goal,omitempty" json:"goal,omitempty"`
+	Goal        []Reference                    `bson:"goal,omitempty" json:"goal,omitempty"`
 	Activity    []CarePlanActivityComponent    `bson:"activity,omitempty" json:"activity,omitempty"`
 	Notes       string                         `bson:"notes,omitempty" json:"notes,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec participant
 type CarePlanParticipantComponent struct {
 	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 	Member *Reference       `bson:"member,omitempty" json:"member,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec goal
-type CarePlanGoalComponent struct {
-	Description string      `bson:"description,omitempty" json:"description,omitempty"`
-	Status      string      `bson:"status,omitempty" json:"status,omitempty"`
-	Notes       string      `bson:"notes,omitempty" json:"notes,omitempty"`
-	Concern     []Reference `bson:"concern,omitempty" json:"concern,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec simple
-type CarePlanActivitySimpleComponent struct {
-	Category        string           `bson:"category,omitempty" json:"category,omitempty"`
-	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	ScheduledTiming *Timing          `bson:"scheduledTiming,omitempty" json:"scheduledTiming,omitempty"`
-	ScheduledPeriod *Period          `bson:"scheduledPeriod,omitempty" json:"scheduledPeriod,omitempty"`
-	ScheduledString string           `bson:"scheduledString,omitempty" json:"scheduledString,omitempty"`
-	Location        *Reference       `bson:"location,omitempty" json:"location,omitempty"`
-	Performer       []Reference      `bson:"performer,omitempty" json:"performer,omitempty"`
-	Product         *Reference       `bson:"product,omitempty" json:"product,omitempty"`
-	DailyAmount     *Quantity        `bson:"dailyAmount,omitempty" json:"dailyAmount,omitempty"`
-	Quantity        *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Details         string           `bson:"details,omitempty" json:"details,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec activity
 type CarePlanActivityComponent struct {
-	Goal            []*Reference                     `bson:"goal,omitempty" json:"goal,omitempty"`
-	Status          string                           `bson:"status,omitempty" json:"status,omitempty"`
-	Prohibited      *bool                            `bson:"prohibited,omitempty" json:"prohibited,omitempty"`
 	ActionResulting []Reference                      `bson:"actionResulting,omitempty" json:"actionResulting,omitempty"`
 	Notes           string                           `bson:"notes,omitempty" json:"notes,omitempty"`
-	Detail          *Reference                       `bson:"detail,omitempty" json:"detail,omitempty"`
-	Simple          *CarePlanActivitySimpleComponent `bson:"simple,omitempty" json:"simple,omitempty"`
+	Reference       *Reference                       `bson:"reference,omitempty" json:"reference,omitempty"`
+	Detail          *CarePlanActivityDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
+}
+
+type CarePlanActivityDetailComponent struct {
+	Category              string           `bson:"category,omitempty" json:"category,omitempty"`
+	Code                  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	ReasonCodeableConcept *CodeableConcept `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
+	ReasonReference       *Reference       `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
+	Goal                  []Reference      `bson:"goal,omitempty" json:"goal,omitempty"`
+	Status                string           `bson:"status,omitempty" json:"status,omitempty"`
+	StatusReason          *CodeableConcept `bson:"statusReason,omitempty" json:"statusReason,omitempty"`
+	Prohibited            *bool            `bson:"prohibited,omitempty" json:"prohibited,omitempty"`
+	ScheduledTiming       *Timing          `bson:"scheduledTiming,omitempty" json:"scheduledTiming,omitempty"`
+	ScheduledPeriod       *Period          `bson:"scheduledPeriod,omitempty" json:"scheduledPeriod,omitempty"`
+	ScheduledString       string           `bson:"scheduledString,omitempty" json:"scheduledString,omitempty"`
+	Location              *Reference       `bson:"location,omitempty" json:"location,omitempty"`
+	Performer             []Reference      `bson:"performer,omitempty" json:"performer,omitempty"`
+	Product               *Reference       `bson:"product,omitempty" json:"product,omitempty"`
+	DailyAmount           *Quantity        `bson:"dailyAmount,omitempty" json:"dailyAmount,omitempty"`
+	Quantity              *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Note                  string           `bson:"note,omitempty" json:"note,omitempty"`
 }
 
 type CarePlanBundle struct {
@@ -103,4 +101,15 @@ type CarePlanCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *CarePlan) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		CarePlan
+	}{
+		ResourceType: "CarePlan",
+		CarePlan:     *resource,
+	}
+	return json.Marshal(x)
 }

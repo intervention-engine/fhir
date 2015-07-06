@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type DiagnosticOrder struct {
 	Id                    string                          `json:"-" bson:"_id"`
@@ -43,7 +46,6 @@ type DiagnosticOrder struct {
 	Item                  []DiagnosticOrderItemComponent  `bson:"item,omitempty" json:"item,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec event
 type DiagnosticOrderEventComponent struct {
 	Status      string           `bson:"status,omitempty" json:"status,omitempty"`
 	Description *CodeableConcept `bson:"description,omitempty" json:"description,omitempty"`
@@ -51,13 +53,13 @@ type DiagnosticOrderEventComponent struct {
 	Actor       *Reference       `bson:"actor,omitempty" json:"actor,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec item
 type DiagnosticOrderItemComponent struct {
-	Code     *CodeableConcept                `bson:"code,omitempty" json:"code,omitempty"`
-	Specimen []Reference                     `bson:"specimen,omitempty" json:"specimen,omitempty"`
-	BodySite *CodeableConcept                `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
-	Status   string                          `bson:"status,omitempty" json:"status,omitempty"`
-	Event    []DiagnosticOrderEventComponent `bson:"event,omitempty" json:"event,omitempty"`
+	Code                    *CodeableConcept                `bson:"code,omitempty" json:"code,omitempty"`
+	Specimen                []Reference                     `bson:"specimen,omitempty" json:"specimen,omitempty"`
+	BodySiteCodeableConcept *CodeableConcept                `bson:"bodySiteCodeableConcept,omitempty" json:"bodySiteCodeableConcept,omitempty"`
+	BodySiteReference       *Reference                      `bson:"bodySiteReference,omitempty" json:"bodySiteReference,omitempty"`
+	Status                  string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Event                   []DiagnosticOrderEventComponent `bson:"event,omitempty" json:"event,omitempty"`
 }
 
 type DiagnosticOrderBundle struct {
@@ -81,4 +83,15 @@ type DiagnosticOrderCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *DiagnosticOrder) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DiagnosticOrder
+	}{
+		ResourceType:    "DiagnosticOrder",
+		DiagnosticOrder: *resource,
+	}
+	return json.Marshal(x)
 }

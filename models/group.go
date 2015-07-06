@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Group struct {
 	Id             string                         `json:"-" bson:"_id"`
@@ -35,12 +38,11 @@ type Group struct {
 	Actual         *bool                          `bson:"actual,omitempty" json:"actual,omitempty"`
 	Code           *CodeableConcept               `bson:"code,omitempty" json:"code,omitempty"`
 	Name           string                         `bson:"name,omitempty" json:"name,omitempty"`
-	Quantity       float64                        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Quantity       *uint32                        `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Characteristic []GroupCharacteristicComponent `bson:"characteristic,omitempty" json:"characteristic,omitempty"`
 	Member         []Reference                    `bson:"member,omitempty" json:"member,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec characteristic
 type GroupCharacteristicComponent struct {
 	Code                 *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
@@ -71,4 +73,15 @@ type GroupCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Group) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Group
+	}{
+		ResourceType: "Group",
+		Group:        *resource,
+	}
+	return json.Marshal(x)
 }

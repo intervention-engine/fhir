@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Subscription struct {
 	Id       string                        `json:"-" bson:"_id"`
@@ -37,22 +40,14 @@ type Subscription struct {
 	Error    string                        `bson:"error,omitempty" json:"error,omitempty"`
 	Channel  *SubscriptionChannelComponent `bson:"channel,omitempty" json:"channel,omitempty"`
 	End      *FHIRDateTime                 `bson:"end,omitempty" json:"end,omitempty"`
-	Tag      []SubscriptionTagComponent    `bson:"tag,omitempty" json:"tag,omitempty"`
+	Tag      []Coding                      `bson:"tag,omitempty" json:"tag,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec channel
 type SubscriptionChannelComponent struct {
-	Type    string `bson:"type,omitempty" json:"type,omitempty"`
-	Url     string `bson:"url,omitempty" json:"url,omitempty"`
-	Payload string `bson:"payload,omitempty" json:"payload,omitempty"`
-	Header  string `bson:"header,omitempty" json:"header,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec tag
-type SubscriptionTagComponent struct {
-	Term        string `bson:"term,omitempty" json:"term,omitempty"`
-	Scheme      string `bson:"scheme,omitempty" json:"scheme,omitempty"`
-	Description string `bson:"description,omitempty" json:"description,omitempty"`
+	Type     string `bson:"type,omitempty" json:"type,omitempty"`
+	Endpoint string `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	Payload  string `bson:"payload,omitempty" json:"payload,omitempty"`
+	Header   string `bson:"header,omitempty" json:"header,omitempty"`
 }
 
 type SubscriptionBundle struct {
@@ -76,4 +71,15 @@ type SubscriptionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Subscription) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Subscription
+	}{
+		ResourceType: "Subscription",
+		Subscription: *resource,
+	}
+	return json.Marshal(x)
 }

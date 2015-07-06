@@ -28,55 +28,50 @@ var _ = Suite(&UploadSuite{})
 
 func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	// Setup the mock server
-	resourceCount, patientCount, encounterCount, conditionCount, immunizationCount, observationCount, procedureCount, diagnosticReportCount, medicationCount, medicationStatementCount := 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	resourceCount, patientCount, encounterCount, conditionCount, immunizationCount, observationCount, procedureCount, diagnosticReportCount, medicationStatementCount := 0, 0, 0, 0, 0, 0, 0, 0, 0
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		output := "Created"
 		decoder := json.NewDecoder(r.Body)
 		switch {
 		case strings.Contains(r.RequestURI, "Patient"):
 			if isValid(decoder, &models.Patient{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Patient/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Patient/%d/_history/1", resourceCount))
 				patientCount++
 			}
 		case strings.Contains(r.RequestURI, "Encounter"):
 			if isValid(decoder, &models.Encounter{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Encounter/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Encounter/%d/_history/1", resourceCount))
 				encounterCount++
 			}
 		case strings.Contains(r.RequestURI, "Condition"):
 			if isValid(decoder, &models.Condition{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Condition/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Condition/%d/_history/1", resourceCount))
 				conditionCount++
 			}
 		case strings.Contains(r.RequestURI, "Immunization"):
 			if isValid(decoder, &models.Immunization{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Immunization/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Immunization/%d/_history/1", resourceCount))
 				immunizationCount++
 			}
 		case strings.Contains(r.RequestURI, "Observation"):
 			if isValid(decoder, &models.Observation{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Observation/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Observation/%d/_history/1", resourceCount))
 				observationCount++
 			}
 		case strings.Contains(r.RequestURI, "Procedure"):
 			if isValid(decoder, &models.Procedure{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Procedure/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/Procedure/%d/_history/1", resourceCount))
 				procedureCount++
 			}
 		case strings.Contains(r.RequestURI, "DiagnosticReport"):
 			if isValid(decoder, &models.DiagnosticReport{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/DiagnosticReport/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/DiagnosticReport/%d/_history/1", resourceCount))
 				diagnosticReportCount++
 			}
 		case strings.Contains(r.RequestURI, "MedicationStatement"):
 			if isValid(decoder, &models.MedicationStatement{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/MedicationStatement/%d", resourceCount))
+				w.Header().Add("Location", fmt.Sprintf("http://localhost/MedicationStatement/%d/_history/1", resourceCount))
 				medicationStatementCount++
-			}
-		case strings.Contains(r.RequestURI, "Medication"):
-			if isValid(decoder, &models.Medication{}) {
-				w.Header().Add("Location", fmt.Sprintf("http://localhost/Medication/%d", resourceCount))
-				medicationCount++
 			}
 		}
 		fmt.Fprintln(w, output)
@@ -94,17 +89,17 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	// 2. The id attribute is configured to not be serialized/deserialized
 	type IdAndType struct {
 		Id   string `json:"id"`
-		Type string `json:"_type"`
+		Type string `json:"resourceType"`
 	}
-	idsAndTypes := make([]IdAndType, 20)
+	idsAndTypes := make([]IdAndType, 19)
 	err = json.Unmarshal(data, &idsAndTypes)
 	util.CheckErr(err)
 
-	rawMessages := make([]json.RawMessage, 20)
+	rawMessages := make([]json.RawMessage, 19)
 	err = json.Unmarshal(data, &rawMessages)
 	util.CheckErr(err)
 
-	fhirmodels := make([]interface{}, 20)
+	fhirmodels := make([]interface{}, 19)
 	for i := range fhirmodels {
 		var y interface{}
 		switch idsAndTypes[i].Type {
@@ -120,8 +115,6 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 			y = &models.DiagnosticReport{Id: idsAndTypes[i].Id}
 		case "Procedure":
 			y = &models.Procedure{Id: idsAndTypes[i].Id}
-		case "Medication":
-			y = &models.Medication{Id: idsAndTypes[i].Id}
 		case "MedicationStatement":
 			y = &models.MedicationStatement{Id: idsAndTypes[i].Id}
 		case "Immunization":
@@ -143,12 +136,12 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	c.Assert(observationCount, Equals, 4)
 	c.Assert(procedureCount, Equals, 2)
 	c.Assert(diagnosticReportCount, Equals, 1)
-	c.Assert(resourceCount, Equals, 20)
 	c.Assert(medicationStatementCount, Equals, 1)
-	c.Assert(medicationCount, Equals, 1)
 
-	c.Assert(len(refMap), Equals, 20)
-	c.Assert(refMap[idsAndTypes[0].Id], Equals, "http://localhost/Patient/0")
+	c.Assert(resourceCount, Equals, 19)
+	c.Assert(len(refMap), Equals, 19)
+
+	c.Assert(refMap[idsAndTypes[0].Id], Equals, "Patient/0")
 	c.Assert(fhirmodels[0].(*models.Patient).Id, Equals, "0")
 }
 
@@ -161,7 +154,7 @@ func (s *UploadSuite) TestExternalReferences(c *C) {
 	defer ts.Close()
 
 	condition := &models.Condition{Id: "123"}
-	condition.Subject = &models.Reference{Reference: "http://localhost/Patient/0"}
+	condition.Patient = &models.Reference{Reference: "Patient/0"}
 
 	// Upload the resource
 	newId, err := UploadResource(condition, ts.URL)
@@ -183,11 +176,11 @@ func (s *UploadSuite) TestUnorderedDependencies(c *C) {
 		switch {
 		case strings.Contains(r.RequestURI, "Patient"):
 			if isValid(decoder, &models.Patient{}) {
-				w.Header().Add("Location", "http://localhost/Patient/1")
+				w.Header().Add("Location", "http://localhost/Patient/1/_history/1")
 			}
 		case strings.Contains(r.RequestURI, "Condition"):
 			if isValid(decoder, &models.Condition{}) {
-				w.Header().Add("Location", "http://localhost/Condition/1")
+				w.Header().Add("Location", "http://localhost/Condition/1") // Purposefully no _history to test this use case
 			}
 		}
 		fmt.Fprintln(w, output)
@@ -197,16 +190,16 @@ func (s *UploadSuite) TestUnorderedDependencies(c *C) {
 
 	patient := &models.Patient{Id: "a1"}
 	condition := &models.Condition{Id: "b2"}
-	condition.Subject = &models.Reference{Reference: "cid:a1"}
+	condition.Patient = &models.Reference{Reference: "cid:a1"}
 
 	// Upload the resources in the wrong order
 	refMap, err := UploadResources([]interface{}{condition, patient}, ts.URL)
 	util.CheckErr(err)
 
-	// Assert that it processed all resources
+	// Assert that it processed all resources and correctly mapped refs
 	c.Assert(len(refMap), Equals, 2)
-	c.Assert(refMap["a1"], Equals, "http://localhost/Patient/1")
-	c.Assert(refMap["b2"], Equals, "http://localhost/Condition/1")
+	c.Assert(refMap["a1"], Equals, "Patient/1")
+	c.Assert(refMap["b2"], Equals, "Condition/1")
 }
 
 func isValid(decoder *json.Decoder, model interface{}) bool {
@@ -220,9 +213,12 @@ func isValid(decoder *json.Decoder, model interface{}) bool {
 	if !isPatient && !isMedication {
 		refs := getAllReferences(model)
 		for _, ref := range refs {
-			match, _ := regexp.MatchString("\\Ahttp://localhost/[^/]+/[0-9a-f]+\\z", ref.Reference)
+			match, _ := regexp.MatchString("\\A[^/]+/[0-9a-f]+\\z", ref.Reference)
 			if !match {
 				fmt.Printf("Invalid reference: %s", ref.Reference)
+				return false
+			} else if strings.Contains(ref.Reference, "/_history/") {
+				fmt.Printf("Invalid reference (contains _history component): %s", ref.Reference)
 				return false
 			}
 		}

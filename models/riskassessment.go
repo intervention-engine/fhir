@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type RiskAssessment struct {
 	Id         string                              `json:"-" bson:"_id"`
@@ -41,13 +44,12 @@ type RiskAssessment struct {
 	Mitigation string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec prediction
 type RiskAssessmentPredictionComponent struct {
 	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	ProbabilityDecimal         float64          `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
+	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
 	ProbabilityRange           *Range           `bson:"probabilityRange,omitempty" json:"probabilityRange,omitempty"`
 	ProbabilityCodeableConcept *CodeableConcept `bson:"probabilityCodeableConcept,omitempty" json:"probabilityCodeableConcept,omitempty"`
-	RelativeRisk               float64          `bson:"relativeRisk,omitempty" json:"relativeRisk,omitempty"`
+	RelativeRisk               *float64         `bson:"relativeRisk,omitempty" json:"relativeRisk,omitempty"`
 	WhenPeriod                 *Period          `bson:"whenPeriod,omitempty" json:"whenPeriod,omitempty"`
 	WhenRange                  *Range           `bson:"whenRange,omitempty" json:"whenRange,omitempty"`
 	Rationale                  string           `bson:"rationale,omitempty" json:"rationale,omitempty"`
@@ -74,4 +76,15 @@ type RiskAssessmentCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *RiskAssessment) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		RiskAssessment
+	}{
+		ResourceType:   "RiskAssessment",
+		RiskAssessment: *resource,
+	}
+	return json.Marshal(x)
 }

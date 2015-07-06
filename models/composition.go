@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Composition struct {
 	Id              string                         `json:"-" bson:"_id"`
@@ -36,41 +39,33 @@ type Composition struct {
 	Class           *CodeableConcept               `bson:"class,omitempty" json:"class,omitempty"`
 	Title           string                         `bson:"title,omitempty" json:"title,omitempty"`
 	Status          string                         `bson:"status,omitempty" json:"status,omitempty"`
-	Confidentiality *Coding                        `bson:"confidentiality,omitempty" json:"confidentiality,omitempty"`
+	Confidentiality string                         `bson:"confidentiality,omitempty" json:"confidentiality,omitempty"`
 	Subject         *Reference                     `bson:"subject,omitempty" json:"subject,omitempty"`
 	Author          []Reference                    `bson:"author,omitempty" json:"author,omitempty"`
 	Attester        []CompositionAttesterComponent `bson:"attester,omitempty" json:"attester,omitempty"`
 	Custodian       *Reference                     `bson:"custodian,omitempty" json:"custodian,omitempty"`
 	Event           []CompositionEventComponent    `bson:"event,omitempty" json:"event,omitempty"`
 	Encounter       *Reference                     `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Section         []SectionComponent             `bson:"section,omitempty" json:"section,omitempty"`
+	Section         []CompositionSectionComponent  `bson:"section,omitempty" json:"section,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec attester
 type CompositionAttesterComponent struct {
 	Mode  []string      `bson:"mode,omitempty" json:"mode,omitempty"`
 	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
 	Party *Reference    `bson:"party,omitempty" json:"party,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec event
 type CompositionEventComponent struct {
 	Code   []CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`
 	Detail []Reference       `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec section
-type SectionComponent struct {
-	Title       string             `bson:"title,omitempty" json:"title,omitempty"`
-	Identifier  []Identifier       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Code        *CodeableConcept   `bson:"code,omitempty" json:"code,omitempty"`
-	Subject     *Reference         `bson:"subject,omitempty" json:"subject,omitempty"`
-	Text        *Narrative         `bson:"text,omitempty" json:"text,omitempty"`
-	EmptyReason *CodeableConcept   `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
-	Order       *CodeableConcept   `bson:"order,omitempty" json:"order,omitempty"`
-	Section     []SectionComponent `bson:"section,omitempty" json:"section,omitempty"`
-	Entry       []Reference        `bson:"entry,omitempty" json:"entry,omitempty"`
+type CompositionSectionComponent struct {
+	Title   string                        `bson:"title,omitempty" json:"title,omitempty"`
+	Code    *CodeableConcept              `bson:"code,omitempty" json:"code,omitempty"`
+	Content *Reference                    `bson:"content,omitempty" json:"content,omitempty"`
+	Section []CompositionSectionComponent `bson:"section,omitempty" json:"section,omitempty"`
 }
 
 type CompositionBundle struct {
@@ -94,4 +89,15 @@ type CompositionCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Composition) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Composition
+	}{
+		ResourceType: "Composition",
+		Composition:  *resource,
+	}
+	return json.Marshal(x)
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -27,11 +27,10 @@
 package models
 
 type Coding struct {
-	Id       string     `json:"-" bson:"_id"`
-	System   string     `bson:"system,omitempty" json:"system,omitempty"`
-	Version  string     `bson:"version,omitempty" json:"version,omitempty"`
-	Code     string     `bson:"code,omitempty" json:"code,omitempty"`
-	Display  string     `bson:"display,omitempty" json:"display,omitempty"`
-	Primary  *bool      `bson:"primary,omitempty" json:"primary,omitempty"`
-	ValueSet *Reference `bson:"valueSet,omitempty" json:"valueSet,omitempty"`
+	Id      string `json:"-" bson:"_id"`
+	System  string `bson:"system,omitempty" json:"system,omitempty"`
+	Version string `bson:"version,omitempty" json:"version,omitempty"`
+	Code    string `bson:"code,omitempty" json:"code,omitempty"`
+	Display string `bson:"display,omitempty" json:"display,omitempty"`
+	Primary *bool  `bson:"primary,omitempty" json:"primary,omitempty"`
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,30 +26,32 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Provenance struct {
-	Id                 string                      `json:"-" bson:"_id"`
-	Target             []Reference                 `bson:"target,omitempty" json:"target,omitempty"`
-	Period             *Period                     `bson:"period,omitempty" json:"period,omitempty"`
-	Recorded           *FHIRDateTime               `bson:"recorded,omitempty" json:"recorded,omitempty"`
-	Reason             *CodeableConcept            `bson:"reason,omitempty" json:"reason,omitempty"`
-	Location           *Reference                  `bson:"location,omitempty" json:"location,omitempty"`
-	Policy             []string                    `bson:"policy,omitempty" json:"policy,omitempty"`
-	Agent              []ProvenanceAgentComponent  `bson:"agent,omitempty" json:"agent,omitempty"`
-	Entity             []ProvenanceEntityComponent `bson:"entity,omitempty" json:"entity,omitempty"`
-	IntegritySignature string                      `bson:"integritySignature,omitempty" json:"integritySignature,omitempty"`
+	Id        string                      `json:"-" bson:"_id"`
+	Target    []Reference                 `bson:"target,omitempty" json:"target,omitempty"`
+	Period    *Period                     `bson:"period,omitempty" json:"period,omitempty"`
+	Recorded  *FHIRDateTime               `bson:"recorded,omitempty" json:"recorded,omitempty"`
+	Reason    *CodeableConcept            `bson:"reason,omitempty" json:"reason,omitempty"`
+	Location  *Reference                  `bson:"location,omitempty" json:"location,omitempty"`
+	Policy    []string                    `bson:"policy,omitempty" json:"policy,omitempty"`
+	Agent     []ProvenanceAgentComponent  `bson:"agent,omitempty" json:"agent,omitempty"`
+	Entity    []ProvenanceEntityComponent `bson:"entity,omitempty" json:"entity,omitempty"`
+	Signature []Signature                 `bson:"signature,omitempty" json:"signature,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec agent
 type ProvenanceAgentComponent struct {
-	Role      *Coding `bson:"role,omitempty" json:"role,omitempty"`
-	Type      *Coding `bson:"type,omitempty" json:"type,omitempty"`
-	Reference string  `bson:"reference,omitempty" json:"reference,omitempty"`
-	Display   string  `bson:"display,omitempty" json:"display,omitempty"`
+	Role               *Coding    `bson:"role,omitempty" json:"role,omitempty"`
+	Type               *Coding    `bson:"type,omitempty" json:"type,omitempty"`
+	ReferenceUri       string     `bson:"referenceUri,omitempty" json:"referenceUri,omitempty"`
+	ReferenceReference *Reference `bson:"referenceReference,omitempty" json:"referenceReference,omitempty"`
+	Display            string     `bson:"display,omitempty" json:"display,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec entity
 type ProvenanceEntityComponent struct {
 	Role      string                    `bson:"role,omitempty" json:"role,omitempty"`
 	Type      *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
@@ -79,4 +81,15 @@ type ProvenanceCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Provenance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Provenance
+	}{
+		ResourceType: "Provenance",
+		Provenance:   *resource,
+	}
+	return json.Marshal(x)
 }

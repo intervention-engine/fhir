@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,84 +26,103 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type ValueSet struct {
 	Id           string                      `json:"-" bson:"_id"`
-	Identifier   string                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Url          string                      `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier   *Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Version      string                      `bson:"version,omitempty" json:"version,omitempty"`
 	Name         string                      `bson:"name,omitempty" json:"name,omitempty"`
-	Purpose      string                      `bson:"purpose,omitempty" json:"purpose,omitempty"`
+	UseContext   []CodeableConcept           `bson:"useContext,omitempty" json:"useContext,omitempty"`
 	Immutable    *bool                       `bson:"immutable,omitempty" json:"immutable,omitempty"`
 	Publisher    string                      `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Telecom      []ContactPoint              `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Contact      []ValueSetContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
 	Description  string                      `bson:"description,omitempty" json:"description,omitempty"`
+	Requirements string                      `bson:"requirements,omitempty" json:"requirements,omitempty"`
 	Copyright    string                      `bson:"copyright,omitempty" json:"copyright,omitempty"`
 	Status       string                      `bson:"status,omitempty" json:"status,omitempty"`
 	Experimental *bool                       `bson:"experimental,omitempty" json:"experimental,omitempty"`
 	Extensible   *bool                       `bson:"extensible,omitempty" json:"extensible,omitempty"`
 	Date         *FHIRDateTime               `bson:"date,omitempty" json:"date,omitempty"`
-	StableDate   *FHIRDateTime               `bson:"stableDate,omitempty" json:"stableDate,omitempty"`
+	LockedDate   *FHIRDateTime               `bson:"lockedDate,omitempty" json:"lockedDate,omitempty"`
 	Define       *ValueSetDefineComponent    `bson:"define,omitempty" json:"define,omitempty"`
 	Compose      *ValueSetComposeComponent   `bson:"compose,omitempty" json:"compose,omitempty"`
 	Expansion    *ValueSetExpansionComponent `bson:"expansion,omitempty" json:"expansion,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec designation
-type ConceptDefinitionDesignationComponent struct {
+type ValueSetContactComponent struct {
+	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+}
+
+type ValueSetDefineComponent struct {
+	System        string                               `bson:"system,omitempty" json:"system,omitempty"`
+	Version       string                               `bson:"version,omitempty" json:"version,omitempty"`
+	CaseSensitive *bool                                `bson:"caseSensitive,omitempty" json:"caseSensitive,omitempty"`
+	Concept       []ValueSetConceptDefinitionComponent `bson:"concept,omitempty" json:"concept,omitempty"`
+}
+
+type ValueSetConceptDefinitionComponent struct {
+	Code        string                                          `bson:"code,omitempty" json:"code,omitempty"`
+	Abstract    *bool                                           `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	Display     string                                          `bson:"display,omitempty" json:"display,omitempty"`
+	Definition  string                                          `bson:"definition,omitempty" json:"definition,omitempty"`
+	Designation []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
+	Concept     []ValueSetConceptDefinitionComponent            `bson:"concept,omitempty" json:"concept,omitempty"`
+}
+
+type ValueSetConceptDefinitionDesignationComponent struct {
 	Language string  `bson:"language,omitempty" json:"language,omitempty"`
 	Use      *Coding `bson:"use,omitempty" json:"use,omitempty"`
 	Value    string  `bson:"value,omitempty" json:"value,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec concept
-type ConceptDefinitionComponent struct {
-	Code        string                                  `bson:"code,omitempty" json:"code,omitempty"`
-	Abstract    *bool                                   `bson:"abstract,omitempty" json:"abstract,omitempty"`
-	Display     string                                  `bson:"display,omitempty" json:"display,omitempty"`
-	Definition  string                                  `bson:"definition,omitempty" json:"definition,omitempty"`
-	Designation []ConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
-	Concept     []ConceptDefinitionComponent            `bson:"concept,omitempty" json:"concept,omitempty"`
+type ValueSetComposeComponent struct {
+	Import  []string                      `bson:"import,omitempty" json:"import,omitempty"`
+	Include []ValueSetConceptSetComponent `bson:"include,omitempty" json:"include,omitempty"`
+	Exclude []ValueSetConceptSetComponent `bson:"exclude,omitempty" json:"exclude,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec define
-type ValueSetDefineComponent struct {
-	System        string                       `bson:"system,omitempty" json:"system,omitempty"`
-	Version       string                       `bson:"version,omitempty" json:"version,omitempty"`
-	CaseSensitive *bool                        `bson:"caseSensitive,omitempty" json:"caseSensitive,omitempty"`
-	Concept       []ConceptDefinitionComponent `bson:"concept,omitempty" json:"concept,omitempty"`
+type ValueSetConceptSetComponent struct {
+	System  string                              `bson:"system,omitempty" json:"system,omitempty"`
+	Version string                              `bson:"version,omitempty" json:"version,omitempty"`
+	Concept []ValueSetConceptReferenceComponent `bson:"concept,omitempty" json:"concept,omitempty"`
+	Filter  []ValueSetConceptSetFilterComponent `bson:"filter,omitempty" json:"filter,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec concept
-type ConceptReferenceComponent struct {
-	Code        string                                  `bson:"code,omitempty" json:"code,omitempty"`
-	Display     string                                  `bson:"display,omitempty" json:"display,omitempty"`
-	Designation []ConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
+type ValueSetConceptReferenceComponent struct {
+	Code        string                                          `bson:"code,omitempty" json:"code,omitempty"`
+	Display     string                                          `bson:"display,omitempty" json:"display,omitempty"`
+	Designation []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec filter
-type ConceptSetFilterComponent struct {
+type ValueSetConceptSetFilterComponent struct {
 	Property string `bson:"property,omitempty" json:"property,omitempty"`
 	Op       string `bson:"op,omitempty" json:"op,omitempty"`
 	Value    string `bson:"value,omitempty" json:"value,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec include
-type ConceptSetComponent struct {
-	System  string                      `bson:"system,omitempty" json:"system,omitempty"`
-	Version string                      `bson:"version,omitempty" json:"version,omitempty"`
-	Concept []ConceptReferenceComponent `bson:"concept,omitempty" json:"concept,omitempty"`
-	Filter  []ConceptSetFilterComponent `bson:"filter,omitempty" json:"filter,omitempty"`
+type ValueSetExpansionComponent struct {
+	Identifier string                                `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Timestamp  *FHIRDateTime                         `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
+	Parameter  []ValueSetExpansionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
+	Contains   []ValueSetExpansionContainsComponent  `bson:"contains,omitempty" json:"contains,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec compose
-type ValueSetComposeComponent struct {
-	Import  []string              `bson:"import,omitempty" json:"import,omitempty"`
-	Include []ConceptSetComponent `bson:"include,omitempty" json:"include,omitempty"`
-	Exclude []ConceptSetComponent `bson:"exclude,omitempty" json:"exclude,omitempty"`
+type ValueSetExpansionParameterComponent struct {
+	Name         string   `bson:"name,omitempty" json:"name,omitempty"`
+	ValueString  string   `bson:"valueString,omitempty" json:"valueString,omitempty"`
+	ValueBoolean *bool    `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
+	ValueInteger *int32   `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
+	ValueDecimal *float64 `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
+	ValueUri     string   `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
+	ValueCode    string   `bson:"valueCode,omitempty" json:"valueCode,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec contains
 type ValueSetExpansionContainsComponent struct {
 	System   string                               `bson:"system,omitempty" json:"system,omitempty"`
 	Abstract *bool                                `bson:"abstract,omitempty" json:"abstract,omitempty"`
@@ -111,13 +130,6 @@ type ValueSetExpansionContainsComponent struct {
 	Code     string                               `bson:"code,omitempty" json:"code,omitempty"`
 	Display  string                               `bson:"display,omitempty" json:"display,omitempty"`
 	Contains []ValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec expansion
-type ValueSetExpansionComponent struct {
-	Identifier *Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Timestamp  *FHIRDateTime                        `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
-	Contains   []ValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
 }
 
 type ValueSetBundle struct {
@@ -141,4 +153,15 @@ type ValueSetCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *ValueSet) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ValueSet
+	}{
+		ResourceType: "ValueSet",
+		ValueSet:     *resource,
+	}
+	return json.Marshal(x)
 }

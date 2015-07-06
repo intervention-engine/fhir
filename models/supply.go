@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Supply struct {
 	Id          string                    `json:"-" bson:"_id"`
@@ -38,7 +41,6 @@ type Supply struct {
 	Dispense    []SupplyDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec dispense
 type SupplyDispenseComponent struct {
 	Identifier     *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Status         string           `bson:"status,omitempty" json:"status,omitempty"`
@@ -47,7 +49,7 @@ type SupplyDispenseComponent struct {
 	SuppliedItem   *Reference       `bson:"suppliedItem,omitempty" json:"suppliedItem,omitempty"`
 	Supplier       *Reference       `bson:"supplier,omitempty" json:"supplier,omitempty"`
 	WhenPrepared   *Period          `bson:"whenPrepared,omitempty" json:"whenPrepared,omitempty"`
-	WhenHandedOver *Period          `bson:"whenHandedOver,omitempty" json:"whenHandedOver,omitempty"`
+	WhenHandedOver *FHIRDateTime    `bson:"whenHandedOver,omitempty" json:"whenHandedOver,omitempty"`
 	Destination    *Reference       `bson:"destination,omitempty" json:"destination,omitempty"`
 	Receiver       []Reference      `bson:"receiver,omitempty" json:"receiver,omitempty"`
 }
@@ -73,4 +75,15 @@ type SupplyCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Supply) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Supply
+	}{
+		ResourceType: "Supply",
+		Supply:       *resource,
+	}
+	return json.Marshal(x)
 }

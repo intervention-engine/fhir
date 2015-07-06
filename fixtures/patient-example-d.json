@@ -23,15 +23,7 @@
       ]
     }
   ],
-  "gender": {
-    "coding": [
-      {
-        "system": "http://hl7.org/fhir/v3/AdministrativeGender",
-        "code": "M",
-        "display": "Male"
-      }
-    ]
-  },
+  "gender": "male",
   "photo": [
     {
       "contentType": "image/gif",

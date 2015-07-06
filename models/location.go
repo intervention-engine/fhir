@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,29 +26,31 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Location struct {
 	Id                   string                     `json:"-" bson:"_id"`
 	Identifier           []Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Name                 string                     `bson:"name,omitempty" json:"name,omitempty"`
 	Description          string                     `bson:"description,omitempty" json:"description,omitempty"`
+	Mode                 string                     `bson:"mode,omitempty" json:"mode,omitempty"`
 	Type                 *CodeableConcept           `bson:"type,omitempty" json:"type,omitempty"`
 	Telecom              []ContactPoint             `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address              *Address                   `bson:"address,omitempty" json:"address,omitempty"`
 	PhysicalType         *CodeableConcept           `bson:"physicalType,omitempty" json:"physicalType,omitempty"`
 	Position             *LocationPositionComponent `bson:"position,omitempty" json:"position,omitempty"`
 	ManagingOrganization *Reference                 `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
-	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
 	PartOf               *Reference                 `bson:"partOf,omitempty" json:"partOf,omitempty"`
-	Mode                 string                     `bson:"mode,omitempty" json:"mode,omitempty"`
+	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec position
 type LocationPositionComponent struct {
-	Longitude float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
-	Latitude  float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
-	Altitude  float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
+	Longitude *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
+	Latitude  *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
+	Altitude  *float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
 }
 
 type LocationBundle struct {
@@ -72,4 +74,15 @@ type LocationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Location) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Location
+	}{
+		ResourceType: "Location",
+		Location:     *resource,
+	}
+	return json.Marshal(x)
 }

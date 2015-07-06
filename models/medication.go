@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -27,9 +27,7 @@
 package models
 
 import (
-	"errors"
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
+	"encoding/json"
 	"time"
 )
 
@@ -44,53 +42,30 @@ type Medication struct {
 	Package      *MedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
 }
 
-type MedicationLookup func(id string) (Medication, error)
-
-func MedicationFinder(database *mgo.Database, idString string) (Medication, error) {
-	var id bson.ObjectId
-	if bson.IsObjectIdHex(idString) {
-		id = bson.ObjectIdHex(idString)
-	} else {
-		return Medication{}, errors.New("Invalid id")
-	}
-
-	c := database.C("medications")
-	result := Medication{}
-	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
-	if err != nil {
-		return Medication{}, err
-	}
-	return result, nil
+type MedicationProductComponent struct {
+	Form       *CodeableConcept                       `bson:"form,omitempty" json:"form,omitempty"`
+	Ingredient []MedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
+	Batch      []MedicationProductBatchComponent      `bson:"batch,omitempty" json:"batch,omitempty"`
 }
 
-func BindMedicationLookup(database *mgo.Database) MedicationLookup {
-	return func(id string) (Medication, error) {
-		return MedicationFinder(database, id)
-	}
-}
-
-// This is an ugly hack to deal with embedded structures in the spec ingredient
 type MedicationProductIngredientComponent struct {
 	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
 	Amount *Ratio     `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec product
-type MedicationProductComponent struct {
-	Form       *CodeableConcept                       `bson:"form,omitempty" json:"form,omitempty"`
-	Ingredient []MedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
+type MedicationProductBatchComponent struct {
+	LotNumber      string        `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
+	ExpirationDate *FHIRDateTime `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec content
-type MedicationPackageContentComponent struct {
-	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
-	Amount *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec package
 type MedicationPackageComponent struct {
 	Container *CodeableConcept                    `bson:"container,omitempty" json:"container,omitempty"`
 	Content   []MedicationPackageContentComponent `bson:"content,omitempty" json:"content,omitempty"`
+}
+
+type MedicationPackageContentComponent struct {
+	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
+	Amount *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
 type MedicationBundle struct {
@@ -114,4 +89,15 @@ type MedicationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Medication) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Medication
+	}{
+		ResourceType: "Medication",
+		Medication:   *resource,
+	}
+	return json.Marshal(x)
 }

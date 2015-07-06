@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,19 +26,20 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type OrderResponse struct {
-	Id                       string           `json:"-" bson:"_id"`
-	Identifier               []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Request                  *Reference       `bson:"request,omitempty" json:"request,omitempty"`
-	Date                     *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
-	Who                      *Reference       `bson:"who,omitempty" json:"who,omitempty"`
-	AuthorityCodeableConcept *CodeableConcept `bson:"authorityCodeableConcept,omitempty" json:"authorityCodeableConcept,omitempty"`
-	AuthorityReference       *Reference       `bson:"authorityReference,omitempty" json:"authorityReference,omitempty"`
-	Code                     string           `bson:"code,omitempty" json:"code,omitempty"`
-	Description              string           `bson:"description,omitempty" json:"description,omitempty"`
-	Fulfillment              []Reference      `bson:"fulfillment,omitempty" json:"fulfillment,omitempty"`
+	Id          string        `json:"-" bson:"_id"`
+	Identifier  []Identifier  `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Request     *Reference    `bson:"request,omitempty" json:"request,omitempty"`
+	Date        *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
+	Who         *Reference    `bson:"who,omitempty" json:"who,omitempty"`
+	OrderStatus string        `bson:"orderStatus,omitempty" json:"orderStatus,omitempty"`
+	Description string        `bson:"description,omitempty" json:"description,omitempty"`
+	Fulfillment []Reference   `bson:"fulfillment,omitempty" json:"fulfillment,omitempty"`
 }
 
 type OrderResponseBundle struct {
@@ -62,4 +63,15 @@ type OrderResponseCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *OrderResponse) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		OrderResponse
+	}{
+		ResourceType:  "OrderResponse",
+		OrderResponse: *resource,
+	}
+	return json.Marshal(x)
 }

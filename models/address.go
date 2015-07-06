@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -27,13 +27,13 @@
 package models
 
 type Address struct {
-	Id      string   `json:"-" bson:"_id"`
-	Use     string   `bson:"use,omitempty" json:"use,omitempty"`
-	Text    string   `bson:"text,omitempty" json:"text,omitempty"`
-	Line    []string `bson:"line,omitempty" json:"line,omitempty"`
-	City    string   `bson:"city,omitempty" json:"city,omitempty"`
-	State   string   `bson:"state,omitempty" json:"state,omitempty"`
-	Zip     string   `bson:"zip,omitempty" json:"zip,omitempty"`
-	Country string   `bson:"country,omitempty" json:"country,omitempty"`
-	Period  *Period  `bson:"period,omitempty" json:"period,omitempty"`
+	Id         string   `json:"-" bson:"_id"`
+	Use        string   `bson:"use,omitempty" json:"use,omitempty"`
+	Text       string   `bson:"text,omitempty" json:"text,omitempty"`
+	Line       []string `bson:"line,omitempty" json:"line,omitempty"`
+	City       string   `bson:"city,omitempty" json:"city,omitempty"`
+	State      string   `bson:"state,omitempty" json:"state,omitempty"`
+	PostalCode string   `bson:"postalCode,omitempty" json:"postalCode,omitempty"`
+	Country    string   `bson:"country,omitempty" json:"country,omitempty"`
+	Period     *Period  `bson:"period,omitempty" json:"period,omitempty"`
 }

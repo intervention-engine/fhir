@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,19 +26,21 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Slot struct {
 	Id           string           `json:"-" bson:"_id"`
 	Identifier   []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type         *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Availability *Reference       `bson:"availability,omitempty" json:"availability,omitempty"`
+	Schedule     *Reference       `bson:"schedule,omitempty" json:"schedule,omitempty"`
 	FreeBusyType string           `bson:"freeBusyType,omitempty" json:"freeBusyType,omitempty"`
 	Start        *FHIRDateTime    `bson:"start,omitempty" json:"start,omitempty"`
 	End          *FHIRDateTime    `bson:"end,omitempty" json:"end,omitempty"`
 	Overbooked   *bool            `bson:"overbooked,omitempty" json:"overbooked,omitempty"`
 	Comment      string           `bson:"comment,omitempty" json:"comment,omitempty"`
-	LastModified *FHIRDateTime    `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
 }
 
 type SlotBundle struct {
@@ -62,4 +64,15 @@ type SlotCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Slot) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Slot
+	}{
+		ResourceType: "Slot",
+		Slot:         *resource,
+	}
+	return json.Marshal(x)
 }

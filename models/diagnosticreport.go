@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,30 +26,33 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type DiagnosticReport struct {
-	Id                 string                           `json:"-" bson:"_id"`
-	Name               *CodeableConcept                 `bson:"name,omitempty" json:"name,omitempty"`
-	Status             string                           `bson:"status,omitempty" json:"status,omitempty"`
-	Issued             *FHIRDateTime                    `bson:"issued,omitempty" json:"issued,omitempty"`
-	Subject            *Reference                       `bson:"subject,omitempty" json:"subject,omitempty"`
-	Performer          *Reference                       `bson:"performer,omitempty" json:"performer,omitempty"`
-	Identifier         *Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	RequestDetail      []Reference                      `bson:"requestDetail,omitempty" json:"requestDetail,omitempty"`
-	ServiceCategory    *CodeableConcept                 `bson:"serviceCategory,omitempty" json:"serviceCategory,omitempty"`
-	DiagnosticDateTime *FHIRDateTime                    `bson:"diagnosticDateTime,omitempty" json:"diagnosticDateTime,omitempty"`
-	DiagnosticPeriod   *Period                          `bson:"diagnosticPeriod,omitempty" json:"diagnosticPeriod,omitempty"`
-	Specimen           []Reference                      `bson:"specimen,omitempty" json:"specimen,omitempty"`
-	Result             []Reference                      `bson:"result,omitempty" json:"result,omitempty"`
-	ImagingStudy       []Reference                      `bson:"imagingStudy,omitempty" json:"imagingStudy,omitempty"`
-	Image              []DiagnosticReportImageComponent `bson:"image,omitempty" json:"image,omitempty"`
-	Conclusion         string                           `bson:"conclusion,omitempty" json:"conclusion,omitempty"`
-	CodedDiagnosis     []CodeableConcept                `bson:"codedDiagnosis,omitempty" json:"codedDiagnosis,omitempty"`
-	PresentedForm      []Attachment                     `bson:"presentedForm,omitempty" json:"presentedForm,omitempty"`
+	Id                string                           `json:"-" bson:"_id"`
+	Code              *CodeableConcept                 `bson:"code,omitempty" json:"code,omitempty"`
+	Status            string                           `bson:"status,omitempty" json:"status,omitempty"`
+	Issued            *FHIRDateTime                    `bson:"issued,omitempty" json:"issued,omitempty"`
+	Subject           *Reference                       `bson:"subject,omitempty" json:"subject,omitempty"`
+	Performer         *Reference                       `bson:"performer,omitempty" json:"performer,omitempty"`
+	Encounter         *Reference                       `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Identifier        []Identifier                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	RequestDetail     []Reference                      `bson:"requestDetail,omitempty" json:"requestDetail,omitempty"`
+	ServiceCategory   *CodeableConcept                 `bson:"serviceCategory,omitempty" json:"serviceCategory,omitempty"`
+	EffectiveDateTime *FHIRDateTime                    `bson:"effectiveDateTime,omitempty" json:"effectiveDateTime,omitempty"`
+	EffectivePeriod   *Period                          `bson:"effectivePeriod,omitempty" json:"effectivePeriod,omitempty"`
+	Specimen          []Reference                      `bson:"specimen,omitempty" json:"specimen,omitempty"`
+	Result            []Reference                      `bson:"result,omitempty" json:"result,omitempty"`
+	ImagingStudy      []Reference                      `bson:"imagingStudy,omitempty" json:"imagingStudy,omitempty"`
+	Image             []DiagnosticReportImageComponent `bson:"image,omitempty" json:"image,omitempty"`
+	Conclusion        string                           `bson:"conclusion,omitempty" json:"conclusion,omitempty"`
+	CodedDiagnosis    []CodeableConcept                `bson:"codedDiagnosis,omitempty" json:"codedDiagnosis,omitempty"`
+	PresentedForm     []Attachment                     `bson:"presentedForm,omitempty" json:"presentedForm,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec image
 type DiagnosticReportImageComponent struct {
 	Comment string     `bson:"comment,omitempty" json:"comment,omitempty"`
 	Link    *Reference `bson:"link,omitempty" json:"link,omitempty"`
@@ -76,4 +79,15 @@ type DiagnosticReportCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *DiagnosticReport) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DiagnosticReport
+	}{
+		ResourceType:     "DiagnosticReport",
+		DiagnosticReport: *resource,
+	}
+	return json.Marshal(x)
 }

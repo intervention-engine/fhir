@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,36 +26,53 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Procedure struct {
-	Id           string                          `json:"-" bson:"_id"`
-	Identifier   []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Subject      *Reference                      `bson:"subject,omitempty" json:"subject,omitempty"`
-	Type         *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
-	BodySite     []CodeableConcept               `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
-	Indication   []CodeableConcept               `bson:"indication,omitempty" json:"indication,omitempty"`
-	Performer    []ProcedurePerformerComponent   `bson:"performer,omitempty" json:"performer,omitempty"`
-	Date         *Period                         `bson:"date,omitempty" json:"date,omitempty"`
-	Encounter    *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Outcome      string                          `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	Report       []Reference                     `bson:"report,omitempty" json:"report,omitempty"`
-	Complication []CodeableConcept               `bson:"complication,omitempty" json:"complication,omitempty"`
-	FollowUp     string                          `bson:"followUp,omitempty" json:"followUp,omitempty"`
-	RelatedItem  []ProcedureRelatedItemComponent `bson:"relatedItem,omitempty" json:"relatedItem,omitempty"`
-	Notes        string                          `bson:"notes,omitempty" json:"notes,omitempty"`
+	Id                string                          `json:"-" bson:"_id"`
+	Identifier        []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient           *Reference                      `bson:"patient,omitempty" json:"patient,omitempty"`
+	Status            string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Category          *CodeableConcept                `bson:"category,omitempty" json:"category,omitempty"`
+	Type              *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
+	BodySite          []ProcedureBodySiteComponent    `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	Indication        []CodeableConcept               `bson:"indication,omitempty" json:"indication,omitempty"`
+	Performer         []ProcedurePerformerComponent   `bson:"performer,omitempty" json:"performer,omitempty"`
+	PerformedDateTime *FHIRDateTime                   `bson:"performedDateTime,omitempty" json:"performedDateTime,omitempty"`
+	PerformedPeriod   *Period                         `bson:"performedPeriod,omitempty" json:"performedPeriod,omitempty"`
+	Encounter         *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Location          *Reference                      `bson:"location,omitempty" json:"location,omitempty"`
+	Outcome           *CodeableConcept                `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	Report            []Reference                     `bson:"report,omitempty" json:"report,omitempty"`
+	Complication      []CodeableConcept               `bson:"complication,omitempty" json:"complication,omitempty"`
+	FollowUp          []CodeableConcept               `bson:"followUp,omitempty" json:"followUp,omitempty"`
+	RelatedItem       []ProcedureRelatedItemComponent `bson:"relatedItem,omitempty" json:"relatedItem,omitempty"`
+	Notes             string                          `bson:"notes,omitempty" json:"notes,omitempty"`
+	Device            []ProcedureDeviceComponent      `bson:"device,omitempty" json:"device,omitempty"`
+	Used              []Reference                     `bson:"used,omitempty" json:"used,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec performer
+type ProcedureBodySiteComponent struct {
+	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
+	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
+}
+
 type ProcedurePerformerComponent struct {
 	Person *Reference       `bson:"person,omitempty" json:"person,omitempty"`
 	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec relatedItem
 type ProcedureRelatedItemComponent struct {
 	Type   string     `bson:"type,omitempty" json:"type,omitempty"`
 	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
+}
+
+type ProcedureDeviceComponent struct {
+	Action      *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
+	Manipulated *Reference       `bson:"manipulated,omitempty" json:"manipulated,omitempty"`
 }
 
 type ProcedureBundle struct {
@@ -79,4 +96,15 @@ type ProcedureCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Procedure) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Procedure
+	}{
+		ResourceType: "Procedure",
+		Procedure:    *resource,
+	}
+	return json.Marshal(x)
 }

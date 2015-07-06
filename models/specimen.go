@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,13 +26,16 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Specimen struct {
 	Id                  string                       `json:"-" bson:"_id"`
 	Identifier          []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type                *CodeableConcept             `bson:"type,omitempty" json:"type,omitempty"`
-	Source              []SpecimenSourceComponent    `bson:"source,omitempty" json:"source,omitempty"`
+	Parent              []Reference                  `bson:"parent,omitempty" json:"parent,omitempty"`
 	Subject             *Reference                   `bson:"subject,omitempty" json:"subject,omitempty"`
 	AccessionIdentifier *Identifier                  `bson:"accessionIdentifier,omitempty" json:"accessionIdentifier,omitempty"`
 	ReceivedTime        *FHIRDateTime                `bson:"receivedTime,omitempty" json:"receivedTime,omitempty"`
@@ -41,38 +44,31 @@ type Specimen struct {
 	Container           []SpecimenContainerComponent `bson:"container,omitempty" json:"container,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec source
-type SpecimenSourceComponent struct {
-	Relationship string      `bson:"relationship,omitempty" json:"relationship,omitempty"`
-	Target       []Reference `bson:"target,omitempty" json:"target,omitempty"`
-}
-
-// This is an ugly hack to deal with embedded structures in the spec collection
 type SpecimenCollectionComponent struct {
-	Collector         *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
-	Comment           []string         `bson:"comment,omitempty" json:"comment,omitempty"`
-	CollectedDateTime *FHIRDateTime    `bson:"collectedDateTime,omitempty" json:"collectedDateTime,omitempty"`
-	CollectedPeriod   *Period          `bson:"collectedPeriod,omitempty" json:"collectedPeriod,omitempty"`
-	Quantity          *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Method            *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
-	SourceSite        *CodeableConcept `bson:"sourceSite,omitempty" json:"sourceSite,omitempty"`
+	Collector               *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
+	Comment                 []string         `bson:"comment,omitempty" json:"comment,omitempty"`
+	CollectedDateTime       *FHIRDateTime    `bson:"collectedDateTime,omitempty" json:"collectedDateTime,omitempty"`
+	CollectedPeriod         *Period          `bson:"collectedPeriod,omitempty" json:"collectedPeriod,omitempty"`
+	Quantity                *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Method                  *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
+	BodySiteCodeableConcept *CodeableConcept `bson:"bodySiteCodeableConcept,omitempty" json:"bodySiteCodeableConcept,omitempty"`
+	BodySiteReference       *Reference       `bson:"bodySiteReference,omitempty" json:"bodySiteReference,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec treatment
 type SpecimenTreatmentComponent struct {
 	Description string           `bson:"description,omitempty" json:"description,omitempty"`
 	Procedure   *CodeableConcept `bson:"procedure,omitempty" json:"procedure,omitempty"`
 	Additive    []Reference      `bson:"additive,omitempty" json:"additive,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec container
 type SpecimenContainerComponent struct {
-	Identifier       []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Description      string           `bson:"description,omitempty" json:"description,omitempty"`
-	Type             *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Capacity         *Quantity        `bson:"capacity,omitempty" json:"capacity,omitempty"`
-	SpecimenQuantity *Quantity        `bson:"specimenQuantity,omitempty" json:"specimenQuantity,omitempty"`
-	Additive         *Reference       `bson:"additive,omitempty" json:"additive,omitempty"`
+	Identifier              []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Description             string           `bson:"description,omitempty" json:"description,omitempty"`
+	Type                    *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Capacity                *Quantity        `bson:"capacity,omitempty" json:"capacity,omitempty"`
+	SpecimenQuantity        *Quantity        `bson:"specimenQuantity,omitempty" json:"specimenQuantity,omitempty"`
+	AdditiveCodeableConcept *CodeableConcept `bson:"additiveCodeableConcept,omitempty" json:"additiveCodeableConcept,omitempty"`
+	AdditiveReference       *Reference       `bson:"additiveReference,omitempty" json:"additiveReference,omitempty"`
 }
 
 type SpecimenBundle struct {
@@ -96,4 +92,15 @@ type SpecimenCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Specimen) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Specimen
+	}{
+		ResourceType: "Specimen",
+		Specimen:     *resource,
+	}
+	return json.Marshal(x)
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,18 +26,22 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Immunization struct {
 	Id                  string                                     `json:"-" bson:"_id"`
 	Identifier          []Identifier                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Date                *FHIRDateTime                              `bson:"date,omitempty" json:"date,omitempty"`
 	VaccineType         *CodeableConcept                           `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
-	Subject             *Reference                                 `bson:"subject,omitempty" json:"subject,omitempty"`
-	RefusedIndicator    *bool                                      `bson:"refusedIndicator,omitempty" json:"refusedIndicator,omitempty"`
+	Patient             *Reference                                 `bson:"patient,omitempty" json:"patient,omitempty"`
+	WasNotGiven         *bool                                      `bson:"wasNotGiven,omitempty" json:"wasNotGiven,omitempty"`
 	Reported            *bool                                      `bson:"reported,omitempty" json:"reported,omitempty"`
 	Performer           *Reference                                 `bson:"performer,omitempty" json:"performer,omitempty"`
 	Requester           *Reference                                 `bson:"requester,omitempty" json:"requester,omitempty"`
+	Encounter           *Reference                                 `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Manufacturer        *Reference                                 `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
 	Location            *Reference                                 `bson:"location,omitempty" json:"location,omitempty"`
 	LotNumber           string                                     `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
@@ -50,26 +54,23 @@ type Immunization struct {
 	VaccinationProtocol []ImmunizationVaccinationProtocolComponent `bson:"vaccinationProtocol,omitempty" json:"vaccinationProtocol,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec explanation
 type ImmunizationExplanationComponent struct {
-	Reason        []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
-	RefusalReason []CodeableConcept `bson:"refusalReason,omitempty" json:"refusalReason,omitempty"`
+	Reason         []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
+	ReasonNotGiven []CodeableConcept `bson:"reasonNotGiven,omitempty" json:"reasonNotGiven,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec reaction
 type ImmunizationReactionComponent struct {
 	Date     *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
 	Detail   *Reference    `bson:"detail,omitempty" json:"detail,omitempty"`
 	Reported *bool         `bson:"reported,omitempty" json:"reported,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec vaccinationProtocol
 type ImmunizationVaccinationProtocolComponent struct {
-	DoseSequence     float64          `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
+	DoseSequence     *uint32          `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
 	Description      string           `bson:"description,omitempty" json:"description,omitempty"`
 	Authority        *Reference       `bson:"authority,omitempty" json:"authority,omitempty"`
 	Series           string           `bson:"series,omitempty" json:"series,omitempty"`
-	SeriesDoses      float64          `bson:"seriesDoses,omitempty" json:"seriesDoses,omitempty"`
+	SeriesDoses      *uint32          `bson:"seriesDoses,omitempty" json:"seriesDoses,omitempty"`
 	DoseTarget       *CodeableConcept `bson:"doseTarget,omitempty" json:"doseTarget,omitempty"`
 	DoseStatus       *CodeableConcept `bson:"doseStatus,omitempty" json:"doseStatus,omitempty"`
 	DoseStatusReason *CodeableConcept `bson:"doseStatusReason,omitempty" json:"doseStatusReason,omitempty"`
@@ -96,4 +97,15 @@ type ImmunizationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Immunization) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Immunization
+	}{
+		ResourceType: "Immunization",
+		Immunization: *resource,
+	}
+	return json.Marshal(x)
 }

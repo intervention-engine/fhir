@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2014, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +26,10 @@
 
 package models
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type Contraindication struct {
 	Id         string                                `json:"-" bson:"_id"`
@@ -42,7 +45,6 @@ type Contraindication struct {
 	Mitigation []ContraindicationMitigationComponent `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
 
-// This is an ugly hack to deal with embedded structures in the spec mitigation
 type ContraindicationMitigationComponent struct {
 	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
 	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
@@ -70,4 +72,15 @@ type ContraindicationCategory struct {
 	Term   string `json:"term,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Scheme string `json:"scheme,omitempty"`
+}
+
+func (resource *Contraindication) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Contraindication
+	}{
+		ResourceType:     "Contraindication",
+		Contraindication: *resource,
+	}
+	return json.Marshal(x)
 }
