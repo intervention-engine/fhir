@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	var allergyintoleranceEntryList []models.AllergyIntoleranceBundleEntry
 	for _, allergyintolerance := range result {
 		var entry models.AllergyIntoleranceBundleEntry
-		entry.Title = "AllergyIntolerance " + allergyintolerance.Id
 		entry.Id = allergyintolerance.Id
-		entry.Content = allergyintolerance
+		entry.Resource = allergyintolerance
 		allergyintoleranceEntryList = append(allergyintoleranceEntryList, entry)
 	}
 
 	var bundle models.AllergyIntoleranceBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "AllergyIntolerance Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = allergyintoleranceEntryList
 
 	log.Println("Setting allergyintolerance search context")

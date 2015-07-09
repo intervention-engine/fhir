@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type OperationOutcome struct {
 	Id    string                           `json:"-" bson:"_id"`
@@ -44,26 +41,19 @@ type OperationOutcomeIssueComponent struct {
 }
 
 type OperationOutcomeBundle struct {
-	Type         string                        `json:"resourceType,omitempty"`
-	Title        string                        `json:"title,omitempty"`
-	Id           string                        `json:"id,omitempty"`
-	Updated      time.Time                     `json:"updated,omitempty"`
-	TotalResults int                           `json:"totalResults,omitempty"`
-	Entry        []OperationOutcomeBundleEntry `json:"entry,omitempty"`
-	Category     OperationOutcomeCategory      `json:"category,omitempty"`
+	Id    string                        `json:"id,omitempty"`
+	Type  string                        `json:"resourceType,omitempty"`
+	Base  string                        `json:"base,omitempty"`
+	Total int                           `json:"total,omitempty"`
+	Link  []BundleLinkComponent         `json:"link,omitempty"`
+	Entry []OperationOutcomeBundleEntry `json:"entry,omitempty"`
 }
 
 type OperationOutcomeBundleEntry struct {
-	Title    string                   `json:"title,omitempty"`
-	Id       string                   `json:"id,omitempty"`
-	Content  OperationOutcome         `json:"content,omitempty"`
-	Category OperationOutcomeCategory `json:"category,omitempty"`
-}
-
-type OperationOutcomeCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource OperationOutcome      `json:"resource,omitempty"`
 }
 
 func (resource *OperationOutcome) MarshalJSON() ([]byte, error) {

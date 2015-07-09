@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Conformance struct {
 	Id             string                              `json:"-" bson:"_id"`
@@ -157,26 +154,19 @@ type ConformanceDocumentComponent struct {
 }
 
 type ConformanceBundle struct {
-	Type         string                   `json:"resourceType,omitempty"`
-	Title        string                   `json:"title,omitempty"`
-	Id           string                   `json:"id,omitempty"`
-	Updated      time.Time                `json:"updated,omitempty"`
-	TotalResults int                      `json:"totalResults,omitempty"`
-	Entry        []ConformanceBundleEntry `json:"entry,omitempty"`
-	Category     ConformanceCategory      `json:"category,omitempty"`
+	Id    string                   `json:"id,omitempty"`
+	Type  string                   `json:"resourceType,omitempty"`
+	Base  string                   `json:"base,omitempty"`
+	Total int                      `json:"total,omitempty"`
+	Link  []BundleLinkComponent    `json:"link,omitempty"`
+	Entry []ConformanceBundleEntry `json:"entry,omitempty"`
 }
 
 type ConformanceBundleEntry struct {
-	Title    string              `json:"title,omitempty"`
-	Id       string              `json:"id,omitempty"`
-	Content  Conformance         `json:"content,omitempty"`
-	Category ConformanceCategory `json:"category,omitempty"`
-}
-
-type ConformanceCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Conformance           `json:"resource,omitempty"`
 }
 
 func (resource *Conformance) MarshalJSON() ([]byte, error) {

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func CoverageIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var coverageEntryList []models.CoverageBundleEntry
 	for _, coverage := range result {
 		var entry models.CoverageBundleEntry
-		entry.Title = "Coverage " + coverage.Id
 		entry.Id = coverage.Id
-		entry.Content = coverage
+		entry.Resource = coverage
 		coverageEntryList = append(coverageEntryList, entry)
 	}
 
 	var bundle models.CoverageBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Coverage Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = coverageEntryList
 
 	log.Println("Setting coverage search context")

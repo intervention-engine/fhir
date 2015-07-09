@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -41,18 +40,15 @@ func MedicationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	var medicationEntryList []models.MedicationBundleEntry
 	for _, medication := range result {
 		var entry models.MedicationBundleEntry
-		entry.Title = "Medication " + medication.Id
 		entry.Id = medication.Id
-		entry.Content = medication
+		entry.Resource = medication
 		medicationEntryList = append(medicationEntryList, entry)
 	}
 
 	var bundle models.MedicationBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Medication Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = medicationEntryList
 
 	log.Println("Setting medication search context")

@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -41,18 +40,15 @@ func StructureDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	var structuredefinitionEntryList []models.StructureDefinitionBundleEntry
 	for _, structuredefinition := range result {
 		var entry models.StructureDefinitionBundleEntry
-		entry.Title = "StructureDefinition " + structuredefinition.Id
 		entry.Id = structuredefinition.Id
-		entry.Content = structuredefinition
+		entry.Resource = structuredefinition
 		structuredefinitionEntryList = append(structuredefinitionEntryList, entry)
 	}
 
 	var bundle models.StructureDefinitionBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "StructureDefinition Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = structuredefinitionEntryList
 
 	log.Println("Setting structuredefinition search context")

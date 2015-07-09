@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -41,18 +40,15 @@ func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	var operationdefinitionEntryList []models.OperationDefinitionBundleEntry
 	for _, operationdefinition := range result {
 		var entry models.OperationDefinitionBundleEntry
-		entry.Title = "OperationDefinition " + operationdefinition.Id
 		entry.Id = operationdefinition.Id
-		entry.Content = operationdefinition
+		entry.Resource = operationdefinition
 		operationdefinitionEntryList = append(operationdefinitionEntryList, entry)
 	}
 
 	var bundle models.OperationDefinitionBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "OperationDefinition Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = operationdefinitionEntryList
 
 	log.Println("Setting operationdefinition search context")

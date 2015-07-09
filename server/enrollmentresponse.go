@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func EnrollmentResponseIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	var enrollmentresponseEntryList []models.EnrollmentResponseBundleEntry
 	for _, enrollmentresponse := range result {
 		var entry models.EnrollmentResponseBundleEntry
-		entry.Title = "EnrollmentResponse " + enrollmentresponse.Id
 		entry.Id = enrollmentresponse.Id
-		entry.Content = enrollmentresponse
+		entry.Resource = enrollmentresponse
 		enrollmentresponseEntryList = append(enrollmentresponseEntryList, entry)
 	}
 
 	var bundle models.EnrollmentResponseBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "EnrollmentResponse Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = enrollmentresponseEntryList
 
 	log.Println("Setting enrollmentresponse search context")

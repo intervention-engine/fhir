@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type OrderResponse struct {
 	Id          string        `json:"-" bson:"_id"`
@@ -43,26 +40,19 @@ type OrderResponse struct {
 }
 
 type OrderResponseBundle struct {
-	Type         string                     `json:"resourceType,omitempty"`
-	Title        string                     `json:"title,omitempty"`
-	Id           string                     `json:"id,omitempty"`
-	Updated      time.Time                  `json:"updated,omitempty"`
-	TotalResults int                        `json:"totalResults,omitempty"`
-	Entry        []OrderResponseBundleEntry `json:"entry,omitempty"`
-	Category     OrderResponseCategory      `json:"category,omitempty"`
+	Id    string                     `json:"id,omitempty"`
+	Type  string                     `json:"resourceType,omitempty"`
+	Base  string                     `json:"base,omitempty"`
+	Total int                        `json:"total,omitempty"`
+	Link  []BundleLinkComponent      `json:"link,omitempty"`
+	Entry []OrderResponseBundleEntry `json:"entry,omitempty"`
 }
 
 type OrderResponseBundleEntry struct {
-	Title    string                `json:"title,omitempty"`
 	Id       string                `json:"id,omitempty"`
-	Content  OrderResponse         `json:"content,omitempty"`
-	Category OrderResponseCategory `json:"category,omitempty"`
-}
-
-type OrderResponseCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource OrderResponse         `json:"resource,omitempty"`
 }
 
 func (resource *OrderResponse) MarshalJSON() ([]byte, error) {

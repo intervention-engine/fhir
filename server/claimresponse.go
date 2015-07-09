@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func ClaimResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var claimresponseEntryList []models.ClaimResponseBundleEntry
 	for _, claimresponse := range result {
 		var entry models.ClaimResponseBundleEntry
-		entry.Title = "ClaimResponse " + claimresponse.Id
 		entry.Id = claimresponse.Id
-		entry.Content = claimresponse
+		entry.Resource = claimresponse
 		claimresponseEntryList = append(claimresponseEntryList, entry)
 	}
 
 	var bundle models.ClaimResponseBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "ClaimResponse Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = claimresponseEntryList
 
 	log.Println("Setting claimresponse search context")

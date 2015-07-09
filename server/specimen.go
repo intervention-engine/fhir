@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var specimenEntryList []models.SpecimenBundleEntry
 	for _, specimen := range result {
 		var entry models.SpecimenBundleEntry
-		entry.Title = "Specimen " + specimen.Id
 		entry.Id = specimen.Id
-		entry.Content = specimen
+		entry.Resource = specimen
 		specimenEntryList = append(specimenEntryList, entry)
 	}
 
 	var bundle models.SpecimenBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Specimen Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = specimenEntryList
 
 	log.Println("Setting specimen search context")

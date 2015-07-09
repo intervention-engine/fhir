@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func ListIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func ListIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	var listEntryList []models.ListBundleEntry
 	for _, list := range result {
 		var entry models.ListBundleEntry
-		entry.Title = "List " + list.Id
 		entry.Id = list.Id
-		entry.Content = list
+		entry.Resource = list
 		listEntryList = append(listEntryList, entry)
 	}
 
 	var bundle models.ListBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "List Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = listEntryList
 
 	log.Println("Setting list search context")

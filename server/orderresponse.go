@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var orderresponseEntryList []models.OrderResponseBundleEntry
 	for _, orderresponse := range result {
 		var entry models.OrderResponseBundleEntry
-		entry.Title = "OrderResponse " + orderresponse.Id
 		entry.Id = orderresponse.Id
-		entry.Content = orderresponse
+		entry.Resource = orderresponse
 		orderresponseEntryList = append(orderresponseEntryList, entry)
 	}
 
 	var bundle models.OrderResponseBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "OrderResponse Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = orderresponseEntryList
 
 	log.Println("Setting orderresponse search context")

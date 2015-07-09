@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func NamingSystemIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var namingsystemEntryList []models.NamingSystemBundleEntry
 	for _, namingsystem := range result {
 		var entry models.NamingSystemBundleEntry
-		entry.Title = "NamingSystem " + namingsystem.Id
 		entry.Id = namingsystem.Id
-		entry.Content = namingsystem
+		entry.Resource = namingsystem
 		namingsystemEntryList = append(namingsystemEntryList, entry)
 	}
 
 	var bundle models.NamingSystemBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "NamingSystem Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = namingsystemEntryList
 
 	log.Println("Setting namingsystem search context")

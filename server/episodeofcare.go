@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func EpisodeOfCareIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func EpisodeOfCareIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var episodeofcareEntryList []models.EpisodeOfCareBundleEntry
 	for _, episodeofcare := range result {
 		var entry models.EpisodeOfCareBundleEntry
-		entry.Title = "EpisodeOfCare " + episodeofcare.Id
 		entry.Id = episodeofcare.Id
-		entry.Content = episodeofcare
+		entry.Resource = episodeofcare
 		episodeofcareEntryList = append(episodeofcareEntryList, entry)
 	}
 
 	var bundle models.EpisodeOfCareBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "EpisodeOfCare Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = episodeofcareEntryList
 
 	log.Println("Setting episodeofcare search context")

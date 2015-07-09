@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Composition struct {
 	Id              string                         `json:"-" bson:"_id"`
@@ -69,26 +66,19 @@ type CompositionSectionComponent struct {
 }
 
 type CompositionBundle struct {
-	Type         string                   `json:"resourceType,omitempty"`
-	Title        string                   `json:"title,omitempty"`
-	Id           string                   `json:"id,omitempty"`
-	Updated      time.Time                `json:"updated,omitempty"`
-	TotalResults int                      `json:"totalResults,omitempty"`
-	Entry        []CompositionBundleEntry `json:"entry,omitempty"`
-	Category     CompositionCategory      `json:"category,omitempty"`
+	Id    string                   `json:"id,omitempty"`
+	Type  string                   `json:"resourceType,omitempty"`
+	Base  string                   `json:"base,omitempty"`
+	Total int                      `json:"total,omitempty"`
+	Link  []BundleLinkComponent    `json:"link,omitempty"`
+	Entry []CompositionBundleEntry `json:"entry,omitempty"`
 }
 
 type CompositionBundleEntry struct {
-	Title    string              `json:"title,omitempty"`
-	Id       string              `json:"id,omitempty"`
-	Content  Composition         `json:"content,omitempty"`
-	Category CompositionCategory `json:"category,omitempty"`
-}
-
-type CompositionCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Composition           `json:"resource,omitempty"`
 }
 
 func (resource *Composition) MarshalJSON() ([]byte, error) {

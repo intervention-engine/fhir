@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var practitionerEntryList []models.PractitionerBundleEntry
 	for _, practitioner := range result {
 		var entry models.PractitionerBundleEntry
-		entry.Title = "Practitioner " + practitioner.Id
 		entry.Id = practitioner.Id
-		entry.Content = practitioner
+		entry.Resource = practitioner
 		practitionerEntryList = append(practitionerEntryList, entry)
 	}
 
 	var bundle models.PractitionerBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Practitioner Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = practitionerEntryList
 
 	log.Println("Setting practitioner search context")

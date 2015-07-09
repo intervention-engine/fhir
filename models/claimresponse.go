@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type ClaimResponse struct {
 	Id                      string                            `json:"-" bson:"_id"`
@@ -149,26 +146,19 @@ type ClaimResponseCoverageComponent struct {
 }
 
 type ClaimResponseBundle struct {
-	Type         string                     `json:"resourceType,omitempty"`
-	Title        string                     `json:"title,omitempty"`
-	Id           string                     `json:"id,omitempty"`
-	Updated      time.Time                  `json:"updated,omitempty"`
-	TotalResults int                        `json:"totalResults,omitempty"`
-	Entry        []ClaimResponseBundleEntry `json:"entry,omitempty"`
-	Category     ClaimResponseCategory      `json:"category,omitempty"`
+	Id    string                     `json:"id,omitempty"`
+	Type  string                     `json:"resourceType,omitempty"`
+	Base  string                     `json:"base,omitempty"`
+	Total int                        `json:"total,omitempty"`
+	Link  []BundleLinkComponent      `json:"link,omitempty"`
+	Entry []ClaimResponseBundleEntry `json:"entry,omitempty"`
 }
 
 type ClaimResponseBundleEntry struct {
-	Title    string                `json:"title,omitempty"`
 	Id       string                `json:"id,omitempty"`
-	Content  ClaimResponse         `json:"content,omitempty"`
-	Category ClaimResponseCategory `json:"category,omitempty"`
-}
-
-type ClaimResponseCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource ClaimResponse         `json:"resource,omitempty"`
 }
 
 func (resource *ClaimResponse) MarshalJSON() ([]byte, error) {

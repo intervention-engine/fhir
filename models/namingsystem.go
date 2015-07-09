@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type NamingSystem struct {
 	Id          string                          `json:"-" bson:"_id"`
@@ -61,26 +58,19 @@ type NamingSystemContactComponent struct {
 }
 
 type NamingSystemBundle struct {
-	Type         string                    `json:"resourceType,omitempty"`
-	Title        string                    `json:"title,omitempty"`
-	Id           string                    `json:"id,omitempty"`
-	Updated      time.Time                 `json:"updated,omitempty"`
-	TotalResults int                       `json:"totalResults,omitempty"`
-	Entry        []NamingSystemBundleEntry `json:"entry,omitempty"`
-	Category     NamingSystemCategory      `json:"category,omitempty"`
+	Id    string                    `json:"id,omitempty"`
+	Type  string                    `json:"resourceType,omitempty"`
+	Base  string                    `json:"base,omitempty"`
+	Total int                       `json:"total,omitempty"`
+	Link  []BundleLinkComponent     `json:"link,omitempty"`
+	Entry []NamingSystemBundleEntry `json:"entry,omitempty"`
 }
 
 type NamingSystemBundleEntry struct {
-	Title    string               `json:"title,omitempty"`
-	Id       string               `json:"id,omitempty"`
-	Content  NamingSystem         `json:"content,omitempty"`
-	Category NamingSystemCategory `json:"category,omitempty"`
-}
-
-type NamingSystemCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource NamingSystem          `json:"resource,omitempty"`
 }
 
 func (resource *NamingSystem) MarshalJSON() ([]byte, error) {

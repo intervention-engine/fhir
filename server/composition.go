@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func CompositionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func CompositionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	var compositionEntryList []models.CompositionBundleEntry
 	for _, composition := range result {
 		var entry models.CompositionBundleEntry
-		entry.Title = "Composition " + composition.Id
 		entry.Id = composition.Id
-		entry.Content = composition
+		entry.Resource = composition
 		compositionEntryList = append(compositionEntryList, entry)
 	}
 
 	var bundle models.CompositionBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Composition Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = compositionEntryList
 
 	log.Println("Setting composition search context")

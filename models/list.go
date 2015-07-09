@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type List struct {
 	Id          string               `json:"-" bson:"_id"`
@@ -55,26 +52,19 @@ type ListEntryComponent struct {
 }
 
 type ListBundle struct {
-	Type         string            `json:"resourceType,omitempty"`
-	Title        string            `json:"title,omitempty"`
-	Id           string            `json:"id,omitempty"`
-	Updated      time.Time         `json:"updated,omitempty"`
-	TotalResults int               `json:"totalResults,omitempty"`
-	Entry        []ListBundleEntry `json:"entry,omitempty"`
-	Category     ListCategory      `json:"category,omitempty"`
+	Id    string                `json:"id,omitempty"`
+	Type  string                `json:"resourceType,omitempty"`
+	Base  string                `json:"base,omitempty"`
+	Total int                   `json:"total,omitempty"`
+	Link  []BundleLinkComponent `json:"link,omitempty"`
+	Entry []ListBundleEntry     `json:"entry,omitempty"`
 }
 
 type ListBundleEntry struct {
-	Title    string       `json:"title,omitempty"`
-	Id       string       `json:"id,omitempty"`
-	Content  List         `json:"content,omitempty"`
-	Category ListCategory `json:"category,omitempty"`
-}
-
-type ListCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource List                  `json:"resource,omitempty"`
 }
 
 func (resource *List) MarshalJSON() ([]byte, error) {

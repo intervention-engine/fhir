@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 	var riskassessmentEntryList []models.RiskAssessmentBundleEntry
 	for _, riskassessment := range result {
 		var entry models.RiskAssessmentBundleEntry
-		entry.Title = "RiskAssessment " + riskassessment.Id
 		entry.Id = riskassessment.Id
-		entry.Content = riskassessment
+		entry.Resource = riskassessment
 		riskassessmentEntryList = append(riskassessmentEntryList, entry)
 	}
 
 	var bundle models.RiskAssessmentBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "RiskAssessment Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = riskassessmentEntryList
 
 	log.Println("Setting riskassessment search context")

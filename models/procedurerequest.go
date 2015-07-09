@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type ProcedureRequest struct {
 	Id                      string                              `json:"-" bson:"_id"`
@@ -58,26 +55,19 @@ type ProcedureRequestBodySiteComponent struct {
 }
 
 type ProcedureRequestBundle struct {
-	Type         string                        `json:"resourceType,omitempty"`
-	Title        string                        `json:"title,omitempty"`
-	Id           string                        `json:"id,omitempty"`
-	Updated      time.Time                     `json:"updated,omitempty"`
-	TotalResults int                           `json:"totalResults,omitempty"`
-	Entry        []ProcedureRequestBundleEntry `json:"entry,omitempty"`
-	Category     ProcedureRequestCategory      `json:"category,omitempty"`
+	Id    string                        `json:"id,omitempty"`
+	Type  string                        `json:"resourceType,omitempty"`
+	Base  string                        `json:"base,omitempty"`
+	Total int                           `json:"total,omitempty"`
+	Link  []BundleLinkComponent         `json:"link,omitempty"`
+	Entry []ProcedureRequestBundleEntry `json:"entry,omitempty"`
 }
 
 type ProcedureRequestBundleEntry struct {
-	Title    string                   `json:"title,omitempty"`
-	Id       string                   `json:"id,omitempty"`
-	Content  ProcedureRequest         `json:"content,omitempty"`
-	Category ProcedureRequestCategory `json:"category,omitempty"`
-}
-
-type ProcedureRequestCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource ProcedureRequest      `json:"resource,omitempty"`
 }
 
 func (resource *ProcedureRequest) MarshalJSON() ([]byte, error) {

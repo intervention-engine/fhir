@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type ReferralRequest struct {
 	Id                    string            `json:"-" bson:"_id"`
@@ -51,26 +48,19 @@ type ReferralRequest struct {
 }
 
 type ReferralRequestBundle struct {
-	Type         string                       `json:"resourceType,omitempty"`
-	Title        string                       `json:"title,omitempty"`
-	Id           string                       `json:"id,omitempty"`
-	Updated      time.Time                    `json:"updated,omitempty"`
-	TotalResults int                          `json:"totalResults,omitempty"`
-	Entry        []ReferralRequestBundleEntry `json:"entry,omitempty"`
-	Category     ReferralRequestCategory      `json:"category,omitempty"`
+	Id    string                       `json:"id,omitempty"`
+	Type  string                       `json:"resourceType,omitempty"`
+	Base  string                       `json:"base,omitempty"`
+	Total int                          `json:"total,omitempty"`
+	Link  []BundleLinkComponent        `json:"link,omitempty"`
+	Entry []ReferralRequestBundleEntry `json:"entry,omitempty"`
 }
 
 type ReferralRequestBundleEntry struct {
-	Title    string                  `json:"title,omitempty"`
-	Id       string                  `json:"id,omitempty"`
-	Content  ReferralRequest         `json:"content,omitempty"`
-	Category ReferralRequestCategory `json:"category,omitempty"`
-}
-
-type ReferralRequestCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource ReferralRequest       `json:"resource,omitempty"`
 }
 
 func (resource *ReferralRequest) MarshalJSON() ([]byte, error) {

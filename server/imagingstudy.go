@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var imagingstudyEntryList []models.ImagingStudyBundleEntry
 	for _, imagingstudy := range result {
 		var entry models.ImagingStudyBundleEntry
-		entry.Title = "ImagingStudy " + imagingstudy.Id
 		entry.Id = imagingstudy.Id
-		entry.Content = imagingstudy
+		entry.Resource = imagingstudy
 		imagingstudyEntryList = append(imagingstudyEntryList, entry)
 	}
 
 	var bundle models.ImagingStudyBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "ImagingStudy Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = imagingstudyEntryList
 
 	log.Println("Setting imagingstudy search context")

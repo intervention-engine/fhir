@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type QuestionnaireAnswers struct {
 	Id            string                              `json:"-" bson:"_id"`
@@ -77,26 +74,19 @@ type QuestionnaireAnswersQuestionAnswerComponent struct {
 }
 
 type QuestionnaireAnswersBundle struct {
-	Type         string                            `json:"resourceType,omitempty"`
-	Title        string                            `json:"title,omitempty"`
-	Id           string                            `json:"id,omitempty"`
-	Updated      time.Time                         `json:"updated,omitempty"`
-	TotalResults int                               `json:"totalResults,omitempty"`
-	Entry        []QuestionnaireAnswersBundleEntry `json:"entry,omitempty"`
-	Category     QuestionnaireAnswersCategory      `json:"category,omitempty"`
+	Id    string                            `json:"id,omitempty"`
+	Type  string                            `json:"resourceType,omitempty"`
+	Base  string                            `json:"base,omitempty"`
+	Total int                               `json:"total,omitempty"`
+	Link  []BundleLinkComponent             `json:"link,omitempty"`
+	Entry []QuestionnaireAnswersBundleEntry `json:"entry,omitempty"`
 }
 
 type QuestionnaireAnswersBundleEntry struct {
-	Title    string                       `json:"title,omitempty"`
-	Id       string                       `json:"id,omitempty"`
-	Content  QuestionnaireAnswers         `json:"content,omitempty"`
-	Category QuestionnaireAnswersCategory `json:"category,omitempty"`
-}
-
-type QuestionnaireAnswersCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource QuestionnaireAnswers  `json:"resource,omitempty"`
 }
 
 func (resource *QuestionnaireAnswers) MarshalJSON() ([]byte, error) {

@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var immunizationEntryList []models.ImmunizationBundleEntry
 	for _, immunization := range result {
 		var entry models.ImmunizationBundleEntry
-		entry.Title = "Immunization " + immunization.Id
 		entry.Id = immunization.Id
-		entry.Content = immunization
+		entry.Resource = immunization
 		immunizationEntryList = append(immunizationEntryList, entry)
 	}
 
 	var bundle models.ImmunizationBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Immunization Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = immunizationEntryList
 
 	log.Println("Setting immunization search context")

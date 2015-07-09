@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func HealthcareServiceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	var healthcareserviceEntryList []models.HealthcareServiceBundleEntry
 	for _, healthcareservice := range result {
 		var entry models.HealthcareServiceBundleEntry
-		entry.Title = "HealthcareService " + healthcareservice.Id
 		entry.Id = healthcareservice.Id
-		entry.Content = healthcareservice
+		entry.Resource = healthcareservice
 		healthcareserviceEntryList = append(healthcareserviceEntryList, entry)
 	}
 
 	var bundle models.HealthcareServiceBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "HealthcareService Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = healthcareserviceEntryList
 
 	log.Println("Setting healthcareservice search context")

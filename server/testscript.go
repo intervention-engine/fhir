@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func TestScriptIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	var testscriptEntryList []models.TestScriptBundleEntry
 	for _, testscript := range result {
 		var entry models.TestScriptBundleEntry
-		entry.Title = "TestScript " + testscript.Id
 		entry.Id = testscript.Id
-		entry.Content = testscript
+		entry.Resource = testscript
 		testscriptEntryList = append(testscriptEntryList, entry)
 	}
 
 	var bundle models.TestScriptBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "TestScript Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = testscriptEntryList
 
 	log.Println("Setting testscript search context")

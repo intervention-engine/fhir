@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type ImmunizationRecommendation struct {
 	Id             string                                              `json:"-" bson:"_id"`
@@ -62,26 +59,19 @@ type ImmunizationRecommendationRecommendationProtocolComponent struct {
 }
 
 type ImmunizationRecommendationBundle struct {
-	Type         string                                  `json:"resourceType,omitempty"`
-	Title        string                                  `json:"title,omitempty"`
-	Id           string                                  `json:"id,omitempty"`
-	Updated      time.Time                               `json:"updated,omitempty"`
-	TotalResults int                                     `json:"totalResults,omitempty"`
-	Entry        []ImmunizationRecommendationBundleEntry `json:"entry,omitempty"`
-	Category     ImmunizationRecommendationCategory      `json:"category,omitempty"`
+	Id    string                                  `json:"id,omitempty"`
+	Type  string                                  `json:"resourceType,omitempty"`
+	Base  string                                  `json:"base,omitempty"`
+	Total int                                     `json:"total,omitempty"`
+	Link  []BundleLinkComponent                   `json:"link,omitempty"`
+	Entry []ImmunizationRecommendationBundleEntry `json:"entry,omitempty"`
 }
 
 type ImmunizationRecommendationBundleEntry struct {
-	Title    string                             `json:"title,omitempty"`
-	Id       string                             `json:"id,omitempty"`
-	Content  ImmunizationRecommendation         `json:"content,omitempty"`
-	Category ImmunizationRecommendationCategory `json:"category,omitempty"`
-}
-
-type ImmunizationRecommendationCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                     `json:"id,omitempty"`
+	Base     string                     `json:"base,omitempty"`
+	Link     []BundleLinkComponent      `json:"link,omitempty"`
+	Resource ImmunizationRecommendation `json:"resource,omitempty"`
 }
 
 func (resource *ImmunizationRecommendation) MarshalJSON() ([]byte, error) {

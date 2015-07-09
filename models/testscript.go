@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type TestScript struct {
 	Id          string                       `json:"-" bson:"_id"`
@@ -118,26 +115,19 @@ type TestScriptTeardownOperationComponent struct {
 }
 
 type TestScriptBundle struct {
-	Type         string                  `json:"resourceType,omitempty"`
-	Title        string                  `json:"title,omitempty"`
-	Id           string                  `json:"id,omitempty"`
-	Updated      time.Time               `json:"updated,omitempty"`
-	TotalResults int                     `json:"totalResults,omitempty"`
-	Entry        []TestScriptBundleEntry `json:"entry,omitempty"`
-	Category     TestScriptCategory      `json:"category,omitempty"`
+	Id    string                  `json:"id,omitempty"`
+	Type  string                  `json:"resourceType,omitempty"`
+	Base  string                  `json:"base,omitempty"`
+	Total int                     `json:"total,omitempty"`
+	Link  []BundleLinkComponent   `json:"link,omitempty"`
+	Entry []TestScriptBundleEntry `json:"entry,omitempty"`
 }
 
 type TestScriptBundleEntry struct {
-	Title    string             `json:"title,omitempty"`
-	Id       string             `json:"id,omitempty"`
-	Content  TestScript         `json:"content,omitempty"`
-	Category TestScriptCategory `json:"category,omitempty"`
-}
-
-type TestScriptCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource TestScript            `json:"resource,omitempty"`
 }
 
 func (resource *TestScript) MarshalJSON() ([]byte, error) {

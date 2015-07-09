@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Person struct {
 	Id                   string                `json:"-" bson:"_id"`
@@ -51,26 +48,19 @@ type PersonLinkComponent struct {
 }
 
 type PersonBundle struct {
-	Type         string              `json:"resourceType,omitempty"`
-	Title        string              `json:"title,omitempty"`
-	Id           string              `json:"id,omitempty"`
-	Updated      time.Time           `json:"updated,omitempty"`
-	TotalResults int                 `json:"totalResults,omitempty"`
-	Entry        []PersonBundleEntry `json:"entry,omitempty"`
-	Category     PersonCategory      `json:"category,omitempty"`
+	Id    string                `json:"id,omitempty"`
+	Type  string                `json:"resourceType,omitempty"`
+	Base  string                `json:"base,omitempty"`
+	Total int                   `json:"total,omitempty"`
+	Link  []BundleLinkComponent `json:"link,omitempty"`
+	Entry []PersonBundleEntry   `json:"entry,omitempty"`
 }
 
 type PersonBundleEntry struct {
-	Title    string         `json:"title,omitempty"`
-	Id       string         `json:"id,omitempty"`
-	Content  Person         `json:"content,omitempty"`
-	Category PersonCategory `json:"category,omitempty"`
-}
-
-type PersonCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Person                `json:"resource,omitempty"`
 }
 
 func (resource *Person) MarshalJSON() ([]byte, error) {

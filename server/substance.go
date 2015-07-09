@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	var substanceEntryList []models.SubstanceBundleEntry
 	for _, substance := range result {
 		var entry models.SubstanceBundleEntry
-		entry.Title = "Substance " + substance.Id
 		entry.Id = substance.Id
-		entry.Content = substance
+		entry.Resource = substance
 		substanceEntryList = append(substanceEntryList, entry)
 	}
 
 	var bundle models.SubstanceBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Substance Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = substanceEntryList
 
 	log.Println("Setting substance search context")

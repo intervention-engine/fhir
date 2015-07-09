@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func DeviceComponentIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	var devicecomponentEntryList []models.DeviceComponentBundleEntry
 	for _, devicecomponent := range result {
 		var entry models.DeviceComponentBundleEntry
-		entry.Title = "DeviceComponent " + devicecomponent.Id
 		entry.Id = devicecomponent.Id
-		entry.Content = devicecomponent
+		entry.Resource = devicecomponent
 		devicecomponentEntryList = append(devicecomponentEntryList, entry)
 	}
 
 	var bundle models.DeviceComponentBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "DeviceComponent Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = devicecomponentEntryList
 
 	log.Println("Setting devicecomponent search context")

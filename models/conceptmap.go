@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type ConceptMap struct {
 	Id              string                             `json:"-" bson:"_id"`
@@ -80,26 +77,19 @@ type ConceptMapOtherElementComponent struct {
 }
 
 type ConceptMapBundle struct {
-	Type         string                  `json:"resourceType,omitempty"`
-	Title        string                  `json:"title,omitempty"`
-	Id           string                  `json:"id,omitempty"`
-	Updated      time.Time               `json:"updated,omitempty"`
-	TotalResults int                     `json:"totalResults,omitempty"`
-	Entry        []ConceptMapBundleEntry `json:"entry,omitempty"`
-	Category     ConceptMapCategory      `json:"category,omitempty"`
+	Id    string                  `json:"id,omitempty"`
+	Type  string                  `json:"resourceType,omitempty"`
+	Base  string                  `json:"base,omitempty"`
+	Total int                     `json:"total,omitempty"`
+	Link  []BundleLinkComponent   `json:"link,omitempty"`
+	Entry []ConceptMapBundleEntry `json:"entry,omitempty"`
 }
 
 type ConceptMapBundleEntry struct {
-	Title    string             `json:"title,omitempty"`
-	Id       string             `json:"id,omitempty"`
-	Content  ConceptMap         `json:"content,omitempty"`
-	Category ConceptMapCategory `json:"category,omitempty"`
-}
-
-type ConceptMapCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource ConceptMap            `json:"resource,omitempty"`
 }
 
 func (resource *ConceptMap) MarshalJSON() ([]byte, error) {

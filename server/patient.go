@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func PatientIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	var patientEntryList []models.PatientBundleEntry
 	for _, patient := range result {
 		var entry models.PatientBundleEntry
-		entry.Title = "Patient " + patient.Id
 		entry.Id = patient.Id
-		entry.Content = patient
+		entry.Resource = patient
 		patientEntryList = append(patientEntryList, entry)
 	}
 
 	var bundle models.PatientBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Patient Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = patientEntryList
 
 	log.Println("Setting patient search context")

@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func EnrollmentRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func EnrollmentRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	var enrollmentrequestEntryList []models.EnrollmentRequestBundleEntry
 	for _, enrollmentrequest := range result {
 		var entry models.EnrollmentRequestBundleEntry
-		entry.Title = "EnrollmentRequest " + enrollmentrequest.Id
 		entry.Id = enrollmentrequest.Id
-		entry.Content = enrollmentrequest
+		entry.Resource = enrollmentrequest
 		enrollmentrequestEntryList = append(enrollmentrequestEntryList, entry)
 	}
 
 	var bundle models.EnrollmentRequestBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "EnrollmentRequest Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = enrollmentrequestEntryList
 
 	log.Println("Setting enrollmentrequest search context")

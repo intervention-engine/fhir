@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func ProcessResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	var processresponseEntryList []models.ProcessResponseBundleEntry
 	for _, processresponse := range result {
 		var entry models.ProcessResponseBundleEntry
-		entry.Title = "ProcessResponse " + processresponse.Id
 		entry.Id = processresponse.Id
-		entry.Content = processresponse
+		entry.Resource = processresponse
 		processresponseEntryList = append(processresponseEntryList, entry)
 	}
 
 	var bundle models.ProcessResponseBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "ProcessResponse Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = processresponseEntryList
 
 	log.Println("Setting processresponse search context")

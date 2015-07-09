@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func CommunicationIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func CommunicationIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var communicationEntryList []models.CommunicationBundleEntry
 	for _, communication := range result {
 		var entry models.CommunicationBundleEntry
-		entry.Title = "Communication " + communication.Id
 		entry.Id = communication.Id
-		entry.Content = communication
+		entry.Resource = communication
 		communicationEntryList = append(communicationEntryList, entry)
 	}
 
 	var bundle models.CommunicationBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Communication Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = communicationEntryList
 
 	log.Println("Setting communication search context")

@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Schedule struct {
 	Id              string            `json:"-" bson:"_id"`
@@ -41,26 +38,19 @@ type Schedule struct {
 }
 
 type ScheduleBundle struct {
-	Type         string                `json:"resourceType,omitempty"`
-	Title        string                `json:"title,omitempty"`
-	Id           string                `json:"id,omitempty"`
-	Updated      time.Time             `json:"updated,omitempty"`
-	TotalResults int                   `json:"totalResults,omitempty"`
-	Entry        []ScheduleBundleEntry `json:"entry,omitempty"`
-	Category     ScheduleCategory      `json:"category,omitempty"`
+	Id    string                `json:"id,omitempty"`
+	Type  string                `json:"resourceType,omitempty"`
+	Base  string                `json:"base,omitempty"`
+	Total int                   `json:"total,omitempty"`
+	Link  []BundleLinkComponent `json:"link,omitempty"`
+	Entry []ScheduleBundleEntry `json:"entry,omitempty"`
 }
 
 type ScheduleBundleEntry struct {
-	Title    string           `json:"title,omitempty"`
-	Id       string           `json:"id,omitempty"`
-	Content  Schedule         `json:"content,omitempty"`
-	Category ScheduleCategory `json:"category,omitempty"`
-}
-
-type ScheduleCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Schedule              `json:"resource,omitempty"`
 }
 
 func (resource *Schedule) MarshalJSON() ([]byte, error) {

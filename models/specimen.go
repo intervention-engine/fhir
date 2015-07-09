@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Specimen struct {
 	Id                  string                       `json:"-" bson:"_id"`
@@ -72,26 +69,19 @@ type SpecimenContainerComponent struct {
 }
 
 type SpecimenBundle struct {
-	Type         string                `json:"resourceType,omitempty"`
-	Title        string                `json:"title,omitempty"`
-	Id           string                `json:"id,omitempty"`
-	Updated      time.Time             `json:"updated,omitempty"`
-	TotalResults int                   `json:"totalResults,omitempty"`
-	Entry        []SpecimenBundleEntry `json:"entry,omitempty"`
-	Category     SpecimenCategory      `json:"category,omitempty"`
+	Id    string                `json:"id,omitempty"`
+	Type  string                `json:"resourceType,omitempty"`
+	Base  string                `json:"base,omitempty"`
+	Total int                   `json:"total,omitempty"`
+	Link  []BundleLinkComponent `json:"link,omitempty"`
+	Entry []SpecimenBundleEntry `json:"entry,omitempty"`
 }
 
 type SpecimenBundleEntry struct {
-	Title    string           `json:"title,omitempty"`
-	Id       string           `json:"id,omitempty"`
-	Content  Specimen         `json:"content,omitempty"`
-	Category SpecimenCategory `json:"category,omitempty"`
-}
-
-type SpecimenCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Specimen              `json:"resource,omitempty"`
 }
 
 func (resource *Specimen) MarshalJSON() ([]byte, error) {

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func ConformanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	var conformanceEntryList []models.ConformanceBundleEntry
 	for _, conformance := range result {
 		var entry models.ConformanceBundleEntry
-		entry.Title = "Conformance " + conformance.Id
 		entry.Id = conformance.Id
-		entry.Content = conformance
+		entry.Resource = conformance
 		conformanceEntryList = append(conformanceEntryList, entry)
 	}
 
 	var bundle models.ConformanceBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Conformance Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = conformanceEntryList
 
 	log.Println("Setting conformance search context")

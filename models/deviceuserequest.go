@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type DeviceUseRequest struct {
 	Id                      string            `json:"-" bson:"_id"`
@@ -52,26 +49,19 @@ type DeviceUseRequest struct {
 }
 
 type DeviceUseRequestBundle struct {
-	Type         string                        `json:"resourceType,omitempty"`
-	Title        string                        `json:"title,omitempty"`
-	Id           string                        `json:"id,omitempty"`
-	Updated      time.Time                     `json:"updated,omitempty"`
-	TotalResults int                           `json:"totalResults,omitempty"`
-	Entry        []DeviceUseRequestBundleEntry `json:"entry,omitempty"`
-	Category     DeviceUseRequestCategory      `json:"category,omitempty"`
+	Id    string                        `json:"id,omitempty"`
+	Type  string                        `json:"resourceType,omitempty"`
+	Base  string                        `json:"base,omitempty"`
+	Total int                           `json:"total,omitempty"`
+	Link  []BundleLinkComponent         `json:"link,omitempty"`
+	Entry []DeviceUseRequestBundleEntry `json:"entry,omitempty"`
 }
 
 type DeviceUseRequestBundleEntry struct {
-	Title    string                   `json:"title,omitempty"`
-	Id       string                   `json:"id,omitempty"`
-	Content  DeviceUseRequest         `json:"content,omitempty"`
-	Category DeviceUseRequestCategory `json:"category,omitempty"`
-}
-
-type DeviceUseRequestCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource DeviceUseRequest      `json:"resource,omitempty"`
 }
 
 func (resource *DeviceUseRequest) MarshalJSON() ([]byte, error) {

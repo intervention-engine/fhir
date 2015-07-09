@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var careplanEntryList []models.CarePlanBundleEntry
 	for _, careplan := range result {
 		var entry models.CarePlanBundleEntry
-		entry.Title = "CarePlan " + careplan.Id
 		entry.Id = careplan.Id
-		entry.Content = careplan
+		entry.Resource = careplan
 		careplanEntryList = append(careplanEntryList, entry)
 	}
 
 	var bundle models.CarePlanBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "CarePlan Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = careplanEntryList
 
 	log.Println("Setting careplan search context")

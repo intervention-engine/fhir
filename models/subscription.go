@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Subscription struct {
 	Id       string                        `json:"-" bson:"_id"`
@@ -51,26 +48,19 @@ type SubscriptionChannelComponent struct {
 }
 
 type SubscriptionBundle struct {
-	Type         string                    `json:"resourceType,omitempty"`
-	Title        string                    `json:"title,omitempty"`
-	Id           string                    `json:"id,omitempty"`
-	Updated      time.Time                 `json:"updated,omitempty"`
-	TotalResults int                       `json:"totalResults,omitempty"`
-	Entry        []SubscriptionBundleEntry `json:"entry,omitempty"`
-	Category     SubscriptionCategory      `json:"category,omitempty"`
+	Id    string                    `json:"id,omitempty"`
+	Type  string                    `json:"resourceType,omitempty"`
+	Base  string                    `json:"base,omitempty"`
+	Total int                       `json:"total,omitempty"`
+	Link  []BundleLinkComponent     `json:"link,omitempty"`
+	Entry []SubscriptionBundleEntry `json:"entry,omitempty"`
 }
 
 type SubscriptionBundleEntry struct {
-	Title    string               `json:"title,omitempty"`
-	Id       string               `json:"id,omitempty"`
-	Content  Subscription         `json:"content,omitempty"`
-	Category SubscriptionCategory `json:"category,omitempty"`
-}
-
-type SubscriptionCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Subscription          `json:"resource,omitempty"`
 }
 
 func (resource *Subscription) MarshalJSON() ([]byte, error) {

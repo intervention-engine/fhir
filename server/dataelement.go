@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func DataElementIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	var dataelementEntryList []models.DataElementBundleEntry
 	for _, dataelement := range result {
 		var entry models.DataElementBundleEntry
-		entry.Title = "DataElement " + dataelement.Id
 		entry.Id = dataelement.Id
-		entry.Content = dataelement
+		entry.Resource = dataelement
 		dataelementEntryList = append(dataelementEntryList, entry)
 	}
 
 	var bundle models.DataElementBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "DataElement Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = dataelementEntryList
 
 	log.Println("Setting dataelement search context")

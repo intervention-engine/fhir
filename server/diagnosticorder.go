@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	var diagnosticorderEntryList []models.DiagnosticOrderBundleEntry
 	for _, diagnosticorder := range result {
 		var entry models.DiagnosticOrderBundleEntry
-		entry.Title = "DiagnosticOrder " + diagnosticorder.Id
 		entry.Id = diagnosticorder.Id
-		entry.Content = diagnosticorder
+		entry.Resource = diagnosticorder
 		diagnosticorderEntryList = append(diagnosticorderEntryList, entry)
 	}
 
 	var bundle models.DiagnosticOrderBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "DiagnosticOrder Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = diagnosticorderEntryList
 
 	log.Println("Setting diagnosticorder search context")
