@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func DeviceUseStatementIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func DeviceUseStatementIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	var deviceusestatementEntryList []models.DeviceUseStatementBundleEntry
 	for _, deviceusestatement := range result {
 		var entry models.DeviceUseStatementBundleEntry
-		entry.Title = "DeviceUseStatement " + deviceusestatement.Id
 		entry.Id = deviceusestatement.Id
-		entry.Content = deviceusestatement
+		entry.Resource = deviceusestatement
 		deviceusestatementEntryList = append(deviceusestatementEntryList, entry)
 	}
 
 	var bundle models.DeviceUseStatementBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "DeviceUseStatement Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = deviceusestatementEntryList
 
 	log.Println("Setting deviceusestatement search context")

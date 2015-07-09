@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	var appointmentEntryList []models.AppointmentBundleEntry
 	for _, appointment := range result {
 		var entry models.AppointmentBundleEntry
-		entry.Title = "Appointment " + appointment.Id
 		entry.Id = appointment.Id
-		entry.Content = appointment
+		entry.Resource = appointment
 		appointmentEntryList = append(appointmentEntryList, entry)
 	}
 
 	var bundle models.AppointmentBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Appointment Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = appointmentEntryList
 
 	log.Println("Setting appointment search context")

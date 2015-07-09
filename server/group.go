@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -41,18 +40,15 @@ func GroupIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var groupEntryList []models.GroupBundleEntry
 	for _, group := range result {
 		var entry models.GroupBundleEntry
-		entry.Title = "Group " + group.Id
 		entry.Id = group.Id
-		entry.Content = group
+		entry.Resource = group
 		groupEntryList = append(groupEntryList, entry)
 	}
 
 	var bundle models.GroupBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Group Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = groupEntryList
 
 	log.Println("Setting group search context")

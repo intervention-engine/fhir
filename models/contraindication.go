@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Contraindication struct {
 	Id         string                                `json:"-" bson:"_id"`
@@ -52,26 +49,19 @@ type ContraindicationMitigationComponent struct {
 }
 
 type ContraindicationBundle struct {
-	Type         string                        `json:"resourceType,omitempty"`
-	Title        string                        `json:"title,omitempty"`
-	Id           string                        `json:"id,omitempty"`
-	Updated      time.Time                     `json:"updated,omitempty"`
-	TotalResults int                           `json:"totalResults,omitempty"`
-	Entry        []ContraindicationBundleEntry `json:"entry,omitempty"`
-	Category     ContraindicationCategory      `json:"category,omitempty"`
+	Id    string                        `json:"id,omitempty"`
+	Type  string                        `json:"resourceType,omitempty"`
+	Base  string                        `json:"base,omitempty"`
+	Total int                           `json:"total,omitempty"`
+	Link  []BundleLinkComponent         `json:"link,omitempty"`
+	Entry []ContraindicationBundleEntry `json:"entry,omitempty"`
 }
 
 type ContraindicationBundleEntry struct {
-	Title    string                   `json:"title,omitempty"`
-	Id       string                   `json:"id,omitempty"`
-	Content  Contraindication         `json:"content,omitempty"`
-	Category ContraindicationCategory `json:"category,omitempty"`
-}
-
-type ContraindicationCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Contraindication      `json:"resource,omitempty"`
 }
 
 func (resource *Contraindication) MarshalJSON() ([]byte, error) {

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func BinaryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	var binaryEntryList []models.BinaryBundleEntry
 	for _, binary := range result {
 		var entry models.BinaryBundleEntry
-		entry.Title = "Binary " + binary.Id
 		entry.Id = binary.Id
-		entry.Content = binary
+		entry.Resource = binary
 		binaryEntryList = append(binaryEntryList, entry)
 	}
 
 	var bundle models.BinaryBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Binary Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = binaryEntryList
 
 	log.Println("Setting binary search context")

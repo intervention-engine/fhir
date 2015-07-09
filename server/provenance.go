@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	var provenanceEntryList []models.ProvenanceBundleEntry
 	for _, provenance := range result {
 		var entry models.ProvenanceBundleEntry
-		entry.Title = "Provenance " + provenance.Id
 		entry.Id = provenance.Id
-		entry.Content = provenance
+		entry.Resource = provenance
 		provenanceEntryList = append(provenanceEntryList, entry)
 	}
 
 	var bundle models.ProvenanceBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Provenance Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = provenanceEntryList
 
 	log.Println("Setting provenance search context")

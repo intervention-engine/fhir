@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func QuestionnaireAnswersIndexHandler(rw http.ResponseWriter, r *http.Request, n
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func QuestionnaireAnswersIndexHandler(rw http.ResponseWriter, r *http.Request, n
 	var questionnaireanswersEntryList []models.QuestionnaireAnswersBundleEntry
 	for _, questionnaireanswers := range result {
 		var entry models.QuestionnaireAnswersBundleEntry
-		entry.Title = "QuestionnaireAnswers " + questionnaireanswers.Id
 		entry.Id = questionnaireanswers.Id
-		entry.Content = questionnaireanswers
+		entry.Resource = questionnaireanswers
 		questionnaireanswersEntryList = append(questionnaireanswersEntryList, entry)
 	}
 
 	var bundle models.QuestionnaireAnswersBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "QuestionnaireAnswers Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = questionnaireanswersEntryList
 
 	log.Println("Setting questionnaireanswers search context")

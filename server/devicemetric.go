@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func DeviceMetricIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var devicemetricEntryList []models.DeviceMetricBundleEntry
 	for _, devicemetric := range result {
 		var entry models.DeviceMetricBundleEntry
-		entry.Title = "DeviceMetric " + devicemetric.Id
 		entry.Id = devicemetric.Id
-		entry.Content = devicemetric
+		entry.Resource = devicemetric
 		devicemetricEntryList = append(devicemetricEntryList, entry)
 	}
 
 	var bundle models.DeviceMetricBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "DeviceMetric Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = devicemetricEntryList
 
 	log.Println("Setting devicemetric search context")

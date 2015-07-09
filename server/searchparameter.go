@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func SearchParameterIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	var searchparameterEntryList []models.SearchParameterBundleEntry
 	for _, searchparameter := range result {
 		var entry models.SearchParameterBundleEntry
-		entry.Title = "SearchParameter " + searchparameter.Id
 		entry.Id = searchparameter.Id
-		entry.Content = searchparameter
+		entry.Resource = searchparameter
 		searchparameterEntryList = append(searchparameterEntryList, entry)
 	}
 
 	var bundle models.SearchParameterBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "SearchParameter Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = searchparameterEntryList
 
 	log.Println("Setting searchparameter search context")

@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func FlagIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func FlagIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	var flagEntryList []models.FlagBundleEntry
 	for _, flag := range result {
 		var entry models.FlagBundleEntry
-		entry.Title = "Flag " + flag.Id
 		entry.Id = flag.Id
-		entry.Content = flag
+		entry.Resource = flag
 		flagEntryList = append(flagEntryList, entry)
 	}
 
 	var bundle models.FlagBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Flag Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = flagEntryList
 
 	log.Println("Setting flag search context")

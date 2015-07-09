@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func SubscriptionIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var subscriptionEntryList []models.SubscriptionBundleEntry
 	for _, subscription := range result {
 		var entry models.SubscriptionBundleEntry
-		entry.Title = "Subscription " + subscription.Id
 		entry.Id = subscription.Id
-		entry.Content = subscription
+		entry.Resource = subscription
 		subscriptionEntryList = append(subscriptionEntryList, entry)
 	}
 
 	var bundle models.SubscriptionBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Subscription Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = subscriptionEntryList
 
 	log.Println("Setting subscription search context")

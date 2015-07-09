@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request,
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request,
 	var medicationprescriptionEntryList []models.MedicationPrescriptionBundleEntry
 	for _, medicationprescription := range result {
 		var entry models.MedicationPrescriptionBundleEntry
-		entry.Title = "MedicationPrescription " + medicationprescription.Id
 		entry.Id = medicationprescription.Id
-		entry.Content = medicationprescription
+		entry.Resource = medicationprescription
 		medicationprescriptionEntryList = append(medicationprescriptionEntryList, entry)
 	}
 
 	var bundle models.MedicationPrescriptionBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "MedicationPrescription Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = medicationprescriptionEntryList
 
 	log.Println("Setting medicationprescription search context")

@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	var supplyEntryList []models.SupplyBundleEntry
 	for _, supply := range result {
 		var entry models.SupplyBundleEntry
-		entry.Title = "Supply " + supply.Id
 		entry.Id = supply.Id
-		entry.Content = supply
+		entry.Resource = supply
 		supplyEntryList = append(supplyEntryList, entry)
 	}
 
 	var bundle models.SupplyBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Supply Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = supplyEntryList
 
 	log.Println("Setting supply search context")

@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type StructureDefinition struct {
 	Id           string                                    `json:"-" bson:"_id"`
@@ -80,26 +77,19 @@ type StructureDefinitionDifferentialComponent struct {
 }
 
 type StructureDefinitionBundle struct {
-	Type         string                           `json:"resourceType,omitempty"`
-	Title        string                           `json:"title,omitempty"`
-	Id           string                           `json:"id,omitempty"`
-	Updated      time.Time                        `json:"updated,omitempty"`
-	TotalResults int                              `json:"totalResults,omitempty"`
-	Entry        []StructureDefinitionBundleEntry `json:"entry,omitempty"`
-	Category     StructureDefinitionCategory      `json:"category,omitempty"`
+	Id    string                           `json:"id,omitempty"`
+	Type  string                           `json:"resourceType,omitempty"`
+	Base  string                           `json:"base,omitempty"`
+	Total int                              `json:"total,omitempty"`
+	Link  []BundleLinkComponent            `json:"link,omitempty"`
+	Entry []StructureDefinitionBundleEntry `json:"entry,omitempty"`
 }
 
 type StructureDefinitionBundleEntry struct {
-	Title    string                      `json:"title,omitempty"`
-	Id       string                      `json:"id,omitempty"`
-	Content  StructureDefinition         `json:"content,omitempty"`
-	Category StructureDefinitionCategory `json:"category,omitempty"`
-}
-
-type StructureDefinitionCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource StructureDefinition   `json:"resource,omitempty"`
 }
 
 func (resource *StructureDefinition) MarshalJSON() ([]byte, error) {

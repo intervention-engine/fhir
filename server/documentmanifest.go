@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	var documentmanifestEntryList []models.DocumentManifestBundleEntry
 	for _, documentmanifest := range result {
 		var entry models.DocumentManifestBundleEntry
-		entry.Title = "DocumentManifest " + documentmanifest.Id
 		entry.Id = documentmanifest.Id
-		entry.Content = documentmanifest
+		entry.Resource = documentmanifest
 		documentmanifestEntryList = append(documentmanifestEntryList, entry)
 	}
 
 	var bundle models.DocumentManifestBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "DocumentManifest Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = documentmanifestEntryList
 
 	log.Println("Setting documentmanifest search context")

@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Immunization struct {
 	Id                  string                                     `json:"-" bson:"_id"`
@@ -77,26 +74,19 @@ type ImmunizationVaccinationProtocolComponent struct {
 }
 
 type ImmunizationBundle struct {
-	Type         string                    `json:"resourceType,omitempty"`
-	Title        string                    `json:"title,omitempty"`
-	Id           string                    `json:"id,omitempty"`
-	Updated      time.Time                 `json:"updated,omitempty"`
-	TotalResults int                       `json:"totalResults,omitempty"`
-	Entry        []ImmunizationBundleEntry `json:"entry,omitempty"`
-	Category     ImmunizationCategory      `json:"category,omitempty"`
+	Id    string                    `json:"id,omitempty"`
+	Type  string                    `json:"resourceType,omitempty"`
+	Base  string                    `json:"base,omitempty"`
+	Total int                       `json:"total,omitempty"`
+	Link  []BundleLinkComponent     `json:"link,omitempty"`
+	Entry []ImmunizationBundleEntry `json:"entry,omitempty"`
 }
 
 type ImmunizationBundleEntry struct {
-	Title    string               `json:"title,omitempty"`
-	Id       string               `json:"id,omitempty"`
-	Content  Immunization         `json:"content,omitempty"`
-	Category ImmunizationCategory `json:"category,omitempty"`
-}
-
-type ImmunizationCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Immunization          `json:"resource,omitempty"`
 }
 
 func (resource *Immunization) MarshalJSON() ([]byte, error) {

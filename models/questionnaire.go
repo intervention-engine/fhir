@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Questionnaire struct {
 	Id         string                       `json:"-" bson:"_id"`
@@ -65,26 +62,19 @@ type QuestionnaireQuestionComponent struct {
 }
 
 type QuestionnaireBundle struct {
-	Type         string                     `json:"resourceType,omitempty"`
-	Title        string                     `json:"title,omitempty"`
-	Id           string                     `json:"id,omitempty"`
-	Updated      time.Time                  `json:"updated,omitempty"`
-	TotalResults int                        `json:"totalResults,omitempty"`
-	Entry        []QuestionnaireBundleEntry `json:"entry,omitempty"`
-	Category     QuestionnaireCategory      `json:"category,omitempty"`
+	Id    string                     `json:"id,omitempty"`
+	Type  string                     `json:"resourceType,omitempty"`
+	Base  string                     `json:"base,omitempty"`
+	Total int                        `json:"total,omitempty"`
+	Link  []BundleLinkComponent      `json:"link,omitempty"`
+	Entry []QuestionnaireBundleEntry `json:"entry,omitempty"`
 }
 
 type QuestionnaireBundleEntry struct {
-	Title    string                `json:"title,omitempty"`
 	Id       string                `json:"id,omitempty"`
-	Content  Questionnaire         `json:"content,omitempty"`
-	Category QuestionnaireCategory `json:"category,omitempty"`
-}
-
-type QuestionnaireCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Questionnaire         `json:"resource,omitempty"`
 }
 
 func (resource *Questionnaire) MarshalJSON() ([]byte, error) {

@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	var documentreferenceEntryList []models.DocumentReferenceBundleEntry
 	for _, documentreference := range result {
 		var entry models.DocumentReferenceBundleEntry
-		entry.Title = "DocumentReference " + documentreference.Id
 		entry.Id = documentreference.Id
-		entry.Content = documentreference
+		entry.Resource = documentreference
 		documentreferenceEntryList = append(documentreferenceEntryList, entry)
 	}
 
 	var bundle models.DocumentReferenceBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "DocumentReference Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = documentreferenceEntryList
 
 	log.Println("Setting documentreference search context")

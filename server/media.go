@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var mediaEntryList []models.MediaBundleEntry
 	for _, media := range result {
 		var entry models.MediaBundleEntry
-		entry.Title = "Media " + media.Id
 		entry.Id = media.Id
-		entry.Content = media
+		entry.Resource = media
 		mediaEntryList = append(mediaEntryList, entry)
 	}
 
 	var bundle models.MediaBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Media Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = mediaEntryList
 
 	log.Println("Setting media search context")

@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Practitioner struct {
 	Id               string                                  `json:"-" bson:"_id"`
@@ -62,26 +59,19 @@ type PractitionerQualificationComponent struct {
 }
 
 type PractitionerBundle struct {
-	Type         string                    `json:"resourceType,omitempty"`
-	Title        string                    `json:"title,omitempty"`
-	Id           string                    `json:"id,omitempty"`
-	Updated      time.Time                 `json:"updated,omitempty"`
-	TotalResults int                       `json:"totalResults,omitempty"`
-	Entry        []PractitionerBundleEntry `json:"entry,omitempty"`
-	Category     PractitionerCategory      `json:"category,omitempty"`
+	Id    string                    `json:"id,omitempty"`
+	Type  string                    `json:"resourceType,omitempty"`
+	Base  string                    `json:"base,omitempty"`
+	Total int                       `json:"total,omitempty"`
+	Link  []BundleLinkComponent     `json:"link,omitempty"`
+	Entry []PractitionerBundleEntry `json:"entry,omitempty"`
 }
 
 type PractitionerBundleEntry struct {
-	Title    string               `json:"title,omitempty"`
-	Id       string               `json:"id,omitempty"`
-	Content  Practitioner         `json:"content,omitempty"`
-	Category PractitionerCategory `json:"category,omitempty"`
-}
-
-type PractitionerCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Practitioner          `json:"resource,omitempty"`
 }
 
 func (resource *Practitioner) MarshalJSON() ([]byte, error) {

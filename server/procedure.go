@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func ProcedureIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func ProcedureIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	var procedureEntryList []models.ProcedureBundleEntry
 	for _, procedure := range result {
 		var entry models.ProcedureBundleEntry
-		entry.Title = "Procedure " + procedure.Id
 		entry.Id = procedure.Id
-		entry.Content = procedure
+		entry.Resource = procedure
 		procedureEntryList = append(procedureEntryList, entry)
 	}
 
 	var bundle models.ProcedureBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Procedure Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = procedureEntryList
 
 	log.Println("Setting procedure search context")

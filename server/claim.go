@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func ClaimIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func ClaimIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var claimEntryList []models.ClaimBundleEntry
 	for _, claim := range result {
 		var entry models.ClaimBundleEntry
-		entry.Title = "Claim " + claim.Id
 		entry.Id = claim.Id
-		entry.Content = claim
+		entry.Resource = claim
 		claimEntryList = append(claimEntryList, entry)
 	}
 
 	var bundle models.ClaimBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Claim Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = claimEntryList
 
 	log.Println("Setting claim search context")

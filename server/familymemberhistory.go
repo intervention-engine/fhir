@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func FamilyMemberHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func FamilyMemberHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	var familymemberhistoryEntryList []models.FamilyMemberHistoryBundleEntry
 	for _, familymemberhistory := range result {
 		var entry models.FamilyMemberHistoryBundleEntry
-		entry.Title = "FamilyMemberHistory " + familymemberhistory.Id
 		entry.Id = familymemberhistory.Id
-		entry.Content = familymemberhistory
+		entry.Resource = familymemberhistory
 		familymemberhistoryEntryList = append(familymemberhistoryEntryList, entry)
 	}
 
 	var bundle models.FamilyMemberHistoryBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "FamilyMemberHistory Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = familymemberhistoryEntryList
 
 	log.Println("Setting familymemberhistory search context")

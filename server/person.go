@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func PersonIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	var personEntryList []models.PersonBundleEntry
 	for _, person := range result {
 		var entry models.PersonBundleEntry
-		entry.Title = "Person " + person.Id
 		entry.Id = person.Id
-		entry.Content = person
+		entry.Resource = person
 		personEntryList = append(personEntryList, entry)
 	}
 
 	var bundle models.PersonBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Person Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = personEntryList
 
 	log.Println("Setting person search context")

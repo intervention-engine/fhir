@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func BasicIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func BasicIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var basicEntryList []models.BasicBundleEntry
 	for _, basic := range result {
 		var entry models.BasicBundleEntry
-		entry.Title = "Basic " + basic.Id
 		entry.Id = basic.Id
-		entry.Content = basic
+		entry.Resource = basic
 		basicEntryList = append(basicEntryList, entry)
 	}
 
 	var bundle models.BasicBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Basic Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = basicEntryList
 
 	log.Println("Setting basic search context")

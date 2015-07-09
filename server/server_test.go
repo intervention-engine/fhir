@@ -87,8 +87,7 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 	err = iter.All(&result)
 	util.CheckErr(err)
 
-	c.Assert(patientBundle.TotalResults, Equals, len(result))
-	c.Assert(patientBundle.Title, Equals, "Patient Index")
+	c.Assert(patientBundle.Total, Equals, len(result))
 }
 
 func (s *ServerSuite) TestCreatePatient(c *C) {

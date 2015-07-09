@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func LocationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var locationEntryList []models.LocationBundleEntry
 	for _, location := range result {
 		var entry models.LocationBundleEntry
-		entry.Title = "Location " + location.Id
 		entry.Id = location.Id
-		entry.Content = location
+		entry.Resource = location
 		locationEntryList = append(locationEntryList, entry)
 	}
 
 	var bundle models.LocationBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Location Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = locationEntryList
 
 	log.Println("Setting location search context")

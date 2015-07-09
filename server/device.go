@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	var deviceEntryList []models.DeviceBundleEntry
 	for _, device := range result {
 		var entry models.DeviceBundleEntry
-		entry.Title = "Device " + device.Id
 		entry.Id = device.Id
-		entry.Content = device
+		entry.Resource = device
 		deviceEntryList = append(deviceEntryList, entry)
 	}
 
 	var bundle models.DeviceBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Device Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = deviceEntryList
 
 	log.Println("Setting device search context")

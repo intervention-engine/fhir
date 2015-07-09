@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Slot struct {
 	Id           string           `json:"-" bson:"_id"`
@@ -44,26 +41,19 @@ type Slot struct {
 }
 
 type SlotBundle struct {
-	Type         string            `json:"resourceType,omitempty"`
-	Title        string            `json:"title,omitempty"`
-	Id           string            `json:"id,omitempty"`
-	Updated      time.Time         `json:"updated,omitempty"`
-	TotalResults int               `json:"totalResults,omitempty"`
-	Entry        []SlotBundleEntry `json:"entry,omitempty"`
-	Category     SlotCategory      `json:"category,omitempty"`
+	Id    string                `json:"id,omitempty"`
+	Type  string                `json:"resourceType,omitempty"`
+	Base  string                `json:"base,omitempty"`
+	Total int                   `json:"total,omitempty"`
+	Link  []BundleLinkComponent `json:"link,omitempty"`
+	Entry []SlotBundleEntry     `json:"entry,omitempty"`
 }
 
 type SlotBundleEntry struct {
-	Title    string       `json:"title,omitempty"`
-	Id       string       `json:"id,omitempty"`
-	Content  Slot         `json:"content,omitempty"`
-	Category SlotCategory `json:"category,omitempty"`
-}
-
-type SlotCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Slot                  `json:"resource,omitempty"`
 }
 
 func (resource *Slot) MarshalJSON() ([]byte, error) {

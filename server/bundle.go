@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func BundleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	var bundleEntryList []models.BundleBundleEntry
 	for _, bundle := range result {
 		var entry models.BundleBundleEntry
-		entry.Title = "Bundle " + bundle.Id
 		entry.Id = bundle.Id
-		entry.Content = bundle
+		entry.Resource = bundle
 		bundleEntryList = append(bundleEntryList, entry)
 	}
 
 	var bundle models.BundleBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Bundle Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = bundleEntryList
 
 	log.Println("Setting bundle search context")

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func EligibilityResponseIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	var eligibilityresponseEntryList []models.EligibilityResponseBundleEntry
 	for _, eligibilityresponse := range result {
 		var entry models.EligibilityResponseBundleEntry
-		entry.Title = "EligibilityResponse " + eligibilityresponse.Id
 		entry.Id = eligibilityresponse.Id
-		entry.Content = eligibilityresponse
+		entry.Resource = eligibilityresponse
 		eligibilityresponseEntryList = append(eligibilityresponseEntryList, entry)
 	}
 
 	var bundle models.EligibilityResponseBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "EligibilityResponse Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = eligibilityresponseEntryList
 
 	log.Println("Setting eligibilityresponse search context")

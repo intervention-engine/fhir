@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Binary struct {
 	Id          string `json:"-" bson:"_id"`
@@ -38,26 +35,19 @@ type Binary struct {
 }
 
 type BinaryBundle struct {
-	Type         string              `json:"resourceType,omitempty"`
-	Title        string              `json:"title,omitempty"`
-	Id           string              `json:"id,omitempty"`
-	Updated      time.Time           `json:"updated,omitempty"`
-	TotalResults int                 `json:"totalResults,omitempty"`
-	Entry        []BinaryBundleEntry `json:"entry,omitempty"`
-	Category     BinaryCategory      `json:"category,omitempty"`
+	Id    string                `json:"id,omitempty"`
+	Type  string                `json:"resourceType,omitempty"`
+	Base  string                `json:"base,omitempty"`
+	Total int                   `json:"total,omitempty"`
+	Link  []BundleLinkComponent `json:"link,omitempty"`
+	Entry []BinaryBundleEntry   `json:"entry,omitempty"`
 }
 
 type BinaryBundleEntry struct {
-	Title    string         `json:"title,omitempty"`
-	Id       string         `json:"id,omitempty"`
-	Content  Binary         `json:"content,omitempty"`
-	Category BinaryCategory `json:"category,omitempty"`
-}
-
-type BinaryCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Binary                `json:"resource,omitempty"`
 }
 
 func (resource *Binary) MarshalJSON() ([]byte, error) {

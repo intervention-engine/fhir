@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func GoalIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func GoalIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	var goalEntryList []models.GoalBundleEntry
 	for _, goal := range result {
 		var entry models.GoalBundleEntry
-		entry.Title = "Goal " + goal.Id
 		entry.Id = goal.Id
-		entry.Content = goal
+		entry.Resource = goal
 		goalEntryList = append(goalEntryList, entry)
 	}
 
 	var bundle models.GoalBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Goal Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = goalEntryList
 
 	log.Println("Setting goal search context")

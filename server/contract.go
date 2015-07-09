@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func ContractIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func ContractIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var contractEntryList []models.ContractBundleEntry
 	for _, contract := range result {
 		var entry models.ContractBundleEntry
-		entry.Title = "Contract " + contract.Id
 		entry.Id = contract.Id
-		entry.Content = contract
+		entry.Resource = contract
 		contractEntryList = append(contractEntryList, entry)
 	}
 
 	var bundle models.ContractBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Contract Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = contractEntryList
 
 	log.Println("Setting contract search context")

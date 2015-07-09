@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func AuditEventIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	var auditeventEntryList []models.AuditEventBundleEntry
 	for _, auditevent := range result {
 		var entry models.AuditEventBundleEntry
-		entry.Title = "AuditEvent " + auditevent.Id
 		entry.Id = auditevent.Id
-		entry.Content = auditevent
+		entry.Resource = auditevent
 		auditeventEntryList = append(auditeventEntryList, entry)
 	}
 
 	var bundle models.AuditEventBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "AuditEvent Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = auditeventEntryList
 
 	log.Println("Setting auditevent search context")

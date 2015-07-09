@@ -26,10 +26,7 @@
 
 package models
 
-import (
-	"encoding/json"
-	"time"
-)
+import "encoding/json"
 
 type Condition struct {
 	Id                string                                `json:"-" bson:"_id"`
@@ -87,26 +84,19 @@ type ConditionOccurredFollowingComponent struct {
 }
 
 type ConditionBundle struct {
-	Type         string                 `json:"resourceType,omitempty"`
-	Title        string                 `json:"title,omitempty"`
-	Id           string                 `json:"id,omitempty"`
-	Updated      time.Time              `json:"updated,omitempty"`
-	TotalResults int                    `json:"totalResults,omitempty"`
-	Entry        []ConditionBundleEntry `json:"entry,omitempty"`
-	Category     ConditionCategory      `json:"category,omitempty"`
+	Id    string                 `json:"id,omitempty"`
+	Type  string                 `json:"resourceType,omitempty"`
+	Base  string                 `json:"base,omitempty"`
+	Total int                    `json:"total,omitempty"`
+	Link  []BundleLinkComponent  `json:"link,omitempty"`
+	Entry []ConditionBundleEntry `json:"entry,omitempty"`
 }
 
 type ConditionBundleEntry struct {
-	Title    string            `json:"title,omitempty"`
-	Id       string            `json:"id,omitempty"`
-	Content  Condition         `json:"content,omitempty"`
-	Category ConditionCategory `json:"category,omitempty"`
-}
-
-type ConditionCategory struct {
-	Term   string `json:"term,omitempty"`
-	Label  string `json:"label,omitempty"`
-	Scheme string `json:"scheme,omitempty"`
+	Id       string                `json:"id,omitempty"`
+	Base     string                `json:"base,omitempty"`
+	Link     []BundleLinkComponent `json:"link,omitempty"`
+	Resource Condition             `json:"resource,omitempty"`
 }
 
 func (resource *Condition) MarshalJSON() ([]byte, error) {

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func ScheduleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var scheduleEntryList []models.ScheduleBundleEntry
 	for _, schedule := range result {
 		var entry models.ScheduleBundleEntry
-		entry.Title = "Schedule " + schedule.Id
 		entry.Id = schedule.Id
-		entry.Content = schedule
+		entry.Resource = schedule
 		scheduleEntryList = append(scheduleEntryList, entry)
 	}
 
 	var bundle models.ScheduleBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Schedule Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = scheduleEntryList
 
 	log.Println("Setting schedule search context")

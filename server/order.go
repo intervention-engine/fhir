@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func OrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "subject") {
+			if splitKey[0] == "subject" {
 				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func OrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var orderEntryList []models.OrderBundleEntry
 	for _, order := range result {
 		var entry models.OrderBundleEntry
-		entry.Title = "Order " + order.Id
 		entry.Id = order.Id
-		entry.Content = order
+		entry.Resource = order
 		orderEntryList = append(orderEntryList, entry)
 	}
 
 	var bundle models.OrderBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Order Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = orderEntryList
 
 	log.Println("Setting order search context")

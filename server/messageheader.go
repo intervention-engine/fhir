@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var messageheaderEntryList []models.MessageHeaderBundleEntry
 	for _, messageheader := range result {
 		var entry models.MessageHeaderBundleEntry
-		entry.Title = "MessageHeader " + messageheader.Id
 		entry.Id = messageheader.Id
-		entry.Content = messageheader
+		entry.Resource = messageheader
 		messageheaderEntryList = append(messageheaderEntryList, entry)
 	}
 
 	var bundle models.MessageHeaderBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "MessageHeader Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = messageheaderEntryList
 
 	log.Println("Setting messageheader search context")

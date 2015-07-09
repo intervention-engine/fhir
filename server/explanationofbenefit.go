@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func ExplanationOfBenefitIndexHandler(rw http.ResponseWriter, r *http.Request, n
 	var explanationofbenefitEntryList []models.ExplanationOfBenefitBundleEntry
 	for _, explanationofbenefit := range result {
 		var entry models.ExplanationOfBenefitBundleEntry
-		entry.Title = "ExplanationOfBenefit " + explanationofbenefit.Id
 		entry.Id = explanationofbenefit.Id
-		entry.Content = explanationofbenefit
+		entry.Resource = explanationofbenefit
 		explanationofbenefitEntryList = append(explanationofbenefitEntryList, entry)
 	}
 
 	var bundle models.ExplanationOfBenefitBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "ExplanationOfBenefit Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = explanationofbenefitEntryList
 
 	log.Println("Setting explanationofbenefit search context")

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func PaymentNoticeIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var paymentnoticeEntryList []models.PaymentNoticeBundleEntry
 	for _, paymentnotice := range result {
 		var entry models.PaymentNoticeBundleEntry
-		entry.Title = "PaymentNotice " + paymentnotice.Id
 		entry.Id = paymentnotice.Id
-		entry.Content = paymentnotice
+		entry.Resource = paymentnotice
 		paymentnoticeEntryList = append(paymentnoticeEntryList, entry)
 	}
 
 	var bundle models.PaymentNoticeBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "PaymentNotice Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = paymentnoticeEntryList
 
 	log.Println("Setting paymentnotice search context")

@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -29,7 +28,7 @@ func BodySiteIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	} else {
 		for key, value := range r.Form {
 			splitKey := strings.Split(key, ":")
-			if (len(splitKey) > 1) && (splitKey[0] == "patient") {
+			if splitKey[0] == "patient" {
 				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
 				if err != nil {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -41,18 +40,15 @@ func BodySiteIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var bodysiteEntryList []models.BodySiteBundleEntry
 	for _, bodysite := range result {
 		var entry models.BodySiteBundleEntry
-		entry.Title = "BodySite " + bodysite.Id
 		entry.Id = bodysite.Id
-		entry.Content = bodysite
+		entry.Resource = bodysite
 		bodysiteEntryList = append(bodysiteEntryList, entry)
 	}
 
 	var bundle models.BodySiteBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "BodySite Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = bodysiteEntryList
 
 	log.Println("Setting bodysite search context")

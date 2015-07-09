@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	var conceptmapEntryList []models.ConceptMapBundleEntry
 	for _, conceptmap := range result {
 		var entry models.ConceptMapBundleEntry
-		entry.Title = "ConceptMap " + conceptmap.Id
 		entry.Id = conceptmap.Id
-		entry.Content = conceptmap
+		entry.Resource = conceptmap
 		conceptmapEntryList = append(conceptmapEntryList, entry)
 	}
 
 	var bundle models.ConceptMapBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "ConceptMap Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = conceptmapEntryList
 
 	log.Println("Setting conceptmap search context")

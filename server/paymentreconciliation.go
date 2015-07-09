@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func PaymentReconciliationIndexHandler(rw http.ResponseWriter, r *http.Request, 
 	var paymentreconciliationEntryList []models.PaymentReconciliationBundleEntry
 	for _, paymentreconciliation := range result {
 		var entry models.PaymentReconciliationBundleEntry
-		entry.Title = "PaymentReconciliation " + paymentreconciliation.Id
 		entry.Id = paymentreconciliation.Id
-		entry.Content = paymentreconciliation
+		entry.Resource = paymentreconciliation
 		paymentreconciliationEntryList = append(paymentreconciliationEntryList, entry)
 	}
 
 	var bundle models.PaymentReconciliationBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "PaymentReconciliation Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = paymentreconciliationEntryList
 
 	log.Println("Setting paymentreconciliation search context")

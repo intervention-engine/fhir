@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func OrganizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var organizationEntryList []models.OrganizationBundleEntry
 	for _, organization := range result {
 		var entry models.OrganizationBundleEntry
-		entry.Title = "Organization " + organization.Id
 		entry.Id = organization.Id
-		entry.Content = organization
+		entry.Resource = organization
 		organizationEntryList = append(organizationEntryList, entry)
 	}
 
 	var bundle models.OrganizationBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Organization Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = organizationEntryList
 
 	log.Println("Setting organization search context")

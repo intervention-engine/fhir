@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -26,18 +25,15 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var questionnaireEntryList []models.QuestionnaireBundleEntry
 	for _, questionnaire := range result {
 		var entry models.QuestionnaireBundleEntry
-		entry.Title = "Questionnaire " + questionnaire.Id
 		entry.Id = questionnaire.Id
-		entry.Content = questionnaire
+		entry.Resource = questionnaire
 		questionnaireEntryList = append(questionnaireEntryList, entry)
 	}
 
 	var bundle models.QuestionnaireBundle
-	bundle.Type = "Bundle"
-	bundle.Title = "Questionnaire Index"
 	bundle.Id = bson.NewObjectId().Hex()
-	bundle.Updated = time.Now()
-	bundle.TotalResults = len(result)
+	bundle.Type = "searchset"
+	bundle.Total = len(result)
 	bundle.Entry = questionnaireEntryList
 
 	log.Println("Setting questionnaire search context")
