@@ -22,18 +22,18 @@ func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var practitionerEntryList []models.PractitionerBundleEntry
+	var practitionerEntryList []models.BundleEntryComponent
 	for _, practitioner := range result {
-		var entry models.PractitionerBundleEntry
-		entry.Id = practitioner.Id
-		entry.Resource = practitioner
+		var entry models.BundleEntryComponent
+		entry.Resource = &practitioner
 		practitionerEntryList = append(practitionerEntryList, entry)
 	}
 
-	var bundle models.PractitionerBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = practitionerEntryList
 
 	log.Println("Setting practitioner search context")
@@ -43,7 +43,7 @@ func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadPractitioner(r *http.Request) (*models.Practitioner, error) {

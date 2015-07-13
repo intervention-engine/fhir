@@ -1,0 +1,21 @@
+{
+  "resourceType": "Condition",
+  "id": "8664777288161060797",
+  "patient": {
+    "reference": "https://example.com/base/Patient/4954037118555241963"
+  },
+  "code": {
+    "coding": [{
+      "system": "http://snomed.info/sct",
+      "code": "10091002"
+    }, {
+      "system": "http://hl7.org/fhir/sid/icd-9",
+      "code": "428.0"
+    }, {
+      "system": "http://hl7.org/fhir/sid/icd-10",
+      "code": "I50.1"
+    }],
+    "text": "Heart failure"
+  },
+  "onsetDateTime": "2012-03-01T07:00:00-05:00"
+}

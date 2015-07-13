@@ -37,18 +37,18 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		}
 	}
 
-	var imagingstudyEntryList []models.ImagingStudyBundleEntry
+	var imagingstudyEntryList []models.BundleEntryComponent
 	for _, imagingstudy := range result {
-		var entry models.ImagingStudyBundleEntry
-		entry.Id = imagingstudy.Id
-		entry.Resource = imagingstudy
+		var entry models.BundleEntryComponent
+		entry.Resource = &imagingstudy
 		imagingstudyEntryList = append(imagingstudyEntryList, entry)
 	}
 
-	var bundle models.ImagingStudyBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = imagingstudyEntryList
 
 	log.Println("Setting imagingstudy search context")
@@ -58,7 +58,7 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadImagingStudy(r *http.Request) (*models.ImagingStudy, error) {

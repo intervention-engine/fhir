@@ -37,18 +37,18 @@ func DiagnosticReportIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		}
 	}
 
-	var diagnosticreportEntryList []models.DiagnosticReportBundleEntry
+	var diagnosticreportEntryList []models.BundleEntryComponent
 	for _, diagnosticreport := range result {
-		var entry models.DiagnosticReportBundleEntry
-		entry.Id = diagnosticreport.Id
-		entry.Resource = diagnosticreport
+		var entry models.BundleEntryComponent
+		entry.Resource = &diagnosticreport
 		diagnosticreportEntryList = append(diagnosticreportEntryList, entry)
 	}
 
-	var bundle models.DiagnosticReportBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = diagnosticreportEntryList
 
 	log.Println("Setting diagnosticreport search context")
@@ -58,7 +58,7 @@ func DiagnosticReportIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDiagnosticReport(r *http.Request) (*models.DiagnosticReport, error) {

@@ -37,18 +37,18 @@ func ContractIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		}
 	}
 
-	var contractEntryList []models.ContractBundleEntry
+	var contractEntryList []models.BundleEntryComponent
 	for _, contract := range result {
-		var entry models.ContractBundleEntry
-		entry.Id = contract.Id
-		entry.Resource = contract
+		var entry models.BundleEntryComponent
+		entry.Resource = &contract
 		contractEntryList = append(contractEntryList, entry)
 	}
 
-	var bundle models.ContractBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = contractEntryList
 
 	log.Println("Setting contract search context")
@@ -58,7 +58,7 @@ func ContractIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadContract(r *http.Request) (*models.Contract, error) {

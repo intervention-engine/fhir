@@ -22,18 +22,18 @@ func OperationOutcomeIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var operationoutcomeEntryList []models.OperationOutcomeBundleEntry
+	var operationoutcomeEntryList []models.BundleEntryComponent
 	for _, operationoutcome := range result {
-		var entry models.OperationOutcomeBundleEntry
-		entry.Id = operationoutcome.Id
-		entry.Resource = operationoutcome
+		var entry models.BundleEntryComponent
+		entry.Resource = &operationoutcome
 		operationoutcomeEntryList = append(operationoutcomeEntryList, entry)
 	}
 
-	var bundle models.OperationOutcomeBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = operationoutcomeEntryList
 
 	log.Println("Setting operationoutcome search context")
@@ -43,7 +43,7 @@ func OperationOutcomeIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadOperationOutcome(r *http.Request) (*models.OperationOutcome, error) {

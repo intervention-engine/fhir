@@ -44,6 +44,18 @@ type NutritionOrder struct {
 	EnteralFormula         *NutritionOrderEnteralFormulaComponent `bson:"enteralFormula,omitempty" json:"enteralFormula,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *NutritionOrder) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		NutritionOrder
+	}{
+		ResourceType:   "NutritionOrder",
+		NutritionOrder: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type NutritionOrderOralDietComponent struct {
 	Type                 []CodeableConcept                         `bson:"type,omitempty" json:"type,omitempty"`
 	Schedule             []Timing                                  `bson:"schedule,omitempty" json:"schedule,omitempty"`
@@ -88,31 +100,4 @@ type NutritionOrderEnteralFormulaAdministrationComponent struct {
 	Quantity     *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	RateQuantity *Quantity `bson:"rateQuantity,omitempty" json:"rateQuantity,omitempty"`
 	RateRatio    *Ratio    `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
-}
-
-type NutritionOrderBundle struct {
-	Id    string                      `json:"id,omitempty"`
-	Type  string                      `json:"resourceType,omitempty"`
-	Base  string                      `json:"base,omitempty"`
-	Total int                         `json:"total,omitempty"`
-	Link  []BundleLinkComponent       `json:"link,omitempty"`
-	Entry []NutritionOrderBundleEntry `json:"entry,omitempty"`
-}
-
-type NutritionOrderBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource NutritionOrder        `json:"resource,omitempty"`
-}
-
-func (resource *NutritionOrder) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		NutritionOrder
-	}{
-		ResourceType:   "NutritionOrder",
-		NutritionOrder: *resource,
-	}
-	return json.Marshal(x)
 }

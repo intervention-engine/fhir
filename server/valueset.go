@@ -22,18 +22,18 @@ func ValueSetIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var valuesetEntryList []models.ValueSetBundleEntry
+	var valuesetEntryList []models.BundleEntryComponent
 	for _, valueset := range result {
-		var entry models.ValueSetBundleEntry
-		entry.Id = valueset.Id
-		entry.Resource = valueset
+		var entry models.BundleEntryComponent
+		entry.Resource = &valueset
 		valuesetEntryList = append(valuesetEntryList, entry)
 	}
 
-	var bundle models.ValueSetBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = valuesetEntryList
 
 	log.Println("Setting valueset search context")
@@ -43,7 +43,7 @@ func ValueSetIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadValueSet(r *http.Request) (*models.ValueSet, error) {

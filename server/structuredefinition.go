@@ -37,18 +37,18 @@ func StructureDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 		}
 	}
 
-	var structuredefinitionEntryList []models.StructureDefinitionBundleEntry
+	var structuredefinitionEntryList []models.BundleEntryComponent
 	for _, structuredefinition := range result {
-		var entry models.StructureDefinitionBundleEntry
-		entry.Id = structuredefinition.Id
-		entry.Resource = structuredefinition
+		var entry models.BundleEntryComponent
+		entry.Resource = &structuredefinition
 		structuredefinitionEntryList = append(structuredefinitionEntryList, entry)
 	}
 
-	var bundle models.StructureDefinitionBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = structuredefinitionEntryList
 
 	log.Println("Setting structuredefinition search context")
@@ -58,7 +58,7 @@ func StructureDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadStructureDefinition(r *http.Request) (*models.StructureDefinition, error) {

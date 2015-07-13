@@ -54,6 +54,18 @@ type HealthcareService struct {
 	AvailabilityExceptions string                                    `bson:"availabilityExceptions,omitempty" json:"availabilityExceptions,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *HealthcareService) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		HealthcareService
+	}{
+		ResourceType:      "HealthcareService",
+		HealthcareService: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type HealthcareServiceServiceTypeComponent struct {
 	Type      *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Specialty []CodeableConcept `bson:"specialty,omitempty" json:"specialty,omitempty"`
@@ -69,31 +81,4 @@ type HealthcareServiceAvailableTimeComponent struct {
 type HealthcareServiceNotAvailableComponent struct {
 	Description string  `bson:"description,omitempty" json:"description,omitempty"`
 	During      *Period `bson:"during,omitempty" json:"during,omitempty"`
-}
-
-type HealthcareServiceBundle struct {
-	Id    string                         `json:"id,omitempty"`
-	Type  string                         `json:"resourceType,omitempty"`
-	Base  string                         `json:"base,omitempty"`
-	Total int                            `json:"total,omitempty"`
-	Link  []BundleLinkComponent          `json:"link,omitempty"`
-	Entry []HealthcareServiceBundleEntry `json:"entry,omitempty"`
-}
-
-type HealthcareServiceBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource HealthcareService     `json:"resource,omitempty"`
-}
-
-func (resource *HealthcareService) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		HealthcareService
-	}{
-		ResourceType:      "HealthcareService",
-		HealthcareService: *resource,
-	}
-	return json.Marshal(x)
 }

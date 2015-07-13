@@ -37,18 +37,18 @@ func MedicationAdministrationIndexHandler(rw http.ResponseWriter, r *http.Reques
 		}
 	}
 
-	var medicationadministrationEntryList []models.MedicationAdministrationBundleEntry
+	var medicationadministrationEntryList []models.BundleEntryComponent
 	for _, medicationadministration := range result {
-		var entry models.MedicationAdministrationBundleEntry
-		entry.Id = medicationadministration.Id
-		entry.Resource = medicationadministration
+		var entry models.BundleEntryComponent
+		entry.Resource = &medicationadministration
 		medicationadministrationEntryList = append(medicationadministrationEntryList, entry)
 	}
 
-	var bundle models.MedicationAdministrationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = medicationadministrationEntryList
 
 	log.Println("Setting medicationadministration search context")
@@ -58,7 +58,7 @@ func MedicationAdministrationIndexHandler(rw http.ResponseWriter, r *http.Reques
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadMedicationAdministration(r *http.Request) (*models.MedicationAdministration, error) {

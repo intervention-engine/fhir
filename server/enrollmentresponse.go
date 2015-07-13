@@ -22,18 +22,18 @@ func EnrollmentResponseIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var enrollmentresponseEntryList []models.EnrollmentResponseBundleEntry
+	var enrollmentresponseEntryList []models.BundleEntryComponent
 	for _, enrollmentresponse := range result {
-		var entry models.EnrollmentResponseBundleEntry
-		entry.Id = enrollmentresponse.Id
-		entry.Resource = enrollmentresponse
+		var entry models.BundleEntryComponent
+		entry.Resource = &enrollmentresponse
 		enrollmentresponseEntryList = append(enrollmentresponseEntryList, entry)
 	}
 
-	var bundle models.EnrollmentResponseBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = enrollmentresponseEntryList
 
 	log.Println("Setting enrollmentresponse search context")
@@ -43,7 +43,7 @@ func EnrollmentResponseIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadEnrollmentResponse(r *http.Request) (*models.EnrollmentResponse, error) {

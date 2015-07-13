@@ -22,18 +22,18 @@ func BinaryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var binaryEntryList []models.BinaryBundleEntry
+	var binaryEntryList []models.BundleEntryComponent
 	for _, binary := range result {
-		var entry models.BinaryBundleEntry
-		entry.Id = binary.Id
-		entry.Resource = binary
+		var entry models.BundleEntryComponent
+		entry.Resource = &binary
 		binaryEntryList = append(binaryEntryList, entry)
 	}
 
-	var bundle models.BinaryBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = binaryEntryList
 
 	log.Println("Setting binary search context")
@@ -43,7 +43,7 @@ func BinaryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadBinary(r *http.Request) (*models.Binary, error) {

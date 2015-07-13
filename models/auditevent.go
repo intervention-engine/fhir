@@ -36,6 +36,18 @@ type AuditEvent struct {
 	Object      []AuditEventObjectComponent      `bson:"object,omitempty" json:"object,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *AuditEvent) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		AuditEvent
+	}{
+		ResourceType: "AuditEvent",
+		AuditEvent:   *resource,
+	}
+	return json.Marshal(x)
+}
+
 type AuditEventEventComponent struct {
 	Type           *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Subtype        []CodeableConcept `bson:"subtype,omitempty" json:"subtype,omitempty"`
@@ -87,31 +99,4 @@ type AuditEventObjectComponent struct {
 type AuditEventObjectDetailComponent struct {
 	Type  string `bson:"type,omitempty" json:"type,omitempty"`
 	Value string `bson:"value,omitempty" json:"value,omitempty"`
-}
-
-type AuditEventBundle struct {
-	Id    string                  `json:"id,omitempty"`
-	Type  string                  `json:"resourceType,omitempty"`
-	Base  string                  `json:"base,omitempty"`
-	Total int                     `json:"total,omitempty"`
-	Link  []BundleLinkComponent   `json:"link,omitempty"`
-	Entry []AuditEventBundleEntry `json:"entry,omitempty"`
-}
-
-type AuditEventBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource AuditEvent            `json:"resource,omitempty"`
-}
-
-func (resource *AuditEvent) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		AuditEvent
-	}{
-		ResourceType: "AuditEvent",
-		AuditEvent:   *resource,
-	}
-	return json.Marshal(x)
 }

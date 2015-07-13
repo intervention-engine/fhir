@@ -22,18 +22,18 @@ func TestScriptIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var testscriptEntryList []models.TestScriptBundleEntry
+	var testscriptEntryList []models.BundleEntryComponent
 	for _, testscript := range result {
-		var entry models.TestScriptBundleEntry
-		entry.Id = testscript.Id
-		entry.Resource = testscript
+		var entry models.BundleEntryComponent
+		entry.Resource = &testscript
 		testscriptEntryList = append(testscriptEntryList, entry)
 	}
 
-	var bundle models.TestScriptBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = testscriptEntryList
 
 	log.Println("Setting testscript search context")
@@ -43,7 +43,7 @@ func TestScriptIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadTestScript(r *http.Request) (*models.TestScript, error) {

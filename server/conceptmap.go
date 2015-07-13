@@ -22,18 +22,18 @@ func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var conceptmapEntryList []models.ConceptMapBundleEntry
+	var conceptmapEntryList []models.BundleEntryComponent
 	for _, conceptmap := range result {
-		var entry models.ConceptMapBundleEntry
-		entry.Id = conceptmap.Id
-		entry.Resource = conceptmap
+		var entry models.BundleEntryComponent
+		entry.Resource = &conceptmap
 		conceptmapEntryList = append(conceptmapEntryList, entry)
 	}
 
-	var bundle models.ConceptMapBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = conceptmapEntryList
 
 	log.Println("Setting conceptmap search context")
@@ -43,7 +43,7 @@ func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadConceptMap(r *http.Request) (*models.ConceptMap, error) {

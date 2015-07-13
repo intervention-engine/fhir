@@ -22,18 +22,18 @@ func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var appointmentEntryList []models.AppointmentBundleEntry
+	var appointmentEntryList []models.BundleEntryComponent
 	for _, appointment := range result {
-		var entry models.AppointmentBundleEntry
-		entry.Id = appointment.Id
-		entry.Resource = appointment
+		var entry models.BundleEntryComponent
+		entry.Resource = &appointment
 		appointmentEntryList = append(appointmentEntryList, entry)
 	}
 
-	var bundle models.AppointmentBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = appointmentEntryList
 
 	log.Println("Setting appointment search context")
@@ -43,7 +43,7 @@ func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadAppointment(r *http.Request) (*models.Appointment, error) {

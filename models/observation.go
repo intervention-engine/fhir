@@ -65,6 +65,18 @@ type Observation struct {
 	Component               []ObservationComponentComponent      `bson:"component,omitempty" json:"component,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Observation) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Observation
+	}{
+		ResourceType: "Observation",
+		Observation:  *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ObservationReferenceRangeComponent struct {
 	Low     *Quantity        `bson:"low,omitempty" json:"low,omitempty"`
 	High    *Quantity        `bson:"high,omitempty" json:"high,omitempty"`
@@ -92,31 +104,4 @@ type ObservationComponentComponent struct {
 	ValuePeriod          *Period                              `bson:"valuePeriod,omitempty" json:"valuePeriod,omitempty"`
 	DataAbsentReason     *CodeableConcept                     `bson:"dataAbsentReason,omitempty" json:"dataAbsentReason,omitempty"`
 	ReferenceRange       []ObservationReferenceRangeComponent `bson:"referenceRange,omitempty" json:"referenceRange,omitempty"`
-}
-
-type ObservationBundle struct {
-	Id    string                   `json:"id,omitempty"`
-	Type  string                   `json:"resourceType,omitempty"`
-	Base  string                   `json:"base,omitempty"`
-	Total int                      `json:"total,omitempty"`
-	Link  []BundleLinkComponent    `json:"link,omitempty"`
-	Entry []ObservationBundleEntry `json:"entry,omitempty"`
-}
-
-type ObservationBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Observation           `json:"resource,omitempty"`
-}
-
-func (resource *Observation) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Observation
-	}{
-		ResourceType: "Observation",
-		Observation:  *resource,
-	}
-	return json.Marshal(x)
 }

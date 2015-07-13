@@ -49,6 +49,18 @@ type MedicationDispense struct {
 	Substitution              *MedicationDispenseSubstitutionComponent       `bson:"substitution,omitempty" json:"substitution,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *MedicationDispense) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MedicationDispense
+	}{
+		ResourceType:       "MedicationDispense",
+		MedicationDispense: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type MedicationDispenseDosageInstructionComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
@@ -70,31 +82,4 @@ type MedicationDispenseSubstitutionComponent struct {
 	Type             *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Reason           []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 	ResponsibleParty []Reference       `bson:"responsibleParty,omitempty" json:"responsibleParty,omitempty"`
-}
-
-type MedicationDispenseBundle struct {
-	Id    string                          `json:"id,omitempty"`
-	Type  string                          `json:"resourceType,omitempty"`
-	Base  string                          `json:"base,omitempty"`
-	Total int                             `json:"total,omitempty"`
-	Link  []BundleLinkComponent           `json:"link,omitempty"`
-	Entry []MedicationDispenseBundleEntry `json:"entry,omitempty"`
-}
-
-type MedicationDispenseBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource MedicationDispense    `json:"resource,omitempty"`
-}
-
-func (resource *MedicationDispense) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		MedicationDispense
-	}{
-		ResourceType:       "MedicationDispense",
-		MedicationDispense: *resource,
-	}
-	return json.Marshal(x)
 }

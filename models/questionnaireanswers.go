@@ -41,6 +41,18 @@ type QuestionnaireAnswers struct {
 	Group         *QuestionnaireAnswersGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *QuestionnaireAnswers) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		QuestionnaireAnswers
+	}{
+		ResourceType:         "QuestionnaireAnswers",
+		QuestionnaireAnswers: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type QuestionnaireAnswersGroupComponent struct {
 	LinkId   string                                  `bson:"linkId,omitempty" json:"linkId,omitempty"`
 	Title    string                                  `bson:"title,omitempty" json:"title,omitempty"`
@@ -71,31 +83,4 @@ type QuestionnaireAnswersQuestionAnswerComponent struct {
 	ValueCoding     *Coding       `bson:"valueCoding,omitempty" json:"valueCoding,omitempty"`
 	ValueQuantity   *Quantity     `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
 	ValueReference  *Reference    `bson:"valueReference,omitempty" json:"valueReference,omitempty"`
-}
-
-type QuestionnaireAnswersBundle struct {
-	Id    string                            `json:"id,omitempty"`
-	Type  string                            `json:"resourceType,omitempty"`
-	Base  string                            `json:"base,omitempty"`
-	Total int                               `json:"total,omitempty"`
-	Link  []BundleLinkComponent             `json:"link,omitempty"`
-	Entry []QuestionnaireAnswersBundleEntry `json:"entry,omitempty"`
-}
-
-type QuestionnaireAnswersBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource QuestionnaireAnswers  `json:"resource,omitempty"`
-}
-
-func (resource *QuestionnaireAnswers) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		QuestionnaireAnswers
-	}{
-		ResourceType:         "QuestionnaireAnswers",
-		QuestionnaireAnswers: *resource,
-	}
-	return json.Marshal(x)
 }

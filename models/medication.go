@@ -39,6 +39,18 @@ type Medication struct {
 	Package      *MedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Medication) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Medication
+	}{
+		ResourceType: "Medication",
+		Medication:   *resource,
+	}
+	return json.Marshal(x)
+}
+
 type MedicationProductComponent struct {
 	Form       *CodeableConcept                       `bson:"form,omitempty" json:"form,omitempty"`
 	Ingredient []MedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
@@ -63,31 +75,4 @@ type MedicationPackageComponent struct {
 type MedicationPackageContentComponent struct {
 	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
 	Amount *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
-}
-
-type MedicationBundle struct {
-	Id    string                  `json:"id,omitempty"`
-	Type  string                  `json:"resourceType,omitempty"`
-	Base  string                  `json:"base,omitempty"`
-	Total int                     `json:"total,omitempty"`
-	Link  []BundleLinkComponent   `json:"link,omitempty"`
-	Entry []MedicationBundleEntry `json:"entry,omitempty"`
-}
-
-type MedicationBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Medication            `json:"resource,omitempty"`
-}
-
-func (resource *Medication) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Medication
-	}{
-		ResourceType: "Medication",
-		Medication:   *resource,
-	}
-	return json.Marshal(x)
 }

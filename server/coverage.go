@@ -22,18 +22,18 @@ func CoverageIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var coverageEntryList []models.CoverageBundleEntry
+	var coverageEntryList []models.BundleEntryComponent
 	for _, coverage := range result {
-		var entry models.CoverageBundleEntry
-		entry.Id = coverage.Id
-		entry.Resource = coverage
+		var entry models.BundleEntryComponent
+		entry.Resource = &coverage
 		coverageEntryList = append(coverageEntryList, entry)
 	}
 
-	var bundle models.CoverageBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = coverageEntryList
 
 	log.Println("Setting coverage search context")
@@ -43,7 +43,7 @@ func CoverageIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadCoverage(r *http.Request) (*models.Coverage, error) {

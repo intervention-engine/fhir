@@ -37,18 +37,18 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		}
 	}
 
-	var contraindicationEntryList []models.ContraindicationBundleEntry
+	var contraindicationEntryList []models.BundleEntryComponent
 	for _, contraindication := range result {
-		var entry models.ContraindicationBundleEntry
-		entry.Id = contraindication.Id
-		entry.Resource = contraindication
+		var entry models.BundleEntryComponent
+		entry.Resource = &contraindication
 		contraindicationEntryList = append(contraindicationEntryList, entry)
 	}
 
-	var bundle models.ContraindicationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = contraindicationEntryList
 
 	log.Println("Setting contraindication search context")
@@ -58,7 +58,7 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadContraindication(r *http.Request) (*models.Contraindication, error) {

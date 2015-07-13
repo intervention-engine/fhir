@@ -37,18 +37,18 @@ func SupplyDeliveryIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 		}
 	}
 
-	var supplydeliveryEntryList []models.SupplyDeliveryBundleEntry
+	var supplydeliveryEntryList []models.BundleEntryComponent
 	for _, supplydelivery := range result {
-		var entry models.SupplyDeliveryBundleEntry
-		entry.Id = supplydelivery.Id
-		entry.Resource = supplydelivery
+		var entry models.BundleEntryComponent
+		entry.Resource = &supplydelivery
 		supplydeliveryEntryList = append(supplydeliveryEntryList, entry)
 	}
 
-	var bundle models.SupplyDeliveryBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = supplydeliveryEntryList
 
 	log.Println("Setting supplydelivery search context")
@@ -58,7 +58,7 @@ func SupplyDeliveryIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadSupplyDelivery(r *http.Request) (*models.SupplyDelivery, error) {

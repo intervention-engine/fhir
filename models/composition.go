@@ -46,6 +46,18 @@ type Composition struct {
 	Section         []CompositionSectionComponent  `bson:"section,omitempty" json:"section,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Composition) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Composition
+	}{
+		ResourceType: "Composition",
+		Composition:  *resource,
+	}
+	return json.Marshal(x)
+}
+
 type CompositionAttesterComponent struct {
 	Mode  []string      `bson:"mode,omitempty" json:"mode,omitempty"`
 	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
@@ -63,31 +75,4 @@ type CompositionSectionComponent struct {
 	Code    *CodeableConcept              `bson:"code,omitempty" json:"code,omitempty"`
 	Content *Reference                    `bson:"content,omitempty" json:"content,omitempty"`
 	Section []CompositionSectionComponent `bson:"section,omitempty" json:"section,omitempty"`
-}
-
-type CompositionBundle struct {
-	Id    string                   `json:"id,omitempty"`
-	Type  string                   `json:"resourceType,omitempty"`
-	Base  string                   `json:"base,omitempty"`
-	Total int                      `json:"total,omitempty"`
-	Link  []BundleLinkComponent    `json:"link,omitempty"`
-	Entry []CompositionBundleEntry `json:"entry,omitempty"`
-}
-
-type CompositionBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Composition           `json:"resource,omitempty"`
-}
-
-func (resource *Composition) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Composition
-	}{
-		ResourceType: "Composition",
-		Composition:  *resource,
-	}
-	return json.Marshal(x)
 }

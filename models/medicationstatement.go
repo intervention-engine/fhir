@@ -47,6 +47,18 @@ type MedicationStatement struct {
 	Dosage                      []MedicationStatementDosageComponent `bson:"dosage,omitempty" json:"dosage,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *MedicationStatement) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MedicationStatement
+	}{
+		ResourceType:        "MedicationStatement",
+		MedicationStatement: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type MedicationStatementDosageComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	Schedule                *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
@@ -58,31 +70,4 @@ type MedicationStatementDosageComponent struct {
 	Quantity                *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Rate                    *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
 	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty" json:"maxDosePerPeriod,omitempty"`
-}
-
-type MedicationStatementBundle struct {
-	Id    string                           `json:"id,omitempty"`
-	Type  string                           `json:"resourceType,omitempty"`
-	Base  string                           `json:"base,omitempty"`
-	Total int                              `json:"total,omitempty"`
-	Link  []BundleLinkComponent            `json:"link,omitempty"`
-	Entry []MedicationStatementBundleEntry `json:"entry,omitempty"`
-}
-
-type MedicationStatementBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource MedicationStatement   `json:"resource,omitempty"`
-}
-
-func (resource *MedicationStatement) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		MedicationStatement
-	}{
-		ResourceType:        "MedicationStatement",
-		MedicationStatement: *resource,
-	}
-	return json.Marshal(x)
 }

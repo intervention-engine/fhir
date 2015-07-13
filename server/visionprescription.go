@@ -37,18 +37,18 @@ func VisionPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 		}
 	}
 
-	var visionprescriptionEntryList []models.VisionPrescriptionBundleEntry
+	var visionprescriptionEntryList []models.BundleEntryComponent
 	for _, visionprescription := range result {
-		var entry models.VisionPrescriptionBundleEntry
-		entry.Id = visionprescription.Id
-		entry.Resource = visionprescription
+		var entry models.BundleEntryComponent
+		entry.Resource = &visionprescription
 		visionprescriptionEntryList = append(visionprescriptionEntryList, entry)
 	}
 
-	var bundle models.VisionPrescriptionBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = visionprescriptionEntryList
 
 	log.Println("Setting visionprescription search context")
@@ -58,7 +58,7 @@ func VisionPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadVisionPrescription(r *http.Request) (*models.VisionPrescription, error) {

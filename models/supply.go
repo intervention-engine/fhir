@@ -38,6 +38,18 @@ type Supply struct {
 	Dispense    []SupplyDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Supply) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Supply
+	}{
+		ResourceType: "Supply",
+		Supply:       *resource,
+	}
+	return json.Marshal(x)
+}
+
 type SupplyDispenseComponent struct {
 	Identifier     *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Status         string           `bson:"status,omitempty" json:"status,omitempty"`
@@ -49,31 +61,4 @@ type SupplyDispenseComponent struct {
 	WhenHandedOver *FHIRDateTime    `bson:"whenHandedOver,omitempty" json:"whenHandedOver,omitempty"`
 	Destination    *Reference       `bson:"destination,omitempty" json:"destination,omitempty"`
 	Receiver       []Reference      `bson:"receiver,omitempty" json:"receiver,omitempty"`
-}
-
-type SupplyBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []SupplyBundleEntry   `json:"entry,omitempty"`
-}
-
-type SupplyBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Supply                `json:"resource,omitempty"`
-}
-
-func (resource *Supply) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Supply
-	}{
-		ResourceType: "Supply",
-		Supply:       *resource,
-	}
-	return json.Marshal(x)
 }

@@ -22,18 +22,18 @@ func LocationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var locationEntryList []models.LocationBundleEntry
+	var locationEntryList []models.BundleEntryComponent
 	for _, location := range result {
-		var entry models.LocationBundleEntry
-		entry.Id = location.Id
-		entry.Resource = location
+		var entry models.BundleEntryComponent
+		entry.Resource = &location
 		locationEntryList = append(locationEntryList, entry)
 	}
 
-	var bundle models.LocationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = locationEntryList
 
 	log.Println("Setting location search context")
@@ -43,7 +43,7 @@ func LocationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadLocation(r *http.Request) (*models.Location, error) {

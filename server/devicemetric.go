@@ -22,18 +22,18 @@ func DeviceMetricIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var devicemetricEntryList []models.DeviceMetricBundleEntry
+	var devicemetricEntryList []models.BundleEntryComponent
 	for _, devicemetric := range result {
-		var entry models.DeviceMetricBundleEntry
-		entry.Id = devicemetric.Id
-		entry.Resource = devicemetric
+		var entry models.BundleEntryComponent
+		entry.Resource = &devicemetric
 		devicemetricEntryList = append(devicemetricEntryList, entry)
 	}
 
-	var bundle models.DeviceMetricBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = devicemetricEntryList
 
 	log.Println("Setting devicemetric search context")
@@ -43,7 +43,7 @@ func DeviceMetricIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDeviceMetric(r *http.Request) (*models.DeviceMetric, error) {

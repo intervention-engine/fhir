@@ -52,6 +52,18 @@ type Conformance struct {
 	Document       []ConformanceDocumentComponent      `bson:"document,omitempty" json:"document,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Conformance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Conformance
+	}{
+		ResourceType: "Conformance",
+		Conformance:  *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ConformanceContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
@@ -151,31 +163,4 @@ type ConformanceDocumentComponent struct {
 	Mode          string     `bson:"mode,omitempty" json:"mode,omitempty"`
 	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
 	Profile       *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
-}
-
-type ConformanceBundle struct {
-	Id    string                   `json:"id,omitempty"`
-	Type  string                   `json:"resourceType,omitempty"`
-	Base  string                   `json:"base,omitempty"`
-	Total int                      `json:"total,omitempty"`
-	Link  []BundleLinkComponent    `json:"link,omitempty"`
-	Entry []ConformanceBundleEntry `json:"entry,omitempty"`
-}
-
-type ConformanceBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Conformance           `json:"resource,omitempty"`
-}
-
-func (resource *Conformance) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Conformance
-	}{
-		ResourceType: "Conformance",
-		Conformance:  *resource,
-	}
-	return json.Marshal(x)
 }

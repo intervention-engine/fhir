@@ -37,18 +37,18 @@ func MedicationDispenseIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 		}
 	}
 
-	var medicationdispenseEntryList []models.MedicationDispenseBundleEntry
+	var medicationdispenseEntryList []models.BundleEntryComponent
 	for _, medicationdispense := range result {
-		var entry models.MedicationDispenseBundleEntry
-		entry.Id = medicationdispense.Id
-		entry.Resource = medicationdispense
+		var entry models.BundleEntryComponent
+		entry.Resource = &medicationdispense
 		medicationdispenseEntryList = append(medicationdispenseEntryList, entry)
 	}
 
-	var bundle models.MedicationDispenseBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = medicationdispenseEntryList
 
 	log.Println("Setting medicationdispense search context")
@@ -58,7 +58,7 @@ func MedicationDispenseIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadMedicationDispense(r *http.Request) (*models.MedicationDispense, error) {

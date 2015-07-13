@@ -37,18 +37,18 @@ func GroupIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 		}
 	}
 
-	var groupEntryList []models.GroupBundleEntry
+	var groupEntryList []models.BundleEntryComponent
 	for _, group := range result {
-		var entry models.GroupBundleEntry
-		entry.Id = group.Id
-		entry.Resource = group
+		var entry models.BundleEntryComponent
+		entry.Resource = &group
 		groupEntryList = append(groupEntryList, entry)
 	}
 
-	var bundle models.GroupBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = groupEntryList
 
 	log.Println("Setting group search context")
@@ -58,7 +58,7 @@ func GroupIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadGroup(r *http.Request) (*models.Group, error) {

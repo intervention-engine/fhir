@@ -39,22 +39,7 @@ type OrderResponse struct {
 	Fulfillment []Reference   `bson:"fulfillment,omitempty" json:"fulfillment,omitempty"`
 }
 
-type OrderResponseBundle struct {
-	Id    string                     `json:"id,omitempty"`
-	Type  string                     `json:"resourceType,omitempty"`
-	Base  string                     `json:"base,omitempty"`
-	Total int                        `json:"total,omitempty"`
-	Link  []BundleLinkComponent      `json:"link,omitempty"`
-	Entry []OrderResponseBundleEntry `json:"entry,omitempty"`
-}
-
-type OrderResponseBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource OrderResponse         `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *OrderResponse) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

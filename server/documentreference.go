@@ -37,18 +37,18 @@ func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 		}
 	}
 
-	var documentreferenceEntryList []models.DocumentReferenceBundleEntry
+	var documentreferenceEntryList []models.BundleEntryComponent
 	for _, documentreference := range result {
-		var entry models.DocumentReferenceBundleEntry
-		entry.Id = documentreference.Id
-		entry.Resource = documentreference
+		var entry models.BundleEntryComponent
+		entry.Resource = &documentreference
 		documentreferenceEntryList = append(documentreferenceEntryList, entry)
 	}
 
-	var bundle models.DocumentReferenceBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = documentreferenceEntryList
 
 	log.Println("Setting documentreference search context")
@@ -58,7 +58,7 @@ func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDocumentReference(r *http.Request) (*models.DocumentReference, error) {

@@ -52,6 +52,18 @@ type Procedure struct {
 	Used              []Reference                     `bson:"used,omitempty" json:"used,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Procedure) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Procedure
+	}{
+		ResourceType: "Procedure",
+		Procedure:    *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ProcedureBodySiteComponent struct {
 	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
 	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
@@ -70,31 +82,4 @@ type ProcedureRelatedItemComponent struct {
 type ProcedureDeviceComponent struct {
 	Action      *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
 	Manipulated *Reference       `bson:"manipulated,omitempty" json:"manipulated,omitempty"`
-}
-
-type ProcedureBundle struct {
-	Id    string                 `json:"id,omitempty"`
-	Type  string                 `json:"resourceType,omitempty"`
-	Base  string                 `json:"base,omitempty"`
-	Total int                    `json:"total,omitempty"`
-	Link  []BundleLinkComponent  `json:"link,omitempty"`
-	Entry []ProcedureBundleEntry `json:"entry,omitempty"`
-}
-
-type ProcedureBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Procedure             `json:"resource,omitempty"`
-}
-
-func (resource *Procedure) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Procedure
-	}{
-		ResourceType: "Procedure",
-		Procedure:    *resource,
-	}
-	return json.Marshal(x)
 }

@@ -22,18 +22,18 @@ func ProcessRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var processrequestEntryList []models.ProcessRequestBundleEntry
+	var processrequestEntryList []models.BundleEntryComponent
 	for _, processrequest := range result {
-		var entry models.ProcessRequestBundleEntry
-		entry.Id = processrequest.Id
-		entry.Resource = processrequest
+		var entry models.BundleEntryComponent
+		entry.Resource = &processrequest
 		processrequestEntryList = append(processrequestEntryList, entry)
 	}
 
-	var bundle models.ProcessRequestBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = processrequestEntryList
 
 	log.Println("Setting processrequest search context")
@@ -43,7 +43,7 @@ func ProcessRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadProcessRequest(r *http.Request) (*models.ProcessRequest, error) {

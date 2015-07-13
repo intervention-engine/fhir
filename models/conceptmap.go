@@ -50,6 +50,18 @@ type ConceptMap struct {
 	Element         []ConceptMapSourceElementComponent `bson:"element,omitempty" json:"element,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *ConceptMap) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ConceptMap
+	}{
+		ResourceType: "ConceptMap",
+		ConceptMap:   *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ConceptMapContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
@@ -74,31 +86,4 @@ type ConceptMapOtherElementComponent struct {
 	Element    string `bson:"element,omitempty" json:"element,omitempty"`
 	CodeSystem string `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
 	Code       string `bson:"code,omitempty" json:"code,omitempty"`
-}
-
-type ConceptMapBundle struct {
-	Id    string                  `json:"id,omitempty"`
-	Type  string                  `json:"resourceType,omitempty"`
-	Base  string                  `json:"base,omitempty"`
-	Total int                     `json:"total,omitempty"`
-	Link  []BundleLinkComponent   `json:"link,omitempty"`
-	Entry []ConceptMapBundleEntry `json:"entry,omitempty"`
-}
-
-type ConceptMapBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ConceptMap            `json:"resource,omitempty"`
-}
-
-func (resource *ConceptMap) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ConceptMap
-	}{
-		ResourceType: "ConceptMap",
-		ConceptMap:   *resource,
-	}
-	return json.Marshal(x)
 }

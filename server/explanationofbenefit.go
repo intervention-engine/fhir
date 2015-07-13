@@ -22,18 +22,18 @@ func ExplanationOfBenefitIndexHandler(rw http.ResponseWriter, r *http.Request, n
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var explanationofbenefitEntryList []models.ExplanationOfBenefitBundleEntry
+	var explanationofbenefitEntryList []models.BundleEntryComponent
 	for _, explanationofbenefit := range result {
-		var entry models.ExplanationOfBenefitBundleEntry
-		entry.Id = explanationofbenefit.Id
-		entry.Resource = explanationofbenefit
+		var entry models.BundleEntryComponent
+		entry.Resource = &explanationofbenefit
 		explanationofbenefitEntryList = append(explanationofbenefitEntryList, entry)
 	}
 
-	var bundle models.ExplanationOfBenefitBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = explanationofbenefitEntryList
 
 	log.Println("Setting explanationofbenefit search context")
@@ -43,7 +43,7 @@ func ExplanationOfBenefitIndexHandler(rw http.ResponseWriter, r *http.Request, n
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadExplanationOfBenefit(r *http.Request) (*models.ExplanationOfBenefit, error) {

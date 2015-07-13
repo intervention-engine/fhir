@@ -48,26 +48,7 @@ type ProcessRequest struct {
 	Period          *Period                        `bson:"period,omitempty" json:"period,omitempty"`
 }
 
-type ProcessRequestItemsComponent struct {
-	SequenceLinkId *int32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
-}
-
-type ProcessRequestBundle struct {
-	Id    string                      `json:"id,omitempty"`
-	Type  string                      `json:"resourceType,omitempty"`
-	Base  string                      `json:"base,omitempty"`
-	Total int                         `json:"total,omitempty"`
-	Link  []BundleLinkComponent       `json:"link,omitempty"`
-	Entry []ProcessRequestBundleEntry `json:"entry,omitempty"`
-}
-
-type ProcessRequestBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ProcessRequest        `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ProcessRequest) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -77,4 +58,8 @@ func (resource *ProcessRequest) MarshalJSON() ([]byte, error) {
 		ProcessRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type ProcessRequestItemsComponent struct {
+	SequenceLinkId *int32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 }

@@ -37,18 +37,18 @@ func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		}
 	}
 
-	var documentmanifestEntryList []models.DocumentManifestBundleEntry
+	var documentmanifestEntryList []models.BundleEntryComponent
 	for _, documentmanifest := range result {
-		var entry models.DocumentManifestBundleEntry
-		entry.Id = documentmanifest.Id
-		entry.Resource = documentmanifest
+		var entry models.BundleEntryComponent
+		entry.Resource = &documentmanifest
 		documentmanifestEntryList = append(documentmanifestEntryList, entry)
 	}
 
-	var bundle models.DocumentManifestBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = documentmanifestEntryList
 
 	log.Println("Setting documentmanifest search context")
@@ -58,7 +58,7 @@ func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDocumentManifest(r *http.Request) (*models.DocumentManifest, error) {

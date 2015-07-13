@@ -40,29 +40,7 @@ type Subscription struct {
 	Tag      []Coding                      `bson:"tag,omitempty" json:"tag,omitempty"`
 }
 
-type SubscriptionChannelComponent struct {
-	Type     string `bson:"type,omitempty" json:"type,omitempty"`
-	Endpoint string `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
-	Payload  string `bson:"payload,omitempty" json:"payload,omitempty"`
-	Header   string `bson:"header,omitempty" json:"header,omitempty"`
-}
-
-type SubscriptionBundle struct {
-	Id    string                    `json:"id,omitempty"`
-	Type  string                    `json:"resourceType,omitempty"`
-	Base  string                    `json:"base,omitempty"`
-	Total int                       `json:"total,omitempty"`
-	Link  []BundleLinkComponent     `json:"link,omitempty"`
-	Entry []SubscriptionBundleEntry `json:"entry,omitempty"`
-}
-
-type SubscriptionBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Subscription          `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Subscription) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -72,4 +50,11 @@ func (resource *Subscription) MarshalJSON() ([]byte, error) {
 		Subscription: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type SubscriptionChannelComponent struct {
+	Type     string `bson:"type,omitempty" json:"type,omitempty"`
+	Endpoint string `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	Payload  string `bson:"payload,omitempty" json:"payload,omitempty"`
+	Header   string `bson:"header,omitempty" json:"header,omitempty"`
 }

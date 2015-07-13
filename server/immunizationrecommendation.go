@@ -37,18 +37,18 @@ func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Requ
 		}
 	}
 
-	var immunizationrecommendationEntryList []models.ImmunizationRecommendationBundleEntry
+	var immunizationrecommendationEntryList []models.BundleEntryComponent
 	for _, immunizationrecommendation := range result {
-		var entry models.ImmunizationRecommendationBundleEntry
-		entry.Id = immunizationrecommendation.Id
-		entry.Resource = immunizationrecommendation
+		var entry models.BundleEntryComponent
+		entry.Resource = &immunizationrecommendation
 		immunizationrecommendationEntryList = append(immunizationrecommendationEntryList, entry)
 	}
 
-	var bundle models.ImmunizationRecommendationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = immunizationrecommendationEntryList
 
 	log.Println("Setting immunizationrecommendation search context")
@@ -58,7 +58,7 @@ func ImmunizationRecommendationIndexHandler(rw http.ResponseWriter, r *http.Requ
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadImmunizationRecommendation(r *http.Request) (*models.ImmunizationRecommendation, error) {

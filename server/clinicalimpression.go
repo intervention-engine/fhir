@@ -37,18 +37,18 @@ func ClinicalImpressionIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 		}
 	}
 
-	var clinicalimpressionEntryList []models.ClinicalImpressionBundleEntry
+	var clinicalimpressionEntryList []models.BundleEntryComponent
 	for _, clinicalimpression := range result {
-		var entry models.ClinicalImpressionBundleEntry
-		entry.Id = clinicalimpression.Id
-		entry.Resource = clinicalimpression
+		var entry models.BundleEntryComponent
+		entry.Resource = &clinicalimpression
 		clinicalimpressionEntryList = append(clinicalimpressionEntryList, entry)
 	}
 
-	var bundle models.ClinicalImpressionBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = clinicalimpressionEntryList
 
 	log.Println("Setting clinicalimpression search context")
@@ -58,7 +58,7 @@ func ClinicalImpressionIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadClinicalImpression(r *http.Request) (*models.ClinicalImpression, error) {

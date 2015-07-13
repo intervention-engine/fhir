@@ -58,6 +58,18 @@ type ClaimResponse struct {
 	Coverage                []ClaimResponseCoverageComponent  `bson:"coverage,omitempty" json:"coverage,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *ClaimResponse) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ClaimResponse
+	}{
+		ResourceType:  "ClaimResponse",
+		ClaimResponse: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ClaimResponseItemsComponent struct {
 	SequenceLinkId *uint32                                  `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 	NoteNumber     []uint32                                 `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
@@ -143,31 +155,4 @@ type ClaimResponseCoverageComponent struct {
 	PreAuthRef          []string   `bson:"preAuthRef,omitempty" json:"preAuthRef,omitempty"`
 	ClaimResponse       *Reference `bson:"claimResponse,omitempty" json:"claimResponse,omitempty"`
 	OriginalRuleset     *Coding    `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`
-}
-
-type ClaimResponseBundle struct {
-	Id    string                     `json:"id,omitempty"`
-	Type  string                     `json:"resourceType,omitempty"`
-	Base  string                     `json:"base,omitempty"`
-	Total int                        `json:"total,omitempty"`
-	Link  []BundleLinkComponent      `json:"link,omitempty"`
-	Entry []ClaimResponseBundleEntry `json:"entry,omitempty"`
-}
-
-type ClaimResponseBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ClaimResponse         `json:"resource,omitempty"`
-}
-
-func (resource *ClaimResponse) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ClaimResponse
-	}{
-		ResourceType:  "ClaimResponse",
-		ClaimResponse: *resource,
-	}
-	return json.Marshal(x)
 }

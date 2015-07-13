@@ -42,22 +42,7 @@ type PaymentNotice struct {
 	PaymentStatus   *Coding       `bson:"paymentStatus,omitempty" json:"paymentStatus,omitempty"`
 }
 
-type PaymentNoticeBundle struct {
-	Id    string                     `json:"id,omitempty"`
-	Type  string                     `json:"resourceType,omitempty"`
-	Base  string                     `json:"base,omitempty"`
-	Total int                        `json:"total,omitempty"`
-	Link  []BundleLinkComponent      `json:"link,omitempty"`
-	Entry []PaymentNoticeBundleEntry `json:"entry,omitempty"`
-}
-
-type PaymentNoticeBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource PaymentNotice         `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *PaymentNotice) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

@@ -37,18 +37,18 @@ func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 		}
 	}
 
-	var riskassessmentEntryList []models.RiskAssessmentBundleEntry
+	var riskassessmentEntryList []models.BundleEntryComponent
 	for _, riskassessment := range result {
-		var entry models.RiskAssessmentBundleEntry
-		entry.Id = riskassessment.Id
-		entry.Resource = riskassessment
+		var entry models.BundleEntryComponent
+		entry.Resource = &riskassessment
 		riskassessmentEntryList = append(riskassessmentEntryList, entry)
 	}
 
-	var bundle models.RiskAssessmentBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = riskassessmentEntryList
 
 	log.Println("Setting riskassessment search context")
@@ -58,7 +58,7 @@ func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadRiskAssessment(r *http.Request) (*models.RiskAssessment, error) {

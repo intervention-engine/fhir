@@ -61,6 +61,18 @@ type Claim struct {
 	MissingTeeth          []ClaimMissingTeethComponent `bson:"missingTeeth,omitempty" json:"missingTeeth,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Claim) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Claim
+	}{
+		ResourceType: "Claim",
+		Claim:        *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ClaimPayeeComponent struct {
 	Type         *Coding    `bson:"type,omitempty" json:"type,omitempty"`
 	Provider     *Reference `bson:"provider,omitempty" json:"provider,omitempty"`
@@ -139,31 +151,4 @@ type ClaimMissingTeethComponent struct {
 	Tooth          *Coding       `bson:"tooth,omitempty" json:"tooth,omitempty"`
 	Reason         *Coding       `bson:"reason,omitempty" json:"reason,omitempty"`
 	ExtractionDate *FHIRDateTime `bson:"extractionDate,omitempty" json:"extractionDate,omitempty"`
-}
-
-type ClaimBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []ClaimBundleEntry    `json:"entry,omitempty"`
-}
-
-type ClaimBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Claim                 `json:"resource,omitempty"`
-}
-
-func (resource *Claim) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Claim
-	}{
-		ResourceType: "Claim",
-		Claim:        *resource,
-	}
-	return json.Marshal(x)
 }

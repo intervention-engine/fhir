@@ -37,18 +37,18 @@ func CommunicationRequestIndexHandler(rw http.ResponseWriter, r *http.Request, n
 		}
 	}
 
-	var communicationrequestEntryList []models.CommunicationRequestBundleEntry
+	var communicationrequestEntryList []models.BundleEntryComponent
 	for _, communicationrequest := range result {
-		var entry models.CommunicationRequestBundleEntry
-		entry.Id = communicationrequest.Id
-		entry.Resource = communicationrequest
+		var entry models.BundleEntryComponent
+		entry.Resource = &communicationrequest
 		communicationrequestEntryList = append(communicationrequestEntryList, entry)
 	}
 
-	var bundle models.CommunicationRequestBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = communicationrequestEntryList
 
 	log.Println("Setting communicationrequest search context")
@@ -58,7 +58,7 @@ func CommunicationRequestIndexHandler(rw http.ResponseWriter, r *http.Request, n
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadCommunicationRequest(r *http.Request) (*models.CommunicationRequest, error) {

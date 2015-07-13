@@ -40,29 +40,7 @@ type Organization struct {
 	Active     *bool                          `bson:"active,omitempty" json:"active,omitempty"`
 }
 
-type OrganizationContactComponent struct {
-	Purpose *CodeableConcept `bson:"purpose,omitempty" json:"purpose,omitempty"`
-	Name    *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Address *Address         `bson:"address,omitempty" json:"address,omitempty"`
-}
-
-type OrganizationBundle struct {
-	Id    string                    `json:"id,omitempty"`
-	Type  string                    `json:"resourceType,omitempty"`
-	Base  string                    `json:"base,omitempty"`
-	Total int                       `json:"total,omitempty"`
-	Link  []BundleLinkComponent     `json:"link,omitempty"`
-	Entry []OrganizationBundleEntry `json:"entry,omitempty"`
-}
-
-type OrganizationBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Organization          `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Organization) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -72,4 +50,11 @@ func (resource *Organization) MarshalJSON() ([]byte, error) {
 		Organization: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type OrganizationContactComponent struct {
+	Purpose *CodeableConcept `bson:"purpose,omitempty" json:"purpose,omitempty"`
+	Name    *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address *Address         `bson:"address,omitempty" json:"address,omitempty"`
 }

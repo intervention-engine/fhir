@@ -22,18 +22,18 @@ func PaymentNoticeIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var paymentnoticeEntryList []models.PaymentNoticeBundleEntry
+	var paymentnoticeEntryList []models.BundleEntryComponent
 	for _, paymentnotice := range result {
-		var entry models.PaymentNoticeBundleEntry
-		entry.Id = paymentnotice.Id
-		entry.Resource = paymentnotice
+		var entry models.BundleEntryComponent
+		entry.Resource = &paymentnotice
 		paymentnoticeEntryList = append(paymentnoticeEntryList, entry)
 	}
 
-	var bundle models.PaymentNoticeBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = paymentnoticeEntryList
 
 	log.Println("Setting paymentnotice search context")
@@ -43,7 +43,7 @@ func PaymentNoticeIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadPaymentNotice(r *http.Request) (*models.PaymentNotice, error) {

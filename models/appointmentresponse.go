@@ -40,22 +40,7 @@ type AppointmentResponse struct {
 	End               *FHIRDateTime     `bson:"end,omitempty" json:"end,omitempty"`
 }
 
-type AppointmentResponseBundle struct {
-	Id    string                           `json:"id,omitempty"`
-	Type  string                           `json:"resourceType,omitempty"`
-	Base  string                           `json:"base,omitempty"`
-	Total int                              `json:"total,omitempty"`
-	Link  []BundleLinkComponent            `json:"link,omitempty"`
-	Entry []AppointmentResponseBundleEntry `json:"entry,omitempty"`
-}
-
-type AppointmentResponseBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource AppointmentResponse   `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *AppointmentResponse) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

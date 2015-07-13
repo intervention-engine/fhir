@@ -37,18 +37,18 @@ func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		}
 	}
 
-	var relatedpersonEntryList []models.RelatedPersonBundleEntry
+	var relatedpersonEntryList []models.BundleEntryComponent
 	for _, relatedperson := range result {
-		var entry models.RelatedPersonBundleEntry
-		entry.Id = relatedperson.Id
-		entry.Resource = relatedperson
+		var entry models.BundleEntryComponent
+		entry.Resource = &relatedperson
 		relatedpersonEntryList = append(relatedpersonEntryList, entry)
 	}
 
-	var bundle models.RelatedPersonBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = relatedpersonEntryList
 
 	log.Println("Setting relatedperson search context")
@@ -58,7 +58,7 @@ func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadRelatedPerson(r *http.Request) (*models.RelatedPerson, error) {

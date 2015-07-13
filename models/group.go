@@ -40,31 +40,7 @@ type Group struct {
 	Member         []Reference                    `bson:"member,omitempty" json:"member,omitempty"`
 }
 
-type GroupCharacteristicComponent struct {
-	Code                 *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
-	ValueBoolean         *bool            `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
-	ValueQuantity        *Quantity        `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
-	ValueRange           *Range           `bson:"valueRange,omitempty" json:"valueRange,omitempty"`
-	Exclude              *bool            `bson:"exclude,omitempty" json:"exclude,omitempty"`
-}
-
-type GroupBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []GroupBundleEntry    `json:"entry,omitempty"`
-}
-
-type GroupBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Group                 `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Group) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -74,4 +50,13 @@ func (resource *Group) MarshalJSON() ([]byte, error) {
 		Group:        *resource,
 	}
 	return json.Marshal(x)
+}
+
+type GroupCharacteristicComponent struct {
+	Code                 *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
+	ValueBoolean         *bool            `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
+	ValueQuantity        *Quantity        `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
+	ValueRange           *Range           `bson:"valueRange,omitempty" json:"valueRange,omitempty"`
+	Exclude              *bool            `bson:"exclude,omitempty" json:"exclude,omitempty"`
 }

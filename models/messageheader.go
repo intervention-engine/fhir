@@ -44,6 +44,18 @@ type MessageHeader struct {
 	Data        []Reference                                `bson:"data,omitempty" json:"data,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *MessageHeader) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MessageHeader
+	}{
+		ResourceType:  "MessageHeader",
+		MessageHeader: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type MessageHeaderResponseComponent struct {
 	Identifier string     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Code       string     `bson:"code,omitempty" json:"code,omitempty"`
@@ -62,31 +74,4 @@ type MessageHeaderMessageDestinationComponent struct {
 	Name     string     `bson:"name,omitempty" json:"name,omitempty"`
 	Target   *Reference `bson:"target,omitempty" json:"target,omitempty"`
 	Endpoint string     `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
-}
-
-type MessageHeaderBundle struct {
-	Id    string                     `json:"id,omitempty"`
-	Type  string                     `json:"resourceType,omitempty"`
-	Base  string                     `json:"base,omitempty"`
-	Total int                        `json:"total,omitempty"`
-	Link  []BundleLinkComponent      `json:"link,omitempty"`
-	Entry []MessageHeaderBundleEntry `json:"entry,omitempty"`
-}
-
-type MessageHeaderBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource MessageHeader         `json:"resource,omitempty"`
-}
-
-func (resource *MessageHeader) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		MessageHeader
-	}{
-		ResourceType:  "MessageHeader",
-		MessageHeader: *resource,
-	}
-	return json.Marshal(x)
 }

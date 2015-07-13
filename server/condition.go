@@ -37,18 +37,18 @@ func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		}
 	}
 
-	var conditionEntryList []models.ConditionBundleEntry
+	var conditionEntryList []models.BundleEntryComponent
 	for _, condition := range result {
-		var entry models.ConditionBundleEntry
-		entry.Id = condition.Id
-		entry.Resource = condition
+		var entry models.BundleEntryComponent
+		entry.Resource = &condition
 		conditionEntryList = append(conditionEntryList, entry)
 	}
 
-	var bundle models.ConditionBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = conditionEntryList
 
 	log.Println("Setting condition search context")
@@ -58,7 +58,7 @@ func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadCondition(r *http.Request) (*models.Condition, error) {

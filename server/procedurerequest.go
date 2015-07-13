@@ -37,18 +37,18 @@ func ProcedureRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		}
 	}
 
-	var procedurerequestEntryList []models.ProcedureRequestBundleEntry
+	var procedurerequestEntryList []models.BundleEntryComponent
 	for _, procedurerequest := range result {
-		var entry models.ProcedureRequestBundleEntry
-		entry.Id = procedurerequest.Id
-		entry.Resource = procedurerequest
+		var entry models.BundleEntryComponent
+		entry.Resource = &procedurerequest
 		procedurerequestEntryList = append(procedurerequestEntryList, entry)
 	}
 
-	var bundle models.ProcedureRequestBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = procedurerequestEntryList
 
 	log.Println("Setting procedurerequest search context")
@@ -58,7 +58,7 @@ func ProcedureRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadProcedureRequest(r *http.Request) (*models.ProcedureRequest, error) {

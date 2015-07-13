@@ -48,22 +48,7 @@ type DeviceUseRequest struct {
 	Priority                string            `bson:"priority,omitempty" json:"priority,omitempty"`
 }
 
-type DeviceUseRequestBundle struct {
-	Id    string                        `json:"id,omitempty"`
-	Type  string                        `json:"resourceType,omitempty"`
-	Base  string                        `json:"base,omitempty"`
-	Total int                           `json:"total,omitempty"`
-	Link  []BundleLinkComponent         `json:"link,omitempty"`
-	Entry []DeviceUseRequestBundleEntry `json:"entry,omitempty"`
-}
-
-type DeviceUseRequestBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource DeviceUseRequest      `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DeviceUseRequest) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

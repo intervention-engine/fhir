@@ -39,6 +39,18 @@ type ImagingObjectSelection struct {
 	Study         []ImagingObjectSelectionStudyComponent `bson:"study,omitempty" json:"study,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *ImagingObjectSelection) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ImagingObjectSelection
+	}{
+		ResourceType:           "ImagingObjectSelection",
+		ImagingObjectSelection: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ImagingObjectSelectionStudyComponent struct {
 	Uid    string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
 	Url    string                                  `bson:"url,omitempty" json:"url,omitempty"`
@@ -61,31 +73,4 @@ type ImagingObjectSelectionInstanceComponent struct {
 type ImagingObjectSelectionFramesComponent struct {
 	FrameNumbers []uint32 `bson:"frameNumbers,omitempty" json:"frameNumbers,omitempty"`
 	Url          string   `bson:"url,omitempty" json:"url,omitempty"`
-}
-
-type ImagingObjectSelectionBundle struct {
-	Id    string                              `json:"id,omitempty"`
-	Type  string                              `json:"resourceType,omitempty"`
-	Base  string                              `json:"base,omitempty"`
-	Total int                                 `json:"total,omitempty"`
-	Link  []BundleLinkComponent               `json:"link,omitempty"`
-	Entry []ImagingObjectSelectionBundleEntry `json:"entry,omitempty"`
-}
-
-type ImagingObjectSelectionBundleEntry struct {
-	Id       string                 `json:"id,omitempty"`
-	Base     string                 `json:"base,omitempty"`
-	Link     []BundleLinkComponent  `json:"link,omitempty"`
-	Resource ImagingObjectSelection `json:"resource,omitempty"`
-}
-
-func (resource *ImagingObjectSelection) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ImagingObjectSelection
-	}{
-		ResourceType:           "ImagingObjectSelection",
-		ImagingObjectSelection: *resource,
-	}
-	return json.Marshal(x)
 }

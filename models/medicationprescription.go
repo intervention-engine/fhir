@@ -46,6 +46,18 @@ type MedicationPrescription struct {
 	Substitution              *MedicationPrescriptionSubstitutionComponent       `bson:"substitution,omitempty" json:"substitution,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *MedicationPrescription) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		MedicationPrescription
+	}{
+		ResourceType:           "MedicationPrescription",
+		MedicationPrescription: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type MedicationPrescriptionDosageInstructionComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
@@ -75,31 +87,4 @@ type MedicationPrescriptionDispenseComponent struct {
 type MedicationPrescriptionSubstitutionComponent struct {
 	Type   *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Reason *CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
-}
-
-type MedicationPrescriptionBundle struct {
-	Id    string                              `json:"id,omitempty"`
-	Type  string                              `json:"resourceType,omitempty"`
-	Base  string                              `json:"base,omitempty"`
-	Total int                                 `json:"total,omitempty"`
-	Link  []BundleLinkComponent               `json:"link,omitempty"`
-	Entry []MedicationPrescriptionBundleEntry `json:"entry,omitempty"`
-}
-
-type MedicationPrescriptionBundleEntry struct {
-	Id       string                 `json:"id,omitempty"`
-	Base     string                 `json:"base,omitempty"`
-	Link     []BundleLinkComponent  `json:"link,omitempty"`
-	Resource MedicationPrescription `json:"resource,omitempty"`
-}
-
-func (resource *MedicationPrescription) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		MedicationPrescription
-	}{
-		ResourceType:           "MedicationPrescription",
-		MedicationPrescription: *resource,
-	}
-	return json.Marshal(x)
 }

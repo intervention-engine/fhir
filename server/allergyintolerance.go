@@ -37,18 +37,18 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 		}
 	}
 
-	var allergyintoleranceEntryList []models.AllergyIntoleranceBundleEntry
+	var allergyintoleranceEntryList []models.BundleEntryComponent
 	for _, allergyintolerance := range result {
-		var entry models.AllergyIntoleranceBundleEntry
-		entry.Id = allergyintolerance.Id
-		entry.Resource = allergyintolerance
+		var entry models.BundleEntryComponent
+		entry.Resource = &allergyintolerance
 		allergyintoleranceEntryList = append(allergyintoleranceEntryList, entry)
 	}
 
-	var bundle models.AllergyIntoleranceBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = allergyintoleranceEntryList
 
 	log.Println("Setting allergyintolerance search context")
@@ -58,7 +58,7 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadAllergyIntolerance(r *http.Request) (*models.AllergyIntolerance, error) {

@@ -37,18 +37,18 @@ func GoalIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 		}
 	}
 
-	var goalEntryList []models.GoalBundleEntry
+	var goalEntryList []models.BundleEntryComponent
 	for _, goal := range result {
-		var entry models.GoalBundleEntry
-		entry.Id = goal.Id
-		entry.Resource = goal
+		var entry models.BundleEntryComponent
+		entry.Resource = &goal
 		goalEntryList = append(goalEntryList, entry)
 	}
 
-	var bundle models.GoalBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = goalEntryList
 
 	log.Println("Setting goal search context")
@@ -58,7 +58,7 @@ func GoalIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadGoal(r *http.Request) (*models.Goal, error) {

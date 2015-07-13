@@ -44,29 +44,7 @@ type List struct {
 	EmptyReason *CodeableConcept     `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
 }
 
-type ListEntryComponent struct {
-	Flag    []CodeableConcept `bson:"flag,omitempty" json:"flag,omitempty"`
-	Deleted *bool             `bson:"deleted,omitempty" json:"deleted,omitempty"`
-	Date    *FHIRDateTime     `bson:"date,omitempty" json:"date,omitempty"`
-	Item    *Reference        `bson:"item,omitempty" json:"item,omitempty"`
-}
-
-type ListBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []ListBundleEntry     `json:"entry,omitempty"`
-}
-
-type ListBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource List                  `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *List) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -76,4 +54,11 @@ func (resource *List) MarshalJSON() ([]byte, error) {
 		List:         *resource,
 	}
 	return json.Marshal(x)
+}
+
+type ListEntryComponent struct {
+	Flag    []CodeableConcept `bson:"flag,omitempty" json:"flag,omitempty"`
+	Deleted *bool             `bson:"deleted,omitempty" json:"deleted,omitempty"`
+	Date    *FHIRDateTime     `bson:"date,omitempty" json:"date,omitempty"`
+	Item    *Reference        `bson:"item,omitempty" json:"item,omitempty"`
 }

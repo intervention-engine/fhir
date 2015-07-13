@@ -42,22 +42,7 @@ type ExplanationOfBenefit struct {
 	RequestOrganization *Reference    `bson:"requestOrganization,omitempty" json:"requestOrganization,omitempty"`
 }
 
-type ExplanationOfBenefitBundle struct {
-	Id    string                            `json:"id,omitempty"`
-	Type  string                            `json:"resourceType,omitempty"`
-	Base  string                            `json:"base,omitempty"`
-	Total int                               `json:"total,omitempty"`
-	Link  []BundleLinkComponent             `json:"link,omitempty"`
-	Entry []ExplanationOfBenefitBundleEntry `json:"entry,omitempty"`
-}
-
-type ExplanationOfBenefitBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ExplanationOfBenefit  `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ExplanationOfBenefit) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

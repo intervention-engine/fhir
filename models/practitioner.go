@@ -42,6 +42,18 @@ type Practitioner struct {
 	Communication    []CodeableConcept                       `bson:"communication,omitempty" json:"communication,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Practitioner) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Practitioner
+	}{
+		ResourceType: "Practitioner",
+		Practitioner: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type PractitionerPractitionerRoleComponent struct {
 	ManagingOrganization *Reference        `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
 	Role                 *CodeableConcept  `bson:"role,omitempty" json:"role,omitempty"`
@@ -56,31 +68,4 @@ type PractitionerQualificationComponent struct {
 	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Period     *Period          `bson:"period,omitempty" json:"period,omitempty"`
 	Issuer     *Reference       `bson:"issuer,omitempty" json:"issuer,omitempty"`
-}
-
-type PractitionerBundle struct {
-	Id    string                    `json:"id,omitempty"`
-	Type  string                    `json:"resourceType,omitempty"`
-	Base  string                    `json:"base,omitempty"`
-	Total int                       `json:"total,omitempty"`
-	Link  []BundleLinkComponent     `json:"link,omitempty"`
-	Entry []PractitionerBundleEntry `json:"entry,omitempty"`
-}
-
-type PractitionerBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Practitioner          `json:"resource,omitempty"`
-}
-
-func (resource *Practitioner) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Practitioner
-	}{
-		ResourceType: "Practitioner",
-		Practitioner: *resource,
-	}
-	return json.Marshal(x)
 }

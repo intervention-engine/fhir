@@ -37,18 +37,18 @@ func EpisodeOfCareIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		}
 	}
 
-	var episodeofcareEntryList []models.EpisodeOfCareBundleEntry
+	var episodeofcareEntryList []models.BundleEntryComponent
 	for _, episodeofcare := range result {
-		var entry models.EpisodeOfCareBundleEntry
-		entry.Id = episodeofcare.Id
-		entry.Resource = episodeofcare
+		var entry models.BundleEntryComponent
+		entry.Resource = &episodeofcare
 		episodeofcareEntryList = append(episodeofcareEntryList, entry)
 	}
 
-	var bundle models.EpisodeOfCareBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = episodeofcareEntryList
 
 	log.Println("Setting episodeofcare search context")
@@ -58,7 +58,7 @@ func EpisodeOfCareIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadEpisodeOfCare(r *http.Request) (*models.EpisodeOfCare, error) {

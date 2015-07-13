@@ -37,18 +37,18 @@ func OrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 		}
 	}
 
-	var orderEntryList []models.OrderBundleEntry
+	var orderEntryList []models.BundleEntryComponent
 	for _, order := range result {
-		var entry models.OrderBundleEntry
-		entry.Id = order.Id
-		entry.Resource = order
+		var entry models.BundleEntryComponent
+		entry.Resource = &order
 		orderEntryList = append(orderEntryList, entry)
 	}
 
-	var bundle models.OrderBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = orderEntryList
 
 	log.Println("Setting order search context")
@@ -58,7 +58,7 @@ func OrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadOrder(r *http.Request) (*models.Order, error) {

@@ -51,6 +51,18 @@ type ValueSet struct {
 	Expansion    *ValueSetExpansionComponent `bson:"expansion,omitempty" json:"expansion,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *ValueSet) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ValueSet
+	}{
+		ResourceType: "ValueSet",
+		ValueSet:     *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ValueSetContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
@@ -127,31 +139,4 @@ type ValueSetExpansionContainsComponent struct {
 	Code     string                               `bson:"code,omitempty" json:"code,omitempty"`
 	Display  string                               `bson:"display,omitempty" json:"display,omitempty"`
 	Contains []ValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
-}
-
-type ValueSetBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []ValueSetBundleEntry `json:"entry,omitempty"`
-}
-
-type ValueSetBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ValueSet              `json:"resource,omitempty"`
-}
-
-func (resource *ValueSet) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ValueSet
-	}{
-		ResourceType: "ValueSet",
-		ValueSet:     *resource,
-	}
-	return json.Marshal(x)
 }

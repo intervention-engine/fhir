@@ -37,18 +37,18 @@ func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 		}
 	}
 
-	var nutritionorderEntryList []models.NutritionOrderBundleEntry
+	var nutritionorderEntryList []models.BundleEntryComponent
 	for _, nutritionorder := range result {
-		var entry models.NutritionOrderBundleEntry
-		entry.Id = nutritionorder.Id
-		entry.Resource = nutritionorder
+		var entry models.BundleEntryComponent
+		entry.Resource = &nutritionorder
 		nutritionorderEntryList = append(nutritionorderEntryList, entry)
 	}
 
-	var bundle models.NutritionOrderBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = nutritionorderEntryList
 
 	log.Println("Setting nutritionorder search context")
@@ -58,7 +58,7 @@ func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadNutritionOrder(r *http.Request) (*models.NutritionOrder, error) {

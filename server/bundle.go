@@ -22,18 +22,18 @@ func BundleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var bundleEntryList []models.BundleBundleEntry
+	var bundleEntryList []models.BundleEntryComponent
 	for _, bundle := range result {
-		var entry models.BundleBundleEntry
-		entry.Id = bundle.Id
-		entry.Resource = bundle
+		var entry models.BundleEntryComponent
+		entry.Resource = &bundle
 		bundleEntryList = append(bundleEntryList, entry)
 	}
 
-	var bundle models.BundleBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = bundleEntryList
 
 	log.Println("Setting bundle search context")
@@ -43,7 +43,7 @@ func BundleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadBundle(r *http.Request) (*models.Bundle, error) {

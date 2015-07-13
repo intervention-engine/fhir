@@ -58,6 +58,18 @@ type Condition struct {
 	Notes             string                                `bson:"notes,omitempty" json:"notes,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Condition) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Condition
+	}{
+		ResourceType: "Condition",
+		Condition:    *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ConditionStageComponent struct {
 	Summary    *CodeableConcept `bson:"summary,omitempty" json:"summary,omitempty"`
 	Assessment []Reference      `bson:"assessment,omitempty" json:"assessment,omitempty"`
@@ -81,31 +93,4 @@ type ConditionDueToComponent struct {
 type ConditionOccurredFollowingComponent struct {
 	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Target *Reference       `bson:"target,omitempty" json:"target,omitempty"`
-}
-
-type ConditionBundle struct {
-	Id    string                 `json:"id,omitempty"`
-	Type  string                 `json:"resourceType,omitempty"`
-	Base  string                 `json:"base,omitempty"`
-	Total int                    `json:"total,omitempty"`
-	Link  []BundleLinkComponent  `json:"link,omitempty"`
-	Entry []ConditionBundleEntry `json:"entry,omitempty"`
-}
-
-type ConditionBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Condition             `json:"resource,omitempty"`
-}
-
-func (resource *Condition) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Condition
-	}{
-		ResourceType: "Condition",
-		Condition:    *resource,
-	}
-	return json.Marshal(x)
 }

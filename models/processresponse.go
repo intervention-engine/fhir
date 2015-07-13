@@ -45,27 +45,7 @@ type ProcessResponse struct {
 	Error               []Coding                        `bson:"error,omitempty" json:"error,omitempty"`
 }
 
-type ProcessResponseNotesComponent struct {
-	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
-	Text string  `bson:"text,omitempty" json:"text,omitempty"`
-}
-
-type ProcessResponseBundle struct {
-	Id    string                       `json:"id,omitempty"`
-	Type  string                       `json:"resourceType,omitempty"`
-	Base  string                       `json:"base,omitempty"`
-	Total int                          `json:"total,omitempty"`
-	Link  []BundleLinkComponent        `json:"link,omitempty"`
-	Entry []ProcessResponseBundleEntry `json:"entry,omitempty"`
-}
-
-type ProcessResponseBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ProcessResponse       `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ProcessResponse) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -75,4 +55,9 @@ func (resource *ProcessResponse) MarshalJSON() ([]byte, error) {
 		ProcessResponse: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type ProcessResponseNotesComponent struct {
+	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
+	Text string  `bson:"text,omitempty" json:"text,omitempty"`
 }

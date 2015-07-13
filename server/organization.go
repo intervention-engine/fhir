@@ -22,18 +22,18 @@ func OrganizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var organizationEntryList []models.OrganizationBundleEntry
+	var organizationEntryList []models.BundleEntryComponent
 	for _, organization := range result {
-		var entry models.OrganizationBundleEntry
-		entry.Id = organization.Id
-		entry.Resource = organization
+		var entry models.BundleEntryComponent
+		entry.Resource = &organization
 		organizationEntryList = append(organizationEntryList, entry)
 	}
 
-	var bundle models.OrganizationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = organizationEntryList
 
 	log.Println("Setting organization search context")
@@ -43,7 +43,7 @@ func OrganizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadOrganization(r *http.Request) (*models.Organization, error) {

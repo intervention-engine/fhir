@@ -51,6 +51,18 @@ type Contract struct {
 	Rule              []ContractComputableLanguageComponent `bson:"rule,omitempty" json:"rule,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Contract) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Contract
+	}{
+		ResourceType: "Contract",
+		Contract:     *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ContractActorComponent struct {
 	Entity *Reference        `bson:"entity,omitempty" json:"entity,omitempty"`
 	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
@@ -119,31 +131,4 @@ type ContractLegalLanguageComponent struct {
 type ContractComputableLanguageComponent struct {
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
-}
-
-type ContractBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []ContractBundleEntry `json:"entry,omitempty"`
-}
-
-type ContractBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Contract              `json:"resource,omitempty"`
-}
-
-func (resource *Contract) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Contract
-	}{
-		ResourceType: "Contract",
-		Contract:     *resource,
-	}
-	return json.Marshal(x)
 }

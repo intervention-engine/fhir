@@ -38,6 +38,18 @@ type Bundle struct {
 	Signature string                 `bson:"signature,omitempty" json:"signature,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Bundle) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Bundle
+	}{
+		ResourceType: "Bundle",
+		Bundle:       *resource,
+	}
+	return json.Marshal(x)
+}
+
 type BundleLinkComponent struct {
 	Relation string `bson:"relation,omitempty" json:"relation,omitempty"`
 	Url      string `bson:"url,omitempty" json:"url,omitempty"`
@@ -46,10 +58,23 @@ type BundleLinkComponent struct {
 type BundleEntryComponent struct {
 	Base                string                                   `bson:"base,omitempty" json:"base,omitempty"`
 	Link                []BundleLinkComponent                    `bson:"link,omitempty" json:"link,omitempty"`
-	Resource            *Reference                               `bson:"resource,omitempty" json:"resource,omitempty"`
+	Resource            interface{}                              `bson:"resource,omitempty" json:"resource,omitempty"`
 	Search              *BundleEntrySearchComponent              `bson:"search,omitempty" json:"search,omitempty"`
 	Transaction         *BundleEntryTransactionComponent         `bson:"transaction,omitempty" json:"transaction,omitempty"`
 	TransactionResponse *BundleEntryTransactionResponseComponent `bson:"transactionResponse,omitempty" json:"transactionResponse,omitempty"`
+}
+
+// The "bundleEntryComponent" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type bundleEntryComponent BundleEntryComponent
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *BundleEntryComponent) UnmarshalJSON(data []byte) (err error) {
+	x2 := bundleEntryComponent{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		x2.Resource = MapToResource(x2.Resource)
+		*x = BundleEntryComponent(x2)
+	}
+	return
 }
 
 type BundleEntrySearchComponent struct {
@@ -71,31 +96,4 @@ type BundleEntryTransactionResponseComponent struct {
 	Location     string        `bson:"location,omitempty" json:"location,omitempty"`
 	Etag         string        `bson:"etag,omitempty" json:"etag,omitempty"`
 	LastModified *FHIRDateTime `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
-}
-
-type BundleBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []BundleBundleEntry   `json:"entry,omitempty"`
-}
-
-type BundleBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Bundle                `json:"resource,omitempty"`
-}
-
-func (resource *Bundle) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Bundle
-	}{
-		ResourceType: "Bundle",
-		Bundle:       *resource,
-	}
-	return json.Marshal(x)
 }

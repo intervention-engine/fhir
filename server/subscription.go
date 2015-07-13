@@ -22,18 +22,18 @@ func SubscriptionIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var subscriptionEntryList []models.SubscriptionBundleEntry
+	var subscriptionEntryList []models.BundleEntryComponent
 	for _, subscription := range result {
-		var entry models.SubscriptionBundleEntry
-		entry.Id = subscription.Id
-		entry.Resource = subscription
+		var entry models.BundleEntryComponent
+		entry.Resource = &subscription
 		subscriptionEntryList = append(subscriptionEntryList, entry)
 	}
 
-	var bundle models.SubscriptionBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = subscriptionEntryList
 
 	log.Println("Setting subscription search context")
@@ -43,7 +43,7 @@ func SubscriptionIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadSubscription(r *http.Request) (*models.Subscription, error) {

@@ -37,18 +37,18 @@ func ReferralRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 		}
 	}
 
-	var referralrequestEntryList []models.ReferralRequestBundleEntry
+	var referralrequestEntryList []models.BundleEntryComponent
 	for _, referralrequest := range result {
-		var entry models.ReferralRequestBundleEntry
-		entry.Id = referralrequest.Id
-		entry.Resource = referralrequest
+		var entry models.BundleEntryComponent
+		entry.Resource = &referralrequest
 		referralrequestEntryList = append(referralrequestEntryList, entry)
 	}
 
-	var bundle models.ReferralRequestBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = referralrequestEntryList
 
 	log.Println("Setting referralrequest search context")
@@ -58,7 +58,7 @@ func ReferralRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadReferralRequest(r *http.Request) (*models.ReferralRequest, error) {

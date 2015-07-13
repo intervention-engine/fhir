@@ -35,6 +35,18 @@ type ImmunizationRecommendation struct {
 	Recommendation []ImmunizationRecommendationRecommendationComponent `bson:"recommendation,omitempty" json:"recommendation,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *ImmunizationRecommendation) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ImmunizationRecommendation
+	}{
+		ResourceType:               "ImmunizationRecommendation",
+		ImmunizationRecommendation: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ImmunizationRecommendationRecommendationComponent struct {
 	Date                         *FHIRDateTime                                                    `bson:"date,omitempty" json:"date,omitempty"`
 	VaccineType                  *CodeableConcept                                                 `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
@@ -56,31 +68,4 @@ type ImmunizationRecommendationRecommendationProtocolComponent struct {
 	Description  string     `bson:"description,omitempty" json:"description,omitempty"`
 	Authority    *Reference `bson:"authority,omitempty" json:"authority,omitempty"`
 	Series       string     `bson:"series,omitempty" json:"series,omitempty"`
-}
-
-type ImmunizationRecommendationBundle struct {
-	Id    string                                  `json:"id,omitempty"`
-	Type  string                                  `json:"resourceType,omitempty"`
-	Base  string                                  `json:"base,omitempty"`
-	Total int                                     `json:"total,omitempty"`
-	Link  []BundleLinkComponent                   `json:"link,omitempty"`
-	Entry []ImmunizationRecommendationBundleEntry `json:"entry,omitempty"`
-}
-
-type ImmunizationRecommendationBundleEntry struct {
-	Id       string                     `json:"id,omitempty"`
-	Base     string                     `json:"base,omitempty"`
-	Link     []BundleLinkComponent      `json:"link,omitempty"`
-	Resource ImmunizationRecommendation `json:"resource,omitempty"`
-}
-
-func (resource *ImmunizationRecommendation) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ImmunizationRecommendation
-	}{
-		ResourceType:               "ImmunizationRecommendation",
-		ImmunizationRecommendation: *resource,
-	}
-	return json.Marshal(x)
 }

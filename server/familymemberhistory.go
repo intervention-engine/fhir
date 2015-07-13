@@ -37,18 +37,18 @@ func FamilyMemberHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 		}
 	}
 
-	var familymemberhistoryEntryList []models.FamilyMemberHistoryBundleEntry
+	var familymemberhistoryEntryList []models.BundleEntryComponent
 	for _, familymemberhistory := range result {
-		var entry models.FamilyMemberHistoryBundleEntry
-		entry.Id = familymemberhistory.Id
-		entry.Resource = familymemberhistory
+		var entry models.BundleEntryComponent
+		entry.Resource = &familymemberhistory
 		familymemberhistoryEntryList = append(familymemberhistoryEntryList, entry)
 	}
 
-	var bundle models.FamilyMemberHistoryBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = familymemberhistoryEntryList
 
 	log.Println("Setting familymemberhistory search context")
@@ -58,7 +58,7 @@ func FamilyMemberHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadFamilyMemberHistory(r *http.Request) (*models.FamilyMemberHistory, error) {
