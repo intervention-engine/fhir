@@ -37,18 +37,18 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 		}
 	}
 
-	var mediaEntryList []models.MediaBundleEntry
+	var mediaEntryList []models.BundleEntryComponent
 	for _, media := range result {
-		var entry models.MediaBundleEntry
-		entry.Id = media.Id
-		entry.Resource = media
+		var entry models.BundleEntryComponent
+		entry.Resource = &media
 		mediaEntryList = append(mediaEntryList, entry)
 	}
 
-	var bundle models.MediaBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = mediaEntryList
 
 	log.Println("Setting media search context")
@@ -58,7 +58,7 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadMedia(r *http.Request) (*models.Media, error) {

@@ -22,18 +22,18 @@ func DataElementIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var dataelementEntryList []models.DataElementBundleEntry
+	var dataelementEntryList []models.BundleEntryComponent
 	for _, dataelement := range result {
-		var entry models.DataElementBundleEntry
-		entry.Id = dataelement.Id
-		entry.Resource = dataelement
+		var entry models.BundleEntryComponent
+		entry.Resource = &dataelement
 		dataelementEntryList = append(dataelementEntryList, entry)
 	}
 
-	var bundle models.DataElementBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = dataelementEntryList
 
 	log.Println("Setting dataelement search context")
@@ -43,7 +43,7 @@ func DataElementIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDataElement(r *http.Request) (*models.DataElement, error) {

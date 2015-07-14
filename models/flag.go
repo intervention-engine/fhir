@@ -39,22 +39,7 @@ type Flag struct {
 	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 }
 
-type FlagBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []FlagBundleEntry     `json:"entry,omitempty"`
-}
-
-type FlagBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Flag                  `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Flag) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

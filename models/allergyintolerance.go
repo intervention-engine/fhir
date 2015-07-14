@@ -45,6 +45,18 @@ type AllergyIntolerance struct {
 	Event         []AllergyIntoleranceEventComponent `bson:"event,omitempty" json:"event,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *AllergyIntolerance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		AllergyIntolerance
+	}{
+		ResourceType:       "AllergyIntolerance",
+		AllergyIntolerance: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type AllergyIntoleranceEventComponent struct {
 	Substance     *CodeableConcept  `bson:"substance,omitempty" json:"substance,omitempty"`
 	Certainty     string            `bson:"certainty,omitempty" json:"certainty,omitempty"`
@@ -55,31 +67,4 @@ type AllergyIntoleranceEventComponent struct {
 	Severity      string            `bson:"severity,omitempty" json:"severity,omitempty"`
 	ExposureRoute *CodeableConcept  `bson:"exposureRoute,omitempty" json:"exposureRoute,omitempty"`
 	Comment       string            `bson:"comment,omitempty" json:"comment,omitempty"`
-}
-
-type AllergyIntoleranceBundle struct {
-	Id    string                          `json:"id,omitempty"`
-	Type  string                          `json:"resourceType,omitempty"`
-	Base  string                          `json:"base,omitempty"`
-	Total int                             `json:"total,omitempty"`
-	Link  []BundleLinkComponent           `json:"link,omitempty"`
-	Entry []AllergyIntoleranceBundleEntry `json:"entry,omitempty"`
-}
-
-type AllergyIntoleranceBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource AllergyIntolerance    `json:"resource,omitempty"`
-}
-
-func (resource *AllergyIntolerance) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		AllergyIntolerance
-	}{
-		ResourceType:       "AllergyIntolerance",
-		AllergyIntolerance: *resource,
-	}
-	return json.Marshal(x)
 }

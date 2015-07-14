@@ -22,18 +22,18 @@ func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var substanceEntryList []models.SubstanceBundleEntry
+	var substanceEntryList []models.BundleEntryComponent
 	for _, substance := range result {
-		var entry models.SubstanceBundleEntry
-		entry.Id = substance.Id
-		entry.Resource = substance
+		var entry models.BundleEntryComponent
+		entry.Resource = &substance
 		substanceEntryList = append(substanceEntryList, entry)
 	}
 
-	var bundle models.SubstanceBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = substanceEntryList
 
 	log.Println("Setting substance search context")
@@ -43,7 +43,7 @@ func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadSubstance(r *http.Request) (*models.Substance, error) {

@@ -37,18 +37,18 @@ func BodySiteIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		}
 	}
 
-	var bodysiteEntryList []models.BodySiteBundleEntry
+	var bodysiteEntryList []models.BundleEntryComponent
 	for _, bodysite := range result {
-		var entry models.BodySiteBundleEntry
-		entry.Id = bodysite.Id
-		entry.Resource = bodysite
+		var entry models.BundleEntryComponent
+		entry.Resource = &bodysite
 		bodysiteEntryList = append(bodysiteEntryList, entry)
 	}
 
-	var bundle models.BodySiteBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = bodysiteEntryList
 
 	log.Println("Setting bodysite search context")
@@ -58,7 +58,7 @@ func BodySiteIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadBodySite(r *http.Request) (*models.BodySite, error) {

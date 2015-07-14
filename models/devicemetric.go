@@ -42,28 +42,7 @@ type DeviceMetric struct {
 	Calibration       []DeviceMetricCalibrationComponent `bson:"calibration,omitempty" json:"calibration,omitempty"`
 }
 
-type DeviceMetricCalibrationComponent struct {
-	Type  string        `bson:"type,omitempty" json:"type,omitempty"`
-	State string        `bson:"state,omitempty" json:"state,omitempty"`
-	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
-}
-
-type DeviceMetricBundle struct {
-	Id    string                    `json:"id,omitempty"`
-	Type  string                    `json:"resourceType,omitempty"`
-	Base  string                    `json:"base,omitempty"`
-	Total int                       `json:"total,omitempty"`
-	Link  []BundleLinkComponent     `json:"link,omitempty"`
-	Entry []DeviceMetricBundleEntry `json:"entry,omitempty"`
-}
-
-type DeviceMetricBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource DeviceMetric          `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DeviceMetric) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -73,4 +52,10 @@ func (resource *DeviceMetric) MarshalJSON() ([]byte, error) {
 		DeviceMetric: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type DeviceMetricCalibrationComponent struct {
+	Type  string        `bson:"type,omitempty" json:"type,omitempty"`
+	State string        `bson:"state,omitempty" json:"state,omitempty"`
+	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
 }

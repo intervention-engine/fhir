@@ -37,18 +37,18 @@ func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 		}
 	}
 
-	var diagnosticorderEntryList []models.DiagnosticOrderBundleEntry
+	var diagnosticorderEntryList []models.BundleEntryComponent
 	for _, diagnosticorder := range result {
-		var entry models.DiagnosticOrderBundleEntry
-		entry.Id = diagnosticorder.Id
-		entry.Resource = diagnosticorder
+		var entry models.BundleEntryComponent
+		entry.Resource = &diagnosticorder
 		diagnosticorderEntryList = append(diagnosticorderEntryList, entry)
 	}
 
-	var bundle models.DiagnosticOrderBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = diagnosticorderEntryList
 
 	log.Println("Setting diagnosticorder search context")
@@ -58,7 +58,7 @@ func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDiagnosticOrder(r *http.Request) (*models.DiagnosticOrder, error) {

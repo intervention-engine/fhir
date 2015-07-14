@@ -49,27 +49,7 @@ type ProcedureRequest struct {
 	Priority                string                              `bson:"priority,omitempty" json:"priority,omitempty"`
 }
 
-type ProcedureRequestBodySiteComponent struct {
-	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
-	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
-}
-
-type ProcedureRequestBundle struct {
-	Id    string                        `json:"id,omitempty"`
-	Type  string                        `json:"resourceType,omitempty"`
-	Base  string                        `json:"base,omitempty"`
-	Total int                           `json:"total,omitempty"`
-	Link  []BundleLinkComponent         `json:"link,omitempty"`
-	Entry []ProcedureRequestBundleEntry `json:"entry,omitempty"`
-}
-
-type ProcedureRequestBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ProcedureRequest      `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ProcedureRequest) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -79,4 +59,9 @@ func (resource *ProcedureRequest) MarshalJSON() ([]byte, error) {
 		ProcedureRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type ProcedureRequestBodySiteComponent struct {
+	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
+	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
 }

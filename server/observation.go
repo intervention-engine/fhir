@@ -37,18 +37,18 @@ func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 		}
 	}
 
-	var observationEntryList []models.ObservationBundleEntry
+	var observationEntryList []models.BundleEntryComponent
 	for _, observation := range result {
-		var entry models.ObservationBundleEntry
-		entry.Id = observation.Id
-		entry.Resource = observation
+		var entry models.BundleEntryComponent
+		entry.Resource = &observation
 		observationEntryList = append(observationEntryList, entry)
 	}
 
-	var bundle models.ObservationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = observationEntryList
 
 	log.Println("Setting observation search context")
@@ -58,7 +58,7 @@ func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadObservation(r *http.Request) (*models.Observation, error) {

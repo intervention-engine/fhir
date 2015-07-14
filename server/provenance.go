@@ -22,18 +22,18 @@ func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var provenanceEntryList []models.ProvenanceBundleEntry
+	var provenanceEntryList []models.BundleEntryComponent
 	for _, provenance := range result {
-		var entry models.ProvenanceBundleEntry
-		entry.Id = provenance.Id
-		entry.Resource = provenance
+		var entry models.BundleEntryComponent
+		entry.Resource = &provenance
 		provenanceEntryList = append(provenanceEntryList, entry)
 	}
 
-	var bundle models.ProvenanceBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = provenanceEntryList
 
 	log.Println("Setting provenance search context")
@@ -43,7 +43,7 @@ func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadProvenance(r *http.Request) (*models.Provenance, error) {

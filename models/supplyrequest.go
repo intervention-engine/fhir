@@ -43,27 +43,7 @@ type SupplyRequest struct {
 	When                  *SupplyRequestWhenComponent `bson:"when,omitempty" json:"when,omitempty"`
 }
 
-type SupplyRequestWhenComponent struct {
-	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
-}
-
-type SupplyRequestBundle struct {
-	Id    string                     `json:"id,omitempty"`
-	Type  string                     `json:"resourceType,omitempty"`
-	Base  string                     `json:"base,omitempty"`
-	Total int                        `json:"total,omitempty"`
-	Link  []BundleLinkComponent      `json:"link,omitempty"`
-	Entry []SupplyRequestBundleEntry `json:"entry,omitempty"`
-}
-
-type SupplyRequestBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource SupplyRequest         `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *SupplyRequest) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -73,4 +53,9 @@ func (resource *SupplyRequest) MarshalJSON() ([]byte, error) {
 		SupplyRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type SupplyRequestWhenComponent struct {
+	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
 }

@@ -44,29 +44,7 @@ type Appointment struct {
 	Participant []AppointmentParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
 }
 
-type AppointmentParticipantComponent struct {
-	Type     []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Actor    *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
-	Required string            `bson:"required,omitempty" json:"required,omitempty"`
-	Status   string            `bson:"status,omitempty" json:"status,omitempty"`
-}
-
-type AppointmentBundle struct {
-	Id    string                   `json:"id,omitempty"`
-	Type  string                   `json:"resourceType,omitempty"`
-	Base  string                   `json:"base,omitempty"`
-	Total int                      `json:"total,omitempty"`
-	Link  []BundleLinkComponent    `json:"link,omitempty"`
-	Entry []AppointmentBundleEntry `json:"entry,omitempty"`
-}
-
-type AppointmentBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Appointment           `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Appointment) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -76,4 +54,11 @@ func (resource *Appointment) MarshalJSON() ([]byte, error) {
 		Appointment:  *resource,
 	}
 	return json.Marshal(x)
+}
+
+type AppointmentParticipantComponent struct {
+	Type     []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Actor    *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
+	Required string            `bson:"required,omitempty" json:"required,omitempty"`
+	Status   string            `bson:"status,omitempty" json:"status,omitempty"`
 }

@@ -46,28 +46,7 @@ type CommunicationRequest struct {
 	Priority      *CodeableConcept                       `bson:"priority,omitempty" json:"priority,omitempty"`
 }
 
-type CommunicationRequestPayloadComponent struct {
-	ContentString     string      `bson:"contentString,omitempty" json:"contentString,omitempty"`
-	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
-	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
-}
-
-type CommunicationRequestBundle struct {
-	Id    string                            `json:"id,omitempty"`
-	Type  string                            `json:"resourceType,omitempty"`
-	Base  string                            `json:"base,omitempty"`
-	Total int                               `json:"total,omitempty"`
-	Link  []BundleLinkComponent             `json:"link,omitempty"`
-	Entry []CommunicationRequestBundleEntry `json:"entry,omitempty"`
-}
-
-type CommunicationRequestBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource CommunicationRequest  `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *CommunicationRequest) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -77,4 +56,10 @@ func (resource *CommunicationRequest) MarshalJSON() ([]byte, error) {
 		CommunicationRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type CommunicationRequestPayloadComponent struct {
+	ContentString     string      `bson:"contentString,omitempty" json:"contentString,omitempty"`
+	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
+	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
 }

@@ -37,18 +37,18 @@ func ClaimIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 		}
 	}
 
-	var claimEntryList []models.ClaimBundleEntry
+	var claimEntryList []models.BundleEntryComponent
 	for _, claim := range result {
-		var entry models.ClaimBundleEntry
-		entry.Id = claim.Id
-		entry.Resource = claim
+		var entry models.BundleEntryComponent
+		entry.Resource = &claim
 		claimEntryList = append(claimEntryList, entry)
 	}
 
-	var bundle models.ClaimBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = claimEntryList
 
 	log.Println("Setting claim search context")
@@ -58,7 +58,7 @@ func ClaimIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadClaim(r *http.Request) (*models.Claim, error) {

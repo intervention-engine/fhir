@@ -47,6 +47,18 @@ type PaymentReconciliation struct {
 	Note                []PaymentReconciliationNotesComponent   `bson:"note,omitempty" json:"note,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *PaymentReconciliation) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		PaymentReconciliation
+	}{
+		ResourceType:          "PaymentReconciliation",
+		PaymentReconciliation: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type PaymentReconciliationDetailsComponent struct {
 	Type      *Coding       `bson:"type,omitempty" json:"type,omitempty"`
 	Request   *Reference    `bson:"request,omitempty" json:"request,omitempty"`
@@ -60,31 +72,4 @@ type PaymentReconciliationDetailsComponent struct {
 type PaymentReconciliationNotesComponent struct {
 	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text string  `bson:"text,omitempty" json:"text,omitempty"`
-}
-
-type PaymentReconciliationBundle struct {
-	Id    string                             `json:"id,omitempty"`
-	Type  string                             `json:"resourceType,omitempty"`
-	Base  string                             `json:"base,omitempty"`
-	Total int                                `json:"total,omitempty"`
-	Link  []BundleLinkComponent              `json:"link,omitempty"`
-	Entry []PaymentReconciliationBundleEntry `json:"entry,omitempty"`
-}
-
-type PaymentReconciliationBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource PaymentReconciliation `json:"resource,omitempty"`
-}
-
-func (resource *PaymentReconciliation) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		PaymentReconciliation
-	}{
-		ResourceType:          "PaymentReconciliation",
-		PaymentReconciliation: *resource,
-	}
-	return json.Marshal(x)
 }

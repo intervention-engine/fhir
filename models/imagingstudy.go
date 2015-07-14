@@ -49,6 +49,18 @@ type ImagingStudy struct {
 	Series              []ImagingStudySeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *ImagingStudy) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ImagingStudy
+	}{
+		ResourceType: "ImagingStudy",
+		ImagingStudy: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ImagingStudySeriesComponent struct {
 	Number            *uint32                               `bson:"number,omitempty" json:"number,omitempty"`
 	Modality          string                                `bson:"modality,omitempty" json:"modality,omitempty"`
@@ -70,31 +82,4 @@ type ImagingStudySeriesInstanceComponent struct {
 	Type     string       `bson:"type,omitempty" json:"type,omitempty"`
 	Title    string       `bson:"title,omitempty" json:"title,omitempty"`
 	Content  []Attachment `bson:"content,omitempty" json:"content,omitempty"`
-}
-
-type ImagingStudyBundle struct {
-	Id    string                    `json:"id,omitempty"`
-	Type  string                    `json:"resourceType,omitempty"`
-	Base  string                    `json:"base,omitempty"`
-	Total int                       `json:"total,omitempty"`
-	Link  []BundleLinkComponent     `json:"link,omitempty"`
-	Entry []ImagingStudyBundleEntry `json:"entry,omitempty"`
-}
-
-type ImagingStudyBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ImagingStudy          `json:"resource,omitempty"`
-}
-
-func (resource *ImagingStudy) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ImagingStudy
-	}{
-		ResourceType: "ImagingStudy",
-		ImagingStudy: *resource,
-	}
-	return json.Marshal(x)
 }

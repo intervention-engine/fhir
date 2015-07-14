@@ -22,18 +22,18 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var questionnaireEntryList []models.QuestionnaireBundleEntry
+	var questionnaireEntryList []models.BundleEntryComponent
 	for _, questionnaire := range result {
-		var entry models.QuestionnaireBundleEntry
-		entry.Id = questionnaire.Id
-		entry.Resource = questionnaire
+		var entry models.BundleEntryComponent
+		entry.Resource = &questionnaire
 		questionnaireEntryList = append(questionnaireEntryList, entry)
 	}
 
-	var bundle models.QuestionnaireBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = questionnaireEntryList
 
 	log.Println("Setting questionnaire search context")
@@ -43,7 +43,7 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadQuestionnaire(r *http.Request) (*models.Questionnaire, error) {

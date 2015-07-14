@@ -47,22 +47,7 @@ type ReferralRequest struct {
 	FulfillmentTime       *Period           `bson:"fulfillmentTime,omitempty" json:"fulfillmentTime,omitempty"`
 }
 
-type ReferralRequestBundle struct {
-	Id    string                       `json:"id,omitempty"`
-	Type  string                       `json:"resourceType,omitempty"`
-	Base  string                       `json:"base,omitempty"`
-	Total int                          `json:"total,omitempty"`
-	Link  []BundleLinkComponent        `json:"link,omitempty"`
-	Entry []ReferralRequestBundleEntry `json:"entry,omitempty"`
-}
-
-type ReferralRequestBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ReferralRequest       `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ReferralRequest) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

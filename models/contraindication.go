@@ -42,28 +42,7 @@ type Contraindication struct {
 	Mitigation []ContraindicationMitigationComponent `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
 
-type ContraindicationMitigationComponent struct {
-	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
-	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
-	Author *Reference       `bson:"author,omitempty" json:"author,omitempty"`
-}
-
-type ContraindicationBundle struct {
-	Id    string                        `json:"id,omitempty"`
-	Type  string                        `json:"resourceType,omitempty"`
-	Base  string                        `json:"base,omitempty"`
-	Total int                           `json:"total,omitempty"`
-	Link  []BundleLinkComponent         `json:"link,omitempty"`
-	Entry []ContraindicationBundleEntry `json:"entry,omitempty"`
-}
-
-type ContraindicationBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Contraindication      `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Contraindication) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -73,4 +52,10 @@ func (resource *Contraindication) MarshalJSON() ([]byte, error) {
 		Contraindication: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type ContraindicationMitigationComponent struct {
+	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
+	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
+	Author *Reference       `bson:"author,omitempty" json:"author,omitempty"`
 }

@@ -22,18 +22,18 @@ func NamingSystemIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var namingsystemEntryList []models.NamingSystemBundleEntry
+	var namingsystemEntryList []models.BundleEntryComponent
 	for _, namingsystem := range result {
-		var entry models.NamingSystemBundleEntry
-		entry.Id = namingsystem.Id
-		entry.Resource = namingsystem
+		var entry models.BundleEntryComponent
+		entry.Resource = &namingsystem
 		namingsystemEntryList = append(namingsystemEntryList, entry)
 	}
 
-	var bundle models.NamingSystemBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = namingsystemEntryList
 
 	log.Println("Setting namingsystem search context")
@@ -43,7 +43,7 @@ func NamingSystemIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadNamingSystem(r *http.Request) (*models.NamingSystem, error) {

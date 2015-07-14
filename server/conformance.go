@@ -22,18 +22,18 @@ func ConformanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var conformanceEntryList []models.ConformanceBundleEntry
+	var conformanceEntryList []models.BundleEntryComponent
 	for _, conformance := range result {
-		var entry models.ConformanceBundleEntry
-		entry.Id = conformance.Id
-		entry.Resource = conformance
+		var entry models.BundleEntryComponent
+		entry.Resource = &conformance
 		conformanceEntryList = append(conformanceEntryList, entry)
 	}
 
-	var bundle models.ConformanceBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = conformanceEntryList
 
 	log.Println("Setting conformance search context")
@@ -43,7 +43,7 @@ func ConformanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadConformance(r *http.Request) (*models.Conformance, error) {

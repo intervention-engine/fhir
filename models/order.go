@@ -41,27 +41,7 @@ type Order struct {
 	Detail                []Reference         `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
-type OrderWhenComponent struct {
-	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
-}
-
-type OrderBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []OrderBundleEntry    `json:"entry,omitempty"`
-}
-
-type OrderBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Order                 `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Order) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -71,4 +51,9 @@ func (resource *Order) MarshalJSON() ([]byte, error) {
 		Order:        *resource,
 	}
 	return json.Marshal(x)
+}
+
+type OrderWhenComponent struct {
+	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
 }

@@ -48,31 +48,7 @@ type MedicationAdministration struct {
 	Dosage                    *MedicationAdministrationDosageComponent `bson:"dosage,omitempty" json:"dosage,omitempty"`
 }
 
-type MedicationAdministrationDosageComponent struct {
-	Text     string           `bson:"text,omitempty" json:"text,omitempty"`
-	Site     *CodeableConcept `bson:"site,omitempty" json:"site,omitempty"`
-	Route    *CodeableConcept `bson:"route,omitempty" json:"route,omitempty"`
-	Method   *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
-	Quantity *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Rate     *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
-}
-
-type MedicationAdministrationBundle struct {
-	Id    string                                `json:"id,omitempty"`
-	Type  string                                `json:"resourceType,omitempty"`
-	Base  string                                `json:"base,omitempty"`
-	Total int                                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent                 `json:"link,omitempty"`
-	Entry []MedicationAdministrationBundleEntry `json:"entry,omitempty"`
-}
-
-type MedicationAdministrationBundleEntry struct {
-	Id       string                   `json:"id,omitempty"`
-	Base     string                   `json:"base,omitempty"`
-	Link     []BundleLinkComponent    `json:"link,omitempty"`
-	Resource MedicationAdministration `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *MedicationAdministration) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -82,4 +58,13 @@ func (resource *MedicationAdministration) MarshalJSON() ([]byte, error) {
 		MedicationAdministration: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type MedicationAdministrationDosageComponent struct {
+	Text     string           `bson:"text,omitempty" json:"text,omitempty"`
+	Site     *CodeableConcept `bson:"site,omitempty" json:"site,omitempty"`
+	Route    *CodeableConcept `bson:"route,omitempty" json:"route,omitempty"`
+	Method   *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
+	Quantity *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Rate     *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
 }

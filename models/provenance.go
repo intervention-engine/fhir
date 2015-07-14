@@ -41,6 +41,18 @@ type Provenance struct {
 	Signature []Signature                 `bson:"signature,omitempty" json:"signature,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Provenance) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Provenance
+	}{
+		ResourceType: "Provenance",
+		Provenance:   *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ProvenanceAgentComponent struct {
 	Role               *Coding    `bson:"role,omitempty" json:"role,omitempty"`
 	Type               *Coding    `bson:"type,omitempty" json:"type,omitempty"`
@@ -55,31 +67,4 @@ type ProvenanceEntityComponent struct {
 	Reference string                    `bson:"reference,omitempty" json:"reference,omitempty"`
 	Display   string                    `bson:"display,omitempty" json:"display,omitempty"`
 	Agent     *ProvenanceAgentComponent `bson:"agent,omitempty" json:"agent,omitempty"`
-}
-
-type ProvenanceBundle struct {
-	Id    string                  `json:"id,omitempty"`
-	Type  string                  `json:"resourceType,omitempty"`
-	Base  string                  `json:"base,omitempty"`
-	Total int                     `json:"total,omitempty"`
-	Link  []BundleLinkComponent   `json:"link,omitempty"`
-	Entry []ProvenanceBundleEntry `json:"entry,omitempty"`
-}
-
-type ProvenanceBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Provenance            `json:"resource,omitempty"`
-}
-
-func (resource *Provenance) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Provenance
-	}{
-		ResourceType: "Provenance",
-		Provenance:   *resource,
-	}
-	return json.Marshal(x)
 }

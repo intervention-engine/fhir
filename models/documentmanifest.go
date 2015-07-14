@@ -44,32 +44,7 @@ type DocumentManifest struct {
 	Related          []DocumentManifestRelatedComponent `bson:"related,omitempty" json:"related,omitempty"`
 }
 
-type DocumentManifestContentComponent struct {
-	PAttachment *Attachment `bson:"pAttachment,omitempty" json:"pAttachment,omitempty"`
-	PReference  *Reference  `bson:"pReference,omitempty" json:"pReference,omitempty"`
-}
-
-type DocumentManifestRelatedComponent struct {
-	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
-}
-
-type DocumentManifestBundle struct {
-	Id    string                        `json:"id,omitempty"`
-	Type  string                        `json:"resourceType,omitempty"`
-	Base  string                        `json:"base,omitempty"`
-	Total int                           `json:"total,omitempty"`
-	Link  []BundleLinkComponent         `json:"link,omitempty"`
-	Entry []DocumentManifestBundleEntry `json:"entry,omitempty"`
-}
-
-type DocumentManifestBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource DocumentManifest      `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DocumentManifest) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -79,4 +54,14 @@ func (resource *DocumentManifest) MarshalJSON() ([]byte, error) {
 		DocumentManifest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type DocumentManifestContentComponent struct {
+	PAttachment *Attachment `bson:"pAttachment,omitempty" json:"pAttachment,omitempty"`
+	PReference  *Reference  `bson:"pReference,omitempty" json:"pReference,omitempty"`
+}
+
+type DocumentManifestRelatedComponent struct {
+	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
 }

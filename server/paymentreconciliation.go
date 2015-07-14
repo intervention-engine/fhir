@@ -22,18 +22,18 @@ func PaymentReconciliationIndexHandler(rw http.ResponseWriter, r *http.Request, 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var paymentreconciliationEntryList []models.PaymentReconciliationBundleEntry
+	var paymentreconciliationEntryList []models.BundleEntryComponent
 	for _, paymentreconciliation := range result {
-		var entry models.PaymentReconciliationBundleEntry
-		entry.Id = paymentreconciliation.Id
-		entry.Resource = paymentreconciliation
+		var entry models.BundleEntryComponent
+		entry.Resource = &paymentreconciliation
 		paymentreconciliationEntryList = append(paymentreconciliationEntryList, entry)
 	}
 
-	var bundle models.PaymentReconciliationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = paymentreconciliationEntryList
 
 	log.Println("Setting paymentreconciliation search context")
@@ -43,7 +43,7 @@ func PaymentReconciliationIndexHandler(rw http.ResponseWriter, r *http.Request, 
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadPaymentReconciliation(r *http.Request) (*models.PaymentReconciliation, error) {

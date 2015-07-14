@@ -50,6 +50,18 @@ type DocumentReference struct {
 	Context          *DocumentReferenceContextComponent    `bson:"context,omitempty" json:"context,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *DocumentReference) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DocumentReference
+	}{
+		ResourceType:      "DocumentReference",
+		DocumentReference: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type DocumentReferenceRelatesToComponent struct {
 	Code   string     `bson:"code,omitempty" json:"code,omitempty"`
 	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
@@ -67,31 +79,4 @@ type DocumentReferenceContextComponent struct {
 type DocumentReferenceContextRelatedComponent struct {
 	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
-}
-
-type DocumentReferenceBundle struct {
-	Id    string                         `json:"id,omitempty"`
-	Type  string                         `json:"resourceType,omitempty"`
-	Base  string                         `json:"base,omitempty"`
-	Total int                            `json:"total,omitempty"`
-	Link  []BundleLinkComponent          `json:"link,omitempty"`
-	Entry []DocumentReferenceBundleEntry `json:"entry,omitempty"`
-}
-
-type DocumentReferenceBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource DocumentReference     `json:"resource,omitempty"`
-}
-
-func (resource *DocumentReference) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		DocumentReference
-	}{
-		ResourceType:      "DocumentReference",
-		DocumentReference: *resource,
-	}
-	return json.Marshal(x)
 }

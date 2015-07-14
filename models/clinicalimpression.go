@@ -50,6 +50,18 @@ type ClinicalImpression struct {
 	Action                 []Reference                                 `bson:"action,omitempty" json:"action,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *ClinicalImpression) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		ClinicalImpression
+	}{
+		ResourceType:       "ClinicalImpression",
+		ClinicalImpression: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ClinicalImpressionInvestigationsComponent struct {
 	Code *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Item []Reference      `bson:"item,omitempty" json:"item,omitempty"`
@@ -63,31 +75,4 @@ type ClinicalImpressionFindingComponent struct {
 type ClinicalImpressionRuledOutComponent struct {
 	Item   *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
 	Reason string           `bson:"reason,omitempty" json:"reason,omitempty"`
-}
-
-type ClinicalImpressionBundle struct {
-	Id    string                          `json:"id,omitempty"`
-	Type  string                          `json:"resourceType,omitempty"`
-	Base  string                          `json:"base,omitempty"`
-	Total int                             `json:"total,omitempty"`
-	Link  []BundleLinkComponent           `json:"link,omitempty"`
-	Entry []ClinicalImpressionBundleEntry `json:"entry,omitempty"`
-}
-
-type ClinicalImpressionBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource ClinicalImpression    `json:"resource,omitempty"`
-}
-
-func (resource *ClinicalImpression) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ClinicalImpression
-	}{
-		ResourceType:       "ClinicalImpression",
-		ClinicalImpression: *resource,
-	}
-	return json.Marshal(x)
 }

@@ -41,6 +41,18 @@ type Specimen struct {
 	Container           []SpecimenContainerComponent `bson:"container,omitempty" json:"container,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Specimen) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Specimen
+	}{
+		ResourceType: "Specimen",
+		Specimen:     *resource,
+	}
+	return json.Marshal(x)
+}
+
 type SpecimenCollectionComponent struct {
 	Collector               *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
 	Comment                 []string         `bson:"comment,omitempty" json:"comment,omitempty"`
@@ -66,31 +78,4 @@ type SpecimenContainerComponent struct {
 	SpecimenQuantity        *Quantity        `bson:"specimenQuantity,omitempty" json:"specimenQuantity,omitempty"`
 	AdditiveCodeableConcept *CodeableConcept `bson:"additiveCodeableConcept,omitempty" json:"additiveCodeableConcept,omitempty"`
 	AdditiveReference       *Reference       `bson:"additiveReference,omitempty" json:"additiveReference,omitempty"`
-}
-
-type SpecimenBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []SpecimenBundleEntry `json:"entry,omitempty"`
-}
-
-type SpecimenBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Specimen              `json:"resource,omitempty"`
-}
-
-func (resource *Specimen) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Specimen
-	}{
-		ResourceType: "Specimen",
-		Specimen:     *resource,
-	}
-	return json.Marshal(x)
 }

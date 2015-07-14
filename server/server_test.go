@@ -77,7 +77,7 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 	util.CheckErr(err)
 
 	decoder := json.NewDecoder(res.Body)
-	patientBundle := &models.PatientBundle{}
+	patientBundle := &models.Bundle{}
 	err = decoder.Decode(patientBundle)
 	util.CheckErr(err)
 
@@ -87,7 +87,7 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 	err = iter.All(&result)
 	util.CheckErr(err)
 
-	c.Assert(patientBundle.Total, Equals, len(result))
+	c.Assert(int(*patientBundle.Total), Equals, len(result))
 }
 
 func (s *ServerSuite) TestCreatePatient(c *C) {

@@ -39,11 +39,36 @@ type TestScript struct {
 	Teardown    *TestScriptTeardownComponent `bson:"teardown,omitempty" json:"teardown,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *TestScript) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		TestScript
+	}{
+		ResourceType: "TestScript",
+		TestScript:   *resource,
+	}
+	return json.Marshal(x)
+}
+
 type TestScriptFixtureComponent struct {
-	Uri        string     `bson:"uri,omitempty" json:"uri,omitempty"`
-	Resource   *Reference `bson:"resource,omitempty" json:"resource,omitempty"`
-	Autocreate *bool      `bson:"autocreate,omitempty" json:"autocreate,omitempty"`
-	Autodelete *bool      `bson:"autodelete,omitempty" json:"autodelete,omitempty"`
+	Uri        string      `bson:"uri,omitempty" json:"uri,omitempty"`
+	Resource   interface{} `bson:"resource,omitempty" json:"resource,omitempty"`
+	Autocreate *bool       `bson:"autocreate,omitempty" json:"autocreate,omitempty"`
+	Autodelete *bool       `bson:"autodelete,omitempty" json:"autodelete,omitempty"`
+}
+
+// The "testScriptFixtureComponent" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type testScriptFixtureComponent TestScriptFixtureComponent
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *TestScriptFixtureComponent) UnmarshalJSON(data []byte) (err error) {
+	x2 := testScriptFixtureComponent{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		x2.Resource = MapToResource(x2.Resource)
+		*x = TestScriptFixtureComponent(x2)
+	}
+	return
 }
 
 type TestScriptSetupComponent struct {
@@ -112,31 +137,4 @@ type TestScriptTeardownOperationComponent struct {
 	Parameter   []string `bson:"parameter,omitempty" json:"parameter,omitempty"`
 	ResponseId  string   `bson:"responseId,omitempty" json:"responseId,omitempty"`
 	ContentType string   `bson:"contentType,omitempty" json:"contentType,omitempty"`
-}
-
-type TestScriptBundle struct {
-	Id    string                  `json:"id,omitempty"`
-	Type  string                  `json:"resourceType,omitempty"`
-	Base  string                  `json:"base,omitempty"`
-	Total int                     `json:"total,omitempty"`
-	Link  []BundleLinkComponent   `json:"link,omitempty"`
-	Entry []TestScriptBundleEntry `json:"entry,omitempty"`
-}
-
-type TestScriptBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource TestScript            `json:"resource,omitempty"`
-}
-
-func (resource *TestScript) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		TestScript
-	}{
-		ResourceType: "TestScript",
-		TestScript:   *resource,
-	}
-	return json.Marshal(x)
 }

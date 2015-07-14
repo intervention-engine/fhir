@@ -22,18 +22,18 @@ func SlotIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var slotEntryList []models.SlotBundleEntry
+	var slotEntryList []models.BundleEntryComponent
 	for _, slot := range result {
-		var entry models.SlotBundleEntry
-		entry.Id = slot.Id
-		entry.Resource = slot
+		var entry models.BundleEntryComponent
+		entry.Resource = &slot
 		slotEntryList = append(slotEntryList, entry)
 	}
 
-	var bundle models.SlotBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = slotEntryList
 
 	log.Println("Setting slot search context")
@@ -43,7 +43,7 @@ func SlotIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadSlot(r *http.Request) (*models.Slot, error) {

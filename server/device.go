@@ -37,18 +37,18 @@ func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		}
 	}
 
-	var deviceEntryList []models.DeviceBundleEntry
+	var deviceEntryList []models.BundleEntryComponent
 	for _, device := range result {
-		var entry models.DeviceBundleEntry
-		entry.Id = device.Id
-		entry.Resource = device
+		var entry models.BundleEntryComponent
+		entry.Resource = &device
 		deviceEntryList = append(deviceEntryList, entry)
 	}
 
-	var bundle models.DeviceBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = deviceEntryList
 
 	log.Println("Setting device search context")
@@ -58,7 +58,7 @@ func DeviceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDevice(r *http.Request) (*models.Device, error) {

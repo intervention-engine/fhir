@@ -22,18 +22,18 @@ func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var messageheaderEntryList []models.MessageHeaderBundleEntry
+	var messageheaderEntryList []models.BundleEntryComponent
 	for _, messageheader := range result {
-		var entry models.MessageHeaderBundleEntry
-		entry.Id = messageheader.Id
-		entry.Resource = messageheader
+		var entry models.BundleEntryComponent
+		entry.Resource = &messageheader
 		messageheaderEntryList = append(messageheaderEntryList, entry)
 	}
 
-	var bundle models.MessageHeaderBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = messageheaderEntryList
 
 	log.Println("Setting messageheader search context")
@@ -43,7 +43,7 @@ func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadMessageHeader(r *http.Request) (*models.MessageHeader, error) {

@@ -22,18 +22,18 @@ func HealthcareServiceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var healthcareserviceEntryList []models.HealthcareServiceBundleEntry
+	var healthcareserviceEntryList []models.BundleEntryComponent
 	for _, healthcareservice := range result {
-		var entry models.HealthcareServiceBundleEntry
-		entry.Id = healthcareservice.Id
-		entry.Resource = healthcareservice
+		var entry models.BundleEntryComponent
+		entry.Resource = &healthcareservice
 		healthcareserviceEntryList = append(healthcareserviceEntryList, entry)
 	}
 
-	var bundle models.HealthcareServiceBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = healthcareserviceEntryList
 
 	log.Println("Setting healthcareservice search context")
@@ -43,7 +43,7 @@ func HealthcareServiceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadHealthcareService(r *http.Request) (*models.HealthcareService, error) {

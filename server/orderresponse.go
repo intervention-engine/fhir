@@ -22,18 +22,18 @@ func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var orderresponseEntryList []models.OrderResponseBundleEntry
+	var orderresponseEntryList []models.BundleEntryComponent
 	for _, orderresponse := range result {
-		var entry models.OrderResponseBundleEntry
-		entry.Id = orderresponse.Id
-		entry.Resource = orderresponse
+		var entry models.BundleEntryComponent
+		entry.Resource = &orderresponse
 		orderresponseEntryList = append(orderresponseEntryList, entry)
 	}
 
-	var bundle models.OrderResponseBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = orderresponseEntryList
 
 	log.Println("Setting orderresponse search context")
@@ -43,7 +43,7 @@ func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadOrderResponse(r *http.Request) (*models.OrderResponse, error) {

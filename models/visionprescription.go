@@ -40,6 +40,18 @@ type VisionPrescription struct {
 	Dispense              []VisionPrescriptionDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *VisionPrescription) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		VisionPrescription
+	}{
+		ResourceType:       "VisionPrescription",
+		VisionPrescription: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type VisionPrescriptionDispenseComponent struct {
 	Product   *Coding   `bson:"product,omitempty" json:"product,omitempty"`
 	Eye       string    `bson:"eye,omitempty" json:"eye,omitempty"`
@@ -56,31 +68,4 @@ type VisionPrescriptionDispenseComponent struct {
 	Color     string    `bson:"color,omitempty" json:"color,omitempty"`
 	Brand     string    `bson:"brand,omitempty" json:"brand,omitempty"`
 	Notes     string    `bson:"notes,omitempty" json:"notes,omitempty"`
-}
-
-type VisionPrescriptionBundle struct {
-	Id    string                          `json:"id,omitempty"`
-	Type  string                          `json:"resourceType,omitempty"`
-	Base  string                          `json:"base,omitempty"`
-	Total int                             `json:"total,omitempty"`
-	Link  []BundleLinkComponent           `json:"link,omitempty"`
-	Entry []VisionPrescriptionBundleEntry `json:"entry,omitempty"`
-}
-
-type VisionPrescriptionBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource VisionPrescription    `json:"resource,omitempty"`
-}
-
-func (resource *VisionPrescription) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		VisionPrescription
-	}{
-		ResourceType:       "VisionPrescription",
-		VisionPrescription: *resource,
-	}
-	return json.Marshal(x)
 }

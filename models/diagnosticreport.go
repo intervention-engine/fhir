@@ -50,27 +50,7 @@ type DiagnosticReport struct {
 	PresentedForm     []Attachment                     `bson:"presentedForm,omitempty" json:"presentedForm,omitempty"`
 }
 
-type DiagnosticReportImageComponent struct {
-	Comment string     `bson:"comment,omitempty" json:"comment,omitempty"`
-	Link    *Reference `bson:"link,omitempty" json:"link,omitempty"`
-}
-
-type DiagnosticReportBundle struct {
-	Id    string                        `json:"id,omitempty"`
-	Type  string                        `json:"resourceType,omitempty"`
-	Base  string                        `json:"base,omitempty"`
-	Total int                           `json:"total,omitempty"`
-	Link  []BundleLinkComponent         `json:"link,omitempty"`
-	Entry []DiagnosticReportBundleEntry `json:"entry,omitempty"`
-}
-
-type DiagnosticReportBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource DiagnosticReport      `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DiagnosticReport) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -80,4 +60,9 @@ func (resource *DiagnosticReport) MarshalJSON() ([]byte, error) {
 		DiagnosticReport: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type DiagnosticReportImageComponent struct {
+	Comment string     `bson:"comment,omitempty" json:"comment,omitempty"`
+	Link    *Reference `bson:"link,omitempty" json:"link,omitempty"`
 }

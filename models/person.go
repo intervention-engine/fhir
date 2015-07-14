@@ -42,27 +42,7 @@ type Person struct {
 	Link                 []PersonLinkComponent `bson:"link,omitempty" json:"link,omitempty"`
 }
 
-type PersonLinkComponent struct {
-	Target    *Reference `bson:"target,omitempty" json:"target,omitempty"`
-	Assurance string     `bson:"assurance,omitempty" json:"assurance,omitempty"`
-}
-
-type PersonBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []PersonBundleEntry   `json:"entry,omitempty"`
-}
-
-type PersonBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Person                `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Person) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -72,4 +52,9 @@ func (resource *Person) MarshalJSON() ([]byte, error) {
 		Person:       *resource,
 	}
 	return json.Marshal(x)
+}
+
+type PersonLinkComponent struct {
+	Target    *Reference `bson:"target,omitempty" json:"target,omitempty"`
+	Assurance string     `bson:"assurance,omitempty" json:"assurance,omitempty"`
 }

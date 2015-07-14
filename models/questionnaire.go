@@ -39,6 +39,18 @@ type Questionnaire struct {
 	Group      *QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Questionnaire) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Questionnaire
+	}{
+		ResourceType:  "Questionnaire",
+		Questionnaire: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type QuestionnaireGroupComponent struct {
 	LinkId   string                           `bson:"linkId,omitempty" json:"linkId,omitempty"`
 	Title    string                           `bson:"title,omitempty" json:"title,omitempty"`
@@ -59,31 +71,4 @@ type QuestionnaireQuestionComponent struct {
 	Repeats  *bool                         `bson:"repeats,omitempty" json:"repeats,omitempty"`
 	Options  *Reference                    `bson:"options,omitempty" json:"options,omitempty"`
 	Group    []QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
-}
-
-type QuestionnaireBundle struct {
-	Id    string                     `json:"id,omitempty"`
-	Type  string                     `json:"resourceType,omitempty"`
-	Base  string                     `json:"base,omitempty"`
-	Total int                        `json:"total,omitempty"`
-	Link  []BundleLinkComponent      `json:"link,omitempty"`
-	Entry []QuestionnaireBundleEntry `json:"entry,omitempty"`
-}
-
-type QuestionnaireBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Questionnaire         `json:"resource,omitempty"`
-}
-
-func (resource *Questionnaire) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Questionnaire
-	}{
-		ResourceType:  "Questionnaire",
-		Questionnaire: *resource,
-	}
-	return json.Marshal(x)
 }

@@ -37,18 +37,18 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		}
 	}
 
-	var careplanEntryList []models.CarePlanBundleEntry
+	var careplanEntryList []models.BundleEntryComponent
 	for _, careplan := range result {
-		var entry models.CarePlanBundleEntry
-		entry.Id = careplan.Id
-		entry.Resource = careplan
+		var entry models.BundleEntryComponent
+		entry.Resource = &careplan
 		careplanEntryList = append(careplanEntryList, entry)
 	}
 
-	var bundle models.CarePlanBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = careplanEntryList
 
 	log.Println("Setting careplan search context")
@@ -58,7 +58,7 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadCarePlan(r *http.Request) (*models.CarePlan, error) {

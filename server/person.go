@@ -22,18 +22,18 @@ func PersonIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var personEntryList []models.PersonBundleEntry
+	var personEntryList []models.BundleEntryComponent
 	for _, person := range result {
-		var entry models.PersonBundleEntry
-		entry.Id = person.Id
-		entry.Resource = person
+		var entry models.BundleEntryComponent
+		entry.Resource = &person
 		personEntryList = append(personEntryList, entry)
 	}
 
-	var bundle models.PersonBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = personEntryList
 
 	log.Println("Setting person search context")
@@ -43,7 +43,7 @@ func PersonIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadPerson(r *http.Request) (*models.Person, error) {

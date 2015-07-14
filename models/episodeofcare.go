@@ -43,33 +43,7 @@ type EpisodeOfCare struct {
 	CareTeam             []EpisodeOfCareCareTeamComponent      `bson:"careTeam,omitempty" json:"careTeam,omitempty"`
 }
 
-type EpisodeOfCareStatusHistoryComponent struct {
-	Status string  `bson:"status,omitempty" json:"status,omitempty"`
-	Period *Period `bson:"period,omitempty" json:"period,omitempty"`
-}
-
-type EpisodeOfCareCareTeamComponent struct {
-	Member *Reference        `bson:"member,omitempty" json:"member,omitempty"`
-	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
-	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`
-}
-
-type EpisodeOfCareBundle struct {
-	Id    string                     `json:"id,omitempty"`
-	Type  string                     `json:"resourceType,omitempty"`
-	Base  string                     `json:"base,omitempty"`
-	Total int                        `json:"total,omitempty"`
-	Link  []BundleLinkComponent      `json:"link,omitempty"`
-	Entry []EpisodeOfCareBundleEntry `json:"entry,omitempty"`
-}
-
-type EpisodeOfCareBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource EpisodeOfCare         `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *EpisodeOfCare) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -79,4 +53,15 @@ func (resource *EpisodeOfCare) MarshalJSON() ([]byte, error) {
 		EpisodeOfCare: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type EpisodeOfCareStatusHistoryComponent struct {
+	Status string  `bson:"status,omitempty" json:"status,omitempty"`
+	Period *Period `bson:"period,omitempty" json:"period,omitempty"`
+}
+
+type EpisodeOfCareCareTeamComponent struct {
+	Member *Reference        `bson:"member,omitempty" json:"member,omitempty"`
+	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
+	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`
 }

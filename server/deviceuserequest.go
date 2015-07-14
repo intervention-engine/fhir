@@ -37,18 +37,18 @@ func DeviceUseRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		}
 	}
 
-	var deviceuserequestEntryList []models.DeviceUseRequestBundleEntry
+	var deviceuserequestEntryList []models.BundleEntryComponent
 	for _, deviceuserequest := range result {
-		var entry models.DeviceUseRequestBundleEntry
-		entry.Id = deviceuserequest.Id
-		entry.Resource = deviceuserequest
+		var entry models.BundleEntryComponent
+		entry.Resource = &deviceuserequest
 		deviceuserequestEntryList = append(deviceuserequestEntryList, entry)
 	}
 
-	var bundle models.DeviceUseRequestBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = deviceuserequestEntryList
 
 	log.Println("Setting deviceuserequest search context")
@@ -58,7 +58,7 @@ func DeviceUseRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadDeviceUseRequest(r *http.Request) (*models.DeviceUseRequest, error) {

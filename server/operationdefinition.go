@@ -37,18 +37,18 @@ func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 		}
 	}
 
-	var operationdefinitionEntryList []models.OperationDefinitionBundleEntry
+	var operationdefinitionEntryList []models.BundleEntryComponent
 	for _, operationdefinition := range result {
-		var entry models.OperationDefinitionBundleEntry
-		entry.Id = operationdefinition.Id
-		entry.Resource = operationdefinition
+		var entry models.BundleEntryComponent
+		entry.Resource = &operationdefinition
 		operationdefinitionEntryList = append(operationdefinitionEntryList, entry)
 	}
 
-	var bundle models.OperationDefinitionBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = operationdefinitionEntryList
 
 	log.Println("Setting operationdefinition search context")
@@ -58,7 +58,7 @@ func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadOperationDefinition(r *http.Request) (*models.OperationDefinition, error) {

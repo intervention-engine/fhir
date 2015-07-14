@@ -51,6 +51,18 @@ type Immunization struct {
 	VaccinationProtocol []ImmunizationVaccinationProtocolComponent `bson:"vaccinationProtocol,omitempty" json:"vaccinationProtocol,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Immunization) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Immunization
+	}{
+		ResourceType: "Immunization",
+		Immunization: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type ImmunizationExplanationComponent struct {
 	Reason         []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 	ReasonNotGiven []CodeableConcept `bson:"reasonNotGiven,omitempty" json:"reasonNotGiven,omitempty"`
@@ -71,31 +83,4 @@ type ImmunizationVaccinationProtocolComponent struct {
 	DoseTarget       *CodeableConcept `bson:"doseTarget,omitempty" json:"doseTarget,omitempty"`
 	DoseStatus       *CodeableConcept `bson:"doseStatus,omitempty" json:"doseStatus,omitempty"`
 	DoseStatusReason *CodeableConcept `bson:"doseStatusReason,omitempty" json:"doseStatusReason,omitempty"`
-}
-
-type ImmunizationBundle struct {
-	Id    string                    `json:"id,omitempty"`
-	Type  string                    `json:"resourceType,omitempty"`
-	Base  string                    `json:"base,omitempty"`
-	Total int                       `json:"total,omitempty"`
-	Link  []BundleLinkComponent     `json:"link,omitempty"`
-	Entry []ImmunizationBundleEntry `json:"entry,omitempty"`
-}
-
-type ImmunizationBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Immunization          `json:"resource,omitempty"`
-}
-
-func (resource *Immunization) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Immunization
-	}{
-		ResourceType: "Immunization",
-		Immunization: *resource,
-	}
-	return json.Marshal(x)
 }

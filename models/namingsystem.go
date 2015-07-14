@@ -45,6 +45,18 @@ type NamingSystem struct {
 	ReplacedBy  *Reference                      `bson:"replacedBy,omitempty" json:"replacedBy,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *NamingSystem) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		NamingSystem
+	}{
+		ResourceType: "NamingSystem",
+		NamingSystem: *resource,
+	}
+	return json.Marshal(x)
+}
+
 type NamingSystemUniqueIdComponent struct {
 	Type      string  `bson:"type,omitempty" json:"type,omitempty"`
 	Value     string  `bson:"value,omitempty" json:"value,omitempty"`
@@ -55,31 +67,4 @@ type NamingSystemUniqueIdComponent struct {
 type NamingSystemContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
-}
-
-type NamingSystemBundle struct {
-	Id    string                    `json:"id,omitempty"`
-	Type  string                    `json:"resourceType,omitempty"`
-	Base  string                    `json:"base,omitempty"`
-	Total int                       `json:"total,omitempty"`
-	Link  []BundleLinkComponent     `json:"link,omitempty"`
-	Entry []NamingSystemBundleEntry `json:"entry,omitempty"`
-}
-
-type NamingSystemBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource NamingSystem          `json:"resource,omitempty"`
-}
-
-func (resource *NamingSystem) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		NamingSystem
-	}{
-		ResourceType: "NamingSystem",
-		NamingSystem: *resource,
-	}
-	return json.Marshal(x)
 }

@@ -36,33 +36,7 @@ type Substance struct {
 	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 }
 
-type SubstanceInstanceComponent struct {
-	Identifier *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Expiry     *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
-	Quantity   *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
-}
-
-type SubstanceIngredientComponent struct {
-	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
-}
-
-type SubstanceBundle struct {
-	Id    string                 `json:"id,omitempty"`
-	Type  string                 `json:"resourceType,omitempty"`
-	Base  string                 `json:"base,omitempty"`
-	Total int                    `json:"total,omitempty"`
-	Link  []BundleLinkComponent  `json:"link,omitempty"`
-	Entry []SubstanceBundleEntry `json:"entry,omitempty"`
-}
-
-type SubstanceBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Substance             `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Substance) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -72,4 +46,15 @@ func (resource *Substance) MarshalJSON() ([]byte, error) {
 		Substance:    *resource,
 	}
 	return json.Marshal(x)
+}
+
+type SubstanceInstanceComponent struct {
+	Identifier *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Expiry     *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
+	Quantity   *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
+}
+
+type SubstanceIngredientComponent struct {
+	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
 }

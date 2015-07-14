@@ -22,18 +22,18 @@ func AuditEventIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var auditeventEntryList []models.AuditEventBundleEntry
+	var auditeventEntryList []models.BundleEntryComponent
 	for _, auditevent := range result {
-		var entry models.AuditEventBundleEntry
-		entry.Id = auditevent.Id
-		entry.Resource = auditevent
+		var entry models.BundleEntryComponent
+		entry.Resource = &auditevent
 		auditeventEntryList = append(auditeventEntryList, entry)
 	}
 
-	var bundle models.AuditEventBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = auditeventEntryList
 
 	log.Println("Setting auditevent search context")
@@ -43,7 +43,7 @@ func AuditEventIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadAuditEvent(r *http.Request) (*models.AuditEvent, error) {

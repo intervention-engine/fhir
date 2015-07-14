@@ -51,6 +51,18 @@ type Encounter struct {
 	PartOf                  *Reference                         `bson:"partOf,omitempty" json:"partOf,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Encounter) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		Encounter
+	}{
+		ResourceType: "Encounter",
+		Encounter:    *resource,
+	}
+	return json.Marshal(x)
+}
+
 type EncounterStatusHistoryComponent struct {
 	Status string  `bson:"status,omitempty" json:"status,omitempty"`
 	Period *Period `bson:"period,omitempty" json:"period,omitempty"`
@@ -79,31 +91,4 @@ type EncounterLocationComponent struct {
 	Location *Reference `bson:"location,omitempty" json:"location,omitempty"`
 	Status   string     `bson:"status,omitempty" json:"status,omitempty"`
 	Period   *Period    `bson:"period,omitempty" json:"period,omitempty"`
-}
-
-type EncounterBundle struct {
-	Id    string                 `json:"id,omitempty"`
-	Type  string                 `json:"resourceType,omitempty"`
-	Base  string                 `json:"base,omitempty"`
-	Total int                    `json:"total,omitempty"`
-	Link  []BundleLinkComponent  `json:"link,omitempty"`
-	Entry []EncounterBundleEntry `json:"entry,omitempty"`
-}
-
-type EncounterBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Encounter             `json:"resource,omitempty"`
-}
-
-func (resource *Encounter) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Encounter
-	}{
-		ResourceType: "Encounter",
-		Encounter:    *resource,
-	}
-	return json.Marshal(x)
 }

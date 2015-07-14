@@ -37,18 +37,18 @@ func FlagIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 		}
 	}
 
-	var flagEntryList []models.FlagBundleEntry
+	var flagEntryList []models.BundleEntryComponent
 	for _, flag := range result {
-		var entry models.FlagBundleEntry
-		entry.Id = flag.Id
-		entry.Resource = flag
+		var entry models.BundleEntryComponent
+		entry.Resource = &flag
 		flagEntryList = append(flagEntryList, entry)
 	}
 
-	var bundle models.FlagBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = flagEntryList
 
 	log.Println("Setting flag search context")
@@ -58,7 +58,7 @@ func FlagIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadFlag(r *http.Request) (*models.Flag, error) {

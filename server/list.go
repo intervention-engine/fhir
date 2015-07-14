@@ -37,18 +37,18 @@ func ListIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 		}
 	}
 
-	var listEntryList []models.ListBundleEntry
+	var listEntryList []models.BundleEntryComponent
 	for _, list := range result {
-		var entry models.ListBundleEntry
-		entry.Id = list.Id
-		entry.Resource = list
+		var entry models.BundleEntryComponent
+		entry.Resource = &list
 		listEntryList = append(listEntryList, entry)
 	}
 
-	var bundle models.ListBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = listEntryList
 
 	log.Println("Setting list search context")
@@ -58,7 +58,7 @@ func ListIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadList(r *http.Request) (*models.List, error) {

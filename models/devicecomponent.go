@@ -42,28 +42,7 @@ type DeviceComponent struct {
 	LanguageCode            *CodeableConcept                                  `bson:"languageCode,omitempty" json:"languageCode,omitempty"`
 }
 
-type DeviceComponentProductionSpecificationComponent struct {
-	SpecType       *CodeableConcept `bson:"specType,omitempty" json:"specType,omitempty"`
-	ComponentId    *Identifier      `bson:"componentId,omitempty" json:"componentId,omitempty"`
-	ProductionSpec string           `bson:"productionSpec,omitempty" json:"productionSpec,omitempty"`
-}
-
-type DeviceComponentBundle struct {
-	Id    string                       `json:"id,omitempty"`
-	Type  string                       `json:"resourceType,omitempty"`
-	Base  string                       `json:"base,omitempty"`
-	Total int                          `json:"total,omitempty"`
-	Link  []BundleLinkComponent        `json:"link,omitempty"`
-	Entry []DeviceComponentBundleEntry `json:"entry,omitempty"`
-}
-
-type DeviceComponentBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource DeviceComponent       `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DeviceComponent) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -73,4 +52,10 @@ func (resource *DeviceComponent) MarshalJSON() ([]byte, error) {
 		DeviceComponent: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type DeviceComponentProductionSpecificationComponent struct {
+	SpecType       *CodeableConcept `bson:"specType,omitempty" json:"specType,omitempty"`
+	ComponentId    *Identifier      `bson:"componentId,omitempty" json:"componentId,omitempty"`
+	ProductionSpec string           `bson:"productionSpec,omitempty" json:"productionSpec,omitempty"`
 }

@@ -43,27 +43,7 @@ type Goal struct {
 	Outcome     []GoalOutcomeComponent `bson:"outcome,omitempty" json:"outcome,omitempty"`
 }
 
-type GoalOutcomeComponent struct {
-	ResultCodeableConcept *CodeableConcept `bson:"resultCodeableConcept,omitempty" json:"resultCodeableConcept,omitempty"`
-	ResultReference       *Reference       `bson:"resultReference,omitempty" json:"resultReference,omitempty"`
-}
-
-type GoalBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []GoalBundleEntry     `json:"entry,omitempty"`
-}
-
-type GoalBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Goal                  `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Goal) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -73,4 +53,9 @@ func (resource *Goal) MarshalJSON() ([]byte, error) {
 		Goal:         *resource,
 	}
 	return json.Marshal(x)
+}
+
+type GoalOutcomeComponent struct {
+	ResultCodeableConcept *CodeableConcept `bson:"resultCodeableConcept,omitempty" json:"resultCodeableConcept,omitempty"`
+	ResultReference       *Reference       `bson:"resultReference,omitempty" json:"resultReference,omitempty"`
 }

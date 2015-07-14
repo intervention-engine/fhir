@@ -22,18 +22,18 @@ func SearchParameterIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var searchparameterEntryList []models.SearchParameterBundleEntry
+	var searchparameterEntryList []models.BundleEntryComponent
 	for _, searchparameter := range result {
-		var entry models.SearchParameterBundleEntry
-		entry.Id = searchparameter.Id
-		entry.Resource = searchparameter
+		var entry models.BundleEntryComponent
+		entry.Resource = &searchparameter
 		searchparameterEntryList = append(searchparameterEntryList, entry)
 	}
 
-	var bundle models.SearchParameterBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = searchparameterEntryList
 
 	log.Println("Setting searchparameter search context")
@@ -43,7 +43,7 @@ func SearchParameterIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadSearchParameter(r *http.Request) (*models.SearchParameter, error) {

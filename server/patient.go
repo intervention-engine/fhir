@@ -22,18 +22,18 @@ func PatientIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var patientEntryList []models.PatientBundleEntry
+	var patientEntryList []models.BundleEntryComponent
 	for _, patient := range result {
-		var entry models.PatientBundleEntry
-		entry.Id = patient.Id
-		entry.Resource = patient
+		var entry models.BundleEntryComponent
+		entry.Resource = &patient
 		patientEntryList = append(patientEntryList, entry)
 	}
 
-	var bundle models.PatientBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = patientEntryList
 
 	log.Println("Setting patient search context")
@@ -43,7 +43,7 @@ func PatientIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadPatient(r *http.Request) (*models.Patient, error) {

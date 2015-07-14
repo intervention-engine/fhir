@@ -37,18 +37,18 @@ func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 		}
 	}
 
-	var immunizationEntryList []models.ImmunizationBundleEntry
+	var immunizationEntryList []models.BundleEntryComponent
 	for _, immunization := range result {
-		var entry models.ImmunizationBundleEntry
-		entry.Id = immunization.Id
-		entry.Resource = immunization
+		var entry models.BundleEntryComponent
+		entry.Resource = &immunization
 		immunizationEntryList = append(immunizationEntryList, entry)
 	}
 
-	var bundle models.ImmunizationBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = immunizationEntryList
 
 	log.Println("Setting immunization search context")
@@ -58,7 +58,7 @@ func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadImmunization(r *http.Request) (*models.Immunization, error) {

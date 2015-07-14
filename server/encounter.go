@@ -37,18 +37,18 @@ func EncounterIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		}
 	}
 
-	var encounterEntryList []models.EncounterBundleEntry
+	var encounterEntryList []models.BundleEntryComponent
 	for _, encounter := range result {
-		var entry models.EncounterBundleEntry
-		entry.Id = encounter.Id
-		entry.Resource = encounter
+		var entry models.BundleEntryComponent
+		entry.Resource = &encounter
 		encounterEntryList = append(encounterEntryList, entry)
 	}
 
-	var bundle models.EncounterBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = encounterEntryList
 
 	log.Println("Setting encounter search context")
@@ -58,7 +58,7 @@ func EncounterIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadEncounter(r *http.Request) (*models.Encounter, error) {

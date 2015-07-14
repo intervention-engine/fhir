@@ -42,22 +42,7 @@ type EligibilityResponse struct {
 	RequestOrganization *Reference    `bson:"requestOrganization,omitempty" json:"requestOrganization,omitempty"`
 }
 
-type EligibilityResponseBundle struct {
-	Id    string                           `json:"id,omitempty"`
-	Type  string                           `json:"resourceType,omitempty"`
-	Base  string                           `json:"base,omitempty"`
-	Total int                              `json:"total,omitempty"`
-	Link  []BundleLinkComponent            `json:"link,omitempty"`
-	Entry []EligibilityResponseBundleEntry `json:"entry,omitempty"`
-}
-
-type EligibilityResponseBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource EligibilityResponse   `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *EligibilityResponse) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`

@@ -41,33 +41,7 @@ type RiskAssessment struct {
 	Mitigation string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
 
-type RiskAssessmentPredictionComponent struct {
-	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
-	ProbabilityRange           *Range           `bson:"probabilityRange,omitempty" json:"probabilityRange,omitempty"`
-	ProbabilityCodeableConcept *CodeableConcept `bson:"probabilityCodeableConcept,omitempty" json:"probabilityCodeableConcept,omitempty"`
-	RelativeRisk               *float64         `bson:"relativeRisk,omitempty" json:"relativeRisk,omitempty"`
-	WhenPeriod                 *Period          `bson:"whenPeriod,omitempty" json:"whenPeriod,omitempty"`
-	WhenRange                  *Range           `bson:"whenRange,omitempty" json:"whenRange,omitempty"`
-	Rationale                  string           `bson:"rationale,omitempty" json:"rationale,omitempty"`
-}
-
-type RiskAssessmentBundle struct {
-	Id    string                      `json:"id,omitempty"`
-	Type  string                      `json:"resourceType,omitempty"`
-	Base  string                      `json:"base,omitempty"`
-	Total int                         `json:"total,omitempty"`
-	Link  []BundleLinkComponent       `json:"link,omitempty"`
-	Entry []RiskAssessmentBundleEntry `json:"entry,omitempty"`
-}
-
-type RiskAssessmentBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource RiskAssessment        `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *RiskAssessment) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -77,4 +51,15 @@ func (resource *RiskAssessment) MarshalJSON() ([]byte, error) {
 		RiskAssessment: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type RiskAssessmentPredictionComponent struct {
+	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
+	ProbabilityRange           *Range           `bson:"probabilityRange,omitempty" json:"probabilityRange,omitempty"`
+	ProbabilityCodeableConcept *CodeableConcept `bson:"probabilityCodeableConcept,omitempty" json:"probabilityCodeableConcept,omitempty"`
+	RelativeRisk               *float64         `bson:"relativeRisk,omitempty" json:"relativeRisk,omitempty"`
+	WhenPeriod                 *Period          `bson:"whenPeriod,omitempty" json:"whenPeriod,omitempty"`
+	WhenRange                  *Range           `bson:"whenRange,omitempty" json:"whenRange,omitempty"`
+	Rationale                  string           `bson:"rationale,omitempty" json:"rationale,omitempty"`
 }

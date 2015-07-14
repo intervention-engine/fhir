@@ -22,18 +22,18 @@ func EligibilityRequestIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var eligibilityrequestEntryList []models.EligibilityRequestBundleEntry
+	var eligibilityrequestEntryList []models.BundleEntryComponent
 	for _, eligibilityrequest := range result {
-		var entry models.EligibilityRequestBundleEntry
-		entry.Id = eligibilityrequest.Id
-		entry.Resource = eligibilityrequest
+		var entry models.BundleEntryComponent
+		entry.Resource = &eligibilityrequest
 		eligibilityrequestEntryList = append(eligibilityrequestEntryList, entry)
 	}
 
-	var bundle models.EligibilityRequestBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = eligibilityrequestEntryList
 
 	log.Println("Setting eligibilityrequest search context")
@@ -43,7 +43,7 @@ func EligibilityRequestIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadEligibilityRequest(r *http.Request) (*models.EligibilityRequest, error) {

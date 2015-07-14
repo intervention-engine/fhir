@@ -46,6 +46,18 @@ type DataElement struct {
 	Element      []ElementDefinition           `bson:"element,omitempty" json:"element,omitempty"`
 }
 
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *DataElement) MarshalJSON() ([]byte, error) {
+	x := struct {
+		ResourceType string `json:"resourceType"`
+		DataElement
+	}{
+		ResourceType: "DataElement",
+		DataElement:  *resource,
+	}
+	return json.Marshal(x)
+}
+
 type DataElementContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
@@ -56,31 +68,4 @@ type DataElementMappingComponent struct {
 	Uri      string `bson:"uri,omitempty" json:"uri,omitempty"`
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`
 	Comments string `bson:"comments,omitempty" json:"comments,omitempty"`
-}
-
-type DataElementBundle struct {
-	Id    string                   `json:"id,omitempty"`
-	Type  string                   `json:"resourceType,omitempty"`
-	Base  string                   `json:"base,omitempty"`
-	Total int                      `json:"total,omitempty"`
-	Link  []BundleLinkComponent    `json:"link,omitempty"`
-	Entry []DataElementBundleEntry `json:"entry,omitempty"`
-}
-
-type DataElementBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource DataElement           `json:"resource,omitempty"`
-}
-
-func (resource *DataElement) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		DataElement
-	}{
-		ResourceType: "DataElement",
-		DataElement:  *resource,
-	}
-	return json.Marshal(x)
 }

@@ -22,18 +22,18 @@ func ScheduleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	var scheduleEntryList []models.ScheduleBundleEntry
+	var scheduleEntryList []models.BundleEntryComponent
 	for _, schedule := range result {
-		var entry models.ScheduleBundleEntry
-		entry.Id = schedule.Id
-		entry.Resource = schedule
+		var entry models.BundleEntryComponent
+		entry.Resource = &schedule
 		scheduleEntryList = append(scheduleEntryList, entry)
 	}
 
-	var bundle models.ScheduleBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = scheduleEntryList
 
 	log.Println("Setting schedule search context")
@@ -43,7 +43,7 @@ func ScheduleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadSchedule(r *http.Request) (*models.Schedule, error) {

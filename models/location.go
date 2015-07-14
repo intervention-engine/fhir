@@ -44,28 +44,7 @@ type Location struct {
 	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
 }
 
-type LocationPositionComponent struct {
-	Longitude *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
-	Latitude  *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
-	Altitude  *float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
-}
-
-type LocationBundle struct {
-	Id    string                `json:"id,omitempty"`
-	Type  string                `json:"resourceType,omitempty"`
-	Base  string                `json:"base,omitempty"`
-	Total int                   `json:"total,omitempty"`
-	Link  []BundleLinkComponent `json:"link,omitempty"`
-	Entry []LocationBundleEntry `json:"entry,omitempty"`
-}
-
-type LocationBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource Location              `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Location) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -75,4 +54,10 @@ func (resource *Location) MarshalJSON() ([]byte, error) {
 		Location:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+type LocationPositionComponent struct {
+	Longitude *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
+	Latitude  *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
+	Altitude  *float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
 }

@@ -37,18 +37,18 @@ func ImagingObjectSelectionIndexHandler(rw http.ResponseWriter, r *http.Request,
 		}
 	}
 
-	var imagingobjectselectionEntryList []models.ImagingObjectSelectionBundleEntry
+	var imagingobjectselectionEntryList []models.BundleEntryComponent
 	for _, imagingobjectselection := range result {
-		var entry models.ImagingObjectSelectionBundleEntry
-		entry.Id = imagingobjectselection.Id
-		entry.Resource = imagingobjectselection
+		var entry models.BundleEntryComponent
+		entry.Resource = &imagingobjectselection
 		imagingobjectselectionEntryList = append(imagingobjectselectionEntryList, entry)
 	}
 
-	var bundle models.ImagingObjectSelectionBundle
+	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	bundle.Total = len(result)
+	var total = uint32(len(result))
+	bundle.Total = &total
 	bundle.Entry = imagingobjectselectionEntryList
 
 	log.Println("Setting imagingobjectselection search context")
@@ -58,7 +58,7 @@ func ImagingObjectSelectionIndexHandler(rw http.ResponseWriter, r *http.Request,
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(bundle)
+	json.NewEncoder(rw).Encode(&bundle)
 }
 
 func LoadImagingObjectSelection(r *http.Request) (*models.ImagingObjectSelection, error) {

@@ -51,31 +51,7 @@ type FamilyMemberHistory struct {
 	Condition       []FamilyMemberHistoryConditionComponent `bson:"condition,omitempty" json:"condition,omitempty"`
 }
 
-type FamilyMemberHistoryConditionComponent struct {
-	Type        *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Outcome     *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	OnsetAge    *Quantity        `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
-	OnsetRange  *Range           `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
-	OnsetString string           `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
-	Note        string           `bson:"note,omitempty" json:"note,omitempty"`
-}
-
-type FamilyMemberHistoryBundle struct {
-	Id    string                           `json:"id,omitempty"`
-	Type  string                           `json:"resourceType,omitempty"`
-	Base  string                           `json:"base,omitempty"`
-	Total int                              `json:"total,omitempty"`
-	Link  []BundleLinkComponent            `json:"link,omitempty"`
-	Entry []FamilyMemberHistoryBundleEntry `json:"entry,omitempty"`
-}
-
-type FamilyMemberHistoryBundleEntry struct {
-	Id       string                `json:"id,omitempty"`
-	Base     string                `json:"base,omitempty"`
-	Link     []BundleLinkComponent `json:"link,omitempty"`
-	Resource FamilyMemberHistory   `json:"resource,omitempty"`
-}
-
+// Custom marshaller to add the resourceType property, as required by the specification
 func (resource *FamilyMemberHistory) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
@@ -85,4 +61,13 @@ func (resource *FamilyMemberHistory) MarshalJSON() ([]byte, error) {
 		FamilyMemberHistory: *resource,
 	}
 	return json.Marshal(x)
+}
+
+type FamilyMemberHistoryConditionComponent struct {
+	Type        *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Outcome     *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	OnsetAge    *Quantity        `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
+	OnsetRange  *Range           `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
+	OnsetString string           `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
+	Note        string           `bson:"note,omitempty" json:"note,omitempty"`
 }
