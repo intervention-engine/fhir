@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Substance struct {
-	Id          string                         `json:"-" bson:"_id"`
+	Id          string                         `json:"id" bson:"_id"`
 	Type        *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
 	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
 	Instance    *SubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`

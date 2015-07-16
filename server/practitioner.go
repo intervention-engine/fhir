@@ -25,7 +25,7 @@ func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var practitionerEntryList []models.BundleEntryComponent
 	for _, practitioner := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &practitioner
+		entry.Resource = practitioner
 		practitionerEntryList = append(practitionerEntryList, entry)
 	}
 

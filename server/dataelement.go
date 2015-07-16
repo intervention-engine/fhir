@@ -25,7 +25,7 @@ func DataElementIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	var dataelementEntryList []models.BundleEntryComponent
 	for _, dataelement := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &dataelement
+		entry.Resource = dataelement
 		dataelementEntryList = append(dataelementEntryList, entry)
 	}
 

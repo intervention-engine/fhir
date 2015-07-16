@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Specimen struct {
-	Id                  string                       `json:"-" bson:"_id"`
+	Id                  string                       `json:"id" bson:"_id"`
 	Identifier          []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type                *CodeableConcept             `bson:"type,omitempty" json:"type,omitempty"`
 	Parent              []Reference                  `bson:"parent,omitempty" json:"parent,omitempty"`

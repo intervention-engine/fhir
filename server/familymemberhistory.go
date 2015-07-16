@@ -40,7 +40,7 @@ func FamilyMemberHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	var familymemberhistoryEntryList []models.BundleEntryComponent
 	for _, familymemberhistory := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &familymemberhistory
+		entry.Resource = familymemberhistory
 		familymemberhistoryEntryList = append(familymemberhistoryEntryList, entry)
 	}
 

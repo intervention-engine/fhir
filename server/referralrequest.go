@@ -40,7 +40,7 @@ func ReferralRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	var referralrequestEntryList []models.BundleEntryComponent
 	for _, referralrequest := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &referralrequest
+		entry.Resource = referralrequest
 		referralrequestEntryList = append(referralrequestEntryList, entry)
 	}
 

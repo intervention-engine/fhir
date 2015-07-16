@@ -25,7 +25,7 @@ func ScheduleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var scheduleEntryList []models.BundleEntryComponent
 	for _, schedule := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &schedule
+		entry.Resource = schedule
 		scheduleEntryList = append(scheduleEntryList, entry)
 	}
 

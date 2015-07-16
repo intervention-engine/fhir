@@ -40,7 +40,7 @@ func AllergyIntoleranceIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	var allergyintoleranceEntryList []models.BundleEntryComponent
 	for _, allergyintolerance := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &allergyintolerance
+		entry.Resource = allergyintolerance
 		allergyintoleranceEntryList = append(allergyintoleranceEntryList, entry)
 	}
 

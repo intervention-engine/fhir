@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DeviceComponent struct {
-	Id                      string                                            `json:"-" bson:"_id"`
+	Id                      string                                            `json:"id" bson:"_id"`
 	Type                    *CodeableConcept                                  `bson:"type,omitempty" json:"type,omitempty"`
 	Identifier              *Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	LastSystemChange        *FHIRDateTime                                     `bson:"lastSystemChange,omitempty" json:"lastSystemChange,omitempty"`

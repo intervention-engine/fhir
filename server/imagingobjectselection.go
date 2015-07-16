@@ -40,7 +40,7 @@ func ImagingObjectSelectionIndexHandler(rw http.ResponseWriter, r *http.Request,
 	var imagingobjectselectionEntryList []models.BundleEntryComponent
 	for _, imagingobjectselection := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &imagingobjectselection
+		entry.Resource = imagingobjectselection
 		imagingobjectselectionEntryList = append(imagingobjectselectionEntryList, entry)
 	}
 

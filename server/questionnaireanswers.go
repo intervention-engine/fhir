@@ -40,7 +40,7 @@ func QuestionnaireAnswersIndexHandler(rw http.ResponseWriter, r *http.Request, n
 	var questionnaireanswersEntryList []models.BundleEntryComponent
 	for _, questionnaireanswers := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &questionnaireanswers
+		entry.Resource = questionnaireanswers
 		questionnaireanswersEntryList = append(questionnaireanswersEntryList, entry)
 	}
 

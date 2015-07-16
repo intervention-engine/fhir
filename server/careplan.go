@@ -40,7 +40,7 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var careplanEntryList []models.BundleEntryComponent
 	for _, careplan := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &careplan
+		entry.Resource = careplan
 		careplanEntryList = append(careplanEntryList, entry)
 	}
 

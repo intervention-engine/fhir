@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type AllergyIntolerance struct {
-	Id            string                             `json:"-" bson:"_id"`
+	Id            string                             `json:"id" bson:"_id"`
 	Identifier    []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	RecordedDate  *FHIRDateTime                      `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
 	Recorder      *Reference                         `bson:"recorder,omitempty" json:"recorder,omitempty"`

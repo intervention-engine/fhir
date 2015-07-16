@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type SupplyRequest struct {
-	Id                    string                      `json:"-" bson:"_id"`
+	Id                    string                      `json:"id" bson:"_id"`
 	Patient               *Reference                  `bson:"patient,omitempty" json:"patient,omitempty"`
 	Source                *Reference                  `bson:"source,omitempty" json:"source,omitempty"`
 	Date                  *FHIRDateTime               `bson:"date,omitempty" json:"date,omitempty"`

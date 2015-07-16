@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Goal struct {
-	Id          string                 `json:"-" bson:"_id"`
+	Id          string                 `json:"id" bson:"_id"`
 	Identifier  []Identifier           `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Patient     *Reference             `bson:"patient,omitempty" json:"patient,omitempty"`
 	TargetDate  *FHIRDateTime          `bson:"targetDate,omitempty" json:"targetDate,omitempty"`

@@ -40,7 +40,7 @@ func StructureDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	var structuredefinitionEntryList []models.BundleEntryComponent
 	for _, structuredefinition := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &structuredefinition
+		entry.Resource = structuredefinition
 		structuredefinitionEntryList = append(structuredefinitionEntryList, entry)
 	}
 

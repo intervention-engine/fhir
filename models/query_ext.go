@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+
 	"gopkg.in/mgo.v2/bson"
 )
 

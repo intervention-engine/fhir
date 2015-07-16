@@ -25,7 +25,7 @@ func MessageHeaderIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var messageheaderEntryList []models.BundleEntryComponent
 	for _, messageheader := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &messageheader
+		entry.Resource = messageheader
 		messageheaderEntryList = append(messageheaderEntryList, entry)
 	}
 

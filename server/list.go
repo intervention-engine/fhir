@@ -40,7 +40,7 @@ func ListIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	var listEntryList []models.BundleEntryComponent
 	for _, list := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &list
+		entry.Resource = list
 		listEntryList = append(listEntryList, entry)
 	}
 

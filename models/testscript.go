@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type TestScript struct {
-	Id          string                       `json:"-" bson:"_id"`
+	Id          string                       `json:"id" bson:"_id"`
 	Name        string                       `bson:"name,omitempty" json:"name,omitempty"`
 	Description string                       `bson:"description,omitempty" json:"description,omitempty"`
 	Multiserver *bool                        `bson:"multiserver,omitempty" json:"multiserver,omitempty"`

@@ -40,7 +40,7 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request,
 	var medicationprescriptionEntryList []models.BundleEntryComponent
 	for _, medicationprescription := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &medicationprescription
+		entry.Resource = medicationprescription
 		medicationprescriptionEntryList = append(medicationprescriptionEntryList, entry)
 	}
 

@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Group struct {
-	Id             string                         `json:"-" bson:"_id"`
+	Id             string                         `json:"id" bson:"_id"`
 	Identifier     *Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type           string                         `bson:"type,omitempty" json:"type,omitempty"`
 	Actual         *bool                          `bson:"actual,omitempty" json:"actual,omitempty"`

@@ -25,7 +25,7 @@ func OperationOutcomeIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	var operationoutcomeEntryList []models.BundleEntryComponent
 	for _, operationoutcome := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &operationoutcome
+		entry.Resource = operationoutcome
 		operationoutcomeEntryList = append(operationoutcomeEntryList, entry)
 	}
 

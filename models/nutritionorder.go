@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type NutritionOrder struct {
-	Id                     string                                 `json:"-" bson:"_id"`
+	Id                     string                                 `json:"id" bson:"_id"`
 	Patient                *Reference                             `bson:"patient,omitempty" json:"patient,omitempty"`
 	Orderer                *Reference                             `bson:"orderer,omitempty" json:"orderer,omitempty"`
 	Identifier             []Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`

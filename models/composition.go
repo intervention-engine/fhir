@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Composition struct {
-	Id              string                         `json:"-" bson:"_id"`
+	Id              string                         `json:"id" bson:"_id"`
 	Identifier      *Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Date            *FHIRDateTime                  `bson:"date,omitempty" json:"date,omitempty"`
 	Type            *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`

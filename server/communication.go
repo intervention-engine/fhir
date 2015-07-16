@@ -40,7 +40,7 @@ func CommunicationIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var communicationEntryList []models.BundleEntryComponent
 	for _, communication := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &communication
+		entry.Resource = communication
 		communicationEntryList = append(communicationEntryList, entry)
 	}
 

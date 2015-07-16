@@ -40,7 +40,7 @@ func DocumentReferenceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	var documentreferenceEntryList []models.BundleEntryComponent
 	for _, documentreference := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &documentreference
+		entry.Resource = documentreference
 		documentreferenceEntryList = append(documentreferenceEntryList, entry)
 	}
 

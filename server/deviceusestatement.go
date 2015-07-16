@@ -40,7 +40,7 @@ func DeviceUseStatementIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	var deviceusestatementEntryList []models.BundleEntryComponent
 	for _, deviceusestatement := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &deviceusestatement
+		entry.Resource = deviceusestatement
 		deviceusestatementEntryList = append(deviceusestatementEntryList, entry)
 	}
 

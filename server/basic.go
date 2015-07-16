@@ -40,7 +40,7 @@ func BasicIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var basicEntryList []models.BundleEntryComponent
 	for _, basic := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &basic
+		entry.Resource = basic
 		basicEntryList = append(basicEntryList, entry)
 	}
 

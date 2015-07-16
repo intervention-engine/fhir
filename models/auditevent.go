@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type AuditEvent struct {
-	Id          string                           `json:"-" bson:"_id"`
+	Id          string                           `json:"id" bson:"_id"`
 	Event       *AuditEventEventComponent        `bson:"event,omitempty" json:"event,omitempty"`
 	Participant []AuditEventParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
 	Source      *AuditEventSourceComponent       `bson:"source,omitempty" json:"source,omitempty"`

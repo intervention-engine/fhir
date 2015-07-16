@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type NamingSystem struct {
-	Id          string                          `json:"-" bson:"_id"`
+	Id          string                          `json:"id" bson:"_id"`
 	Type        string                          `bson:"type,omitempty" json:"type,omitempty"`
 	Name        string                          `bson:"name,omitempty" json:"name,omitempty"`
 	Date        *FHIRDateTime                   `bson:"date,omitempty" json:"date,omitempty"`

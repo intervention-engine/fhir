@@ -25,7 +25,7 @@ func SubscriptionIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var subscriptionEntryList []models.BundleEntryComponent
 	for _, subscription := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &subscription
+		entry.Resource = subscription
 		subscriptionEntryList = append(subscriptionEntryList, entry)
 	}
 

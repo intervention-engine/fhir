@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ClaimResponse struct {
-	Id                      string                            `json:"-" bson:"_id"`
+	Id                      string                            `json:"id" bson:"_id"`
 	Identifier              []Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Request                 *Reference                        `bson:"request,omitempty" json:"request,omitempty"`
 	Ruleset                 *Coding                           `bson:"ruleset,omitempty" json:"ruleset,omitempty"`

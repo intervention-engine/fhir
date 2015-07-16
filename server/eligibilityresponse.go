@@ -25,7 +25,7 @@ func EligibilityResponseIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	var eligibilityresponseEntryList []models.BundleEntryComponent
 	for _, eligibilityresponse := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &eligibilityresponse
+		entry.Resource = eligibilityresponse
 		eligibilityresponseEntryList = append(eligibilityresponseEntryList, entry)
 	}
 

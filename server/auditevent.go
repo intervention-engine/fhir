@@ -25,7 +25,7 @@ func AuditEventIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	var auditeventEntryList []models.BundleEntryComponent
 	for _, auditevent := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &auditevent
+		entry.Resource = auditevent
 		auditeventEntryList = append(auditeventEntryList, entry)
 	}
 

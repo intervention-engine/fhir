@@ -40,7 +40,7 @@ func GoalIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	var goalEntryList []models.BundleEntryComponent
 	for _, goal := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &goal
+		entry.Resource = goal
 		goalEntryList = append(goalEntryList, entry)
 	}
 

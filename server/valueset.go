@@ -25,7 +25,7 @@ func ValueSetIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var valuesetEntryList []models.BundleEntryComponent
 	for _, valueset := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &valueset
+		entry.Resource = valueset
 		valuesetEntryList = append(valuesetEntryList, entry)
 	}
 

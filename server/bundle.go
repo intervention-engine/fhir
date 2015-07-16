@@ -25,7 +25,7 @@ func BundleIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	var bundleEntryList []models.BundleEntryComponent
 	for _, bundle := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &bundle
+		entry.Resource = bundle
 		bundleEntryList = append(bundleEntryList, entry)
 	}
 

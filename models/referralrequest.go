@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ReferralRequest struct {
-	Id                    string            `json:"-" bson:"_id"`
+	Id                    string            `json:"id" bson:"_id"`
 	Status                string            `bson:"status,omitempty" json:"status,omitempty"`
 	Identifier            []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type                  *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`

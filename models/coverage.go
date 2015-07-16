@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Coverage struct {
-	Id           string       `json:"-" bson:"_id"`
+	Id           string       `json:"id" bson:"_id"`
 	Issuer       *Reference   `bson:"issuer,omitempty" json:"issuer,omitempty"`
 	Bin          *Identifier  `bson:"bin,omitempty" json:"bin,omitempty"`
 	Period       *Period      `bson:"period,omitempty" json:"period,omitempty"`

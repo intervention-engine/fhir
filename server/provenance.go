@@ -25,7 +25,7 @@ func ProvenanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	var provenanceEntryList []models.BundleEntryComponent
 	for _, provenance := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &provenance
+		entry.Resource = provenance
 		provenanceEntryList = append(provenanceEntryList, entry)
 	}
 

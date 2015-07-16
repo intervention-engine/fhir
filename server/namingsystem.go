@@ -25,7 +25,7 @@ func NamingSystemIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	var namingsystemEntryList []models.BundleEntryComponent
 	for _, namingsystem := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &namingsystem
+		entry.Resource = namingsystem
 		namingsystemEntryList = append(namingsystemEntryList, entry)
 	}
 

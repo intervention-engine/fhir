@@ -27,6 +27,6 @@
 package models
 
 type BackboneElement struct {
-	Id                string      `json:"-" bson:"_id"`
+	Id                string      `json:"id" bson:"_id"`
 	ModifierExtension []Extension `bson:"modifierExtension,omitempty" json:"modifierExtension,omitempty"`
 }

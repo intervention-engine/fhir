@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type OperationOutcome struct {
-	Id    string                           `json:"-" bson:"_id"`
+	Id    string                           `json:"id" bson:"_id"`
 	Issue []OperationOutcomeIssueComponent `bson:"issue,omitempty" json:"issue,omitempty"`
 }
 

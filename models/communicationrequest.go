@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type CommunicationRequest struct {
-	Id            string                                 `json:"-" bson:"_id"`
+	Id            string                                 `json:"id" bson:"_id"`
 	Identifier    []Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Category      *CodeableConcept                       `bson:"category,omitempty" json:"category,omitempty"`
 	Sender        *Reference                             `bson:"sender,omitempty" json:"sender,omitempty"`

@@ -40,7 +40,7 @@ func BodySiteIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var bodysiteEntryList []models.BundleEntryComponent
 	for _, bodysite := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &bodysite
+		entry.Resource = bodysite
 		bodysiteEntryList = append(bodysiteEntryList, entry)
 	}
 

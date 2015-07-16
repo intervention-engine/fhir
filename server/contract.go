@@ -40,7 +40,7 @@ func ContractIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	var contractEntryList []models.BundleEntryComponent
 	for _, contract := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &contract
+		entry.Resource = contract
 		contractEntryList = append(contractEntryList, entry)
 	}
 

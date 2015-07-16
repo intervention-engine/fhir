@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type MedicationPrescription struct {
-	Id                        string                                             `json:"-" bson:"_id"`
+	Id                        string                                             `json:"id" bson:"_id"`
 	Identifier                []Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	DateWritten               *FHIRDateTime                                      `bson:"dateWritten,omitempty" json:"dateWritten,omitempty"`
 	Status                    string                                             `bson:"status,omitempty" json:"status,omitempty"`

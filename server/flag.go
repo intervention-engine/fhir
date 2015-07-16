@@ -40,7 +40,7 @@ func FlagIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	var flagEntryList []models.BundleEntryComponent
 	for _, flag := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &flag
+		entry.Resource = flag
 		flagEntryList = append(flagEntryList, entry)
 	}
 

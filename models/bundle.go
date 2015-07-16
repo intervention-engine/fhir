@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Bundle struct {
-	Id        string                 `json:"-" bson:"_id"`
+	Id        string                 `json:"id" bson:"_id"`
 	Type      string                 `bson:"type,omitempty" json:"type,omitempty"`
 	Base      string                 `bson:"base,omitempty" json:"base,omitempty"`
 	Total     *uint32                `bson:"total,omitempty" json:"total,omitempty"`

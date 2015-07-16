@@ -40,7 +40,7 @@ func GroupIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var groupEntryList []models.BundleEntryComponent
 	for _, group := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &group
+		entry.Resource = group
 		groupEntryList = append(groupEntryList, entry)
 	}
 

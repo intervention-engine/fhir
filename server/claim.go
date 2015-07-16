@@ -40,7 +40,7 @@ func ClaimIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	var claimEntryList []models.BundleEntryComponent
 	for _, claim := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &claim
+		entry.Resource = claim
 		claimEntryList = append(claimEntryList, entry)
 	}
 

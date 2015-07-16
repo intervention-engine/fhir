@@ -40,7 +40,7 @@ func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	var relatedpersonEntryList []models.BundleEntryComponent
 	for _, relatedperson := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &relatedperson
+		entry.Resource = relatedperson
 		relatedpersonEntryList = append(relatedpersonEntryList, entry)
 	}
 

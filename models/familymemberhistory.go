@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type FamilyMemberHistory struct {
-	Id              string                                  `json:"-" bson:"_id"`
+	Id              string                                  `json:"id" bson:"_id"`
 	Identifier      []Identifier                            `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Patient         *Reference                              `bson:"patient,omitempty" json:"patient,omitempty"`
 	Date            *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`

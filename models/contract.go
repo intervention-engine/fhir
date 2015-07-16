@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Contract struct {
-	Id                string                                `json:"-" bson:"_id"`
+	Id                string                                `json:"id" bson:"_id"`
 	Identifier        *Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Issued            *FHIRDateTime                         `bson:"issued,omitempty" json:"issued,omitempty"`
 	Applies           *Period                               `bson:"applies,omitempty" json:"applies,omitempty"`

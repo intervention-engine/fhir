@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ProcessRequest struct {
-	Id              string                         `json:"-" bson:"_id"`
+	Id              string                         `json:"id" bson:"_id"`
 	Action          string                         `bson:"action,omitempty" json:"action,omitempty"`
 	Identifier      []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Ruleset         *Coding                        `bson:"ruleset,omitempty" json:"ruleset,omitempty"`

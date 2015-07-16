@@ -40,7 +40,7 @@ func RiskAssessmentIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 	var riskassessmentEntryList []models.BundleEntryComponent
 	for _, riskassessment := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &riskassessment
+		entry.Resource = riskassessment
 		riskassessmentEntryList = append(riskassessmentEntryList, entry)
 	}
 
