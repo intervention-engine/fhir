@@ -27,6 +27,6 @@
 package models
 
 type Element struct {
-	Id        string      `json:"-" bson:"_id"`
+	Id        string      `json:"id" bson:"_id"`
 	Extension []Extension `bson:"extension,omitempty" json:"extension,omitempty"`
 }

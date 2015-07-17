@@ -38,9 +38,9 @@ func ConditionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	}
 
 	var conditionEntryList []models.BundleEntryComponent
-	for _, condition := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &condition
+		entry.Resource = &result[i]
 		conditionEntryList = append(conditionEntryList, entry)
 	}
 

@@ -38,9 +38,9 @@ func EpisodeOfCareIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	var episodeofcareEntryList []models.BundleEntryComponent
-	for _, episodeofcare := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &episodeofcare
+		entry.Resource = &result[i]
 		episodeofcareEntryList = append(episodeofcareEntryList, entry)
 	}
 

@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Contraindication struct {
-	Id         string                                `json:"-" bson:"_id"`
+	Id         string                                `json:"id" bson:"_id"`
 	Patient    *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
 	Category   *CodeableConcept                      `bson:"category,omitempty" json:"category,omitempty"`
 	Severity   string                                `bson:"severity,omitempty" json:"severity,omitempty"`

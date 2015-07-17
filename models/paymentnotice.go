@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type PaymentNotice struct {
-	Id              string        `json:"-" bson:"_id"`
+	Id              string        `json:"id" bson:"_id"`
 	Identifier      []Identifier  `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Ruleset         *Coding       `bson:"ruleset,omitempty" json:"ruleset,omitempty"`
 	OriginalRuleset *Coding       `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`

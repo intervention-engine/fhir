@@ -38,9 +38,9 @@ func ClaimIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	}
 
 	var claimEntryList []models.BundleEntryComponent
-	for _, claim := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &claim
+		entry.Resource = &result[i]
 		claimEntryList = append(claimEntryList, entry)
 	}
 

@@ -23,9 +23,9 @@ func PersonIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	}
 
 	var personEntryList []models.BundleEntryComponent
-	for _, person := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &person
+		entry.Resource = &result[i]
 		personEntryList = append(personEntryList, entry)
 	}
 

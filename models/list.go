@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type List struct {
-	Id          string               `json:"-" bson:"_id"`
+	Id          string               `json:"id" bson:"_id"`
 	Identifier  []Identifier         `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Title       string               `bson:"title,omitempty" json:"title,omitempty"`
 	Code        *CodeableConcept     `bson:"code,omitempty" json:"code,omitempty"`

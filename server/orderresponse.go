@@ -23,9 +23,9 @@ func OrderResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	var orderresponseEntryList []models.BundleEntryComponent
-	for _, orderresponse := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &orderresponse
+		entry.Resource = &result[i]
 		orderresponseEntryList = append(orderresponseEntryList, entry)
 	}
 

@@ -38,9 +38,9 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	}
 
 	var supplyEntryList []models.BundleEntryComponent
-	for _, supply := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &supply
+		entry.Resource = &result[i]
 		supplyEntryList = append(supplyEntryList, entry)
 	}
 

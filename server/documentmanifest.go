@@ -38,9 +38,9 @@ func DocumentManifestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	}
 
 	var documentmanifestEntryList []models.BundleEntryComponent
-	for _, documentmanifest := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &documentmanifest
+		entry.Resource = &result[i]
 		documentmanifestEntryList = append(documentmanifestEntryList, entry)
 	}
 

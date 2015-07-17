@@ -38,9 +38,9 @@ func EnrollmentRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	var enrollmentrequestEntryList []models.BundleEntryComponent
-	for _, enrollmentrequest := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &enrollmentrequest
+		entry.Resource = &result[i]
 		enrollmentrequestEntryList = append(enrollmentrequestEntryList, entry)
 	}
 

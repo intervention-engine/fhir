@@ -23,9 +23,9 @@ func TestScriptIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	}
 
 	var testscriptEntryList []models.BundleEntryComponent
-	for _, testscript := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &testscript
+		entry.Resource = &result[i]
 		testscriptEntryList = append(testscriptEntryList, entry)
 	}
 

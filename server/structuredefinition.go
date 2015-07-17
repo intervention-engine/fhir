@@ -38,9 +38,9 @@ func StructureDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	}
 
 	var structuredefinitionEntryList []models.BundleEntryComponent
-	for _, structuredefinition := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &structuredefinition
+		entry.Resource = &result[i]
 		structuredefinitionEntryList = append(structuredefinitionEntryList, entry)
 	}
 

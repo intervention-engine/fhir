@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ImagingObjectSelection struct {
-	Id            string                                 `json:"-" bson:"_id"`
+	Id            string                                 `json:"id" bson:"_id"`
 	Uid           string                                 `bson:"uid,omitempty" json:"uid,omitempty"`
 	Patient       *Reference                             `bson:"patient,omitempty" json:"patient,omitempty"`
 	Title         *CodeableConcept                       `bson:"title,omitempty" json:"title,omitempty"`

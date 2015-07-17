@@ -23,9 +23,9 @@ func ExplanationOfBenefitIndexHandler(rw http.ResponseWriter, r *http.Request, n
 	}
 
 	var explanationofbenefitEntryList []models.BundleEntryComponent
-	for _, explanationofbenefit := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &explanationofbenefit
+		entry.Resource = &result[i]
 		explanationofbenefitEntryList = append(explanationofbenefitEntryList, entry)
 	}
 

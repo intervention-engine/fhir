@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Supply struct {
-	Id          string                    `json:"-" bson:"_id"`
+	Id          string                    `json:"id" bson:"_id"`
 	Kind        *CodeableConcept          `bson:"kind,omitempty" json:"kind,omitempty"`
 	Identifier  *Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Status      string                    `bson:"status,omitempty" json:"status,omitempty"`

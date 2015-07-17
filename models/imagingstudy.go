@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ImagingStudy struct {
-	Id                  string                        `json:"-" bson:"_id"`
+	Id                  string                        `json:"id" bson:"_id"`
 	Started             *FHIRDateTime                 `bson:"started,omitempty" json:"started,omitempty"`
 	Patient             *Reference                    `bson:"patient,omitempty" json:"patient,omitempty"`
 	Uid                 string                        `bson:"uid,omitempty" json:"uid,omitempty"`

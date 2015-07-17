@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Person struct {
-	Id                   string                `json:"-" bson:"_id"`
+	Id                   string                `json:"id" bson:"_id"`
 	Identifier           []Identifier          `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Name                 []HumanName           `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom              []ContactPoint        `bson:"telecom,omitempty" json:"telecom,omitempty"`

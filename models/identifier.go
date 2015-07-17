@@ -27,7 +27,7 @@
 package models
 
 type Identifier struct {
-	Id       string           `json:"-" bson:"_id"`
+	Id       string           `json:"id" bson:"_id"`
 	Use      string           `bson:"use,omitempty" json:"use,omitempty"`
 	Type     *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	System   string           `bson:"system,omitempty" json:"system,omitempty"`

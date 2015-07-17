@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Subscription struct {
-	Id       string                        `json:"-" bson:"_id"`
+	Id       string                        `json:"id" bson:"_id"`
 	Criteria string                        `bson:"criteria,omitempty" json:"criteria,omitempty"`
 	Contact  []ContactPoint                `bson:"contact,omitempty" json:"contact,omitempty"`
 	Reason   string                        `bson:"reason,omitempty" json:"reason,omitempty"`

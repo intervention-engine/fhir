@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Observation struct {
-	Id                      string                               `json:"-" bson:"_id"`
+	Id                      string                               `json:"id" bson:"_id"`
 	Code                    *CodeableConcept                     `bson:"code,omitempty" json:"code,omitempty"`
 	Category                *CodeableConcept                     `bson:"category,omitempty" json:"category,omitempty"`
 	ValueQuantity           *Quantity                            `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`

@@ -23,9 +23,9 @@ func CoverageIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	}
 
 	var coverageEntryList []models.BundleEntryComponent
-	for _, coverage := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &coverage
+		entry.Resource = &result[i]
 		coverageEntryList = append(coverageEntryList, entry)
 	}
 

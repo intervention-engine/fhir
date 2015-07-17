@@ -38,9 +38,9 @@ func ClinicalImpressionIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	}
 
 	var clinicalimpressionEntryList []models.BundleEntryComponent
-	for _, clinicalimpression := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &clinicalimpression
+		entry.Resource = &result[i]
 		clinicalimpressionEntryList = append(clinicalimpressionEntryList, entry)
 	}
 

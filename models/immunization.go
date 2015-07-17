@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Immunization struct {
-	Id                  string                                     `json:"-" bson:"_id"`
+	Id                  string                                     `json:"id" bson:"_id"`
 	Identifier          []Identifier                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Date                *FHIRDateTime                              `bson:"date,omitempty" json:"date,omitempty"`
 	VaccineType         *CodeableConcept                           `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`

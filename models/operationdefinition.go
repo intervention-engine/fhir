@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type OperationDefinition struct {
-	Id           string                                  `json:"-" bson:"_id"`
+	Id           string                                  `json:"id" bson:"_id"`
 	Url          string                                  `bson:"url,omitempty" json:"url,omitempty"`
 	Version      string                                  `bson:"version,omitempty" json:"version,omitempty"`
 	Name         string                                  `bson:"name,omitempty" json:"name,omitempty"`

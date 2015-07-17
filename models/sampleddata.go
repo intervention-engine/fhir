@@ -27,7 +27,7 @@
 package models
 
 type SampledData struct {
-	Id         string    `json:"-" bson:"_id"`
+	Id         string    `json:"id" bson:"_id"`
 	Origin     *Quantity `bson:"origin,omitempty" json:"origin,omitempty"`
 	Period     *float64  `bson:"period,omitempty" json:"period,omitempty"`
 	Factor     *float64  `bson:"factor,omitempty" json:"factor,omitempty"`

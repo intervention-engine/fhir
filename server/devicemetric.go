@@ -23,9 +23,9 @@ func DeviceMetricIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	}
 
 	var devicemetricEntryList []models.BundleEntryComponent
-	for _, devicemetric := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &devicemetric
+		entry.Resource = &result[i]
 		devicemetricEntryList = append(devicemetricEntryList, entry)
 	}
 

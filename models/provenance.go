@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Provenance struct {
-	Id        string                      `json:"-" bson:"_id"`
+	Id        string                      `json:"id" bson:"_id"`
 	Target    []Reference                 `bson:"target,omitempty" json:"target,omitempty"`
 	Period    *Period                     `bson:"period,omitempty" json:"period,omitempty"`
 	Recorded  *FHIRDateTime               `bson:"recorded,omitempty" json:"recorded,omitempty"`

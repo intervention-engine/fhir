@@ -27,7 +27,7 @@
 package models
 
 type Extension struct {
-	Id                   string           `json:"-" bson:"_id"`
+	Id                   string           `json:"id" bson:"_id"`
 	Url                  string           `bson:"url,omitempty" json:"url,omitempty"`
 	ValueString          string           `bson:"valueString,omitempty" json:"valueString,omitempty"`
 	ValueInteger         *int32           `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`

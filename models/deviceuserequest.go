@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DeviceUseRequest struct {
-	Id                      string            `json:"-" bson:"_id"`
+	Id                      string            `json:"id" bson:"_id"`
 	BodySiteCodeableConcept *CodeableConcept  `bson:"bodySiteCodeableConcept,omitempty" json:"bodySiteCodeableConcept,omitempty"`
 	BodySiteReference       *Reference        `bson:"bodySiteReference,omitempty" json:"bodySiteReference,omitempty"`
 	Status                  string            `bson:"status,omitempty" json:"status,omitempty"`

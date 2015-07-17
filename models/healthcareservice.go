@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type HealthcareService struct {
-	Id                     string                                    `json:"-" bson:"_id"`
+	Id                     string                                    `json:"id" bson:"_id"`
 	Identifier             []Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	ProvidedBy             *Reference                                `bson:"providedBy,omitempty" json:"providedBy,omitempty"`
 	Location               *Reference                                `bson:"location,omitempty" json:"location,omitempty"`

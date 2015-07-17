@@ -38,9 +38,9 @@ func ObservationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	}
 
 	var observationEntryList []models.BundleEntryComponent
-	for _, observation := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &observation
+		entry.Resource = &result[i]
 		observationEntryList = append(observationEntryList, entry)
 	}
 

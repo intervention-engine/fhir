@@ -23,9 +23,9 @@ func ConformanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	}
 
 	var conformanceEntryList []models.BundleEntryComponent
-	for _, conformance := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &conformance
+		entry.Resource = &result[i]
 		conformanceEntryList = append(conformanceEntryList, entry)
 	}
 

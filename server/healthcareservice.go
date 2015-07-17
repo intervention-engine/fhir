@@ -23,9 +23,9 @@ func HealthcareServiceIndexHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	var healthcareserviceEntryList []models.BundleEntryComponent
-	for _, healthcareservice := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &healthcareservice
+		entry.Resource = &result[i]
 		healthcareserviceEntryList = append(healthcareserviceEntryList, entry)
 	}
 

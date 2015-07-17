@@ -27,7 +27,7 @@
 package models
 
 type Attachment struct {
-	Id          string        `json:"-" bson:"_id"`
+	Id          string        `json:"id" bson:"_id"`
 	ContentType string        `bson:"contentType,omitempty" json:"contentType,omitempty"`
 	Language    string        `bson:"language,omitempty" json:"language,omitempty"`
 	Data        string        `bson:"data,omitempty" json:"data,omitempty"`

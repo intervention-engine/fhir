@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DeviceMetric struct {
-	Id                string                             `json:"-" bson:"_id"`
+	Id                string                             `json:"id" bson:"_id"`
 	Type              *CodeableConcept                   `bson:"type,omitempty" json:"type,omitempty"`
 	Identifier        *Identifier                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Unit              *CodeableConcept                   `bson:"unit,omitempty" json:"unit,omitempty"`

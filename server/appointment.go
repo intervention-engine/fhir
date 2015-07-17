@@ -23,9 +23,9 @@ func AppointmentIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	}
 
 	var appointmentEntryList []models.BundleEntryComponent
-	for _, appointment := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &appointment
+		entry.Resource = &result[i]
 		appointmentEntryList = append(appointmentEntryList, entry)
 	}
 

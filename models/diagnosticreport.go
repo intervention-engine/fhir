@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DiagnosticReport struct {
-	Id                string                           `json:"-" bson:"_id"`
+	Id                string                           `json:"id" bson:"_id"`
 	Code              *CodeableConcept                 `bson:"code,omitempty" json:"code,omitempty"`
 	Status            string                           `bson:"status,omitempty" json:"status,omitempty"`
 	Issued            *FHIRDateTime                    `bson:"issued,omitempty" json:"issued,omitempty"`

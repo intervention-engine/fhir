@@ -23,9 +23,9 @@ func ProcessRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	var processrequestEntryList []models.BundleEntryComponent
-	for _, processrequest := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &processrequest
+		entry.Resource = &result[i]
 		processrequestEntryList = append(processrequestEntryList, entry)
 	}
 

@@ -38,9 +38,9 @@ func VisionPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request, nex
 	}
 
 	var visionprescriptionEntryList []models.BundleEntryComponent
-	for _, visionprescription := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &visionprescription
+		entry.Resource = &result[i]
 		visionprescriptionEntryList = append(visionprescriptionEntryList, entry)
 	}
 

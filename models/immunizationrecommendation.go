@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ImmunizationRecommendation struct {
-	Id             string                                              `json:"-" bson:"_id"`
+	Id             string                                              `json:"id" bson:"_id"`
 	Identifier     []Identifier                                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Patient        *Reference                                          `bson:"patient,omitempty" json:"patient,omitempty"`
 	Recommendation []ImmunizationRecommendationRecommendationComponent `bson:"recommendation,omitempty" json:"recommendation,omitempty"`

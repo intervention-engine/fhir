@@ -23,9 +23,9 @@ func ConceptMapIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	}
 
 	var conceptmapEntryList []models.BundleEntryComponent
-	for _, conceptmap := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &conceptmap
+		entry.Resource = &result[i]
 		conceptmapEntryList = append(conceptmapEntryList, entry)
 	}
 

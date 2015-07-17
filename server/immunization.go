@@ -38,9 +38,9 @@ func ImmunizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	}
 
 	var immunizationEntryList []models.BundleEntryComponent
-	for _, immunization := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &immunization
+		entry.Resource = &result[i]
 		immunizationEntryList = append(immunizationEntryList, entry)
 	}
 

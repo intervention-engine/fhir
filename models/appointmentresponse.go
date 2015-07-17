@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type AppointmentResponse struct {
-	Id                string            `json:"-" bson:"_id"`
+	Id                string            `json:"id" bson:"_id"`
 	Identifier        []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Appointment       *Reference        `bson:"appointment,omitempty" json:"appointment,omitempty"`
 	ParticipantType   []CodeableConcept `bson:"participantType,omitempty" json:"participantType,omitempty"`

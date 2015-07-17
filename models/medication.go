@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Medication struct {
-	Id           string                      `json:"-" bson:"_id"`
+	Id           string                      `json:"id" bson:"_id"`
 	Name         string                      `bson:"name,omitempty" json:"name,omitempty"`
 	Code         *CodeableConcept            `bson:"code,omitempty" json:"code,omitempty"`
 	IsBrand      *bool                       `bson:"isBrand,omitempty" json:"isBrand,omitempty"`

@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ValueSet struct {
-	Id           string                      `json:"-" bson:"_id"`
+	Id           string                      `json:"id" bson:"_id"`
 	Url          string                      `bson:"url,omitempty" json:"url,omitempty"`
 	Identifier   *Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Version      string                      `bson:"version,omitempty" json:"version,omitempty"`

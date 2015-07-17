@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type RiskAssessment struct {
-	Id         string                              `json:"-" bson:"_id"`
+	Id         string                              `json:"id" bson:"_id"`
 	Subject    *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
 	Date       *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
 	Condition  *Reference                          `bson:"condition,omitempty" json:"condition,omitempty"`

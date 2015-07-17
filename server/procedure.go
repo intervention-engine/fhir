@@ -38,9 +38,9 @@ func ProcedureIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	}
 
 	var procedureEntryList []models.BundleEntryComponent
-	for _, procedure := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &procedure
+		entry.Resource = &result[i]
 		procedureEntryList = append(procedureEntryList, entry)
 	}
 

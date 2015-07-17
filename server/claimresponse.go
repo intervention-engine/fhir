@@ -23,9 +23,9 @@ func ClaimResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	var claimresponseEntryList []models.BundleEntryComponent
-	for _, claimresponse := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &claimresponse
+		entry.Resource = &result[i]
 		claimresponseEntryList = append(claimresponseEntryList, entry)
 	}
 

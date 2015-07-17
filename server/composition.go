@@ -38,9 +38,9 @@ func CompositionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.
 	}
 
 	var compositionEntryList []models.BundleEntryComponent
-	for _, composition := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = &composition
+		entry.Resource = &result[i]
 		compositionEntryList = append(compositionEntryList, entry)
 	}
 
