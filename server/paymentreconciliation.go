@@ -23,9 +23,9 @@ func PaymentReconciliationIndexHandler(rw http.ResponseWriter, r *http.Request, 
 	}
 
 	var paymentreconciliationEntryList []models.BundleEntryComponent
-	for _, paymentreconciliation := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = paymentreconciliation
+		entry.Resource = &result[i]
 		paymentreconciliationEntryList = append(paymentreconciliationEntryList, entry)
 	}
 

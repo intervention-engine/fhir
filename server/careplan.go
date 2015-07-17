@@ -38,9 +38,9 @@ func CarePlanIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	}
 
 	var careplanEntryList []models.BundleEntryComponent
-	for _, careplan := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = careplan
+		entry.Resource = &result[i]
 		careplanEntryList = append(careplanEntryList, entry)
 	}
 

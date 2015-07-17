@@ -23,9 +23,9 @@ func PaymentNoticeIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	var paymentnoticeEntryList []models.BundleEntryComponent
-	for _, paymentnotice := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = paymentnotice
+		entry.Resource = &result[i]
 		paymentnoticeEntryList = append(paymentnoticeEntryList, entry)
 	}
 

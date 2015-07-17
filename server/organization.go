@@ -23,9 +23,9 @@ func OrganizationIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	}
 
 	var organizationEntryList []models.BundleEntryComponent
-	for _, organization := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = organization
+		entry.Resource = &result[i]
 		organizationEntryList = append(organizationEntryList, entry)
 	}
 

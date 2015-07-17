@@ -38,9 +38,9 @@ func OperationDefinitionIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 	}
 
 	var operationdefinitionEntryList []models.BundleEntryComponent
-	for _, operationdefinition := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = operationdefinition
+		entry.Resource = &result[i]
 		operationdefinitionEntryList = append(operationdefinitionEntryList, entry)
 	}
 

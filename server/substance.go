@@ -23,9 +23,9 @@ func SubstanceIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	}
 
 	var substanceEntryList []models.BundleEntryComponent
-	for _, substance := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = substance
+		entry.Resource = &result[i]
 		substanceEntryList = append(substanceEntryList, entry)
 	}
 

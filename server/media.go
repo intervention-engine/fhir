@@ -38,9 +38,9 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	}
 
 	var mediaEntryList []models.BundleEntryComponent
-	for _, media := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = media
+		entry.Resource = &result[i]
 		mediaEntryList = append(mediaEntryList, entry)
 	}
 

@@ -23,9 +23,9 @@ func DeviceComponentIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	}
 
 	var devicecomponentEntryList []models.BundleEntryComponent
-	for _, devicecomponent := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = devicecomponent
+		entry.Resource = &result[i]
 		devicecomponentEntryList = append(devicecomponentEntryList, entry)
 	}
 

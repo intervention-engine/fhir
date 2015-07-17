@@ -23,9 +23,9 @@ func SlotIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	}
 
 	var slotEntryList []models.BundleEntryComponent
-	for _, slot := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = slot
+		entry.Resource = &result[i]
 		slotEntryList = append(slotEntryList, entry)
 	}
 

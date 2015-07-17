@@ -38,9 +38,9 @@ func OrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	}
 
 	var orderEntryList []models.BundleEntryComponent
-	for _, order := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = order
+		entry.Resource = &result[i]
 		orderEntryList = append(orderEntryList, entry)
 	}
 

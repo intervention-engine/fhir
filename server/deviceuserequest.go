@@ -38,9 +38,9 @@ func DeviceUseRequestIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	}
 
 	var deviceuserequestEntryList []models.BundleEntryComponent
-	for _, deviceuserequest := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = deviceuserequest
+		entry.Resource = &result[i]
 		deviceuserequestEntryList = append(deviceuserequestEntryList, entry)
 	}
 

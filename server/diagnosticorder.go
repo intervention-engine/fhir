@@ -38,9 +38,9 @@ func DiagnosticOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	}
 
 	var diagnosticorderEntryList []models.BundleEntryComponent
-	for _, diagnosticorder := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = diagnosticorder
+		entry.Resource = &result[i]
 		diagnosticorderEntryList = append(diagnosticorderEntryList, entry)
 	}
 

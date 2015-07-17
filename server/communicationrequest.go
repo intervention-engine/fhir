@@ -38,9 +38,9 @@ func CommunicationRequestIndexHandler(rw http.ResponseWriter, r *http.Request, n
 	}
 
 	var communicationrequestEntryList []models.BundleEntryComponent
-	for _, communicationrequest := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = communicationrequest
+		entry.Resource = &result[i]
 		communicationrequestEntryList = append(communicationrequestEntryList, entry)
 	}
 

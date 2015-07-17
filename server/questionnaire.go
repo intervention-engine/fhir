@@ -23,9 +23,9 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	var questionnaireEntryList []models.BundleEntryComponent
-	for _, questionnaire := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = questionnaire
+		entry.Resource = &result[i]
 		questionnaireEntryList = append(questionnaireEntryList, entry)
 	}
 

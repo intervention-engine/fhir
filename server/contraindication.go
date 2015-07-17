@@ -38,9 +38,9 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	}
 
 	var contraindicationEntryList []models.BundleEntryComponent
-	for _, contraindication := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = contraindication
+		entry.Resource = &result[i]
 		contraindicationEntryList = append(contraindicationEntryList, entry)
 	}
 

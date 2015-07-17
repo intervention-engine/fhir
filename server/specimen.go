@@ -38,9 +38,9 @@ func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	}
 
 	var specimenEntryList []models.BundleEntryComponent
-	for _, specimen := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = specimen
+		entry.Resource = &result[i]
 		specimenEntryList = append(specimenEntryList, entry)
 	}
 

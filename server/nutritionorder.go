@@ -38,9 +38,9 @@ func NutritionOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	var nutritionorderEntryList []models.BundleEntryComponent
-	for _, nutritionorder := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = nutritionorder
+		entry.Resource = &result[i]
 		nutritionorderEntryList = append(nutritionorderEntryList, entry)
 	}
 

@@ -23,9 +23,9 @@ func BinaryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	}
 
 	var binaryEntryList []models.BundleEntryComponent
-	for _, binary := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = binary
+		entry.Resource = &result[i]
 		binaryEntryList = append(binaryEntryList, entry)
 	}
 

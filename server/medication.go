@@ -38,9 +38,9 @@ func MedicationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	}
 
 	var medicationEntryList []models.BundleEntryComponent
-	for _, medication := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = medication
+		entry.Resource = &result[i]
 		medicationEntryList = append(medicationEntryList, entry)
 	}
 

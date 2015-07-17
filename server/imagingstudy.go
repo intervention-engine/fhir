@@ -38,9 +38,9 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 	}
 
 	var imagingstudyEntryList []models.BundleEntryComponent
-	for _, imagingstudy := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = imagingstudy
+		entry.Resource = &result[i]
 		imagingstudyEntryList = append(imagingstudyEntryList, entry)
 	}
 

@@ -38,9 +38,9 @@ func GoalIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handler
 	}
 
 	var goalEntryList []models.BundleEntryComponent
-	for _, goal := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = goal
+		entry.Resource = &result[i]
 		goalEntryList = append(goalEntryList, entry)
 	}
 

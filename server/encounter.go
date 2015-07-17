@@ -38,9 +38,9 @@ func EncounterIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	}
 
 	var encounterEntryList []models.BundleEntryComponent
-	for _, encounter := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = encounter
+		entry.Resource = &result[i]
 		encounterEntryList = append(encounterEntryList, entry)
 	}
 

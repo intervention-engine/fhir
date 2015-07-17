@@ -23,9 +23,9 @@ func SearchParameterIndexHandler(rw http.ResponseWriter, r *http.Request, next h
 	}
 
 	var searchparameterEntryList []models.BundleEntryComponent
-	for _, searchparameter := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = searchparameter
+		entry.Resource = &result[i]
 		searchparameterEntryList = append(searchparameterEntryList, entry)
 	}
 

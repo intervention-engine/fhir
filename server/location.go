@@ -23,9 +23,9 @@ func LocationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	}
 
 	var locationEntryList []models.BundleEntryComponent
-	for _, location := range result {
+	for i := range result {
 		var entry models.BundleEntryComponent
-		entry.Resource = location
+		entry.Resource = &result[i]
 		locationEntryList = append(locationEntryList, entry)
 	}
 
