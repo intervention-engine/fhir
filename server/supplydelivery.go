@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func SupplyDeliveryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.SupplyDelivery
-	c := Database.C("supplydeliverys")
+	c := Database.C("supplydeliveries")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func SupplyDeliveryIndexHandler(rw http.ResponseWriter, r *http.Request, next ht
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "patient" {
-				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "SupplyDelivery", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadSupplyDelivery(r *http.Request) (*models.SupplyDelivery, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("supplydeliverys")
+	c := Database.C("supplydeliveries")
 	result := models.SupplyDelivery{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func SupplyDeliveryCreateHandler(rw http.ResponseWriter, r *http.Request, next h
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("supplydeliverys")
+	c := Database.C("supplydeliveries")
 	i := bson.NewObjectId()
 	supplydelivery.Id = i.Hex()
 	err = c.Insert(supplydelivery)
@@ -142,7 +139,7 @@ func SupplyDeliveryUpdateHandler(rw http.ResponseWriter, r *http.Request, next h
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("supplydeliverys")
+	c := Database.C("supplydeliveries")
 	supplydelivery.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, supplydelivery)
 	if err != nil {
@@ -165,7 +162,7 @@ func SupplyDeliveryDeleteHandler(rw http.ResponseWriter, r *http.Request, next h
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("supplydeliverys")
+	c := Database.C("supplydeliveries")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

@@ -6,11 +6,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -26,14 +26,11 @@ func DiagnosticReportIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "subject" {
-				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "DiagnosticReport", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 

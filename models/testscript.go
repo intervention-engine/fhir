@@ -65,7 +65,7 @@ type testScriptFixtureComponent TestScriptFixtureComponent
 func (x *TestScriptFixtureComponent) UnmarshalJSON(data []byte) (err error) {
 	x2 := testScriptFixtureComponent{}
 	if err = json.Unmarshal(data, &x2); err == nil {
-		x2.Resource = MapToResource(x2.Resource)
+		x2.Resource = MapToResource(x2.Resource, false)
 		*x = TestScriptFixtureComponent(x2)
 	}
 	return

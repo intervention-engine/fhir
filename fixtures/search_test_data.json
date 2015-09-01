@@ -1,0 +1,560 @@
+[{
+	"resourceType": "Patient",
+	"id": "4954037118555241963",
+	"name": [{
+		"family": ["Peters"],
+		"given": ["John"]
+	}],
+	"gender": "male",
+	"birthDate": "1991-02-01",
+	"address": [
+    {
+      "use": "home",
+      "line": [
+        "534 Broad St"
+      ],
+      "city": "Middletown",
+      "state": "AK",
+      "postalCode": "99999"
+    }
+  ]
+}, {
+	"resourceType": "Encounter",
+	"id": "6648204100111387580",
+	"identifier": [{
+		"system": "http://acme.com",
+		"value": "1"
+	}, {
+		"system": "http://example.com",
+		"value": "a"
+	}],
+	"type": [{
+		"coding": [{
+			"system": "http://www.ama-assn.org/go/cpt",
+			"code": "99201"
+		}],
+		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
+	}],
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"period": {
+		"start": "2011-11-01T08:00:00-05:00",
+		"end": "2011-11-01T09:00:00-05:00"
+	}
+}, {
+	"resourceType": "Encounter",
+	"id": "8201045996936564654",
+	"identifier": [{
+		"system": "http://acme.com",
+		"value": "2"
+	}, {
+		"system": "http://example.com",
+		"value": "b"
+	}],
+	"type": [{
+		"coding": [{
+			"system": "http://www.ama-assn.org/go/cpt",
+			"code": "99201"
+		}],
+		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
+	}],
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"period": {
+		"start": "2012-10-01T08:00:00-05:00",
+		"end": "2012-10-01T09:00:00-05:00"
+	}
+}, {
+	"resourceType": "Encounter",
+	"id": "8321553112379843342",
+	"type": [{
+		"coding": [{
+			"system": "http://www.ama-assn.org/go/cpt",
+			"code": "99201"
+		}],
+		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
+	}],
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"period": {
+		"start": "2012-11-01T08:00:00-05:00",
+		"end": "2012-11-01T09:00:00-05:00"
+	}
+}, {
+	"resourceType": "Encounter",
+	"id": "5982681932300579709",
+	"type": [{
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "171047005"
+		}],
+		"text": "Encounter, Performed: Alcohol and Drug Dependence Treatment (Code List: 2.16.840.1.113883.3.464.1003.106.12.1005)"
+	}],
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"period": {
+		"start": "2012-11-01T08:45:00-05:00",
+		"end": "2012-11-01T09:00:00-05:00"
+	}
+}, {
+	"resourceType": "Condition",
+	"id": "8664777288161060797",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "10091002"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-9",
+			"code": "428.0"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-10",
+			"code": "I50.1"
+		}],
+		"text": "Diagnosis, Active: Heart Failure (Code List: 2.16.840.1.113883.3.526.3.376)"
+	},
+	"onsetDateTime": "2012-03-01T07:00:00-05:00"
+}, {
+	"resourceType": "Condition",
+	"id": "4248502720904412195",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "981000124106"
+		}],
+		"text": "Diagnosis, Active: Moderate or Severe LVSD (Code List: 2.16.840.1.113883.3.526.3.1090)"
+	},
+	"onsetDateTime": "2012-03-01T07:05:00-05:00"
+}, {
+	"resourceType": "Condition",
+	"id": "8382342521862968868",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "123641001"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-9",
+			"code": "411.0"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-10",
+			"code": "I20.0"
+		}],
+		"text": "Diagnosis, Active: Ischemic Vascular Disease (Code List: 2.16.840.1.113883.3.464.1003.104.12.1003)"
+	},
+	"onsetDateTime": "2012-03-01T07:05:00-05:00"
+}, {
+	"resourceType": "Condition",
+	"id": "5852315345721171557",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "123641001"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-9",
+			"code": "411.0"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-10",
+			"code": "I20.0"
+		}],
+		"text": "Diagnosis, Active: Coronary Artery Disease No MI (Code List: 2.16.840.1.113883.3.526.3.369)"
+	},
+	"onsetDateTime": "2012-03-01T07:05:00-05:00"
+}, {
+	"resourceType": "Condition",
+	"id": "4072118967138896162",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "10725009"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-9",
+			"code": "401.1"
+		}],
+		"text": "Diagnosis, Active: Hypertension (Code List: 2.16.840.1.113883.3.464.1003.104.12.1016)"
+	},
+	"onsetDateTime": "2012-03-01T07:30:00-05:00"
+}, {
+	"resourceType": "Observation",
+	"id": "5637152931209212154",
+	"code": {
+		"coding": [{
+			"system": "http://loinc.org",
+			"code": "17856-6"
+		}],
+		"text": "Laboratory Test, Result: HbA1c Laboratory Test"
+	},
+	"valueQuantity": {
+		"value": 8,
+		"units": "%"
+	},
+	"effectivePeriod": {
+		"start": "2011-11-01T08:16:40-04:00",
+		"end": "2011-11-01T08:16:40-04:00"
+	},
+	"status": "final",
+	"reliability": "ok",
+	"subject": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"encounter": {
+		"reference": "Encounter/6648204100111387580"
+	}
+}, {
+	"resourceType": "Procedure",
+	"id": "1203028907289396691",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"type": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "116783008"
+		}],
+		"text": "Procedure, Result: Clinical Staging Procedure"
+	},
+	"performedPeriod": {
+		"start": "2011-11-01T08:16:40-04:00",
+		"end": "2011-11-01T11:03:20-04:00"
+	},
+	"encounter": {
+		"reference": "Encounter/6648204100111387580"
+	},
+	"report": [{
+		"reference": "DiagnosticReport/551262234714579397"
+	}],
+	"notes": "Procedure, Result: Clinical Staging Procedure"
+}, {
+	"resourceType": "DiagnosticReport",
+	"id": "551262234714579397",
+	"subject": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"result": [{
+		"reference": "Observation/5433989216383325950"
+	}, {
+		"reference": "Observation/3436673599267881943"
+	}, {
+		"reference": "Observation/2098437086268740293"
+	}]
+}, {
+	"resourceType": "Observation",
+	"id": "5433989216383325950",
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "116783008"
+		}],
+		"text": "Procedure, Result: Clinical Staging Procedure"
+	},
+	"valueCodeableConcept": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "433581000124101"
+		}],
+		"text": "Colon Distant Metastasis Status M0"
+	},
+	"effectivePeriod": {
+		"start": "2011-11-01T08:16:40-04:00",
+		"end": "2011-11-01T11:03:20-04:00"
+	},
+	"status": "final",
+	"reliability": "ok",
+	"subject": {
+		"reference": "Patient/4954037118555241963"
+	}
+}, {
+	"resourceType": "Observation",
+	"id": "3436673599267881943",
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "116783008"
+		}],
+		"text": "Procedure, Result: Clinical Staging Procedure"
+	},
+	"valueCodeableConcept": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "433571000124104"
+		}],
+		"text": "Colon Cancer Regional Lymph Node Status N2b"
+	},
+	"effectivePeriod": {
+		"start": "2011-11-01T08:16:40-04:00",
+		"end": "2011-11-01T11:03:20-04:00"
+	},
+	"status": "final",
+	"reliability": "ok",
+	"subject": {
+		"reference": "Patient/4954037118555241963"
+	}
+}, {
+	"resourceType": "Observation",
+	"id": "2098437086268740293",
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "116783008"
+		}],
+		"text": "Procedure, Result: Clinical Staging Procedure"
+	},
+	"valueCodeableConcept": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "433491000124102"
+		}],
+		"text": "Colon Cancer Primary Tumor Size T4a"
+	},
+	"effectivePeriod": {
+		"start": "2011-11-01T08:16:40-04:00",
+		"end": "2011-11-01T11:03:20-04:00"
+	},
+	"status": "final",
+	"reliability": "ok",
+	"subject": {
+		"reference": "Patient/4954037118555241963"
+	}
+}, {
+	"resourceType": "Procedure",
+	"id": "6400692968849601141",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"type": {
+		"coding": [{
+			"system": "http://hl7.org/fhir/sid/icd-9",
+			"code": "36.10"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-10",
+			"code": "0210093"
+		}, {
+			"system": "http://snomed.info/sct",
+			"code": "10190003"
+		}],
+		"text": "Procedure, Performed: Hospital measures-CABG"
+	},
+	"performedPeriod": {
+		"start": "2013-03-02T10:45:00-05:00",
+		"end": "2013-03-02T11:45:00-05:00"
+	},
+	"notes": "Procedure, Performed: Hospital measures-CABG"
+}, {
+	"resourceType": "MedicationStatement",
+	"id": "3284098338643216325",
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	},
+	"effectivePeriod": {
+		"start": "2012-10-01T08:00:00-04:00",
+		"end": "2012-10-01T08:00:00-04:00"
+	},
+	"medicationCodeableConcept": {
+		"coding": [{
+			"system": "http://www.nlm.nih.gov/research/umls/rxnorm/",
+			"code": "1000048"
+		}],
+		"text": "Medication, Order: BH Antidepressant medication (Code List: 2.16.840.1.113883.3.1257.1.972)"
+	}
+}, {
+	"resourceType": "Immunization",
+	"id": "7045606679745526993",
+	"date": "2011-08-15T08:00:00-04:00",
+	"vaccineType": {
+		"coding": [{
+			"system": "http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx",
+			"code": "33"
+		}],
+		"text": "Medication, Administered: Pneumococcal Vaccine (Code List: 2.16.840.1.113883.3.464.1003.110.12.1027)"
+	},
+	"vaccinationProtocol": [{
+    "doseSequence": 1
+	}],
+	"patient": {
+		"reference": "Patient/4954037118555241963"
+	}
+}, {
+  "resourceType": "ImagingStudy",
+  "id": "7045606679745526994",
+  "started": "2011-01-01T11:01:20+03:00",
+  "patient": {
+    "reference": "Patient/12345"
+  },
+  "uid": "urn:oid:2.16.124.113543.6003.1154777499.30246.19789.3503430045",
+  "numberOfSeries": 1,
+  "numberOfInstances": 1,
+  "series": [
+    {
+      "number": 3,
+      "modality": {
+        "system": "http://nema.org/dicom/dicm",
+        "code": "CT"
+      },
+      "uid": "urn:oid:2.16.124.113543.6003.2588828330.45298.17418.2723805630",
+      "description": "CT Surview 180",
+      "numberOfInstances": 1,
+      "bodySite": {
+        "system": "http://snomed.info/sct",
+        "code": "67734004",
+        "display": "Upper Trunk Structure"
+      },
+      "instance": [
+        {
+          "number": 1,
+          "uid": "urn:oid:2.16.124.113543.6003.189642796.63084.16748.2599092903",
+          "sopClass": "urn:oid:1.2.840.10008.5.1.4.1.1.2",
+          "content": [
+            {
+              "url": "http://localhost/fhir/Binary/1.2.840.11361907579238403408700.3.0.14.19970327150033"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}, {
+  "resourceType": "Device",
+  "id": "7045606679745526995",
+  "identifier": [
+    {
+      "system": "http://goodcare.org/devices/id",
+      "value": "345675"
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "SNO"
+          }
+        ],
+        "text": "Serial Number"
+      },
+      "value": "AMID-342135-8464"
+    }
+  ],
+  "type": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "86184003",
+        "display": "Electrocardiographic monitor and recorder"
+      }
+    ],
+    "text": "ECG"
+  },
+  "note": [
+    {
+      "authorReference": {
+        "reference": "Practitioner/xcda-author"
+      },
+      "time": "2015-06-28T14:03:32+10:00",
+      "text": "QA Checked"
+    }
+  ],
+  "status": "available",
+  "manufacturer": "Acme Devices, Inc",
+  "model": "AB 45-J",
+  "lotNumber": "43453424",
+  "contact": [
+    {
+      "system": "phone",
+      "value": "ext 4352"
+    }
+  ]
+}, {
+  "resourceType": "Observation",
+  "id": "7045606679745526996",
+  "status": "final",
+  "category": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/observation-category",
+        "code": "vital-signs",
+        "display": "Vital Signs"
+      }
+    ]
+  },
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "3141-9",
+        "display": "Weight Measured"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "27113001",
+        "display": "Body weight"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/12345"
+  },
+  "valueQuantity": {
+    "value": 185,
+    "units": "lbs",
+    "system": "http://unitsofmeasure.org",
+    "code": "[lb_av]"
+  }
+}, {
+  "resourceType": "Subscription",
+  "id": "7045606679745526997",
+  "criteria": "/Observation?name=http://loinc.org|1975-2",
+  "reason": "Monitor new neonatal function",
+  "status": "requested",
+  "channel": {
+    "type": "rest-hook",
+    "endpoint": "https://biliwatch.com/customers/mount-auburn-miu/on-result",
+    "payload": "application/json",
+    "header": "Authorization: Bearer secret-token-abc-123"
+  }
+}, {
+  "resourceType": "Group",
+  "id": "7045606679745526998",
+  "type": "animal",
+  "actual": true,
+  "code": {
+    "text": "Horse"
+  },
+  "name": "John's herd",
+  "quantity": 25,
+  "characteristic": [
+    {
+      "code": {
+        "text": "gender"
+      },
+      "valueCodeableConcept": {
+        "text": "mixed"
+      },
+      "exclude": false
+    },
+    {
+      "code": {
+        "text": "owner"
+      },
+      "valueCodeableConcept": {
+        "text": "John Smith"
+      },
+      "exclude": false
+    }
+  ]
+}]

@@ -6,17 +6,18 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func GroupIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Group
 	c := Database.C("groups")
+
 	r.ParseForm()
 	if len(r.Form) == 0 {
 		iter := c.Find(nil).Limit(100).Iter()
@@ -25,15 +26,11 @@ func GroupIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		codeValue := r.Form.Get("code")
-		splitCode := strings.Split(codeValue, "|")
-		if len(splitCode) > 1 {
-			codeSystem := splitCode[0]
-			code := splitCode[1]
-			err := c.Find(bson.M{"code.coding.system": codeSystem, "code.coding.code": code}).All(&result)
-			if err != nil {
-				http.Error(rw, err.Error(), http.StatusInternalServerError)
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "Group", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 

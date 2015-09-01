@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Specimen
-	c := Database.C("specimens")
+	c := Database.C("specimen")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func SpecimenIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "subject" {
-				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "Specimen", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadSpecimen(r *http.Request) (*models.Specimen, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("specimens")
+	c := Database.C("specimen")
 	result := models.Specimen{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func SpecimenCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("specimens")
+	c := Database.C("specimen")
 	i := bson.NewObjectId()
 	specimen.Id = i.Hex()
 	err = c.Insert(specimen)
@@ -142,7 +139,7 @@ func SpecimenUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("specimens")
+	c := Database.C("specimen")
 	specimen.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, specimen)
 	if err != nil {
@@ -165,7 +162,7 @@ func SpecimenDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("specimens")
+	c := Database.C("specimen")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
