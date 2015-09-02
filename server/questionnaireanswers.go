@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func QuestionnaireAnswersIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.QuestionnaireAnswers
-	c := Database.C("questionnaireanswerss")
+	c := Database.C("questionnaireanswers")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func QuestionnaireAnswersIndexHandler(rw http.ResponseWriter, r *http.Request, n
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "subject" {
-				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "QuestionnaireAnswers", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadQuestionnaireAnswers(r *http.Request) (*models.QuestionnaireAnswers, er
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("questionnaireanswerss")
+	c := Database.C("questionnaireanswers")
 	result := models.QuestionnaireAnswers{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func QuestionnaireAnswersCreateHandler(rw http.ResponseWriter, r *http.Request, 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("questionnaireanswerss")
+	c := Database.C("questionnaireanswers")
 	i := bson.NewObjectId()
 	questionnaireanswers.Id = i.Hex()
 	err = c.Insert(questionnaireanswers)
@@ -142,7 +139,7 @@ func QuestionnaireAnswersUpdateHandler(rw http.ResponseWriter, r *http.Request, 
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("questionnaireanswerss")
+	c := Database.C("questionnaireanswers")
 	questionnaireanswers.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, questionnaireanswers)
 	if err != nil {
@@ -165,7 +162,7 @@ func QuestionnaireAnswersDeleteHandler(rw http.ResponseWriter, r *http.Request, 
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("questionnaireanswerss")
+	c := Database.C("questionnaireanswers")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

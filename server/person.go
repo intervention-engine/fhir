@@ -10,16 +10,28 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func PersonIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Person
-	c := Database.C("persons")
-	iter := c.Find(nil).Limit(100).Iter()
-	err := iter.All(&result)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	c := Database.C("people")
+
+	r.ParseForm()
+	if len(r.Form) == 0 {
+		iter := c.Find(nil).Limit(100).Iter()
+		err := iter.All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "Person", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
 	}
 
 	var personEntryList []models.BundleEntryComponent
@@ -56,7 +68,7 @@ func LoadPerson(r *http.Request) (*models.Person, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("persons")
+	c := Database.C("people")
 	result := models.Person{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -88,7 +100,7 @@ func PersonCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("persons")
+	c := Database.C("people")
 	i := bson.NewObjectId()
 	person.Id = i.Hex()
 	err = c.Insert(person)
@@ -127,7 +139,7 @@ func PersonUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("persons")
+	c := Database.C("people")
 	person.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, person)
 	if err != nil {
@@ -150,7 +162,7 @@ func PersonDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("persons")
+	c := Database.C("people")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

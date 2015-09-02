@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Supply
-	c := Database.C("supplys")
+	c := Database.C("supplies")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "patient" {
-				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "Supply", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadSupply(r *http.Request) (*models.Supply, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("supplys")
+	c := Database.C("supplies")
 	result := models.Supply{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("supplys")
+	c := Database.C("supplies")
 	i := bson.NewObjectId()
 	supply.Id = i.Hex()
 	err = c.Insert(supply)
@@ -142,7 +139,7 @@ func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("supplys")
+	c := Database.C("supplies")
 	supply.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, supply)
 	if err != nil {
@@ -165,7 +162,7 @@ func SupplyDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("supplys")
+	c := Database.C("supplies")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

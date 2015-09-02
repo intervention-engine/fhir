@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.RelatedPerson
-	c := Database.C("relatedpersons")
+	c := Database.C("relatedpeople")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func RelatedPersonIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "patient" {
-				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "RelatedPerson", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadRelatedPerson(r *http.Request) (*models.RelatedPerson, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("relatedpersons")
+	c := Database.C("relatedpeople")
 	result := models.RelatedPerson{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func RelatedPersonCreateHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("relatedpersons")
+	c := Database.C("relatedpeople")
 	i := bson.NewObjectId()
 	relatedperson.Id = i.Hex()
 	err = c.Insert(relatedperson)
@@ -142,7 +139,7 @@ func RelatedPersonUpdateHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("relatedpersons")
+	c := Database.C("relatedpeople")
 	relatedperson.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, relatedperson)
 	if err != nil {
@@ -165,7 +162,7 @@ func RelatedPersonDeleteHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("relatedpersons")
+	c := Database.C("relatedpeople")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

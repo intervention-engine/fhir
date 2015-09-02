@@ -83,47 +83,14 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	data, err := ioutil.ReadFile("../fixtures/john_peters.json")
 	util.CheckErr(err)
 
-	// Do a bunch of junk to properly unmarshal all the data
-	// This is needed because:
-	// 1. It's a homogenous array, so go doesn't unmarshal it very well
-	// 2. The id attribute is configured to not be serialized/deserialized
-	type IdAndType struct {
-		Id   string `json:"id"`
-		Type string `json:"resourceType"`
-	}
-	idsAndTypes := make([]IdAndType, 19)
-	err = json.Unmarshal(data, &idsAndTypes)
+	maps := make([]interface{}, 19)
+	err = json.Unmarshal(data, &maps)
 	util.CheckErr(err)
 
-	rawMessages := make([]json.RawMessage, 19)
-	err = json.Unmarshal(data, &rawMessages)
-	util.CheckErr(err)
-
-	fhirmodels := make([]interface{}, 19)
-	for i := range fhirmodels {
-		var y interface{}
-		switch idsAndTypes[i].Type {
-		case "Patient":
-			y = &models.Patient{Id: idsAndTypes[i].Id}
-		case "Encounter":
-			y = &models.Encounter{Id: idsAndTypes[i].Id}
-		case "Condition":
-			y = &models.Condition{Id: idsAndTypes[i].Id}
-		case "Observation":
-			y = &models.Observation{Id: idsAndTypes[i].Id}
-		case "DiagnosticReport":
-			y = &models.DiagnosticReport{Id: idsAndTypes[i].Id}
-		case "Procedure":
-			y = &models.Procedure{Id: idsAndTypes[i].Id}
-		case "MedicationStatement":
-			y = &models.MedicationStatement{Id: idsAndTypes[i].Id}
-		case "Immunization":
-			y = &models.Immunization{Id: idsAndTypes[i].Id}
-		default:
-			c.Errorf("Unexpected Type: %s", idsAndTypes[i].Type)
-		}
-		json.Unmarshal(rawMessages[i], y)
-		fhirmodels[i] = y
+	fhirmodels := make([]interface{}, 0, len(maps))
+	for _, resourceMap := range maps {
+		r := models.MapToResource(resourceMap, true)
+		fhirmodels = append(fhirmodels, r)
 	}
 
 	// Upload the resources and check the counts
@@ -141,7 +108,6 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 	c.Assert(resourceCount, Equals, 19)
 	c.Assert(len(refMap), Equals, 19)
 
-	c.Assert(refMap[idsAndTypes[0].Id], Equals, "Patient/0")
 	c.Assert(fhirmodels[0].(*models.Patient).Id, Equals, "0")
 }
 

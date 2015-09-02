@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Media
-	c := Database.C("medias")
+	c := Database.C("media")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func MediaIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "subject" {
-				err := c.Find(bson.M{"subject.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "Media", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadMedia(r *http.Request) (*models.Media, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("medias")
+	c := Database.C("media")
 	result := models.Media{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func MediaCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("medias")
+	c := Database.C("media")
 	i := bson.NewObjectId()
 	media.Id = i.Hex()
 	err = c.Insert(media)
@@ -142,7 +139,7 @@ func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("medias")
+	c := Database.C("media")
 	media.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, media)
 	if err != nil {
@@ -165,7 +162,7 @@ func MediaDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("medias")
+	c := Database.C("media")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

@@ -10,16 +10,28 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func TestScriptIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.TestScript
 	c := Database.C("testscripts")
-	iter := c.Find(nil).Limit(100).Iter()
-	err := iter.All(&result)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+
+	r.ParseForm()
+	if len(r.Form) == 0 {
+		iter := c.Find(nil).Limit(100).Iter()
+		err := iter.All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "TestScript", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
 	}
 
 	var testscriptEntryList []models.BundleEntryComponent

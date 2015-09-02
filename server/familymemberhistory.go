@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func FamilyMemberHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.FamilyMemberHistory
-	c := Database.C("familymemberhistorys")
+	c := Database.C("familymemberhistories")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func FamilyMemberHistoryIndexHandler(rw http.ResponseWriter, r *http.Request, ne
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "patient" {
-				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "FamilyMemberHistory", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadFamilyMemberHistory(r *http.Request) (*models.FamilyMemberHistory, erro
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("familymemberhistorys")
+	c := Database.C("familymemberhistories")
 	result := models.FamilyMemberHistory{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func FamilyMemberHistoryCreateHandler(rw http.ResponseWriter, r *http.Request, n
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("familymemberhistorys")
+	c := Database.C("familymemberhistories")
 	i := bson.NewObjectId()
 	familymemberhistory.Id = i.Hex()
 	err = c.Insert(familymemberhistory)
@@ -142,7 +139,7 @@ func FamilyMemberHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request, n
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("familymemberhistorys")
+	c := Database.C("familymemberhistories")
 	familymemberhistory.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, familymemberhistory)
 	if err != nil {
@@ -165,7 +162,7 @@ func FamilyMemberHistoryDeleteHandler(rw http.ResponseWriter, r *http.Request, n
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("familymemberhistorys")
+	c := Database.C("familymemberhistories")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

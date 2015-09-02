@@ -10,16 +10,28 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func BinaryIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.Binary
-	c := Database.C("binarys")
-	iter := c.Find(nil).Limit(100).Iter()
-	err := iter.All(&result)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	c := Database.C("binaries")
+
+	r.ParseForm()
+	if len(r.Form) == 0 {
+		iter := c.Find(nil).Limit(100).Iter()
+		err := iter.All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "Binary", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
 	}
 
 	var binaryEntryList []models.BundleEntryComponent
@@ -56,7 +68,7 @@ func LoadBinary(r *http.Request) (*models.Binary, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("binarys")
+	c := Database.C("binaries")
 	result := models.Binary{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -88,7 +100,7 @@ func BinaryCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("binarys")
+	c := Database.C("binaries")
 	i := bson.NewObjectId()
 	binary.Id = i.Hex()
 	err = c.Insert(binary)
@@ -127,7 +139,7 @@ func BinaryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("binarys")
+	c := Database.C("binaries")
 	binary.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, binary)
 	if err != nil {
@@ -150,7 +162,7 @@ func BinaryDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("binarys")
+	c := Database.C("binaries")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {

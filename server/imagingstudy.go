@@ -6,17 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var result []models.ImagingStudy
-	c := Database.C("imagingstudys")
+	c := Database.C("imagingstudies")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -26,14 +26,11 @@ func ImagingStudyIndexHandler(rw http.ResponseWriter, r *http.Request, next http
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
-		for key, value := range r.Form {
-			splitKey := strings.Split(key, ":")
-			if splitKey[0] == "patient" {
-				err := c.Find(bson.M{"patient.referenceid": value[0]}).All(&result)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-				}
-			}
+		searcher := search.NewMongoSearcher(Database)
+		query := search.Query{Resource: "ImagingStudy", Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(&result)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
@@ -71,7 +68,7 @@ func LoadImagingStudy(r *http.Request) (*models.ImagingStudy, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("imagingstudys")
+	c := Database.C("imagingstudies")
 	result := models.ImagingStudy{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
@@ -103,7 +100,7 @@ func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("imagingstudys")
+	c := Database.C("imagingstudies")
 	i := bson.NewObjectId()
 	imagingstudy.Id = i.Hex()
 	err = c.Insert(imagingstudy)
@@ -142,7 +139,7 @@ func ImagingStudyUpdateHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("imagingstudys")
+	c := Database.C("imagingstudies")
 	imagingstudy.Id = id.Hex()
 	err = c.Update(bson.M{"_id": id.Hex()}, imagingstudy)
 	if err != nil {
@@ -165,7 +162,7 @@ func ImagingStudyDeleteHandler(rw http.ResponseWriter, r *http.Request, next htt
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("imagingstudys")
+	c := Database.C("imagingstudies")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
