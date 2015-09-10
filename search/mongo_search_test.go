@@ -829,43 +829,43 @@ func (m *MongoSearchSuite) TestConditionMultiplePatientAndMultipleCodesQueryObje
 // Test that invalid search parameters PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestInvalidSearchParameterPanics(c *C) {
 	q := Query{"Condition", "abatement=2012"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Invalid search: Condition does not support search parameter: abatement`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, InvalidSearchError("Condition does not support search parameter: abatement"))
 }
 
 // Test that unimplemented features PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestCompositeSearchPanics(c *C) {
 	q := Query{"Group", "characteristic-value=gender$male"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Unsupported: composite search parameters`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("composite search parameters"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedDateSearchPanics(c *C) {
 	q := Query{"Condition", "onset=lt2012"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Unsupported: date search prefix: lt`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("date search prefix: lt"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedNumberSearchPanics(c *C) {
 	q := Query{"Immunization", "dose-sequence=gt1"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Unsupported: number search prefix: gt`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("number search prefix: gt"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedQuantitySearchPanics(c *C) {
 	q := Query{"Observation", "value-quantity=ap1||mg"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Unsupported: quantity search prefix: ap`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("quantity search prefix: ap"))
 }
 
 func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
 	q := Query{"Condition", "code:text=headache"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Unsupported: search modifier: :text`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search modifier: :text"))
 }
 
 func (m *MongoSearchSuite) TestChainedSearchPanics(c *C) {
 	q := Query{"Condition", "patient.gender=male"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Unsupported: chained search parameters`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("chained search parameters"))
 }
 
 func (m *MongoSearchSuite) TestSpecialSearchParameterPanics(c *C) {
 	q := Query{"Condition", "onset=2012&_sort:asc=onset"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, PanicMatches, `Unsupported: special search parameter: _sort:asc`)
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("special search parameter: _sort:asc"))
 }
 
 // Test internally used functions
