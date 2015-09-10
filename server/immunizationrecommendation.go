@@ -133,6 +133,7 @@ func ImmunizationRecommendationCreateHandler(rw http.ResponseWriter, r *http.Req
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/ImmunizationRecommendation/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

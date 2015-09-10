@@ -133,6 +133,7 @@ func EpisodeOfCareCreateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/EpisodeOfCare/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func EpisodeOfCareUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

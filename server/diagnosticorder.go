@@ -133,6 +133,7 @@ func DiagnosticOrderCreateHandler(rw http.ResponseWriter, r *http.Request, next 
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/DiagnosticOrder/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

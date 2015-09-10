@@ -133,6 +133,7 @@ func ImagingStudyCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/ImagingStudy/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ImagingStudyUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

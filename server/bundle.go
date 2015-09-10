@@ -133,6 +133,7 @@ func BundleCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Bundle/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func BundleUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

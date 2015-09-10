@@ -133,6 +133,7 @@ func NamingSystemCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/NamingSystem/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func NamingSystemUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

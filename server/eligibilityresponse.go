@@ -133,6 +133,7 @@ func EligibilityResponseCreateHandler(rw http.ResponseWriter, r *http.Request, n
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/EligibilityResponse/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func EligibilityResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

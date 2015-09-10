@@ -133,6 +133,7 @@ func CommunicationCreateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Communication/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func CommunicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

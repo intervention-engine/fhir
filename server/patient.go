@@ -133,6 +133,7 @@ func PatientCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Patient/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

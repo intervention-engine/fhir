@@ -133,6 +133,7 @@ func ProcessRequestCreateHandler(rw http.ResponseWriter, r *http.Request, next h
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/ProcessRequest/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ProcessRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

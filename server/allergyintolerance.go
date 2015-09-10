@@ -133,6 +133,7 @@ func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/AllergyIntolerance/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

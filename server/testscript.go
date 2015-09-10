@@ -133,6 +133,7 @@ func TestScriptCreateHandler(rw http.ResponseWriter, r *http.Request, next http.
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/TestScript/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func TestScriptUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

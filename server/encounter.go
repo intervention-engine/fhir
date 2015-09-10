@@ -133,6 +133,7 @@ func EncounterCreateHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Encounter/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

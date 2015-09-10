@@ -133,6 +133,7 @@ func EnrollmentRequestCreateHandler(rw http.ResponseWriter, r *http.Request, nex
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/EnrollmentRequest/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func EnrollmentRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

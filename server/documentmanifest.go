@@ -133,6 +133,7 @@ func DocumentManifestCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/DocumentManifest/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func DocumentManifestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

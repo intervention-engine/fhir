@@ -133,6 +133,7 @@ func NutritionOrderCreateHandler(rw http.ResponseWriter, r *http.Request, next h
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/NutritionOrder/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func NutritionOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

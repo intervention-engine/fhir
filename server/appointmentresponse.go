@@ -133,6 +133,7 @@ func AppointmentResponseCreateHandler(rw http.ResponseWriter, r *http.Request, n
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/AppointmentResponse/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func AppointmentResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

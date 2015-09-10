@@ -133,6 +133,7 @@ func PersonCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Person/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func PersonUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

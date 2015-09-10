@@ -133,6 +133,7 @@ func DeviceComponentCreateHandler(rw http.ResponseWriter, r *http.Request, next 
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/DeviceComponent/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func DeviceComponentUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

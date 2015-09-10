@@ -133,6 +133,7 @@ func OrderResponseCreateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/OrderResponse/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func OrderResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

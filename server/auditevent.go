@@ -133,6 +133,7 @@ func AuditEventCreateHandler(rw http.ResponseWriter, r *http.Request, next http.
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/AuditEvent/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func AuditEventUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -133,6 +133,7 @@ func ClinicalImpressionCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/ClinicalImpression/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ClinicalImpressionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

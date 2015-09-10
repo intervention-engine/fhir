@@ -133,6 +133,7 @@ func ConditionCreateHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Condition/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ConditionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

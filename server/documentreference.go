@@ -133,6 +133,7 @@ func DocumentReferenceCreateHandler(rw http.ResponseWriter, r *http.Request, nex
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/DocumentReference/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

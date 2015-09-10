@@ -133,6 +133,7 @@ func FamilyMemberHistoryCreateHandler(rw http.ResponseWriter, r *http.Request, n
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/FamilyMemberHistory/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func FamilyMemberHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

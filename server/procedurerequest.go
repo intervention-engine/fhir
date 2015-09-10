@@ -133,6 +133,7 @@ func ProcedureRequestCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/ProcedureRequest/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ProcedureRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

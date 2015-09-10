@@ -133,6 +133,7 @@ func SearchParameterCreateHandler(rw http.ResponseWriter, r *http.Request, next 
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/SearchParameter/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func SearchParameterUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

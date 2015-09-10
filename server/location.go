@@ -133,6 +133,7 @@ func LocationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Location/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func LocationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

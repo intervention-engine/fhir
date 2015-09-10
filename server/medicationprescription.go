@@ -133,6 +133,7 @@ func MedicationPrescriptionCreateHandler(rw http.ResponseWriter, r *http.Request
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/MedicationPrescription/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func MedicationPrescriptionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

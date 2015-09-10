@@ -133,6 +133,7 @@ func ListCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/List/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ListUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

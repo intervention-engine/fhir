@@ -133,6 +133,7 @@ func FlagCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Flag/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func FlagUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -133,6 +133,7 @@ func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Contraindication/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

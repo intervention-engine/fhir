@@ -133,6 +133,7 @@ func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Supply/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -133,6 +133,7 @@ func SlotCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Slot/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func SlotUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

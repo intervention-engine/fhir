@@ -133,6 +133,7 @@ func PractitionerCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Practitioner/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func PractitionerUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

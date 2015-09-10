@@ -133,6 +133,7 @@ func ConformanceCreateHandler(rw http.ResponseWriter, r *http.Request, next http
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Conformance/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ConformanceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

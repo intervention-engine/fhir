@@ -133,6 +133,7 @@ func CompositionCreateHandler(rw http.ResponseWriter, r *http.Request, next http
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Composition/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

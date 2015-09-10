@@ -133,6 +133,7 @@ func DeviceUseRequestCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/DeviceUseRequest/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func DeviceUseRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

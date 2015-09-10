@@ -133,6 +133,7 @@ func PaymentReconciliationCreateHandler(rw http.ResponseWriter, r *http.Request,
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/PaymentReconciliation/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func PaymentReconciliationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

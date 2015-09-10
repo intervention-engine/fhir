@@ -133,6 +133,7 @@ func OperationOutcomeCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/OperationOutcome/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func OperationOutcomeUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -133,6 +133,7 @@ func GroupCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Group/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func GroupUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

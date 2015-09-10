@@ -133,6 +133,7 @@ func RiskAssessmentCreateHandler(rw http.ResponseWriter, r *http.Request, next h
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/RiskAssessment/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func RiskAssessmentUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

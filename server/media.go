@@ -133,6 +133,7 @@ func MediaCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Media/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

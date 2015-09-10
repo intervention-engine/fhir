@@ -133,6 +133,7 @@ func DataElementCreateHandler(rw http.ResponseWriter, r *http.Request, next http
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/DataElement/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func DataElementUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

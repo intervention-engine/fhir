@@ -133,6 +133,7 @@ func ReferralRequestCreateHandler(rw http.ResponseWriter, r *http.Request, next 
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/ReferralRequest/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ReferralRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

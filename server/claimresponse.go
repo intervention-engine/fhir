@@ -133,6 +133,7 @@ func ClaimResponseCreateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/ClaimResponse/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ClaimResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -133,6 +133,7 @@ func DeviceMetricCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/DeviceMetric/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func DeviceMetricUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

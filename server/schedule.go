@@ -133,6 +133,7 @@ func ScheduleCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Schedule/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ScheduleUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

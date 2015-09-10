@@ -133,6 +133,7 @@ func BodySiteCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/BodySite/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func BodySiteUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

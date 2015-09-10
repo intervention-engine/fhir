@@ -133,6 +133,7 @@ func StructureDefinitionCreateHandler(rw http.ResponseWriter, r *http.Request, n
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/StructureDefinition/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func StructureDefinitionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
