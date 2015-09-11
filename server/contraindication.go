@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +16,22 @@ import (
 )
 
 func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	defer func() {
+		if r := recover(); r != nil {
+			rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+			switch x := r.(type) {
+			case search.SearchError:
+				rw.WriteHeader(x.HTTPStatus())
+				json.NewEncoder(rw).Encode(x.OperationOutcome())
+				return
+			default:
+				e := search.InternalServerError(fmt.Sprintf("%s", x))
+				rw.WriteHeader(e.HTTPStatus())
+				json.NewEncoder(rw).Encode(e.OperationOutcome())
+			}
+		}
+	}()
+
 	var result []models.Contraindication
 	c := Database.C("contraindications")
 
@@ -119,6 +136,7 @@ func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Contraindication/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

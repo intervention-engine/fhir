@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +16,22 @@ import (
 )
 
 func PractitionerIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	defer func() {
+		if r := recover(); r != nil {
+			rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+			switch x := r.(type) {
+			case search.SearchError:
+				rw.WriteHeader(x.HTTPStatus())
+				json.NewEncoder(rw).Encode(x.OperationOutcome())
+				return
+			default:
+				e := search.InternalServerError(fmt.Sprintf("%s", x))
+				rw.WriteHeader(e.HTTPStatus())
+				json.NewEncoder(rw).Encode(e.OperationOutcome())
+			}
+		}
+	}()
+
 	var result []models.Practitioner
 	c := Database.C("practitioners")
 
@@ -119,6 +136,7 @@ func PractitionerCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	}
 
 	rw.Header().Add("Location", "http://"+host+":3001/Practitioner/"+i.Hex())
+	rw.WriteHeader(http.StatusCreated)
 }
 
 func PractitionerUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -2,9 +2,11 @@ package search
 
 import (
 	"fmt"
+	"net/http"
 	"regexp"
 	"strings"
 
+	"github.com/intervention-engine/fhir/models"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -68,12 +70,12 @@ func (m *MongoSearcher) createParamObjects(resource string, params []SearchParam
 }
 
 func (m *MongoSearcher) createCompositeQueryObject(resource string, c *CompositeParam) bson.M {
-	panic("Unimplemented: composite search parameters")
+	panic(UnsupportedError("composite search parameters"))
 }
 
 func (m *MongoSearcher) createDateQueryObject(d *DateParam) bson.M {
 	if d.Prefix != "" && d.Prefix != EQ {
-		panic(fmt.Sprintf("Unimplemented: date search prefix: %s", d.Prefix))
+		panic(UnsupportedError(fmt.Sprintf("date search prefix: %s", d.Prefix)))
 	}
 
 	single := func(p SearchParamPath) bson.M {
@@ -119,7 +121,7 @@ func (m *MongoSearcher) createDateQueryObject(d *DateParam) bson.M {
 
 func (m *MongoSearcher) createNumberQueryObject(n *NumberParam) bson.M {
 	if n.Prefix != "" && n.Prefix != EQ {
-		panic(fmt.Sprintf("Unimplemented: number search prefix: %s", n.Prefix))
+		panic(UnsupportedError(fmt.Sprintf("number search prefix: %s", n.Prefix)))
 	}
 
 	single := func(p SearchParamPath) bson.M {
@@ -136,7 +138,7 @@ func (m *MongoSearcher) createNumberQueryObject(n *NumberParam) bson.M {
 
 func (m *MongoSearcher) createQuantityQueryObject(q *QuantityParam) bson.M {
 	if q.Prefix != "" && q.Prefix != EQ {
-		panic(fmt.Sprintf("Unimplemented: quantity search prefix: %s", q.Prefix))
+		panic(UnsupportedError(fmt.Sprintf("quantity search prefix: %s", q.Prefix)))
 	}
 
 	single := func(p SearchParamPath) bson.M {
@@ -272,6 +274,68 @@ func (m *MongoSearcher) createOrQueryObject(resource string, o *OrParam) bson.M 
 	}
 }
 
+// SearchError is an interface for search errors, providing an HTTP status and operation outcome
+type SearchError interface {
+	HTTPStatus() int
+	OperationOutcome() *models.OperationOutcome
+}
+
+func createOpOutcome(severity string, code string, display string, details string) *models.OperationOutcome {
+	return &models.OperationOutcome{
+		Issue: []models.OperationOutcomeIssueComponent{
+			models.OperationOutcomeIssueComponent{
+				Severity: severity,
+				Code: &models.CodeableConcept{
+					Coding: []models.Coding{
+						models.Coding{Code: code, System: "http://hl7.org/fhir/issue-type", Display: display},
+					},
+					Text: display,
+				},
+				Details: details,
+			},
+		},
+	}
+}
+
+// UnsupportedError indicates that the requested search is not currently supported.
+type UnsupportedError string
+
+// HTTPStatus returns HTTP 501
+func (s UnsupportedError) HTTPStatus() int {
+	return http.StatusNotImplemented
+}
+
+// OperationOutcome returns an OperationOutcome with the 'not-supported' code
+func (s UnsupportedError) OperationOutcome() *models.OperationOutcome {
+	return createOpOutcome("error", "not-supported", "Content not supported", "Unsupported: "+string(s))
+}
+
+// InvalidSearchError indicates that the requested search is not a valid FHIR search.
+type InvalidSearchError string
+
+// HTTPStatus returns HTTP 400
+func (s InvalidSearchError) HTTPStatus() int {
+	return http.StatusBadRequest
+}
+
+// OperationOutcome returns an OperationOutcome with the 'processing' code
+func (s InvalidSearchError) OperationOutcome() *models.OperationOutcome {
+	return createOpOutcome("error", "processing", "Processing Failure", "Invalid Search: "+string(s))
+}
+
+// InternalServerError indicates that there was an unexpected error in the server.
+type InternalServerError string
+
+// HTTPStatus returns HTTP 500
+func (s InternalServerError) HTTPStatus() int {
+	return http.StatusInternalServerError
+}
+
+// OperationOutcome returns an OperationOutcome with the 'exception' code
+func (s InternalServerError) OperationOutcome() *models.OperationOutcome {
+	return createOpOutcome("fatal", "exception", "Exception", string(s))
+}
+
 func buildBSON(path string, criteria interface{}) bson.M {
 	result := bson.M{}
 
@@ -344,7 +408,7 @@ func processOrCriteria(path string, orValue interface{}, result bson.M) {
 		}
 		result["$or"] = newOrs
 	} else {
-		panic(fmt.Sprintf("$or operator used with non-array: %v", orValue))
+		panic(InvalidSearchError(fmt.Sprintf("$or operator used with non-array: %v", orValue)))
 	}
 }
 
