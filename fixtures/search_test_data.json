@@ -19,6 +19,26 @@
     }
   ]
 }, {
+	"resourceType": "Patient",
+	"id": "4954037118555579315",
+	"name": [{
+		"family": ["Peters"],
+		"given": ["Sally"]
+	}],
+	"gender": "female",
+	"birthDate": "1989-07-15",
+	"address": [
+    {
+      "use": "home",
+      "line": [
+        "534 Broad St"
+      ],
+      "city": "Middletown",
+      "state": "AK",
+      "postalCode": "99999"
+    }
+  ]
+}, {
 	"resourceType": "Encounter",
 	"id": "6648204100111387580",
 	"identifier": [{
@@ -191,6 +211,20 @@
 		"text": "Diagnosis, Active: Hypertension (Code List: 2.16.840.1.113883.3.464.1003.104.12.1016)"
 	},
 	"onsetDateTime": "2012-03-01T07:30:00-05:00"
+}, {
+	"resourceType": "Condition",
+	"id": "8664777288161038467",
+	"patient": {
+		"reference": "Patient/4954037118555579315"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "27836007"
+		}],
+		"text": "Pertussis (disorder)"
+	},
+	"onsetDateTime": "2011-10-23T012:00:00-05:00"
 }, {
 	"resourceType": "Observation",
 	"id": "5637152931209212154",

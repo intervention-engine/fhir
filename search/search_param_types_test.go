@@ -743,9 +743,10 @@ func (s *SearchPTSuite) TestQuantityPrefixes(c *C) {
  ******************************************************************************/
 
 var referenceParamInfo = SearchParamInfo{
-	Name:  "foo",
-	Type:  "reference",
-	Paths: []SearchParamPath{SearchParamPath{Path: "bar", Type: "reference"}},
+	Name:    "foo",
+	Type:    "reference",
+	Paths:   []SearchParamPath{SearchParamPath{Path: "bar", Type: "reference"}},
+	Targets: []string{"Patient"},
 }
 
 func (s *SearchPTSuite) TestReferenceID(c *C) {
@@ -755,17 +756,34 @@ func (s *SearchPTSuite) TestReferenceID(c *C) {
 	c.Assert(r.Type, Equals, "reference")
 	c.Assert(r.Paths, HasLen, 1)
 	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
-	c.Assert(r.Reference, Equals, "23")
 
-	id, ok := r.GetID()
-	c.Assert(id, Equals, "23")
-	c.Assert(ok, Equals, true)
-	typ, ok := r.GetType()
-	c.Assert(typ, Equals, "")
-	c.Assert(ok, Equals, false)
-	url, ok := r.GetURL()
-	c.Assert(url, Equals, "")
-	c.Assert(ok, Equals, false)
+	c.Assert(r.Reference, FitsTypeOf, LocalReference{})
+	lRef := r.Reference.(LocalReference)
+	c.Assert(lRef.ID, Equals, "23")
+	c.Assert(lRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceIDWithModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	r := ParseReferenceParam("23", modInfo)
+
+	c.Assert(r.Name, Equals, "foo")
+	c.Assert(r.Type, Equals, "reference")
+	c.Assert(r.Paths, HasLen, 1)
+	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
+	c.Assert(r.Modifier, Equals, "Patient")
+
+	c.Assert(r.Reference, FitsTypeOf, LocalReference{})
+	lRef := r.Reference.(LocalReference)
+	c.Assert(lRef.ID, Equals, "23")
+	c.Assert(lRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceIDWithMismatchedModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Condition"
+	c.Assert(func() { ParseReferenceParam("23", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
 }
 
 func (s *SearchPTSuite) TestReferenceTypeAndId(c *C) {
@@ -776,15 +794,38 @@ func (s *SearchPTSuite) TestReferenceTypeAndId(c *C) {
 	c.Assert(r.Paths, HasLen, 1)
 	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
 
-	id, ok := r.GetID()
-	c.Assert(id, Equals, "23")
-	c.Assert(ok, Equals, true)
-	typ, ok := r.GetType()
-	c.Assert(typ, Equals, "Patient")
-	c.Assert(ok, Equals, true)
-	url, ok := r.GetURL()
-	c.Assert(url, Equals, "")
-	c.Assert(ok, Equals, false)
+	c.Assert(r.Reference, FitsTypeOf, LocalReference{})
+	lRef := r.Reference.(LocalReference)
+	c.Assert(lRef.ID, Equals, "23")
+	c.Assert(lRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceTypeAndIDWithMismatchedType(c *C) {
+	modInfo := referenceParamInfo
+	c.Assert(func() { ParseReferenceParam("Condition/23", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
+}
+
+func (s *SearchPTSuite) TestReferenceTypeAndIdWithModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	r := ParseReferenceParam("Patient/23", modInfo)
+
+	c.Assert(r.Name, Equals, "foo")
+	c.Assert(r.Type, Equals, "reference")
+	c.Assert(r.Paths, HasLen, 1)
+	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
+	c.Assert(r.Modifier, Equals, "Patient")
+
+	c.Assert(r.Reference, FitsTypeOf, LocalReference{})
+	lRef := r.Reference.(LocalReference)
+	c.Assert(lRef.ID, Equals, "23")
+	c.Assert(lRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceTypeAndIdWithMismatchedModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Condition"
+	c.Assert(func() { ParseReferenceParam("Patient/23", modInfo) }, Panics, InvalidSearchError("reference modifier is Condition, but type is Patient"))
 }
 
 func (s *SearchPTSuite) TestReferenceAbsoluteURL(c *C) {
@@ -794,17 +835,79 @@ func (s *SearchPTSuite) TestReferenceAbsoluteURL(c *C) {
 	c.Assert(r.Type, Equals, "reference")
 	c.Assert(r.Paths, HasLen, 1)
 	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
-	c.Assert(r.Reference, Equals, "http://acme.org/fhir/Patient/23")
 
-	id, ok := r.GetID()
-	c.Assert(id, Equals, "")
-	c.Assert(ok, Equals, false)
-	typ, ok := r.GetType()
-	c.Assert(typ, Equals, "")
-	c.Assert(ok, Equals, false)
-	url, ok := r.GetURL()
-	c.Assert(url, Equals, "http://acme.org/fhir/Patient/23")
-	c.Assert(ok, Equals, true)
+	c.Assert(r.Reference, FitsTypeOf, ExternalReference{})
+	eRef := r.Reference.(ExternalReference)
+	c.Assert(eRef.URL, Equals, "http://acme.org/fhir/Patient/23")
+	c.Assert(eRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceAbsoluteURLWithMismatchedType(c *C) {
+	modInfo := referenceParamInfo
+	c.Assert(func() { ParseReferenceParam("http://acme.org/fhir/Condition/23", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
+}
+
+func (s *SearchPTSuite) TestReferenceAbsoluteURLWithModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	r := ParseReferenceParam("http://acme.org/fhir/Patient/23", modInfo)
+
+	c.Assert(r.Name, Equals, "foo")
+	c.Assert(r.Type, Equals, "reference")
+	c.Assert(r.Paths, HasLen, 1)
+	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
+	c.Assert(r.Modifier, Equals, "Patient")
+
+	c.Assert(r.Reference, FitsTypeOf, ExternalReference{})
+	eRef := r.Reference.(ExternalReference)
+	c.Assert(eRef.URL, Equals, "http://acme.org/fhir/Patient/23")
+	c.Assert(eRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceAbsoluteURLWithMismatchedModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Condition"
+	c.Assert(func() { ParseReferenceParam("http://acme.org/fhir/Patient/23", modInfo) }, Panics, InvalidSearchError("reference modifier is Condition, but type is Patient"))
+}
+
+func (s *SearchPTSuite) TestReferenceChainedQuery(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Postfix = "name"
+	r := ParseReferenceParam("Peter", modInfo)
+
+	c.Assert(r.Name, Equals, "foo")
+	c.Assert(r.Type, Equals, "reference")
+	c.Assert(r.Paths, HasLen, 1)
+	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
+
+	c.Assert(r.Reference, FitsTypeOf, ChainedQueryReference{})
+	qRef := r.Reference.(ChainedQueryReference)
+	c.Assert(qRef.ChainedQuery, DeepEquals, Query{Resource: "Patient", Query: "name=Peter"})
+	c.Assert(qRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceChainedQueryWithModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	modInfo.Postfix = "name"
+	r := ParseReferenceParam("Peter", modInfo)
+
+	c.Assert(r.Name, Equals, "foo")
+	c.Assert(r.Type, Equals, "reference")
+	c.Assert(r.Paths, HasLen, 1)
+	c.Assert(r.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "reference"})
+
+	c.Assert(r.Reference, FitsTypeOf, ChainedQueryReference{})
+	qRef := r.Reference.(ChainedQueryReference)
+	c.Assert(qRef.ChainedQuery, DeepEquals, Query{Resource: "Patient", Query: "name=Peter"})
+	c.Assert(qRef.Type, Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestReferenceChainedQueryWithMismatchedModifier(c *C) {
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Condition"
+	modInfo.Postfix = "name"
+	c.Assert(func() { ParseReferenceParam("Peter", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
 }
 
 /******************************************************************************
