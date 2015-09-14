@@ -216,7 +216,10 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientId(c *C) {
 	q := Query{"Condition", "patient=4954037118555241963"}
 
 	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{"patient.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"}})
+	c.Assert(o, DeepEquals, bson.M{
+		"patient.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
+		"patient.type":        "Patient",
+	})
 }
 
 func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientId(c *C) {
@@ -255,7 +258,31 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientURL(c *C) {
 
 // TODO: Test execution of reference search on PatientURL (as above)
 
-// TODO: Test reference searches on chained queries
+// Test reference searches on chained queries
+
+func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientGender(c *C) {
+	q := Query{"Condition", "patient.gender=male"}
+
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"patient.referenceid": bson.M{"$in": []string{"4954037118555241963"}},
+		"patient.type":        "Patient",
+	})
+}
+
+func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
+	q := Query{"Condition", "patient.gender=male"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 5)
+
+	q = Query{"Condition", "patient.gender=female"}
+	mq = m.MongoSearcher.CreateQuery(q)
+	num, err = mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+}
 
 // Test date searches on DateTime
 
@@ -446,6 +473,12 @@ func (m *MongoSearchSuite) TestPatientNameStringQuery(c *C) {
 	mq := m.MongoSearcher.CreateQuery(q)
 	num, err := mq.Count()
 	util.CheckErr(err)
+	c.Assert(num, Equals, 2)
+
+	q = Query{"Patient", "name=John"}
+	mq = m.MongoSearcher.CreateQuery(q)
+	num, err = mq.Count()
+	util.CheckErr(err)
 	c.Assert(num, Equals, 1)
 }
 
@@ -480,7 +513,7 @@ func (m *MongoSearchSuite) TestPatientAddressStringQuery(c *C) {
 	mq := m.MongoSearcher.CreateQuery(q)
 	num, err := mq.Count()
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	c.Assert(num, Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestNonMatchingPatientAddressStringQuery(c *C) {
@@ -689,10 +722,11 @@ func (m *MongoSearchSuite) TestConditionPatientAndCodeAndOnsetQueryObject(c *C) 
 
 	o := m.MongoSearcher.createQueryObject(q)
 	// Make sure only the expected elements are there
-	c.Assert(o, HasLen, 3)
+	c.Assert(o, HasLen, 4)
 
 	// Check the patient part of the query
 	c.Assert(o["patient.referenceid"], DeepEquals, bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"})
+	c.Assert(o["patient.type"], Equals, "Patient")
 
 	// Check the code part of the query
 	c.Assert(o["code.coding"], DeepEquals, bson.M{
@@ -757,10 +791,11 @@ func (m *MongoSearchSuite) TestConditionPatientAndMultipleCodesQueryObject(c *C)
 
 	o := m.MongoSearcher.createQueryObject(q)
 	// Make sure only the expected elements are there
-	c.Assert(o, HasLen, 2)
+	c.Assert(o, HasLen, 3)
 
 	// Check the patient part of the query
 	c.Assert(o["patient.referenceid"], DeepEquals, bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"})
+	c.Assert(o["patient.type"], Equals, "Patient")
 
 	// Check the code part of the query
 	c.Assert(o["$or"], DeepEquals, []bson.M{
@@ -791,9 +826,18 @@ func (m *MongoSearchSuite) TestConditionMultiplePatientAndMultipleCodesQueryObje
 	c.Assert(o, HasLen, 2)
 
 	expectedTopOr := []bson.M{
-		{"patient.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"}},
-		{"patient.referenceid": bson.RegEx{Pattern: "^123456789$", Options: "i"}},
-		{"patient.referenceid": bson.RegEx{Pattern: "^ABCDEFG$", Options: "i"}},
+		{
+			"patient.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
+			"patient.type":        "Patient",
+		},
+		{
+			"patient.referenceid": bson.RegEx{Pattern: "^123456789$", Options: "i"},
+			"patient.type":        "Patient",
+		},
+		{
+			"patient.referenceid": bson.RegEx{Pattern: "^ABCDEFG$", Options: "i"},
+			"patient.type":        "Patient",
+		},
 	}
 
 	expectedNestedOr := []bson.M{
@@ -840,17 +884,17 @@ func (m *MongoSearchSuite) TestCompositeSearchPanics(c *C) {
 
 func (m *MongoSearchSuite) TestPrefixedDateSearchPanics(c *C) {
 	q := Query{"Condition", "onset=lt2012"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("date search prefix: lt"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search prefix: lt"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedNumberSearchPanics(c *C) {
 	q := Query{"Immunization", "dose-sequence=gt1"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("number search prefix: gt"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search prefix: gt"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedQuantitySearchPanics(c *C) {
 	q := Query{"Observation", "value-quantity=ap1||mg"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("quantity search prefix: ap"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search prefix: ap"))
 }
 
 func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
@@ -858,14 +902,9 @@ func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
 	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search modifier: :text"))
 }
 
-func (m *MongoSearchSuite) TestChainedSearchPanics(c *C) {
-	q := Query{"Condition", "patient.gender=male"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("chained search parameters"))
-}
-
 func (m *MongoSearchSuite) TestSpecialSearchParameterPanics(c *C) {
 	q := Query{"Condition", "onset=2012&_sort:asc=onset"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("special search parameter: _sort:asc"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("special search parameter: _sort"))
 }
 
 // Test internally used functions
