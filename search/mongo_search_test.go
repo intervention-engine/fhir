@@ -340,12 +340,12 @@ func (m *MongoSearchSuite) TestConditionOnsetGTQueryObject(c *C) {
 		"$or": []bson.M{
 			bson.M{
 				"onsetDateTime.time": bson.M{
-					"$gte": time.Date(2012, time.March, 1, 7, 1, 0, 0, m.Local),
+					"$gt": time.Date(2012, time.March, 1, 7, 0, 0, 0, m.Local),
 				},
 			},
 			bson.M{
 				"onsetPeriod.end.time": bson.M{
-					"$gte": time.Date(2012, time.March, 1, 7, 1, 0, 0, m.Local),
+					"$gt": time.Date(2012, time.March, 1, 7, 0, 0, 0, m.Local),
 				},
 			},
 			bson.M{
@@ -414,7 +414,7 @@ func (m *MongoSearchSuite) TestConditionOnsetGEQueryObject(c *C) {
 			},
 			bson.M{
 				"onsetPeriod.end.time": bson.M{
-					"$gte": time.Date(2012, time.March, 1, 7, 1, 0, 0, m.Local),
+					"$gt": time.Date(2012, time.March, 1, 7, 0, 0, 0, m.Local),
 				},
 			},
 			bson.M{
@@ -514,7 +514,7 @@ func (m *MongoSearchSuite) TestEncounterPeriodGTQueryObject(c *C) {
 		"$or": []bson.M{
 			bson.M{
 				"period.end.time": bson.M{
-					"$gte": time.Date(2012, time.November, 1, 8, 31, 0, 0, m.Local),
+					"$gt": time.Date(2012, time.November, 1, 8, 30, 0, 0, m.Local),
 				},
 			},
 			bson.M{
@@ -530,7 +530,7 @@ func (m *MongoSearchSuite) TestEncounterPeriodGTQuery(c *C) {
 	mq := m.MongoSearcher.CreateQuery(q)
 	num, err := mq.Count()
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	c.Assert(num, Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodLTQueryObject(c *C) {
@@ -575,7 +575,7 @@ func (m *MongoSearchSuite) TestEncounterPeriodGEQueryObject(c *C) {
 			},
 			bson.M{
 				"period.end.time": bson.M{
-					"$gte": time.Date(2012, time.November, 1, 8, 31, 0, 0, m.Local),
+					"$gt": time.Date(2012, time.November, 1, 8, 30, 0, 0, m.Local),
 				},
 			},
 			bson.M{
