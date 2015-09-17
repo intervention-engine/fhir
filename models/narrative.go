@@ -27,7 +27,6 @@
 package models
 
 type Narrative struct {
-	Id     string `json:"id" bson:"_id"`
 	Status string `bson:"status,omitempty" json:"status,omitempty"`
 	Div    string `bson:"div,omitempty" json:"div,omitempty"`
 }

@@ -27,7 +27,6 @@
 package models
 
 type Timing struct {
-	Id     string                 `json:"id" bson:"_id"`
 	Event  []FHIRDateTime         `bson:"event,omitempty" json:"event,omitempty"`
 	Repeat *TimingRepeatComponent `bson:"repeat,omitempty" json:"repeat,omitempty"`
 	Code   *CodeableConcept       `bson:"code,omitempty" json:"code,omitempty"`

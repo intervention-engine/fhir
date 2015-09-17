@@ -27,7 +27,6 @@
 package models
 
 type CodeableConcept struct {
-	Id     string   `json:"id" bson:"_id"`
 	Coding []Coding `bson:"coding,omitempty" json:"coding,omitempty"`
 	Text   string   `bson:"text,omitempty" json:"text,omitempty"`
 }

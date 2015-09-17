@@ -27,7 +27,6 @@
 package models
 
 type Coding struct {
-	Id           string `json:"id" bson:"_id"`
 	System       string `bson:"system,omitempty" json:"system,omitempty"`
 	Version      string `bson:"version,omitempty" json:"version,omitempty"`
 	Code         string `bson:"code,omitempty" json:"code,omitempty"`

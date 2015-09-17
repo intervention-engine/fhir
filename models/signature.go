@@ -27,7 +27,6 @@
 package models
 
 type Signature struct {
-	Id           string        `json:"id" bson:"_id"`
 	Type         []Coding      `bson:"type,omitempty" json:"type,omitempty"`
 	When         *FHIRDateTime `bson:"when,omitempty" json:"when,omitempty"`
 	WhoUri       string        `bson:"whoUri,omitempty" json:"whoUri,omitempty"`

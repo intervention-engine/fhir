@@ -27,7 +27,6 @@
 package models
 
 type ElementDefinition struct {
-	Id                          string                                 `json:"id" bson:"_id"`
 	Path                        string                                 `bson:"path,omitempty" json:"path,omitempty"`
 	Representation              []string                               `bson:"representation,omitempty" json:"representation,omitempty"`
 	Name                        string                                 `bson:"name,omitempty" json:"name,omitempty"`

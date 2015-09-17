@@ -27,7 +27,6 @@
 package models
 
 type Address struct {
-	Id         string   `json:"id" bson:"_id"`
 	Use        string   `bson:"use,omitempty" json:"use,omitempty"`
 	Type       string   `bson:"type,omitempty" json:"type,omitempty"`
 	Text       string   `bson:"text,omitempty" json:"text,omitempty"`

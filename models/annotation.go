@@ -27,7 +27,6 @@
 package models
 
 type Annotation struct {
-	Id              string        `json:"id" bson:"_id"`
 	AuthorReference *Reference    `bson:"authorReference,omitempty" json:"authorReference,omitempty"`
 	AuthorString    string        `bson:"authorString,omitempty" json:"authorString,omitempty"`
 	Time            *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
