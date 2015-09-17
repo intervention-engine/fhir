@@ -134,9 +134,11 @@ func DeviceUseStatementCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/DeviceUseStatement/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(deviceusestatement)
 }
 
 func DeviceUseStatementUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func DeviceUseStatementUpdateHandler(rw http.ResponseWriter, r *http.Request, ne
 	context.Set(r, "DeviceUseStatement", deviceusestatement)
 	context.Set(r, "Resource", "DeviceUseStatement")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(deviceusestatement)
 }
 
 func DeviceUseStatementDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

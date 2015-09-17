@@ -134,9 +134,11 @@ func OrderCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Order/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(order)
 }
 
 func OrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func OrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	context.Set(r, "Order", order)
 	context.Set(r, "Resource", "Order")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(order)
 }
 
 func OrderDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

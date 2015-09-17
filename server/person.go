@@ -134,9 +134,11 @@ func PersonCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Person/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(person)
 }
 
 func PersonUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func PersonUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	context.Set(r, "Person", person)
 	context.Set(r, "Resource", "Person")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(person)
 }
 
 func PersonDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

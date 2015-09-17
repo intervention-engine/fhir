@@ -134,9 +134,11 @@ func ImagingObjectSelectionCreateHandler(rw http.ResponseWriter, r *http.Request
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/ImagingObjectSelection/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(imagingobjectselection)
 }
 
 func ImagingObjectSelectionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ImagingObjectSelectionUpdateHandler(rw http.ResponseWriter, r *http.Request
 	context.Set(r, "ImagingObjectSelection", imagingobjectselection)
 	context.Set(r, "Resource", "ImagingObjectSelection")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(imagingobjectselection)
 }
 
 func ImagingObjectSelectionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

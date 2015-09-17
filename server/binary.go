@@ -134,9 +134,11 @@ func BinaryCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Binary/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(binary)
 }
 
 func BinaryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func BinaryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	context.Set(r, "Binary", binary)
 	context.Set(r, "Resource", "Binary")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(binary)
 }
 
 func BinaryDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

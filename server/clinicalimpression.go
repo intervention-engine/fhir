@@ -134,9 +134,11 @@ func ClinicalImpressionCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/ClinicalImpression/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(clinicalimpression)
 }
 
 func ClinicalImpressionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ClinicalImpressionUpdateHandler(rw http.ResponseWriter, r *http.Request, ne
 	context.Set(r, "ClinicalImpression", clinicalimpression)
 	context.Set(r, "Resource", "ClinicalImpression")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(clinicalimpression)
 }
 
 func ClinicalImpressionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

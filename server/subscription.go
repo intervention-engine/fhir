@@ -134,9 +134,11 @@ func SubscriptionCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Subscription/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(subscription)
 }
 
 func SubscriptionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func SubscriptionUpdateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	context.Set(r, "Subscription", subscription)
 	context.Set(r, "Resource", "Subscription")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(subscription)
 }
 
 func SubscriptionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

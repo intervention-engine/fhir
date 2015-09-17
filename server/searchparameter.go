@@ -134,9 +134,11 @@ func SearchParameterCreateHandler(rw http.ResponseWriter, r *http.Request, next 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/SearchParameter/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(searchparameter)
 }
 
 func SearchParameterUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func SearchParameterUpdateHandler(rw http.ResponseWriter, r *http.Request, next 
 	context.Set(r, "SearchParameter", searchparameter)
 	context.Set(r, "Resource", "SearchParameter")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(searchparameter)
 }
 
 func SearchParameterDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

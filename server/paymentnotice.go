@@ -134,9 +134,11 @@ func PaymentNoticeCreateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/PaymentNotice/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(paymentnotice)
 }
 
 func PaymentNoticeUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func PaymentNoticeUpdateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	context.Set(r, "PaymentNotice", paymentnotice)
 	context.Set(r, "Resource", "PaymentNotice")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(paymentnotice)
 }
 
 func PaymentNoticeDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

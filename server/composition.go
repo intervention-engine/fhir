@@ -134,9 +134,11 @@ func CompositionCreateHandler(rw http.ResponseWriter, r *http.Request, next http
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Composition/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(composition)
 }
 
 func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func CompositionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http
 	context.Set(r, "Composition", composition)
 	context.Set(r, "Resource", "Composition")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(composition)
 }
 
 func CompositionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

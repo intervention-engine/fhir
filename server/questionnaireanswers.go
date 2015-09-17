@@ -134,9 +134,11 @@ func QuestionnaireAnswersCreateHandler(rw http.ResponseWriter, r *http.Request, 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/QuestionnaireAnswers/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(questionnaireanswers)
 }
 
 func QuestionnaireAnswersUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func QuestionnaireAnswersUpdateHandler(rw http.ResponseWriter, r *http.Request, 
 	context.Set(r, "QuestionnaireAnswers", questionnaireanswers)
 	context.Set(r, "Resource", "QuestionnaireAnswers")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(questionnaireanswers)
 }
 
 func QuestionnaireAnswersDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

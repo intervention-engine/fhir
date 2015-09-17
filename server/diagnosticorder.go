@@ -134,9 +134,11 @@ func DiagnosticOrderCreateHandler(rw http.ResponseWriter, r *http.Request, next 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/DiagnosticOrder/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(diagnosticorder)
 }
 
 func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func DiagnosticOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next 
 	context.Set(r, "DiagnosticOrder", diagnosticorder)
 	context.Set(r, "Resource", "DiagnosticOrder")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(diagnosticorder)
 }
 
 func DiagnosticOrderDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -134,9 +134,11 @@ func OrganizationCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Organization/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(organization)
 }
 
 func OrganizationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func OrganizationUpdateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	context.Set(r, "Organization", organization)
 	context.Set(r, "Resource", "Organization")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(organization)
 }
 
 func OrganizationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

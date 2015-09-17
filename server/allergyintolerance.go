@@ -134,9 +134,11 @@ func AllergyIntoleranceCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/AllergyIntolerance/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(allergyintolerance)
 }
 
 func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func AllergyIntoleranceUpdateHandler(rw http.ResponseWriter, r *http.Request, ne
 	context.Set(r, "AllergyIntolerance", allergyintolerance)
 	context.Set(r, "Resource", "AllergyIntolerance")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(allergyintolerance)
 }
 
 func AllergyIntoleranceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

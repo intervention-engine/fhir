@@ -134,9 +134,11 @@ func NamingSystemCreateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/NamingSystem/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(namingsystem)
 }
 
 func NamingSystemUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func NamingSystemUpdateHandler(rw http.ResponseWriter, r *http.Request, next htt
 	context.Set(r, "NamingSystem", namingsystem)
 	context.Set(r, "Resource", "NamingSystem")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(namingsystem)
 }
 
 func NamingSystemDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

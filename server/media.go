@@ -134,9 +134,11 @@ func MediaCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Media/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(media)
 }
 
 func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func MediaUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	context.Set(r, "Media", media)
 	context.Set(r, "Resource", "Media")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(media)
 }
 
 func MediaDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

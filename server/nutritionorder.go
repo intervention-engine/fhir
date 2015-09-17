@@ -134,9 +134,11 @@ func NutritionOrderCreateHandler(rw http.ResponseWriter, r *http.Request, next h
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/NutritionOrder/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(nutritionorder)
 }
 
 func NutritionOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func NutritionOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next h
 	context.Set(r, "NutritionOrder", nutritionorder)
 	context.Set(r, "Resource", "NutritionOrder")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(nutritionorder)
 }
 
 func NutritionOrderDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

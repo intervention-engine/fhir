@@ -134,9 +134,11 @@ func BundleCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Bundle/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(bundle)
 }
 
 func BundleUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func BundleUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	context.Set(r, "Bundle", bundle)
 	context.Set(r, "Resource", "Bundle")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(bundle)
 }
 
 func BundleDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

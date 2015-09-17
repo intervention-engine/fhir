@@ -134,9 +134,11 @@ func ClaimCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Claim/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(claim)
 }
 
 func ClaimUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ClaimUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	context.Set(r, "Claim", claim)
 	context.Set(r, "Resource", "Claim")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(claim)
 }
 
 func ClaimDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

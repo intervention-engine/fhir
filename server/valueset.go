@@ -134,9 +134,11 @@ func ValueSetCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/ValueSet/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(valueset)
 }
 
 func ValueSetUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ValueSetUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Ha
 	context.Set(r, "ValueSet", valueset)
 	context.Set(r, "Resource", "ValueSet")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(valueset)
 }
 
 func ValueSetDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

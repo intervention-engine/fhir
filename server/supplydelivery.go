@@ -134,9 +134,11 @@ func SupplyDeliveryCreateHandler(rw http.ResponseWriter, r *http.Request, next h
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/SupplyDelivery/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(supplydelivery)
 }
 
 func SupplyDeliveryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func SupplyDeliveryUpdateHandler(rw http.ResponseWriter, r *http.Request, next h
 	context.Set(r, "SupplyDelivery", supplydelivery)
 	context.Set(r, "Resource", "SupplyDelivery")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(supplydelivery)
 }
 
 func SupplyDeliveryDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
