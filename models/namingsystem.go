@@ -30,18 +30,18 @@ import "encoding/json"
 
 type NamingSystem struct {
 	Id          string                          `json:"id" bson:"_id"`
-	Type        string                          `bson:"type,omitempty" json:"type,omitempty"`
 	Name        string                          `bson:"name,omitempty" json:"name,omitempty"`
-	Date        *FHIRDateTime                   `bson:"date,omitempty" json:"date,omitempty"`
 	Status      string                          `bson:"status,omitempty" json:"status,omitempty"`
-	Country     string                          `bson:"country,omitempty" json:"country,omitempty"`
-	Category    *CodeableConcept                `bson:"category,omitempty" json:"category,omitempty"`
-	Responsible string                          `bson:"responsible,omitempty" json:"responsible,omitempty"`
-	Description string                          `bson:"description,omitempty" json:"description,omitempty"`
-	Usage       string                          `bson:"usage,omitempty" json:"usage,omitempty"`
-	UniqueId    []NamingSystemUniqueIdComponent `bson:"uniqueId,omitempty" json:"uniqueId,omitempty"`
+	Kind        string                          `bson:"kind,omitempty" json:"kind,omitempty"`
 	Publisher   string                          `bson:"publisher,omitempty" json:"publisher,omitempty"`
 	Contact     []NamingSystemContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
+	Responsible string                          `bson:"responsible,omitempty" json:"responsible,omitempty"`
+	Date        *FHIRDateTime                   `bson:"date,omitempty" json:"date,omitempty"`
+	Type        *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
+	Description string                          `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext  []CodeableConcept               `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Usage       string                          `bson:"usage,omitempty" json:"usage,omitempty"`
+	UniqueId    []NamingSystemUniqueIdComponent `bson:"uniqueId,omitempty" json:"uniqueId,omitempty"`
 	ReplacedBy  *Reference                      `bson:"replacedBy,omitempty" json:"replacedBy,omitempty"`
 }
 
@@ -57,14 +57,14 @@ func (resource *NamingSystem) MarshalJSON() ([]byte, error) {
 	return json.Marshal(x)
 }
 
+type NamingSystemContactComponent struct {
+	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+}
+
 type NamingSystemUniqueIdComponent struct {
 	Type      string  `bson:"type,omitempty" json:"type,omitempty"`
 	Value     string  `bson:"value,omitempty" json:"value,omitempty"`
 	Preferred *bool   `bson:"preferred,omitempty" json:"preferred,omitempty"`
 	Period    *Period `bson:"period,omitempty" json:"period,omitempty"`
-}
-
-type NamingSystemContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }

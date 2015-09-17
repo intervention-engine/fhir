@@ -31,18 +31,21 @@ import "encoding/json"
 type CarePlan struct {
 	Id          string                         `json:"id" bson:"_id"`
 	Identifier  []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient     *Reference                     `bson:"patient,omitempty" json:"patient,omitempty"`
+	Subject     *Reference                     `bson:"subject,omitempty" json:"subject,omitempty"`
 	Status      string                         `bson:"status,omitempty" json:"status,omitempty"`
+	Context     *Reference                     `bson:"context,omitempty" json:"context,omitempty"`
 	Period      *Period                        `bson:"period,omitempty" json:"period,omitempty"`
 	Author      []Reference                    `bson:"author,omitempty" json:"author,omitempty"`
 	Modified    *FHIRDateTime                  `bson:"modified,omitempty" json:"modified,omitempty"`
 	Category    []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
-	Concern     []Reference                    `bson:"concern,omitempty" json:"concern,omitempty"`
+	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
+	Addresses   []Reference                    `bson:"addresses,omitempty" json:"addresses,omitempty"`
 	Support     []Reference                    `bson:"support,omitempty" json:"support,omitempty"`
+	RelatedPlan []CarePlanRelatedPlanComponent `bson:"relatedPlan,omitempty" json:"relatedPlan,omitempty"`
 	Participant []CarePlanParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
 	Goal        []Reference                    `bson:"goal,omitempty" json:"goal,omitempty"`
 	Activity    []CarePlanActivityComponent    `bson:"activity,omitempty" json:"activity,omitempty"`
-	Notes       string                         `bson:"notes,omitempty" json:"notes,omitempty"`
+	Note        *Annotation                    `bson:"note,omitempty" json:"note,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -57,6 +60,11 @@ func (resource *CarePlan) MarshalJSON() ([]byte, error) {
 	return json.Marshal(x)
 }
 
+type CarePlanRelatedPlanComponent struct {
+	Code string     `bson:"code,omitempty" json:"code,omitempty"`
+	Plan *Reference `bson:"plan,omitempty" json:"plan,omitempty"`
+}
+
 type CarePlanParticipantComponent struct {
 	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 	Member *Reference       `bson:"member,omitempty" json:"member,omitempty"`
@@ -64,27 +72,28 @@ type CarePlanParticipantComponent struct {
 
 type CarePlanActivityComponent struct {
 	ActionResulting []Reference                      `bson:"actionResulting,omitempty" json:"actionResulting,omitempty"`
-	Notes           string                           `bson:"notes,omitempty" json:"notes,omitempty"`
+	Progress        []Annotation                     `bson:"progress,omitempty" json:"progress,omitempty"`
 	Reference       *Reference                       `bson:"reference,omitempty" json:"reference,omitempty"`
 	Detail          *CarePlanActivityDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
 type CarePlanActivityDetailComponent struct {
-	Category              string           `bson:"category,omitempty" json:"category,omitempty"`
-	Code                  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	ReasonCodeableConcept *CodeableConcept `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
-	ReasonReference       *Reference       `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
-	Goal                  []Reference      `bson:"goal,omitempty" json:"goal,omitempty"`
-	Status                string           `bson:"status,omitempty" json:"status,omitempty"`
-	StatusReason          *CodeableConcept `bson:"statusReason,omitempty" json:"statusReason,omitempty"`
-	Prohibited            *bool            `bson:"prohibited,omitempty" json:"prohibited,omitempty"`
-	ScheduledTiming       *Timing          `bson:"scheduledTiming,omitempty" json:"scheduledTiming,omitempty"`
-	ScheduledPeriod       *Period          `bson:"scheduledPeriod,omitempty" json:"scheduledPeriod,omitempty"`
-	ScheduledString       string           `bson:"scheduledString,omitempty" json:"scheduledString,omitempty"`
-	Location              *Reference       `bson:"location,omitempty" json:"location,omitempty"`
-	Performer             []Reference      `bson:"performer,omitempty" json:"performer,omitempty"`
-	Product               *Reference       `bson:"product,omitempty" json:"product,omitempty"`
-	DailyAmount           *Quantity        `bson:"dailyAmount,omitempty" json:"dailyAmount,omitempty"`
-	Quantity              *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Note                  string           `bson:"note,omitempty" json:"note,omitempty"`
+	Category               *CodeableConcept  `bson:"category,omitempty" json:"category,omitempty"`
+	Code                   *CodeableConcept  `bson:"code,omitempty" json:"code,omitempty"`
+	ReasonCode             []CodeableConcept `bson:"reasonCode,omitempty" json:"reasonCode,omitempty"`
+	ReasonReference        []Reference       `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
+	Goal                   []Reference       `bson:"goal,omitempty" json:"goal,omitempty"`
+	Status                 string            `bson:"status,omitempty" json:"status,omitempty"`
+	StatusReason           *CodeableConcept  `bson:"statusReason,omitempty" json:"statusReason,omitempty"`
+	Prohibited             *bool             `bson:"prohibited,omitempty" json:"prohibited,omitempty"`
+	ScheduledTiming        *Timing           `bson:"scheduledTiming,omitempty" json:"scheduledTiming,omitempty"`
+	ScheduledPeriod        *Period           `bson:"scheduledPeriod,omitempty" json:"scheduledPeriod,omitempty"`
+	ScheduledString        string            `bson:"scheduledString,omitempty" json:"scheduledString,omitempty"`
+	Location               *Reference        `bson:"location,omitempty" json:"location,omitempty"`
+	Performer              []Reference       `bson:"performer,omitempty" json:"performer,omitempty"`
+	ProductCodeableConcept *CodeableConcept  `bson:"productCodeableConcept,omitempty" json:"productCodeableConcept,omitempty"`
+	ProductReference       *Reference        `bson:"productReference,omitempty" json:"productReference,omitempty"`
+	DailyAmount            *Quantity         `bson:"dailyAmount,omitempty" json:"dailyAmount,omitempty"`
+	Quantity               *Quantity         `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Description            string            `bson:"description,omitempty" json:"description,omitempty"`
 }

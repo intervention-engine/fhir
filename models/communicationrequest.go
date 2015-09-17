@@ -29,21 +29,22 @@ package models
 import "encoding/json"
 
 type CommunicationRequest struct {
-	Id            string                                 `json:"id" bson:"_id"`
-	Identifier    []Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Category      *CodeableConcept                       `bson:"category,omitempty" json:"category,omitempty"`
-	Sender        *Reference                             `bson:"sender,omitempty" json:"sender,omitempty"`
-	Recipient     []Reference                            `bson:"recipient,omitempty" json:"recipient,omitempty"`
-	Payload       []CommunicationRequestPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
-	Medium        []CodeableConcept                      `bson:"medium,omitempty" json:"medium,omitempty"`
-	Requester     *Reference                             `bson:"requester,omitempty" json:"requester,omitempty"`
-	Status        string                                 `bson:"status,omitempty" json:"status,omitempty"`
-	Encounter     *Reference                             `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	ScheduledTime *FHIRDateTime                          `bson:"scheduledTime,omitempty" json:"scheduledTime,omitempty"`
-	Reason        []CodeableConcept                      `bson:"reason,omitempty" json:"reason,omitempty"`
-	OrderedOn     *FHIRDateTime                          `bson:"orderedOn,omitempty" json:"orderedOn,omitempty"`
-	Subject       *Reference                             `bson:"subject,omitempty" json:"subject,omitempty"`
-	Priority      *CodeableConcept                       `bson:"priority,omitempty" json:"priority,omitempty"`
+	Id                string                                 `json:"id" bson:"_id"`
+	Identifier        []Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Category          *CodeableConcept                       `bson:"category,omitempty" json:"category,omitempty"`
+	Sender            *Reference                             `bson:"sender,omitempty" json:"sender,omitempty"`
+	Recipient         []Reference                            `bson:"recipient,omitempty" json:"recipient,omitempty"`
+	Payload           []CommunicationRequestPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
+	Medium            []CodeableConcept                      `bson:"medium,omitempty" json:"medium,omitempty"`
+	Requester         *Reference                             `bson:"requester,omitempty" json:"requester,omitempty"`
+	Status            string                                 `bson:"status,omitempty" json:"status,omitempty"`
+	Encounter         *Reference                             `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	ScheduledDateTime *FHIRDateTime                          `bson:"scheduledDateTime,omitempty" json:"scheduledDateTime,omitempty"`
+	ScheduledPeriod   *Period                                `bson:"scheduledPeriod,omitempty" json:"scheduledPeriod,omitempty"`
+	Reason            []CodeableConcept                      `bson:"reason,omitempty" json:"reason,omitempty"`
+	RequestedOn       *FHIRDateTime                          `bson:"requestedOn,omitempty" json:"requestedOn,omitempty"`
+	Subject           *Reference                             `bson:"subject,omitempty" json:"subject,omitempty"`
+	Priority          *CodeableConcept                       `bson:"priority,omitempty" json:"priority,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification

@@ -31,13 +31,13 @@ import "encoding/json"
 type Organization struct {
 	Id         string                         `json:"id" bson:"_id"`
 	Identifier []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Name       string                         `bson:"name,omitempty" json:"name,omitempty"`
+	Active     *bool                          `bson:"active,omitempty" json:"active,omitempty"`
 	Type       *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
+	Name       string                         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom    []ContactPoint                 `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address    []Address                      `bson:"address,omitempty" json:"address,omitempty"`
 	PartOf     *Reference                     `bson:"partOf,omitempty" json:"partOf,omitempty"`
 	Contact    []OrganizationContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Active     *bool                          `bson:"active,omitempty" json:"active,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification

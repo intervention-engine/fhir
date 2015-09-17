@@ -30,7 +30,6 @@ import "encoding/json"
 
 type MessageHeader struct {
 	Id          string                                     `json:"id" bson:"_id"`
-	Identifier  string                                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Timestamp   *FHIRDateTime                              `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
 	Event       *Coding                                    `bson:"event,omitempty" json:"event,omitempty"`
 	Response    *MessageHeaderResponseComponent            `bson:"response,omitempty" json:"response,omitempty"`

@@ -33,18 +33,19 @@ type Conformance struct {
 	Url            string                              `bson:"url,omitempty" json:"url,omitempty"`
 	Version        string                              `bson:"version,omitempty" json:"version,omitempty"`
 	Name           string                              `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                              `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental   *bool                               `bson:"experimental,omitempty" json:"experimental,omitempty"`
 	Publisher      string                              `bson:"publisher,omitempty" json:"publisher,omitempty"`
 	Contact        []ConformanceContactComponent       `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date           *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
 	Description    string                              `bson:"description,omitempty" json:"description,omitempty"`
 	Requirements   string                              `bson:"requirements,omitempty" json:"requirements,omitempty"`
 	Copyright      string                              `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Status         string                              `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental   *bool                               `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Date           *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
+	Kind           string                              `bson:"kind,omitempty" json:"kind,omitempty"`
 	Software       *ConformanceSoftwareComponent       `bson:"software,omitempty" json:"software,omitempty"`
 	Implementation *ConformanceImplementationComponent `bson:"implementation,omitempty" json:"implementation,omitempty"`
 	FhirVersion    string                              `bson:"fhirVersion,omitempty" json:"fhirVersion,omitempty"`
-	AcceptUnknown  *bool                               `bson:"acceptUnknown,omitempty" json:"acceptUnknown,omitempty"`
+	AcceptUnknown  string                              `bson:"acceptUnknown,omitempty" json:"acceptUnknown,omitempty"`
 	Format         []string                            `bson:"format,omitempty" json:"format,omitempty"`
 	Profile        []Reference                         `bson:"profile,omitempty" json:"profile,omitempty"`
 	Rest           []ConformanceRestComponent          `bson:"rest,omitempty" json:"rest,omitempty"`
@@ -81,14 +82,15 @@ type ConformanceImplementationComponent struct {
 }
 
 type ConformanceRestComponent struct {
-	Mode            string                                  `bson:"mode,omitempty" json:"mode,omitempty"`
-	Documentation   string                                  `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Security        *ConformanceRestSecurityComponent       `bson:"security,omitempty" json:"security,omitempty"`
-	Resource        []ConformanceRestResourceComponent      `bson:"resource,omitempty" json:"resource,omitempty"`
-	Interaction     []ConformanceSystemInteractionComponent `bson:"interaction,omitempty" json:"interaction,omitempty"`
-	Operation       []ConformanceRestOperationComponent     `bson:"operation,omitempty" json:"operation,omitempty"`
-	DocumentMailbox []string                                `bson:"documentMailbox,omitempty" json:"documentMailbox,omitempty"`
-	Compartment     []string                                `bson:"compartment,omitempty" json:"compartment,omitempty"`
+	Mode            string                                        `bson:"mode,omitempty" json:"mode,omitempty"`
+	Documentation   string                                        `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Security        *ConformanceRestSecurityComponent             `bson:"security,omitempty" json:"security,omitempty"`
+	Resource        []ConformanceRestResourceComponent            `bson:"resource,omitempty" json:"resource,omitempty"`
+	Interaction     []ConformanceSystemInteractionComponent       `bson:"interaction,omitempty" json:"interaction,omitempty"`
+	TransactionMode string                                        `bson:"transactionMode,omitempty" json:"transactionMode,omitempty"`
+	SearchParam     []ConformanceRestResourceSearchParamComponent `bson:"searchParam,omitempty" json:"searchParam,omitempty"`
+	Operation       []ConformanceRestOperationComponent           `bson:"operation,omitempty" json:"operation,omitempty"`
+	Compartment     []string                                      `bson:"compartment,omitempty" json:"compartment,omitempty"`
 }
 
 type ConformanceRestSecurityComponent struct {
@@ -112,8 +114,9 @@ type ConformanceRestResourceComponent struct {
 	UpdateCreate      *bool                                         `bson:"updateCreate,omitempty" json:"updateCreate,omitempty"`
 	ConditionalCreate *bool                                         `bson:"conditionalCreate,omitempty" json:"conditionalCreate,omitempty"`
 	ConditionalUpdate *bool                                         `bson:"conditionalUpdate,omitempty" json:"conditionalUpdate,omitempty"`
-	ConditionalDelete *bool                                         `bson:"conditionalDelete,omitempty" json:"conditionalDelete,omitempty"`
+	ConditionalDelete string                                        `bson:"conditionalDelete,omitempty" json:"conditionalDelete,omitempty"`
 	SearchInclude     []string                                      `bson:"searchInclude,omitempty" json:"searchInclude,omitempty"`
+	SearchRevInclude  []string                                      `bson:"searchRevInclude,omitempty" json:"searchRevInclude,omitempty"`
 	SearchParam       []ConformanceRestResourceSearchParamComponent `bson:"searchParam,omitempty" json:"searchParam,omitempty"`
 }
 
@@ -128,6 +131,7 @@ type ConformanceRestResourceSearchParamComponent struct {
 	Type          string   `bson:"type,omitempty" json:"type,omitempty"`
 	Documentation string   `bson:"documentation,omitempty" json:"documentation,omitempty"`
 	Target        []string `bson:"target,omitempty" json:"target,omitempty"`
+	Modifier      []string `bson:"modifier,omitempty" json:"modifier,omitempty"`
 	Chain         []string `bson:"chain,omitempty" json:"chain,omitempty"`
 }
 
@@ -142,17 +146,21 @@ type ConformanceRestOperationComponent struct {
 }
 
 type ConformanceMessagingComponent struct {
-	Endpoint      string                               `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
-	ReliableCache *uint32                              `bson:"reliableCache,omitempty" json:"reliableCache,omitempty"`
-	Documentation string                               `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Event         []ConformanceMessagingEventComponent `bson:"event,omitempty" json:"event,omitempty"`
+	Endpoint      []ConformanceMessagingEndpointComponent `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	ReliableCache *uint32                                 `bson:"reliableCache,omitempty" json:"reliableCache,omitempty"`
+	Documentation string                                  `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Event         []ConformanceMessagingEventComponent    `bson:"event,omitempty" json:"event,omitempty"`
+}
+
+type ConformanceMessagingEndpointComponent struct {
+	Protocol *Coding `bson:"protocol,omitempty" json:"protocol,omitempty"`
+	Address  string  `bson:"address,omitempty" json:"address,omitempty"`
 }
 
 type ConformanceMessagingEventComponent struct {
 	Code          *Coding    `bson:"code,omitempty" json:"code,omitempty"`
 	Category      string     `bson:"category,omitempty" json:"category,omitempty"`
 	Mode          string     `bson:"mode,omitempty" json:"mode,omitempty"`
-	Protocol      []Coding   `bson:"protocol,omitempty" json:"protocol,omitempty"`
 	Focus         string     `bson:"focus,omitempty" json:"focus,omitempty"`
 	Request       *Reference `bson:"request,omitempty" json:"request,omitempty"`
 	Response      *Reference `bson:"response,omitempty" json:"response,omitempty"`

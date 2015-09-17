@@ -71,8 +71,12 @@ type CompositionEventComponent struct {
 }
 
 type CompositionSectionComponent struct {
-	Title   string                        `bson:"title,omitempty" json:"title,omitempty"`
-	Code    *CodeableConcept              `bson:"code,omitempty" json:"code,omitempty"`
-	Content *Reference                    `bson:"content,omitempty" json:"content,omitempty"`
-	Section []CompositionSectionComponent `bson:"section,omitempty" json:"section,omitempty"`
+	Title       string                        `bson:"title,omitempty" json:"title,omitempty"`
+	Code        *CodeableConcept              `bson:"code,omitempty" json:"code,omitempty"`
+	Text        *Narrative                    `bson:"text,omitempty" json:"text,omitempty"`
+	Mode        string                        `bson:"mode,omitempty" json:"mode,omitempty"`
+	OrderedBy   *CodeableConcept              `bson:"orderedBy,omitempty" json:"orderedBy,omitempty"`
+	Entry       []Reference                   `bson:"entry,omitempty" json:"entry,omitempty"`
+	EmptyReason *CodeableConcept              `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
+	Section     []CompositionSectionComponent `bson:"section,omitempty" json:"section,omitempty"`
 }

@@ -29,33 +29,32 @@ package models
 import "encoding/json"
 
 type Condition struct {
-	Id                string                                `json:"id" bson:"_id"`
-	Identifier        []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient           *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
-	Encounter         *Reference                            `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Asserter          *Reference                            `bson:"asserter,omitempty" json:"asserter,omitempty"`
-	DateAsserted      *FHIRDateTime                         `bson:"dateAsserted,omitempty" json:"dateAsserted,omitempty"`
-	Code              *CodeableConcept                      `bson:"code,omitempty" json:"code,omitempty"`
-	Category          *CodeableConcept                      `bson:"category,omitempty" json:"category,omitempty"`
-	ClinicalStatus    string                                `bson:"clinicalStatus,omitempty" json:"clinicalStatus,omitempty"`
-	Severity          *CodeableConcept                      `bson:"severity,omitempty" json:"severity,omitempty"`
-	OnsetDateTime     *FHIRDateTime                         `bson:"onsetDateTime,omitempty" json:"onsetDateTime,omitempty"`
-	OnsetAge          *Quantity                             `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
-	OnsetPeriod       *Period                               `bson:"onsetPeriod,omitempty" json:"onsetPeriod,omitempty"`
-	OnsetRange        *Range                                `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
-	OnsetString       string                                `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
-	AbatementDate     *FHIRDateTime                         `bson:"abatementDate,omitempty" json:"abatementDate,omitempty"`
-	AbatementAge      *Quantity                             `bson:"abatementAge,omitempty" json:"abatementAge,omitempty"`
-	AbatementBoolean  *bool                                 `bson:"abatementBoolean,omitempty" json:"abatementBoolean,omitempty"`
-	AbatementPeriod   *Period                               `bson:"abatementPeriod,omitempty" json:"abatementPeriod,omitempty"`
-	AbatementRange    *Range                                `bson:"abatementRange,omitempty" json:"abatementRange,omitempty"`
-	AbatementString   string                                `bson:"abatementString,omitempty" json:"abatementString,omitempty"`
-	Stage             *ConditionStageComponent              `bson:"stage,omitempty" json:"stage,omitempty"`
-	Evidence          []ConditionEvidenceComponent          `bson:"evidence,omitempty" json:"evidence,omitempty"`
-	Location          []ConditionLocationComponent          `bson:"location,omitempty" json:"location,omitempty"`
-	DueTo             []ConditionDueToComponent             `bson:"dueTo,omitempty" json:"dueTo,omitempty"`
-	OccurredFollowing []ConditionOccurredFollowingComponent `bson:"occurredFollowing,omitempty" json:"occurredFollowing,omitempty"`
-	Notes             string                                `bson:"notes,omitempty" json:"notes,omitempty"`
+	Id                 string                       `json:"id" bson:"_id"`
+	Identifier         []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient            *Reference                   `bson:"patient,omitempty" json:"patient,omitempty"`
+	Encounter          *Reference                   `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Asserter           *Reference                   `bson:"asserter,omitempty" json:"asserter,omitempty"`
+	DateRecorded       *FHIRDateTime                `bson:"dateRecorded,omitempty" json:"dateRecorded,omitempty"`
+	Code               *CodeableConcept             `bson:"code,omitempty" json:"code,omitempty"`
+	Category           *CodeableConcept             `bson:"category,omitempty" json:"category,omitempty"`
+	ClinicalStatus     string                       `bson:"clinicalStatus,omitempty" json:"clinicalStatus,omitempty"`
+	VerificationStatus string                       `bson:"verificationStatus,omitempty" json:"verificationStatus,omitempty"`
+	Severity           *CodeableConcept             `bson:"severity,omitempty" json:"severity,omitempty"`
+	OnsetDateTime      *FHIRDateTime                `bson:"onsetDateTime,omitempty" json:"onsetDateTime,omitempty"`
+	OnsetAge           *Quantity                    `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
+	OnsetPeriod        *Period                      `bson:"onsetPeriod,omitempty" json:"onsetPeriod,omitempty"`
+	OnsetRange         *Range                       `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
+	OnsetString        string                       `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
+	AbatementDateTime  *FHIRDateTime                `bson:"abatementDateTime,omitempty" json:"abatementDateTime,omitempty"`
+	AbatementAge       *Quantity                    `bson:"abatementAge,omitempty" json:"abatementAge,omitempty"`
+	AbatementBoolean   *bool                        `bson:"abatementBoolean,omitempty" json:"abatementBoolean,omitempty"`
+	AbatementPeriod    *Period                      `bson:"abatementPeriod,omitempty" json:"abatementPeriod,omitempty"`
+	AbatementRange     *Range                       `bson:"abatementRange,omitempty" json:"abatementRange,omitempty"`
+	AbatementString    string                       `bson:"abatementString,omitempty" json:"abatementString,omitempty"`
+	Stage              *ConditionStageComponent     `bson:"stage,omitempty" json:"stage,omitempty"`
+	Evidence           []ConditionEvidenceComponent `bson:"evidence,omitempty" json:"evidence,omitempty"`
+	BodySite           []CodeableConcept            `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	Notes              string                       `bson:"notes,omitempty" json:"notes,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -78,19 +77,4 @@ type ConditionStageComponent struct {
 type ConditionEvidenceComponent struct {
 	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Detail []Reference      `bson:"detail,omitempty" json:"detail,omitempty"`
-}
-
-type ConditionLocationComponent struct {
-	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
-	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
-}
-
-type ConditionDueToComponent struct {
-	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Target *Reference       `bson:"target,omitempty" json:"target,omitempty"`
-}
-
-type ConditionOccurredFollowingComponent struct {
-	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Target *Reference       `bson:"target,omitempty" json:"target,omitempty"`
 }

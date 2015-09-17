@@ -31,6 +31,7 @@ import "encoding/json"
 type Specimen struct {
 	Id                  string                       `json:"id" bson:"_id"`
 	Identifier          []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status              string                       `bson:"status,omitempty" json:"status,omitempty"`
 	Type                *CodeableConcept             `bson:"type,omitempty" json:"type,omitempty"`
 	Parent              []Reference                  `bson:"parent,omitempty" json:"parent,omitempty"`
 	Subject             *Reference                   `bson:"subject,omitempty" json:"subject,omitempty"`
@@ -54,14 +55,13 @@ func (resource *Specimen) MarshalJSON() ([]byte, error) {
 }
 
 type SpecimenCollectionComponent struct {
-	Collector               *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
-	Comment                 []string         `bson:"comment,omitempty" json:"comment,omitempty"`
-	CollectedDateTime       *FHIRDateTime    `bson:"collectedDateTime,omitempty" json:"collectedDateTime,omitempty"`
-	CollectedPeriod         *Period          `bson:"collectedPeriod,omitempty" json:"collectedPeriod,omitempty"`
-	Quantity                *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Method                  *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
-	BodySiteCodeableConcept *CodeableConcept `bson:"bodySiteCodeableConcept,omitempty" json:"bodySiteCodeableConcept,omitempty"`
-	BodySiteReference       *Reference       `bson:"bodySiteReference,omitempty" json:"bodySiteReference,omitempty"`
+	Collector         *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
+	Comment           []string         `bson:"comment,omitempty" json:"comment,omitempty"`
+	CollectedDateTime *FHIRDateTime    `bson:"collectedDateTime,omitempty" json:"collectedDateTime,omitempty"`
+	CollectedPeriod   *Period          `bson:"collectedPeriod,omitempty" json:"collectedPeriod,omitempty"`
+	Quantity          *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Method            *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
+	BodySite          *CodeableConcept `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
 }
 
 type SpecimenTreatmentComponent struct {

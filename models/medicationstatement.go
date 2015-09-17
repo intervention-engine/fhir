@@ -42,6 +42,7 @@ type MedicationStatement struct {
 	EffectiveDateTime           *FHIRDateTime                        `bson:"effectiveDateTime,omitempty" json:"effectiveDateTime,omitempty"`
 	EffectivePeriod             *Period                              `bson:"effectivePeriod,omitempty" json:"effectivePeriod,omitempty"`
 	Note                        string                               `bson:"note,omitempty" json:"note,omitempty"`
+	SupportingInformation       []Reference                          `bson:"supportingInformation,omitempty" json:"supportingInformation,omitempty"`
 	MedicationCodeableConcept   *CodeableConcept                     `bson:"medicationCodeableConcept,omitempty" json:"medicationCodeableConcept,omitempty"`
 	MedicationReference         *Reference                           `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
 	Dosage                      []MedicationStatementDosageComponent `bson:"dosage,omitempty" json:"dosage,omitempty"`
@@ -61,13 +62,16 @@ func (resource *MedicationStatement) MarshalJSON() ([]byte, error) {
 
 type MedicationStatementDosageComponent struct {
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
-	Schedule                *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	Timing                  *Timing          `bson:"timing,omitempty" json:"timing,omitempty"`
 	AsNeededBoolean         *bool            `bson:"asNeededBoolean,omitempty" json:"asNeededBoolean,omitempty"`
 	AsNeededCodeableConcept *CodeableConcept `bson:"asNeededCodeableConcept,omitempty" json:"asNeededCodeableConcept,omitempty"`
-	Site                    *CodeableConcept `bson:"site,omitempty" json:"site,omitempty"`
+	SiteCodeableConcept     *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
+	SiteReference           *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
 	Route                   *CodeableConcept `bson:"route,omitempty" json:"route,omitempty"`
 	Method                  *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
-	Quantity                *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Rate                    *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
+	QuantitySimpleQuantity  *Quantity        `bson:"quantitySimpleQuantity,omitempty" json:"quantitySimpleQuantity,omitempty"`
+	QuantityRange           *Range           `bson:"quantityRange,omitempty" json:"quantityRange,omitempty"`
+	RateRatio               *Ratio           `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
+	RateRange               *Range           `bson:"rateRange,omitempty" json:"rateRange,omitempty"`
 	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty" json:"maxDosePerPeriod,omitempty"`
 }

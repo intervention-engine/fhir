@@ -33,6 +33,7 @@ type RiskAssessment struct {
 	Subject    *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
 	Date       *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
 	Condition  *Reference                          `bson:"condition,omitempty" json:"condition,omitempty"`
+	Encounter  *Reference                          `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Performer  *Reference                          `bson:"performer,omitempty" json:"performer,omitempty"`
 	Identifier *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Method     *CodeableConcept                    `bson:"method,omitempty" json:"method,omitempty"`

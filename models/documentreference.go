@@ -35,7 +35,6 @@ type DocumentReference struct {
 	Subject          *Reference                            `bson:"subject,omitempty" json:"subject,omitempty"`
 	Type             *CodeableConcept                      `bson:"type,omitempty" json:"type,omitempty"`
 	Class            *CodeableConcept                      `bson:"class,omitempty" json:"class,omitempty"`
-	Format           []string                              `bson:"format,omitempty" json:"format,omitempty"`
 	Author           []Reference                           `bson:"author,omitempty" json:"author,omitempty"`
 	Custodian        *Reference                            `bson:"custodian,omitempty" json:"custodian,omitempty"`
 	Authenticator    *Reference                            `bson:"authenticator,omitempty" json:"authenticator,omitempty"`
@@ -45,8 +44,8 @@ type DocumentReference struct {
 	DocStatus        *CodeableConcept                      `bson:"docStatus,omitempty" json:"docStatus,omitempty"`
 	RelatesTo        []DocumentReferenceRelatesToComponent `bson:"relatesTo,omitempty" json:"relatesTo,omitempty"`
 	Description      string                                `bson:"description,omitempty" json:"description,omitempty"`
-	Confidentiality  []CodeableConcept                     `bson:"confidentiality,omitempty" json:"confidentiality,omitempty"`
-	Content          []Attachment                          `bson:"content,omitempty" json:"content,omitempty"`
+	SecurityLabel    []CodeableConcept                     `bson:"securityLabel,omitempty" json:"securityLabel,omitempty"`
+	Content          []DocumentReferenceContentComponent   `bson:"content,omitempty" json:"content,omitempty"`
 	Context          *DocumentReferenceContextComponent    `bson:"context,omitempty" json:"context,omitempty"`
 }
 
@@ -67,7 +66,13 @@ type DocumentReferenceRelatesToComponent struct {
 	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
 
+type DocumentReferenceContentComponent struct {
+	Attachment *Attachment `bson:"attachment,omitempty" json:"attachment,omitempty"`
+	Format     []Coding    `bson:"format,omitempty" json:"format,omitempty"`
+}
+
 type DocumentReferenceContextComponent struct {
+	Encounter         *Reference                                 `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Event             []CodeableConcept                          `bson:"event,omitempty" json:"event,omitempty"`
 	Period            *Period                                    `bson:"period,omitempty" json:"period,omitempty"`
 	FacilityType      *CodeableConcept                           `bson:"facilityType,omitempty" json:"facilityType,omitempty"`

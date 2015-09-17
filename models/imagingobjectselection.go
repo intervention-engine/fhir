@@ -52,9 +52,10 @@ func (resource *ImagingObjectSelection) MarshalJSON() ([]byte, error) {
 }
 
 type ImagingObjectSelectionStudyComponent struct {
-	Uid    string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
-	Url    string                                  `bson:"url,omitempty" json:"url,omitempty"`
-	Series []ImagingObjectSelectionSeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
+	Uid          string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
+	Url          string                                  `bson:"url,omitempty" json:"url,omitempty"`
+	ImagingStudy *Reference                              `bson:"imagingStudy,omitempty" json:"imagingStudy,omitempty"`
+	Series       []ImagingObjectSelectionSeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
 }
 
 type ImagingObjectSelectionSeriesComponent struct {

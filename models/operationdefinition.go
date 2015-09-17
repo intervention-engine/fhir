@@ -33,14 +33,14 @@ type OperationDefinition struct {
 	Url          string                                  `bson:"url,omitempty" json:"url,omitempty"`
 	Version      string                                  `bson:"version,omitempty" json:"version,omitempty"`
 	Name         string                                  `bson:"name,omitempty" json:"name,omitempty"`
+	Status       string                                  `bson:"status,omitempty" json:"status,omitempty"`
+	Kind         string                                  `bson:"kind,omitempty" json:"kind,omitempty"`
+	Experimental *bool                                   `bson:"experimental,omitempty" json:"experimental,omitempty"`
 	Publisher    string                                  `bson:"publisher,omitempty" json:"publisher,omitempty"`
 	Contact      []OperationDefinitionContactComponent   `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date         *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
 	Description  string                                  `bson:"description,omitempty" json:"description,omitempty"`
 	Requirements string                                  `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Status       string                                  `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                                   `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Date         *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
-	Kind         string                                  `bson:"kind,omitempty" json:"kind,omitempty"`
 	Idempotent   *bool                                   `bson:"idempotent,omitempty" json:"idempotent,omitempty"`
 	Code         string                                  `bson:"code,omitempty" json:"code,omitempty"`
 	Notes        string                                  `bson:"notes,omitempty" json:"notes,omitempty"`
@@ -69,21 +69,19 @@ type OperationDefinitionContactComponent struct {
 }
 
 type OperationDefinitionParameterComponent struct {
-	Name          string                                      `bson:"name,omitempty" json:"name,omitempty"`
-	Use           string                                      `bson:"use,omitempty" json:"use,omitempty"`
-	Min           *int32                                      `bson:"min,omitempty" json:"min,omitempty"`
-	Max           string                                      `bson:"max,omitempty" json:"max,omitempty"`
-	Documentation string                                      `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Type          string                                      `bson:"type,omitempty" json:"type,omitempty"`
-	Profile       *Reference                                  `bson:"profile,omitempty" json:"profile,omitempty"`
-	Part          []OperationDefinitionParameterPartComponent `bson:"part,omitempty" json:"part,omitempty"`
+	Name          string                                        `bson:"name,omitempty" json:"name,omitempty"`
+	Use           string                                        `bson:"use,omitempty" json:"use,omitempty"`
+	Min           *int32                                        `bson:"min,omitempty" json:"min,omitempty"`
+	Max           string                                        `bson:"max,omitempty" json:"max,omitempty"`
+	Documentation string                                        `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Type          string                                        `bson:"type,omitempty" json:"type,omitempty"`
+	Profile       *Reference                                    `bson:"profile,omitempty" json:"profile,omitempty"`
+	Binding       *OperationDefinitionParameterBindingComponent `bson:"binding,omitempty" json:"binding,omitempty"`
+	Part          []OperationDefinitionParameterComponent       `bson:"part,omitempty" json:"part,omitempty"`
 }
 
-type OperationDefinitionParameterPartComponent struct {
-	Name          string     `bson:"name,omitempty" json:"name,omitempty"`
-	Min           *uint32    `bson:"min,omitempty" json:"min,omitempty"`
-	Max           string     `bson:"max,omitempty" json:"max,omitempty"`
-	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Type          string     `bson:"type,omitempty" json:"type,omitempty"`
-	Profile       *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
+type OperationDefinitionParameterBindingComponent struct {
+	Strength          string     `bson:"strength,omitempty" json:"strength,omitempty"`
+	ValueSetUri       string     `bson:"valueSetUri,omitempty" json:"valueSetUri,omitempty"`
+	ValueSetReference *Reference `bson:"valueSetReference,omitempty" json:"valueSetReference,omitempty"`
 }

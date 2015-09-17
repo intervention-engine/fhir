@@ -29,18 +29,23 @@ package models
 import "encoding/json"
 
 type Goal struct {
-	Id          string                 `json:"id" bson:"_id"`
-	Identifier  []Identifier           `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient     *Reference             `bson:"patient,omitempty" json:"patient,omitempty"`
-	TargetDate  *FHIRDateTime          `bson:"targetDate,omitempty" json:"targetDate,omitempty"`
-	Description string                 `bson:"description,omitempty" json:"description,omitempty"`
-	Status      string                 `bson:"status,omitempty" json:"status,omitempty"`
-	StatusDate  *FHIRDateTime          `bson:"statusDate,omitempty" json:"statusDate,omitempty"`
-	Author      *Reference             `bson:"author,omitempty" json:"author,omitempty"`
-	Priority    *CodeableConcept       `bson:"priority,omitempty" json:"priority,omitempty"`
-	Concern     []Reference            `bson:"concern,omitempty" json:"concern,omitempty"`
-	Notes       string                 `bson:"notes,omitempty" json:"notes,omitempty"`
-	Outcome     []GoalOutcomeComponent `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	Id                   string                 `json:"id" bson:"_id"`
+	Identifier           []Identifier           `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Subject              *Reference             `bson:"subject,omitempty" json:"subject,omitempty"`
+	StartDate            *FHIRDateTime          `bson:"startDate,omitempty" json:"startDate,omitempty"`
+	StartCodeableConcept *CodeableConcept       `bson:"startCodeableConcept,omitempty" json:"startCodeableConcept,omitempty"`
+	TargetDate           *FHIRDateTime          `bson:"targetDate,omitempty" json:"targetDate,omitempty"`
+	TargetDuration       *Quantity              `bson:"targetDuration,omitempty" json:"targetDuration,omitempty"`
+	Category             []CodeableConcept      `bson:"category,omitempty" json:"category,omitempty"`
+	Description          string                 `bson:"description,omitempty" json:"description,omitempty"`
+	Status               string                 `bson:"status,omitempty" json:"status,omitempty"`
+	StatusDate           *FHIRDateTime          `bson:"statusDate,omitempty" json:"statusDate,omitempty"`
+	StatusReason         *CodeableConcept       `bson:"statusReason,omitempty" json:"statusReason,omitempty"`
+	Author               *Reference             `bson:"author,omitempty" json:"author,omitempty"`
+	Priority             *CodeableConcept       `bson:"priority,omitempty" json:"priority,omitempty"`
+	Addresses            []Reference            `bson:"addresses,omitempty" json:"addresses,omitempty"`
+	Note                 []Annotation           `bson:"note,omitempty" json:"note,omitempty"`
+	Outcome              []GoalOutcomeComponent `bson:"outcome,omitempty" json:"outcome,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification

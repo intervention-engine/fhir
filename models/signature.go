@@ -32,5 +32,6 @@ type Signature struct {
 	When         *FHIRDateTime `bson:"when,omitempty" json:"when,omitempty"`
 	WhoUri       string        `bson:"whoUri,omitempty" json:"whoUri,omitempty"`
 	WhoReference *Reference    `bson:"whoReference,omitempty" json:"whoReference,omitempty"`
+	ContentType  string        `bson:"contentType,omitempty" json:"contentType,omitempty"`
 	Blob         string        `bson:"blob,omitempty" json:"blob,omitempty"`
 }

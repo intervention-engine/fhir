@@ -34,7 +34,8 @@ type Flag struct {
 	Category   *CodeableConcept `bson:"category,omitempty" json:"category,omitempty"`
 	Status     string           `bson:"status,omitempty" json:"status,omitempty"`
 	Period     *Period          `bson:"period,omitempty" json:"period,omitempty"`
-	Patient    *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
+	Subject    *Reference       `bson:"subject,omitempty" json:"subject,omitempty"`
+	Encounter  *Reference       `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Author     *Reference       `bson:"author,omitempty" json:"author,omitempty"`
 	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 }

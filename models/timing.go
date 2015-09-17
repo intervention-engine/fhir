@@ -34,14 +34,17 @@ type Timing struct {
 }
 
 type TimingRepeatComponent struct {
-	Bounds        *Period  `bson:"bounds,omitempty" json:"bounds,omitempty"`
-	Count         *int32   `bson:"count,omitempty" json:"count,omitempty"`
-	Duration      *float64 `bson:"duration,omitempty" json:"duration,omitempty"`
-	DurationUnits string   `bson:"durationUnits,omitempty" json:"durationUnits,omitempty"`
-	Frequency     *int32   `bson:"frequency,omitempty" json:"frequency,omitempty"`
-	FrequencyMax  *int32   `bson:"frequencyMax,omitempty" json:"frequencyMax,omitempty"`
-	Period        *float64 `bson:"period,omitempty" json:"period,omitempty"`
-	PeriodMax     *float64 `bson:"periodMax,omitempty" json:"periodMax,omitempty"`
-	PeriodUnits   string   `bson:"periodUnits,omitempty" json:"periodUnits,omitempty"`
-	When          string   `bson:"when,omitempty" json:"when,omitempty"`
+	BoundsDuration *Quantity `bson:"boundsDuration,omitempty" json:"boundsDuration,omitempty"`
+	BoundsRange    *Range    `bson:"boundsRange,omitempty" json:"boundsRange,omitempty"`
+	BoundsPeriod   *Period   `bson:"boundsPeriod,omitempty" json:"boundsPeriod,omitempty"`
+	Count          *int32    `bson:"count,omitempty" json:"count,omitempty"`
+	Duration       *float64  `bson:"duration,omitempty" json:"duration,omitempty"`
+	DurationMax    *float64  `bson:"durationMax,omitempty" json:"durationMax,omitempty"`
+	DurationUnits  string    `bson:"durationUnits,omitempty" json:"durationUnits,omitempty"`
+	Frequency      *int32    `bson:"frequency,omitempty" json:"frequency,omitempty"`
+	FrequencyMax   *int32    `bson:"frequencyMax,omitempty" json:"frequencyMax,omitempty"`
+	Period         *float64  `bson:"period,omitempty" json:"period,omitempty"`
+	PeriodMax      *float64  `bson:"periodMax,omitempty" json:"periodMax,omitempty"`
+	PeriodUnits    string    `bson:"periodUnits,omitempty" json:"periodUnits,omitempty"`
+	When           string    `bson:"when,omitempty" json:"when,omitempty"`
 }

@@ -788,7 +788,7 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnit(c *C) {
 		},
 		"$or": []bson.M{
 			bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-			bson.M{"valueQuantity.units": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+			bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 		},
 	})
 }
@@ -1124,38 +1124,38 @@ func (m *MongoSearchSuite) TestConditionMultiplePatientAndMultipleCodesQueryObje
 // Test that invalid search parameters PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestInvalidSearchParameterPanics(c *C) {
 	q := Query{"Condition", "abatement=2012"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, InvalidSearchError("Condition does not support search parameter: abatement"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createInvalidSearchError("SEARCH_NONE", "Error: no processable search found for Condition search parameters \"abatement\""))
 }
 
 // Test that unimplemented features PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestCompositeSearchPanics(c *C) {
 	q := Query{"Group", "characteristic-value=gender$male"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("composite search parameters"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"characteristic-value\" not understood"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedDateSearchPanicsForUnsupportedPrefix(c *C) {
 	q := Query{"Condition", "onset=ap2012"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search prefix: ap"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"onset\" content is invalid"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedNumberSearchPanics(c *C) {
 	q := Query{"Immunization", "dose-sequence=gt1"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search prefix: gt"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"dose-sequence\" content is invalid"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedQuantitySearchPanics(c *C) {
 	q := Query{"Observation", "value-quantity=ap1||mg"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search prefix: ap"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"value-quantity\" content is invalid"))
 }
 
 func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
 	q := Query{"Condition", "code:text=headache"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("search modifier: :text"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"code\" modifier is invalid"))
 }
 
 func (m *MongoSearchSuite) TestSpecialSearchParameterPanics(c *C) {
 	q := Query{"Condition", "onset=2012&_sort:asc=onset"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, UnsupportedError("special search parameter: _sort"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_sort\" not understood"))
 }
 
 // Test internally used functions

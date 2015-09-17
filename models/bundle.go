@@ -31,11 +31,10 @@ import "encoding/json"
 type Bundle struct {
 	Id        string                 `json:"id" bson:"_id"`
 	Type      string                 `bson:"type,omitempty" json:"type,omitempty"`
-	Base      string                 `bson:"base,omitempty" json:"base,omitempty"`
 	Total     *uint32                `bson:"total,omitempty" json:"total,omitempty"`
 	Link      []BundleLinkComponent  `bson:"link,omitempty" json:"link,omitempty"`
 	Entry     []BundleEntryComponent `bson:"entry,omitempty" json:"entry,omitempty"`
-	Signature string                 `bson:"signature,omitempty" json:"signature,omitempty"`
+	Signature *Signature             `bson:"signature,omitempty" json:"signature,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -56,12 +55,12 @@ type BundleLinkComponent struct {
 }
 
 type BundleEntryComponent struct {
-	Base                string                                   `bson:"base,omitempty" json:"base,omitempty"`
-	Link                []BundleLinkComponent                    `bson:"link,omitempty" json:"link,omitempty"`
-	Resource            interface{}                              `bson:"resource,omitempty" json:"resource,omitempty"`
-	Search              *BundleEntrySearchComponent              `bson:"search,omitempty" json:"search,omitempty"`
-	Transaction         *BundleEntryTransactionComponent         `bson:"transaction,omitempty" json:"transaction,omitempty"`
-	TransactionResponse *BundleEntryTransactionResponseComponent `bson:"transactionResponse,omitempty" json:"transactionResponse,omitempty"`
+	Link     []BundleLinkComponent         `bson:"link,omitempty" json:"link,omitempty"`
+	FullUrl  string                        `bson:"fullUrl,omitempty" json:"fullUrl,omitempty"`
+	Resource interface{}                   `bson:"resource,omitempty" json:"resource,omitempty"`
+	Search   *BundleEntrySearchComponent   `bson:"search,omitempty" json:"search,omitempty"`
+	Request  *BundleEntryRequestComponent  `bson:"request,omitempty" json:"request,omitempty"`
+	Response *BundleEntryResponseComponent `bson:"response,omitempty" json:"response,omitempty"`
 }
 
 // The "bundleEntryComponent" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -82,16 +81,16 @@ type BundleEntrySearchComponent struct {
 	Score *float64 `bson:"score,omitempty" json:"score,omitempty"`
 }
 
-type BundleEntryTransactionComponent struct {
+type BundleEntryRequestComponent struct {
 	Method          string        `bson:"method,omitempty" json:"method,omitempty"`
 	Url             string        `bson:"url,omitempty" json:"url,omitempty"`
 	IfNoneMatch     string        `bson:"ifNoneMatch,omitempty" json:"ifNoneMatch,omitempty"`
-	IfMatch         string        `bson:"ifMatch,omitempty" json:"ifMatch,omitempty"`
 	IfModifiedSince *FHIRDateTime `bson:"ifModifiedSince,omitempty" json:"ifModifiedSince,omitempty"`
+	IfMatch         string        `bson:"ifMatch,omitempty" json:"ifMatch,omitempty"`
 	IfNoneExist     string        `bson:"ifNoneExist,omitempty" json:"ifNoneExist,omitempty"`
 }
 
-type BundleEntryTransactionResponseComponent struct {
+type BundleEntryResponseComponent struct {
 	Status       string        `bson:"status,omitempty" json:"status,omitempty"`
 	Location     string        `bson:"location,omitempty" json:"location,omitempty"`
 	Etag         string        `bson:"etag,omitempty" json:"etag,omitempty"`

@@ -591,7 +591,7 @@ var quantityParamInfo = SearchParamInfo{
 	Paths: []SearchParamPath{SearchParamPath{Path: "bar", Type: "quantity"}},
 }
 
-func (s *SearchPTSuite) TestQuantitiesWithSystemsAndUnits(c *C) {
+func (s *SearchPTSuite) TestQuantitiesWithSystemsAndUnit(c *C) {
 	q := ParseQuantityParam("5.4|http://unitsofmeasure.org|mg", quantityParamInfo)
 
 	c.Assert(q.Name, Equals, "foo")
@@ -604,7 +604,7 @@ func (s *SearchPTSuite) TestQuantitiesWithSystemsAndUnits(c *C) {
 	c.Assert(q.Code, Equals, "mg")
 }
 
-func (s *SearchPTSuite) TestQuantitiesWithOnlyUnits(c *C) {
+func (s *SearchPTSuite) TestQuantitiesWithOnlyUnit(c *C) {
 	q := ParseQuantityParam("5.4||mg", quantityParamInfo)
 
 	c.Assert(q.Name, Equals, "foo")
@@ -617,7 +617,7 @@ func (s *SearchPTSuite) TestQuantitiesWithOnlyUnits(c *C) {
 	c.Assert(q.Code, Equals, "mg")
 }
 
-func (s *SearchPTSuite) TestQuantitiesWithNoUnits(c *C) {
+func (s *SearchPTSuite) TestQuantitiesWithNoUnit(c *C) {
 	q := ParseQuantityParam("5.4", quantityParamInfo)
 
 	c.Assert(q.Name, Equals, "foo")
@@ -783,7 +783,7 @@ func (s *SearchPTSuite) TestReferenceIDWithModifier(c *C) {
 func (s *SearchPTSuite) TestReferenceIDWithMismatchedModifier(c *C) {
 	modInfo := referenceParamInfo
 	modInfo.Modifier = "Condition"
-	c.Assert(func() { ParseReferenceParam("23", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
+	c.Assert(func() { ParseReferenceParam("23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
 }
 
 func (s *SearchPTSuite) TestReferenceTypeAndId(c *C) {
@@ -802,7 +802,7 @@ func (s *SearchPTSuite) TestReferenceTypeAndId(c *C) {
 
 func (s *SearchPTSuite) TestReferenceTypeAndIDWithMismatchedType(c *C) {
 	modInfo := referenceParamInfo
-	c.Assert(func() { ParseReferenceParam("Condition/23", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
+	c.Assert(func() { ParseReferenceParam("Condition/23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"foo\" content is invalid"))
 }
 
 func (s *SearchPTSuite) TestReferenceTypeAndIdWithModifier(c *C) {
@@ -825,7 +825,7 @@ func (s *SearchPTSuite) TestReferenceTypeAndIdWithModifier(c *C) {
 func (s *SearchPTSuite) TestReferenceTypeAndIdWithMismatchedModifier(c *C) {
 	modInfo := referenceParamInfo
 	modInfo.Modifier = "Condition"
-	c.Assert(func() { ParseReferenceParam("Patient/23", modInfo) }, Panics, InvalidSearchError("reference modifier is Condition, but type is Patient"))
+	c.Assert(func() { ParseReferenceParam("Patient/23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
 }
 
 func (s *SearchPTSuite) TestReferenceAbsoluteURL(c *C) {
@@ -844,7 +844,7 @@ func (s *SearchPTSuite) TestReferenceAbsoluteURL(c *C) {
 
 func (s *SearchPTSuite) TestReferenceAbsoluteURLWithMismatchedType(c *C) {
 	modInfo := referenceParamInfo
-	c.Assert(func() { ParseReferenceParam("http://acme.org/fhir/Condition/23", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
+	c.Assert(func() { ParseReferenceParam("http://acme.org/fhir/Condition/23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"foo\" content is invalid"))
 }
 
 func (s *SearchPTSuite) TestReferenceAbsoluteURLWithModifier(c *C) {
@@ -867,7 +867,7 @@ func (s *SearchPTSuite) TestReferenceAbsoluteURLWithModifier(c *C) {
 func (s *SearchPTSuite) TestReferenceAbsoluteURLWithMismatchedModifier(c *C) {
 	modInfo := referenceParamInfo
 	modInfo.Modifier = "Condition"
-	c.Assert(func() { ParseReferenceParam("http://acme.org/fhir/Patient/23", modInfo) }, Panics, InvalidSearchError("reference modifier is Condition, but type is Patient"))
+	c.Assert(func() { ParseReferenceParam("http://acme.org/fhir/Patient/23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
 }
 
 func (s *SearchPTSuite) TestReferenceChainedQuery(c *C) {
@@ -907,7 +907,7 @@ func (s *SearchPTSuite) TestReferenceChainedQueryWithMismatchedModifier(c *C) {
 	modInfo := referenceParamInfo
 	modInfo.Modifier = "Condition"
 	modInfo.Postfix = "name"
-	c.Assert(func() { ParseReferenceParam("Peter", modInfo) }, Panics, InvalidSearchError("target is Patient, but type is Condition"))
+	c.Assert(func() { ParseReferenceParam("Peter", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
 }
 
 /******************************************************************************

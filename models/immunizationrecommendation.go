@@ -49,7 +49,7 @@ func (resource *ImmunizationRecommendation) MarshalJSON() ([]byte, error) {
 
 type ImmunizationRecommendationRecommendationComponent struct {
 	Date                         *FHIRDateTime                                                    `bson:"date,omitempty" json:"date,omitempty"`
-	VaccineType                  *CodeableConcept                                                 `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
+	VaccineCode                  *CodeableConcept                                                 `bson:"vaccineCode,omitempty" json:"vaccineCode,omitempty"`
 	DoseNumber                   *uint32                                                          `bson:"doseNumber,omitempty" json:"doseNumber,omitempty"`
 	ForecastStatus               *CodeableConcept                                                 `bson:"forecastStatus,omitempty" json:"forecastStatus,omitempty"`
 	DateCriterion                []ImmunizationRecommendationRecommendationDateCriterionComponent `bson:"dateCriterion,omitempty" json:"dateCriterion,omitempty"`

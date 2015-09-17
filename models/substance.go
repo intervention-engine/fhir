@@ -30,9 +30,11 @@ import "encoding/json"
 
 type Substance struct {
 	Id          string                         `json:"id" bson:"_id"`
-	Type        *CodeableConcept               `bson:"type,omitempty" json:"type,omitempty"`
+	Identifier  []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Category    []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
+	Code        *CodeableConcept               `bson:"code,omitempty" json:"code,omitempty"`
 	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
-	Instance    *SubstanceInstanceComponent    `bson:"instance,omitempty" json:"instance,omitempty"`
+	Instance    []SubstanceInstanceComponent   `bson:"instance,omitempty" json:"instance,omitempty"`
 	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 }
 

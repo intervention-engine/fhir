@@ -26,11 +26,10 @@
 
 package models
 
-type Quantity struct {
-	Id         string   `json:"id" bson:"_id"`
-	Value      *float64 `bson:"value,omitempty" json:"value,omitempty"`
-	Comparator string   `bson:"comparator,omitempty" json:"comparator,omitempty"`
-	Unit       string   `bson:"unit,omitempty" json:"unit,omitempty"`
-	System     string   `bson:"system,omitempty" json:"system,omitempty"`
-	Code       string   `bson:"code,omitempty" json:"code,omitempty"`
+type Annotation struct {
+	Id              string        `json:"id" bson:"_id"`
+	AuthorReference *Reference    `bson:"authorReference,omitempty" json:"authorReference,omitempty"`
+	AuthorString    string        `bson:"authorString,omitempty" json:"authorString,omitempty"`
+	Time            *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
+	Text            string        `bson:"text,omitempty" json:"text,omitempty"`
 }

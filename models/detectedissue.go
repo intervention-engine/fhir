@@ -28,37 +28,34 @@ package models
 
 import "encoding/json"
 
-type Supply struct {
-	Id          string                    `json:"id" bson:"_id"`
-	Kind        *CodeableConcept          `bson:"kind,omitempty" json:"kind,omitempty"`
-	Identifier  *Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status      string                    `bson:"status,omitempty" json:"status,omitempty"`
-	OrderedItem *Reference                `bson:"orderedItem,omitempty" json:"orderedItem,omitempty"`
-	Patient     *Reference                `bson:"patient,omitempty" json:"patient,omitempty"`
-	Dispense    []SupplyDispenseComponent `bson:"dispense,omitempty" json:"dispense,omitempty"`
+type DetectedIssue struct {
+	Id         string                             `json:"id" bson:"_id"`
+	Patient    *Reference                         `bson:"patient,omitempty" json:"patient,omitempty"`
+	Category   *CodeableConcept                   `bson:"category,omitempty" json:"category,omitempty"`
+	Severity   string                             `bson:"severity,omitempty" json:"severity,omitempty"`
+	Implicated []Reference                        `bson:"implicated,omitempty" json:"implicated,omitempty"`
+	Detail     string                             `bson:"detail,omitempty" json:"detail,omitempty"`
+	Date       *FHIRDateTime                      `bson:"date,omitempty" json:"date,omitempty"`
+	Author     *Reference                         `bson:"author,omitempty" json:"author,omitempty"`
+	Identifier *Identifier                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Reference  string                             `bson:"reference,omitempty" json:"reference,omitempty"`
+	Mitigation []DetectedIssueMitigationComponent `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
-func (resource *Supply) MarshalJSON() ([]byte, error) {
+func (resource *DetectedIssue) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
-		Supply
+		DetectedIssue
 	}{
-		ResourceType: "Supply",
-		Supply:       *resource,
+		ResourceType:  "DetectedIssue",
+		DetectedIssue: *resource,
 	}
 	return json.Marshal(x)
 }
 
-type SupplyDispenseComponent struct {
-	Identifier     *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status         string           `bson:"status,omitempty" json:"status,omitempty"`
-	Type           *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Quantity       *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	SuppliedItem   *Reference       `bson:"suppliedItem,omitempty" json:"suppliedItem,omitempty"`
-	Supplier       *Reference       `bson:"supplier,omitempty" json:"supplier,omitempty"`
-	WhenPrepared   *Period          `bson:"whenPrepared,omitempty" json:"whenPrepared,omitempty"`
-	WhenHandedOver *FHIRDateTime    `bson:"whenHandedOver,omitempty" json:"whenHandedOver,omitempty"`
-	Destination    *Reference       `bson:"destination,omitempty" json:"destination,omitempty"`
-	Receiver       []Reference      `bson:"receiver,omitempty" json:"receiver,omitempty"`
+type DetectedIssueMitigationComponent struct {
+	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
+	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
+	Author *Reference       `bson:"author,omitempty" json:"author,omitempty"`
 }

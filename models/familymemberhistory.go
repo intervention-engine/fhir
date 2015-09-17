@@ -33,6 +33,7 @@ type FamilyMemberHistory struct {
 	Identifier      []Identifier                            `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Patient         *Reference                              `bson:"patient,omitempty" json:"patient,omitempty"`
 	Date            *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
+	Status          string                                  `bson:"status,omitempty" json:"status,omitempty"`
 	Name            string                                  `bson:"name,omitempty" json:"name,omitempty"`
 	Relationship    *CodeableConcept                        `bson:"relationship,omitempty" json:"relationship,omitempty"`
 	Gender          string                                  `bson:"gender,omitempty" json:"gender,omitempty"`
@@ -47,7 +48,7 @@ type FamilyMemberHistory struct {
 	DeceasedRange   *Range                                  `bson:"deceasedRange,omitempty" json:"deceasedRange,omitempty"`
 	DeceasedDate    *FHIRDateTime                           `bson:"deceasedDate,omitempty" json:"deceasedDate,omitempty"`
 	DeceasedString  string                                  `bson:"deceasedString,omitempty" json:"deceasedString,omitempty"`
-	Note            string                                  `bson:"note,omitempty" json:"note,omitempty"`
+	Note            *Annotation                             `bson:"note,omitempty" json:"note,omitempty"`
 	Condition       []FamilyMemberHistoryConditionComponent `bson:"condition,omitempty" json:"condition,omitempty"`
 }
 
@@ -64,10 +65,11 @@ func (resource *FamilyMemberHistory) MarshalJSON() ([]byte, error) {
 }
 
 type FamilyMemberHistoryConditionComponent struct {
-	Type        *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Code        *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Outcome     *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
 	OnsetAge    *Quantity        `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
 	OnsetRange  *Range           `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
+	OnsetPeriod *Period          `bson:"onsetPeriod,omitempty" json:"onsetPeriod,omitempty"`
 	OnsetString string           `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
-	Note        string           `bson:"note,omitempty" json:"note,omitempty"`
+	Note        *Annotation      `bson:"note,omitempty" json:"note,omitempty"`
 }

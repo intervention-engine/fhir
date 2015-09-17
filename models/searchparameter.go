@@ -32,16 +32,18 @@ type SearchParameter struct {
 	Id           string                            `json:"id" bson:"_id"`
 	Url          string                            `bson:"url,omitempty" json:"url,omitempty"`
 	Name         string                            `bson:"name,omitempty" json:"name,omitempty"`
-	Publisher    string                            `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []SearchParameterContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Requirements string                            `bson:"requirements,omitempty" json:"requirements,omitempty"`
 	Status       string                            `bson:"status,omitempty" json:"status,omitempty"`
 	Experimental *bool                             `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher    string                            `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact      []SearchParameterContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
 	Date         *FHIRDateTime                     `bson:"date,omitempty" json:"date,omitempty"`
+	Requirements string                            `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Code         string                            `bson:"code,omitempty" json:"code,omitempty"`
 	Base         string                            `bson:"base,omitempty" json:"base,omitempty"`
 	Type         string                            `bson:"type,omitempty" json:"type,omitempty"`
 	Description  string                            `bson:"description,omitempty" json:"description,omitempty"`
 	Xpath        string                            `bson:"xpath,omitempty" json:"xpath,omitempty"`
+	XpathUsage   string                            `bson:"xpathUsage,omitempty" json:"xpathUsage,omitempty"`
 	Target       []string                          `bson:"target,omitempty" json:"target,omitempty"`
 }
 

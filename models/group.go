@@ -30,14 +30,14 @@ import "encoding/json"
 
 type Group struct {
 	Id             string                         `json:"id" bson:"_id"`
-	Identifier     *Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Identifier     []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type           string                         `bson:"type,omitempty" json:"type,omitempty"`
 	Actual         *bool                          `bson:"actual,omitempty" json:"actual,omitempty"`
 	Code           *CodeableConcept               `bson:"code,omitempty" json:"code,omitempty"`
 	Name           string                         `bson:"name,omitempty" json:"name,omitempty"`
 	Quantity       *uint32                        `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Characteristic []GroupCharacteristicComponent `bson:"characteristic,omitempty" json:"characteristic,omitempty"`
-	Member         []Reference                    `bson:"member,omitempty" json:"member,omitempty"`
+	Member         []GroupMemberComponent         `bson:"member,omitempty" json:"member,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -59,4 +59,11 @@ type GroupCharacteristicComponent struct {
 	ValueQuantity        *Quantity        `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
 	ValueRange           *Range           `bson:"valueRange,omitempty" json:"valueRange,omitempty"`
 	Exclude              *bool            `bson:"exclude,omitempty" json:"exclude,omitempty"`
+	Period               *Period          `bson:"period,omitempty" json:"period,omitempty"`
+}
+
+type GroupMemberComponent struct {
+	Entity   *Reference `bson:"entity,omitempty" json:"entity,omitempty"`
+	Period   *Period    `bson:"period,omitempty" json:"period,omitempty"`
+	Inactive *bool      `bson:"inactive,omitempty" json:"inactive,omitempty"`
 }
