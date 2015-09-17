@@ -134,9 +134,11 @@ func ObservationCreateHandler(rw http.ResponseWriter, r *http.Request, next http
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Observation/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(observation)
 }
 
 func ObservationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ObservationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http
 	context.Set(r, "Observation", observation)
 	context.Set(r, "Resource", "Observation")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(observation)
 }
 
 func ObservationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

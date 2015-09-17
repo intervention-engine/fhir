@@ -134,9 +134,11 @@ func ImmunizationRecommendationCreateHandler(rw http.ResponseWriter, r *http.Req
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/ImmunizationRecommendation/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(immunizationrecommendation)
 }
 
 func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ImmunizationRecommendationUpdateHandler(rw http.ResponseWriter, r *http.Req
 	context.Set(r, "ImmunizationRecommendation", immunizationrecommendation)
 	context.Set(r, "Resource", "ImmunizationRecommendation")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(immunizationrecommendation)
 }
 
 func ImmunizationRecommendationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

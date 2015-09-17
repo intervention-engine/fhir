@@ -134,9 +134,11 @@ func PatientCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Patient/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(patient)
 }
 
 func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func PatientUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Han
 	context.Set(r, "Patient", patient)
 	context.Set(r, "Resource", "Patient")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(patient)
 }
 
 func PatientDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

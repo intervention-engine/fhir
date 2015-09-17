@@ -134,9 +134,11 @@ func FlagCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Flag/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(flag)
 }
 
 func FlagUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func FlagUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	context.Set(r, "Flag", flag)
 	context.Set(r, "Resource", "Flag")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(flag)
 }
 
 func FlagDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

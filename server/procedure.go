@@ -134,9 +134,11 @@ func ProcedureCreateHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Procedure/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(procedure)
 }
 
 func ProcedureUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ProcedureUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	context.Set(r, "Procedure", procedure)
 	context.Set(r, "Resource", "Procedure")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(procedure)
 }
 
 func ProcedureDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

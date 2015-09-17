@@ -134,9 +134,11 @@ func SlotCreateHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Slot/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(slot)
 }
 
 func SlotUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func SlotUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Handle
 	context.Set(r, "Slot", slot)
 	context.Set(r, "Resource", "Slot")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(slot)
 }
 
 func SlotDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

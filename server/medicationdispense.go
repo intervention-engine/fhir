@@ -134,9 +134,11 @@ func MedicationDispenseCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/MedicationDispense/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(medicationdispense)
 }
 
 func MedicationDispenseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func MedicationDispenseUpdateHandler(rw http.ResponseWriter, r *http.Request, ne
 	context.Set(r, "MedicationDispense", medicationdispense)
 	context.Set(r, "Resource", "MedicationDispense")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(medicationdispense)
 }
 
 func MedicationDispenseDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

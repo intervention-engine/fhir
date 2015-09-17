@@ -134,9 +134,11 @@ func CommunicationCreateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Communication/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(communication)
 }
 
 func CommunicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func CommunicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	context.Set(r, "Communication", communication)
 	context.Set(r, "Resource", "Communication")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(communication)
 }
 
 func CommunicationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

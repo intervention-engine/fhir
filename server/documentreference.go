@@ -134,9 +134,11 @@ func DocumentReferenceCreateHandler(rw http.ResponseWriter, r *http.Request, nex
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/DocumentReference/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(documentreference)
 }
 
 func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func DocumentReferenceUpdateHandler(rw http.ResponseWriter, r *http.Request, nex
 	context.Set(r, "DocumentReference", documentreference)
 	context.Set(r, "Resource", "DocumentReference")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(documentreference)
 }
 
 func DocumentReferenceDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

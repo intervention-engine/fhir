@@ -134,9 +134,11 @@ func EnrollmentResponseCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/EnrollmentResponse/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(enrollmentresponse)
 }
 
 func EnrollmentResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func EnrollmentResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, ne
 	context.Set(r, "EnrollmentResponse", enrollmentresponse)
 	context.Set(r, "Resource", "EnrollmentResponse")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(enrollmentresponse)
 }
 
 func EnrollmentResponseDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -134,9 +134,11 @@ func EligibilityRequestCreateHandler(rw http.ResponseWriter, r *http.Request, ne
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/EligibilityRequest/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(eligibilityrequest)
 }
 
 func EligibilityRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func EligibilityRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, ne
 	context.Set(r, "EligibilityRequest", eligibilityrequest)
 	context.Set(r, "Resource", "EligibilityRequest")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(eligibilityrequest)
 }
 
 func EligibilityRequestDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

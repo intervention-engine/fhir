@@ -134,9 +134,11 @@ func EncounterCreateHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Encounter/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(encounter)
 }
 
 func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func EncounterUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.H
 	context.Set(r, "Encounter", encounter)
 	context.Set(r, "Resource", "Encounter")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(encounter)
 }
 
 func EncounterDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

@@ -134,9 +134,11 @@ func DeviceUseRequestCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/DeviceUseRequest/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(deviceuserequest)
 }
 
 func DeviceUseRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func DeviceUseRequestUpdateHandler(rw http.ResponseWriter, r *http.Request, next
 	context.Set(r, "DeviceUseRequest", deviceuserequest)
 	context.Set(r, "Resource", "DeviceUseRequest")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(deviceuserequest)
 }
 
 func DeviceUseRequestDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

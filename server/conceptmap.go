@@ -134,9 +134,11 @@ func ConceptMapCreateHandler(rw http.ResponseWriter, r *http.Request, next http.
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/ConceptMap/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(conceptmap)
 }
 
 func ConceptMapUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ConceptMapUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.
 	context.Set(r, "ConceptMap", conceptmap)
 	context.Set(r, "Resource", "ConceptMap")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(conceptmap)
 }
 
 func ConceptMapDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

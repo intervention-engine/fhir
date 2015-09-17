@@ -134,9 +134,11 @@ func ExplanationOfBenefitCreateHandler(rw http.ResponseWriter, r *http.Request, 
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/ExplanationOfBenefit/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(explanationofbenefit)
 }
 
 func ExplanationOfBenefitUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ExplanationOfBenefitUpdateHandler(rw http.ResponseWriter, r *http.Request, 
 	context.Set(r, "ExplanationOfBenefit", explanationofbenefit)
 	context.Set(r, "Resource", "ExplanationOfBenefit")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(explanationofbenefit)
 }
 
 func ExplanationOfBenefitDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

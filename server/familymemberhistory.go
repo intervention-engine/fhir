@@ -134,9 +134,11 @@ func FamilyMemberHistoryCreateHandler(rw http.ResponseWriter, r *http.Request, n
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/FamilyMemberHistory/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(familymemberhistory)
 }
 
 func FamilyMemberHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func FamilyMemberHistoryUpdateHandler(rw http.ResponseWriter, r *http.Request, n
 	context.Set(r, "FamilyMemberHistory", familymemberhistory)
 	context.Set(r, "Resource", "FamilyMemberHistory")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(familymemberhistory)
 }
 
 func FamilyMemberHistoryDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

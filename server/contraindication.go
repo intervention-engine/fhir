@@ -134,9 +134,11 @@ func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request, next
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/Contraindication/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(contraindication)
 }
 
 func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -168,6 +170,10 @@ func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next
 	context.Set(r, "Contraindication", contraindication)
 	context.Set(r, "Resource", "Contraindication")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(contraindication)
 }
 
 func ContraindicationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
