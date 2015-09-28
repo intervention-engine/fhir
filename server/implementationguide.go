@@ -140,9 +140,11 @@ func ImplementationGuideCreateHandler(rw http.ResponseWriter, r *http.Request, n
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-
 	rw.Header().Add("Location", "http://"+host+":3001/ImplementationGuide/"+i.Hex())
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
+	json.NewEncoder(rw).Encode(implementationguide)
 }
 
 func ImplementationGuideUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -174,6 +176,10 @@ func ImplementationGuideUpdateHandler(rw http.ResponseWriter, r *http.Request, n
 	context.Set(r, "ImplementationGuide", implementationguide)
 	context.Set(r, "Resource", "ImplementationGuide")
 	context.Set(r, "Action", "update")
+
+	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(rw).Encode(implementationguide)
 }
 
 func ImplementationGuideDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
