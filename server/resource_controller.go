@@ -1,11 +1,14 @@
 package server
 
+// TODO: This code can and should be cleaned up.  For now, it is more or less a port of the code that used to exist
+// for every resource controller.
+
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"os"
+	"reflect"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -14,7 +17,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+type ResourceController struct {
+	Name string
+}
+
+func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	defer func() {
 		if r := recover(); r != nil {
 			rw.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -38,42 +45,42 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		}
 	}()
 
-	var result []models.Questionnaire
-	c := Database.C("questionnaires")
+	result := models.NewSliceForResourceName(rc.Name, 0, 0)
+	c := Database.C(models.PluralizeLowerResourceName(rc.Name))
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
 		iter := c.Find(nil).Limit(100).Iter()
-		err := iter.All(&result)
+		err := iter.All(result)
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
 		searcher := search.NewMongoSearcher(Database)
-		query := search.Query{Resource: "Questionnaire", Query: r.URL.RawQuery}
-		err := searcher.CreateQuery(query).All(&result)
+		query := search.Query{Resource: rc.Name, Query: r.URL.RawQuery}
+		err := searcher.CreateQuery(query).All(result)
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
-	var questionnaireEntryList []models.BundleEntryComponent
-	for i := range result {
+	var entryList []models.BundleEntryComponent
+	resultVal := reflect.ValueOf(result).Elem()
+	for i := 0; i < resultVal.Len(); i++ {
 		var entry models.BundleEntryComponent
-		entry.Resource = &result[i]
-		questionnaireEntryList = append(questionnaireEntryList, entry)
+		entry.Resource = resultVal.Index(i).Addr().Interface()
+		entryList = append(entryList, entry)
 	}
 
 	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	var total = uint32(len(result))
+	var total = uint32(resultVal.Len())
 	bundle.Total = &total
-	bundle.Entry = questionnaireEntryList
+	bundle.Entry = entryList
 
-	log.Println("Setting questionnaire search context")
-	context.Set(r, "Questionnaire", result)
-	context.Set(r, "Resource", "Questionnaire")
+	context.Set(r, rc.Name, reflect.ValueOf(result).Elem().Interface())
+	context.Set(r, "Resource", rc.Name)
 	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -81,7 +88,7 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	json.NewEncoder(rw).Encode(&bundle)
 }
 
-func LoadQuestionnaire(r *http.Request) (*models.Questionnaire, error) {
+func (rc *ResourceController) LoadResource(r *http.Request) (interface{}, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -91,63 +98,61 @@ func LoadQuestionnaire(r *http.Request) (*models.Questionnaire, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("questionnaires")
-	result := models.Questionnaire{}
-	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
+	c := Database.C(models.PluralizeLowerResourceName(rc.Name))
+	result := models.NewStructForResourceName(rc.Name)
+	err := c.Find(bson.M{"_id": id.Hex()}).One(result)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("Setting questionnaire read context")
-	context.Set(r, "Questionnaire", result)
-	context.Set(r, "Resource", "Questionnaire")
-	return &result, nil
+	context.Set(r, rc.Name, result)
+	context.Set(r, "Resource", rc.Name)
+	return result, nil
 }
 
-func QuestionnaireShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func (rc *ResourceController) ShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	context.Set(r, "Action", "read")
-	_, err := LoadQuestionnaire(r)
+	_, err := rc.LoadResource(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(context.Get(r, "Questionnaire"))
+	json.NewEncoder(rw).Encode(context.Get(r, rc.Name))
 }
 
-func QuestionnaireCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func (rc *ResourceController) CreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
-	questionnaire := &models.Questionnaire{}
-	err := decoder.Decode(questionnaire)
+	resource := models.NewStructForResourceName(rc.Name)
+	err := decoder.Decode(resource)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("questionnaires")
+	c := Database.C(models.PluralizeLowerResourceName(rc.Name))
 	i := bson.NewObjectId()
-	questionnaire.Id = i.Hex()
-	err = c.Insert(questionnaire)
+	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(i.Hex())
+	err = c.Insert(resource)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting questionnaire create context")
-	context.Set(r, "Questionnaire", questionnaire)
-	context.Set(r, "Resource", "Questionnaire")
+	context.Set(r, rc.Name, resource)
+	context.Set(r, "Resource", rc.Name)
 	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-	rw.Header().Add("Location", "http://"+host+":3001/Questionnaire/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/"+rc.Name+"/"+i.Hex())
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
-	json.NewEncoder(rw).Encode(questionnaire)
+	json.NewEncoder(rw).Encode(resource)
 }
 
-func QuestionnaireUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func (rc *ResourceController) UpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -159,30 +164,29 @@ func QuestionnaireUpdateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	questionnaire := &models.Questionnaire{}
-	err := decoder.Decode(questionnaire)
+	resource := models.NewStructForResourceName(rc.Name)
+	err := decoder.Decode(resource)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("questionnaires")
-	questionnaire.Id = id.Hex()
-	err = c.Update(bson.M{"_id": id.Hex()}, questionnaire)
+	c := Database.C(models.PluralizeLowerResourceName(rc.Name))
+	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(id.Hex())
+	err = c.Update(bson.M{"_id": id.Hex()}, resource)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting questionnaire update context")
-	context.Set(r, "Questionnaire", questionnaire)
-	context.Set(r, "Resource", "Questionnaire")
+	context.Set(r, rc.Name, resource)
+	context.Set(r, "Resource", rc.Name)
 	context.Set(r, "Action", "update")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(questionnaire)
+	json.NewEncoder(rw).Encode(resource)
 }
 
-func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func (rc *ResourceController) DeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -192,7 +196,7 @@ func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("questionnaires")
+	c := Database.C(models.PluralizeLowerResourceName(rc.Name))
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
@@ -200,8 +204,7 @@ func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request, next ht
 		return
 	}
 
-	log.Println("Setting questionnaire delete context")
-	context.Set(r, "Questionnaire", id.Hex())
-	context.Set(r, "Resource", "Questionnaire")
+	context.Set(r, rc.Name, id.Hex())
+	context.Set(r, "Resource", rc.Name)
 	context.Set(r, "Action", "delete")
 }

@@ -25,7 +25,6 @@ func Test(t *testing.T) { TestingT(t) }
 type MongoSearchSuite struct {
 	DBServer      *dbtest.DBServer
 	Session       *mgo.Session
-	FhirModels    []interface{}
 	MongoSearcher *MongoSearcher
 	EST           *time.Location
 	Local         *time.Location
@@ -57,7 +56,7 @@ func (m *MongoSearchSuite) SetUpSuite(c *C) {
 
 	for _, resourceMap := range maps {
 		r := models.MapToResource(resourceMap, true)
-		collection := MongoCollectionNames[reflect.TypeOf(r).Elem().Name()]
+		collection := models.PluralizeLowerResourceName(reflect.TypeOf(r).Elem().Name())
 		util.CheckErr(db.C(collection).Insert(r))
 	}
 }
