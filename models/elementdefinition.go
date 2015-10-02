@@ -27,7 +27,6 @@
 package models
 
 type ElementDefinition struct {
-	Id                          string                                 `json:"id" bson:"_id"`
 	Path                        string                                 `bson:"path,omitempty" json:"path,omitempty"`
 	Representation              []string                               `bson:"representation,omitempty" json:"representation,omitempty"`
 	Name                        string                                 `bson:"name,omitempty" json:"name,omitempty"`
@@ -41,6 +40,7 @@ type ElementDefinition struct {
 	Alias                       []string                               `bson:"alias,omitempty" json:"alias,omitempty"`
 	Min                         *int32                                 `bson:"min,omitempty" json:"min,omitempty"`
 	Max                         string                                 `bson:"max,omitempty" json:"max,omitempty"`
+	Base                        *ElementDefinitionBaseComponent        `bson:"base,omitempty" json:"base,omitempty"`
 	Type                        []ElementDefinitionTypeRefComponent    `bson:"type,omitempty" json:"type,omitempty"`
 	NameReference               string                                 `bson:"nameReference,omitempty" json:"nameReference,omitempty"`
 	DefaultValueString          string                                 `bson:"defaultValueString,omitempty" json:"defaultValueString,omitempty"`
@@ -68,6 +68,18 @@ type ElementDefinition struct {
 	ExampleBoolean              *bool                                  `bson:"exampleBoolean,omitempty" json:"exampleBoolean,omitempty"`
 	ExampleCodeableConcept      *CodeableConcept                       `bson:"exampleCodeableConcept,omitempty" json:"exampleCodeableConcept,omitempty"`
 	ExampleRange                *Range                                 `bson:"exampleRange,omitempty" json:"exampleRange,omitempty"`
+	MinValueString              string                                 `bson:"minValueString,omitempty" json:"minValueString,omitempty"`
+	MinValueInteger             *int32                                 `bson:"minValueInteger,omitempty" json:"minValueInteger,omitempty"`
+	MinValueDateTime            *FHIRDateTime                          `bson:"minValueDateTime,omitempty" json:"minValueDateTime,omitempty"`
+	MinValueBoolean             *bool                                  `bson:"minValueBoolean,omitempty" json:"minValueBoolean,omitempty"`
+	MinValueCodeableConcept     *CodeableConcept                       `bson:"minValueCodeableConcept,omitempty" json:"minValueCodeableConcept,omitempty"`
+	MinValueRange               *Range                                 `bson:"minValueRange,omitempty" json:"minValueRange,omitempty"`
+	MaxValueString              string                                 `bson:"maxValueString,omitempty" json:"maxValueString,omitempty"`
+	MaxValueInteger             *int32                                 `bson:"maxValueInteger,omitempty" json:"maxValueInteger,omitempty"`
+	MaxValueDateTime            *FHIRDateTime                          `bson:"maxValueDateTime,omitempty" json:"maxValueDateTime,omitempty"`
+	MaxValueBoolean             *bool                                  `bson:"maxValueBoolean,omitempty" json:"maxValueBoolean,omitempty"`
+	MaxValueCodeableConcept     *CodeableConcept                       `bson:"maxValueCodeableConcept,omitempty" json:"maxValueCodeableConcept,omitempty"`
+	MaxValueRange               *Range                                 `bson:"maxValueRange,omitempty" json:"maxValueRange,omitempty"`
 	MaxLength                   *int32                                 `bson:"maxLength,omitempty" json:"maxLength,omitempty"`
 	Condition                   []string                               `bson:"condition,omitempty" json:"condition,omitempty"`
 	Constraint                  []ElementDefinitionConstraintComponent `bson:"constraint,omitempty" json:"constraint,omitempty"`
@@ -85,6 +97,12 @@ type ElementDefinitionSlicingComponent struct {
 	Rules         string   `bson:"rules,omitempty" json:"rules,omitempty"`
 }
 
+type ElementDefinitionBaseComponent struct {
+	Path string `bson:"path,omitempty" json:"path,omitempty"`
+	Min  *int32 `bson:"min,omitempty" json:"min,omitempty"`
+	Max  string `bson:"max,omitempty" json:"max,omitempty"`
+}
+
 type ElementDefinitionTypeRefComponent struct {
 	Code        string   `bson:"code,omitempty" json:"code,omitempty"`
 	Profile     []string `bson:"profile,omitempty" json:"profile,omitempty"`
@@ -92,15 +110,14 @@ type ElementDefinitionTypeRefComponent struct {
 }
 
 type ElementDefinitionConstraintComponent struct {
-	Key      string `bson:"key,omitempty" json:"key,omitempty"`
-	Name     string `bson:"name,omitempty" json:"name,omitempty"`
-	Severity string `bson:"severity,omitempty" json:"severity,omitempty"`
-	Human    string `bson:"human,omitempty" json:"human,omitempty"`
-	Xpath    string `bson:"xpath,omitempty" json:"xpath,omitempty"`
+	Key          string `bson:"key,omitempty" json:"key,omitempty"`
+	Requirements string `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Severity     string `bson:"severity,omitempty" json:"severity,omitempty"`
+	Human        string `bson:"human,omitempty" json:"human,omitempty"`
+	Xpath        string `bson:"xpath,omitempty" json:"xpath,omitempty"`
 }
 
 type ElementDefinitionBindingComponent struct {
-	Name              string     `bson:"name,omitempty" json:"name,omitempty"`
 	Strength          string     `bson:"strength,omitempty" json:"strength,omitempty"`
 	Description       string     `bson:"description,omitempty" json:"description,omitempty"`
 	ValueSetUri       string     `bson:"valueSetUri,omitempty" json:"valueSetUri,omitempty"`

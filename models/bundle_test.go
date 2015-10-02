@@ -18,7 +18,7 @@ var _ = check.Suite(&BundleSuite{})
 func (s *BundleSuite) TestMarshalJSON(c *check.C) {
 	// Build a bundle
 	total := uint32(2)
-	bundle := Bundle{Type: "searchset", Base: "http://example.com/base", Total: &total}
+	bundle := Bundle{Type: "searchset", Total: &total}
 	bundle.Link = make([]BundleLinkComponent, 1)
 	bundle.Link[0].Relation = "self"
 	bundle.Link[0].Url = "https://example.com/base/Condition?patient=4954037118555241963"
@@ -62,7 +62,6 @@ func (s *BundleSuite) TestMarshalJSON(c *check.C) {
 	util.CheckErr(err)
 	c.Assert(j.Get("resourceType").MustString(), check.Equals, "Bundle")
 	c.Assert(j.Get("type").MustString(), check.Equals, "searchset")
-	c.Assert(j.Get("base").MustString(), check.Equals, "http://example.com/base")
 	c.Assert(j.Get("total").MustInt(), check.Equals, 2)
 	c.Assert(j.Get("link").MustArray(), check.HasLen, 1)
 	c.Assert(j.Get("link").GetIndex(0).Get("relation").MustString(), check.Equals, "self")
@@ -98,7 +97,6 @@ func (s *BundleSuite) TestUnmarshalJSON(c *check.C) {
 
 	// Check that it unmarshalled correctly
 	c.Assert(bundle.Type, check.Equals, "searchset")
-	c.Assert(bundle.Base, check.Equals, "http://example.com/base")
 	c.Assert(*bundle.Total, check.Equals, uint32(2))
 	c.Assert(bundle.Link, check.HasLen, 1)
 	c.Assert(bundle.Link[0].Relation, check.Equals, "self")

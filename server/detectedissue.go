@@ -14,7 +14,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func DetectedIssueIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	defer func() {
 		if r := recover(); r != nil {
 			rw.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -38,8 +38,8 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		}
 	}()
 
-	var result []models.Questionnaire
-	c := Database.C("questionnaires")
+	var result []models.DetectedIssue
+	c := Database.C("detectedissues")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -50,18 +50,18 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 		}
 	} else {
 		searcher := search.NewMongoSearcher(Database)
-		query := search.Query{Resource: "Questionnaire", Query: r.URL.RawQuery}
+		query := search.Query{Resource: "DetectedIssue", Query: r.URL.RawQuery}
 		err := searcher.CreateQuery(query).All(&result)
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
-	var questionnaireEntryList []models.BundleEntryComponent
+	var detectedissueEntryList []models.BundleEntryComponent
 	for i := range result {
 		var entry models.BundleEntryComponent
 		entry.Resource = &result[i]
-		questionnaireEntryList = append(questionnaireEntryList, entry)
+		detectedissueEntryList = append(detectedissueEntryList, entry)
 	}
 
 	var bundle models.Bundle
@@ -69,11 +69,11 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	bundle.Type = "searchset"
 	var total = uint32(len(result))
 	bundle.Total = &total
-	bundle.Entry = questionnaireEntryList
+	bundle.Entry = detectedissueEntryList
 
-	log.Println("Setting questionnaire search context")
-	context.Set(r, "Questionnaire", result)
-	context.Set(r, "Resource", "Questionnaire")
+	log.Println("Setting detectedissue search context")
+	context.Set(r, "DetectedIssue", result)
+	context.Set(r, "Resource", "DetectedIssue")
 	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -81,7 +81,7 @@ func QuestionnaireIndexHandler(rw http.ResponseWriter, r *http.Request, next htt
 	json.NewEncoder(rw).Encode(&bundle)
 }
 
-func LoadQuestionnaire(r *http.Request) (*models.Questionnaire, error) {
+func LoadDetectedIssue(r *http.Request) (*models.DetectedIssue, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -91,63 +91,63 @@ func LoadQuestionnaire(r *http.Request) (*models.Questionnaire, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("questionnaires")
-	result := models.Questionnaire{}
+	c := Database.C("detectedissues")
+	result := models.DetectedIssue{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("Setting questionnaire read context")
-	context.Set(r, "Questionnaire", result)
-	context.Set(r, "Resource", "Questionnaire")
+	log.Println("Setting detectedissue read context")
+	context.Set(r, "DetectedIssue", result)
+	context.Set(r, "Resource", "DetectedIssue")
 	return &result, nil
 }
 
-func QuestionnaireShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func DetectedIssueShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	context.Set(r, "Action", "read")
-	_, err := LoadQuestionnaire(r)
+	_, err := LoadDetectedIssue(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(context.Get(r, "Questionnaire"))
+	json.NewEncoder(rw).Encode(context.Get(r, "DetectedIssue"))
 }
 
-func QuestionnaireCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func DetectedIssueCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
-	questionnaire := &models.Questionnaire{}
-	err := decoder.Decode(questionnaire)
+	detectedissue := &models.DetectedIssue{}
+	err := decoder.Decode(detectedissue)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("questionnaires")
+	c := Database.C("detectedissues")
 	i := bson.NewObjectId()
-	questionnaire.Id = i.Hex()
-	err = c.Insert(questionnaire)
+	detectedissue.Id = i.Hex()
+	err = c.Insert(detectedissue)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting questionnaire create context")
-	context.Set(r, "Questionnaire", questionnaire)
-	context.Set(r, "Resource", "Questionnaire")
+	log.Println("Setting detectedissue create context")
+	context.Set(r, "DetectedIssue", detectedissue)
+	context.Set(r, "Resource", "DetectedIssue")
 	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-	rw.Header().Add("Location", "http://"+host+":3001/Questionnaire/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/DetectedIssue/"+i.Hex())
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
-	json.NewEncoder(rw).Encode(questionnaire)
+	json.NewEncoder(rw).Encode(detectedissue)
 }
 
-func QuestionnaireUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func DetectedIssueUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -159,30 +159,30 @@ func QuestionnaireUpdateHandler(rw http.ResponseWriter, r *http.Request, next ht
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	questionnaire := &models.Questionnaire{}
-	err := decoder.Decode(questionnaire)
+	detectedissue := &models.DetectedIssue{}
+	err := decoder.Decode(detectedissue)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("questionnaires")
-	questionnaire.Id = id.Hex()
-	err = c.Update(bson.M{"_id": id.Hex()}, questionnaire)
+	c := Database.C("detectedissues")
+	detectedissue.Id = id.Hex()
+	err = c.Update(bson.M{"_id": id.Hex()}, detectedissue)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting questionnaire update context")
-	context.Set(r, "Questionnaire", questionnaire)
-	context.Set(r, "Resource", "Questionnaire")
+	log.Println("Setting detectedissue update context")
+	context.Set(r, "DetectedIssue", detectedissue)
+	context.Set(r, "Resource", "DetectedIssue")
 	context.Set(r, "Action", "update")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(questionnaire)
+	json.NewEncoder(rw).Encode(detectedissue)
 }
 
-func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func DetectedIssueDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -192,7 +192,7 @@ func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request, next ht
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("questionnaires")
+	c := Database.C("detectedissues")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
@@ -200,8 +200,8 @@ func QuestionnaireDeleteHandler(rw http.ResponseWriter, r *http.Request, next ht
 		return
 	}
 
-	log.Println("Setting questionnaire delete context")
-	context.Set(r, "Questionnaire", id.Hex())
-	context.Set(r, "Resource", "Questionnaire")
+	log.Println("Setting detectedissue delete context")
+	context.Set(r, "DetectedIssue", id.Hex())
+	context.Set(r, "Resource", "DetectedIssue")
 	context.Set(r, "Action", "delete")
 }

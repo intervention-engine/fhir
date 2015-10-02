@@ -33,7 +33,8 @@ type Provenance struct {
 	Target    []Reference                 `bson:"target,omitempty" json:"target,omitempty"`
 	Period    *Period                     `bson:"period,omitempty" json:"period,omitempty"`
 	Recorded  *FHIRDateTime               `bson:"recorded,omitempty" json:"recorded,omitempty"`
-	Reason    *CodeableConcept            `bson:"reason,omitempty" json:"reason,omitempty"`
+	Reason    []CodeableConcept           `bson:"reason,omitempty" json:"reason,omitempty"`
+	Activity  *CodeableConcept            `bson:"activity,omitempty" json:"activity,omitempty"`
 	Location  *Reference                  `bson:"location,omitempty" json:"location,omitempty"`
 	Policy    []string                    `bson:"policy,omitempty" json:"policy,omitempty"`
 	Agent     []ProvenanceAgentComponent  `bson:"agent,omitempty" json:"agent,omitempty"`
@@ -54,11 +55,15 @@ func (resource *Provenance) MarshalJSON() ([]byte, error) {
 }
 
 type ProvenanceAgentComponent struct {
-	Role               *Coding    `bson:"role,omitempty" json:"role,omitempty"`
-	Type               *Coding    `bson:"type,omitempty" json:"type,omitempty"`
-	ReferenceUri       string     `bson:"referenceUri,omitempty" json:"referenceUri,omitempty"`
-	ReferenceReference *Reference `bson:"referenceReference,omitempty" json:"referenceReference,omitempty"`
-	Display            string     `bson:"display,omitempty" json:"display,omitempty"`
+	Role         *Coding                                `bson:"role,omitempty" json:"role,omitempty"`
+	Actor        *Reference                             `bson:"actor,omitempty" json:"actor,omitempty"`
+	UserId       *Identifier                            `bson:"userId,omitempty" json:"userId,omitempty"`
+	RelatedAgent []ProvenanceAgentRelatedAgentComponent `bson:"relatedAgent,omitempty" json:"relatedAgent,omitempty"`
+}
+
+type ProvenanceAgentRelatedAgentComponent struct {
+	Type   *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Target string           `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 type ProvenanceEntityComponent struct {

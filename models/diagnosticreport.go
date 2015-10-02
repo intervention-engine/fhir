@@ -30,17 +30,17 @@ import "encoding/json"
 
 type DiagnosticReport struct {
 	Id                string                           `json:"id" bson:"_id"`
-	Code              *CodeableConcept                 `bson:"code,omitempty" json:"code,omitempty"`
-	Status            string                           `bson:"status,omitempty" json:"status,omitempty"`
-	Issued            *FHIRDateTime                    `bson:"issued,omitempty" json:"issued,omitempty"`
-	Subject           *Reference                       `bson:"subject,omitempty" json:"subject,omitempty"`
-	Performer         *Reference                       `bson:"performer,omitempty" json:"performer,omitempty"`
-	Encounter         *Reference                       `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Identifier        []Identifier                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	RequestDetail     []Reference                      `bson:"requestDetail,omitempty" json:"requestDetail,omitempty"`
-	ServiceCategory   *CodeableConcept                 `bson:"serviceCategory,omitempty" json:"serviceCategory,omitempty"`
+	Status            string                           `bson:"status,omitempty" json:"status,omitempty"`
+	Category          *CodeableConcept                 `bson:"category,omitempty" json:"category,omitempty"`
+	Code              *CodeableConcept                 `bson:"code,omitempty" json:"code,omitempty"`
+	Subject           *Reference                       `bson:"subject,omitempty" json:"subject,omitempty"`
+	Encounter         *Reference                       `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	EffectiveDateTime *FHIRDateTime                    `bson:"effectiveDateTime,omitempty" json:"effectiveDateTime,omitempty"`
 	EffectivePeriod   *Period                          `bson:"effectivePeriod,omitempty" json:"effectivePeriod,omitempty"`
+	Issued            *FHIRDateTime                    `bson:"issued,omitempty" json:"issued,omitempty"`
+	Performer         *Reference                       `bson:"performer,omitempty" json:"performer,omitempty"`
+	Request           []Reference                      `bson:"request,omitempty" json:"request,omitempty"`
 	Specimen          []Reference                      `bson:"specimen,omitempty" json:"specimen,omitempty"`
 	Result            []Reference                      `bson:"result,omitempty" json:"result,omitempty"`
 	ImagingStudy      []Reference                      `bson:"imagingStudy,omitempty" json:"imagingStudy,omitempty"`

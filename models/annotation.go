@@ -26,28 +26,9 @@
 
 package models
 
-import "encoding/json"
-
-type Flag struct {
-	Id         string           `json:"id" bson:"_id"`
-	Identifier []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Category   *CodeableConcept `bson:"category,omitempty" json:"category,omitempty"`
-	Status     string           `bson:"status,omitempty" json:"status,omitempty"`
-	Period     *Period          `bson:"period,omitempty" json:"period,omitempty"`
-	Subject    *Reference       `bson:"subject,omitempty" json:"subject,omitempty"`
-	Encounter  *Reference       `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Author     *Reference       `bson:"author,omitempty" json:"author,omitempty"`
-	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-}
-
-// Custom marshaller to add the resourceType property, as required by the specification
-func (resource *Flag) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Flag
-	}{
-		ResourceType: "Flag",
-		Flag:         *resource,
-	}
-	return json.Marshal(x)
+type Annotation struct {
+	AuthorReference *Reference    `bson:"authorReference,omitempty" json:"authorReference,omitempty"`
+	AuthorString    string        `bson:"authorString,omitempty" json:"authorString,omitempty"`
+	Time            *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
+	Text            string        `bson:"text,omitempty" json:"text,omitempty"`
 }

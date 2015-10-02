@@ -32,9 +32,9 @@ type HealthcareService struct {
 	Id                     string                                    `json:"id" bson:"_id"`
 	Identifier             []Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	ProvidedBy             *Reference                                `bson:"providedBy,omitempty" json:"providedBy,omitempty"`
-	Location               *Reference                                `bson:"location,omitempty" json:"location,omitempty"`
 	ServiceCategory        *CodeableConcept                          `bson:"serviceCategory,omitempty" json:"serviceCategory,omitempty"`
 	ServiceType            []HealthcareServiceServiceTypeComponent   `bson:"serviceType,omitempty" json:"serviceType,omitempty"`
+	Location               *Reference                                `bson:"location,omitempty" json:"location,omitempty"`
 	ServiceName            string                                    `bson:"serviceName,omitempty" json:"serviceName,omitempty"`
 	Comment                string                                    `bson:"comment,omitempty" json:"comment,omitempty"`
 	ExtraDetails           string                                    `bson:"extraDetails,omitempty" json:"extraDetails,omitempty"`

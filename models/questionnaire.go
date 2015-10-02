@@ -29,14 +29,15 @@ package models
 import "encoding/json"
 
 type Questionnaire struct {
-	Id         string                       `json:"id" bson:"_id"`
-	Identifier []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version    string                       `bson:"version,omitempty" json:"version,omitempty"`
-	Status     string                       `bson:"status,omitempty" json:"status,omitempty"`
-	Date       *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
-	Publisher  string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Telecom    []ContactPoint               `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Group      *QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
+	Id          string                       `json:"id" bson:"_id"`
+	Identifier  []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version     string                       `bson:"version,omitempty" json:"version,omitempty"`
+	Status      string                       `bson:"status,omitempty" json:"status,omitempty"`
+	Date        *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
+	Publisher   string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Telecom     []ContactPoint               `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	SubjectType []string                     `bson:"subjectType,omitempty" json:"subjectType,omitempty"`
+	Group       *QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -70,5 +71,6 @@ type QuestionnaireQuestionComponent struct {
 	Required *bool                         `bson:"required,omitempty" json:"required,omitempty"`
 	Repeats  *bool                         `bson:"repeats,omitempty" json:"repeats,omitempty"`
 	Options  *Reference                    `bson:"options,omitempty" json:"options,omitempty"`
+	Option   []Coding                      `bson:"option,omitempty" json:"option,omitempty"`
 	Group    []QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }

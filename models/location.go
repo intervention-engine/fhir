@@ -31,6 +31,7 @@ import "encoding/json"
 type Location struct {
 	Id                   string                     `json:"id" bson:"_id"`
 	Identifier           []Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
 	Name                 string                     `bson:"name,omitempty" json:"name,omitempty"`
 	Description          string                     `bson:"description,omitempty" json:"description,omitempty"`
 	Mode                 string                     `bson:"mode,omitempty" json:"mode,omitempty"`
@@ -41,7 +42,6 @@ type Location struct {
 	Position             *LocationPositionComponent `bson:"position,omitempty" json:"position,omitempty"`
 	ManagingOrganization *Reference                 `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
 	PartOf               *Reference                 `bson:"partOf,omitempty" json:"partOf,omitempty"`
-	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification

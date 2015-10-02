@@ -29,20 +29,21 @@ package models
 import "encoding/json"
 
 type AllergyIntolerance struct {
-	Id            string                             `json:"id" bson:"_id"`
-	Identifier    []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	RecordedDate  *FHIRDateTime                      `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
-	Recorder      *Reference                         `bson:"recorder,omitempty" json:"recorder,omitempty"`
-	Patient       *Reference                         `bson:"patient,omitempty" json:"patient,omitempty"`
-	Reporter      *Reference                         `bson:"reporter,omitempty" json:"reporter,omitempty"`
-	Substance     *CodeableConcept                   `bson:"substance,omitempty" json:"substance,omitempty"`
-	Status        string                             `bson:"status,omitempty" json:"status,omitempty"`
-	Criticality   string                             `bson:"criticality,omitempty" json:"criticality,omitempty"`
-	Type          string                             `bson:"type,omitempty" json:"type,omitempty"`
-	Category      string                             `bson:"category,omitempty" json:"category,omitempty"`
-	LastOccurence *FHIRDateTime                      `bson:"lastOccurence,omitempty" json:"lastOccurence,omitempty"`
-	Comment       string                             `bson:"comment,omitempty" json:"comment,omitempty"`
-	Event         []AllergyIntoleranceEventComponent `bson:"event,omitempty" json:"event,omitempty"`
+	Id            string                                `json:"id" bson:"_id"`
+	Identifier    []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Onset         *FHIRDateTime                         `bson:"onset,omitempty" json:"onset,omitempty"`
+	RecordedDate  *FHIRDateTime                         `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
+	Recorder      *Reference                            `bson:"recorder,omitempty" json:"recorder,omitempty"`
+	Patient       *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
+	Reporter      *Reference                            `bson:"reporter,omitempty" json:"reporter,omitempty"`
+	Substance     *CodeableConcept                      `bson:"substance,omitempty" json:"substance,omitempty"`
+	Status        string                                `bson:"status,omitempty" json:"status,omitempty"`
+	Criticality   string                                `bson:"criticality,omitempty" json:"criticality,omitempty"`
+	Type          string                                `bson:"type,omitempty" json:"type,omitempty"`
+	Category      string                                `bson:"category,omitempty" json:"category,omitempty"`
+	LastOccurence *FHIRDateTime                         `bson:"lastOccurence,omitempty" json:"lastOccurence,omitempty"`
+	Note          *Annotation                           `bson:"note,omitempty" json:"note,omitempty"`
+	Reaction      []AllergyIntoleranceReactionComponent `bson:"reaction,omitempty" json:"reaction,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -57,14 +58,13 @@ func (resource *AllergyIntolerance) MarshalJSON() ([]byte, error) {
 	return json.Marshal(x)
 }
 
-type AllergyIntoleranceEventComponent struct {
+type AllergyIntoleranceReactionComponent struct {
 	Substance     *CodeableConcept  `bson:"substance,omitempty" json:"substance,omitempty"`
 	Certainty     string            `bson:"certainty,omitempty" json:"certainty,omitempty"`
 	Manifestation []CodeableConcept `bson:"manifestation,omitempty" json:"manifestation,omitempty"`
 	Description   string            `bson:"description,omitempty" json:"description,omitempty"`
 	Onset         *FHIRDateTime     `bson:"onset,omitempty" json:"onset,omitempty"`
-	Duration      *Quantity         `bson:"duration,omitempty" json:"duration,omitempty"`
 	Severity      string            `bson:"severity,omitempty" json:"severity,omitempty"`
 	ExposureRoute *CodeableConcept  `bson:"exposureRoute,omitempty" json:"exposureRoute,omitempty"`
-	Comment       string            `bson:"comment,omitempty" json:"comment,omitempty"`
+	Note          *Annotation       `bson:"note,omitempty" json:"note,omitempty"`
 }

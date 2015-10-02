@@ -96,8 +96,8 @@ type NutritionOrderEnteralFormulaComponent struct {
 }
 
 type NutritionOrderEnteralFormulaAdministrationComponent struct {
-	Schedule     *Timing   `bson:"schedule,omitempty" json:"schedule,omitempty"`
-	Quantity     *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	RateQuantity *Quantity `bson:"rateQuantity,omitempty" json:"rateQuantity,omitempty"`
-	RateRatio    *Ratio    `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
+	Schedule           *Timing   `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	Quantity           *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	RateSimpleQuantity *Quantity `bson:"rateSimpleQuantity,omitempty" json:"rateSimpleQuantity,omitempty"`
+	RateRatio          *Ratio    `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
 }

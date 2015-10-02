@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,25 +14,32 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func MedicationOrderIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	defer func() {
 		if r := recover(); r != nil {
 			rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 			switch x := r.(type) {
-			case search.SearchError:
-				rw.WriteHeader(x.HTTPStatus())
-				json.NewEncoder(rw).Encode(x.OperationOutcome())
+			case search.Error:
+				rw.WriteHeader(x.HTTPStatus)
+				json.NewEncoder(rw).Encode(x.OperationOutcome)
 				return
 			default:
-				e := search.InternalServerError(fmt.Sprintf("%s", x))
-				rw.WriteHeader(e.HTTPStatus())
-				json.NewEncoder(rw).Encode(e.OperationOutcome())
+				outcome := &models.OperationOutcome{
+					Issue: []models.OperationOutcomeIssueComponent{
+						models.OperationOutcomeIssueComponent{
+							Severity: "fatal",
+							Code:     "exception",
+						},
+					},
+				}
+				rw.WriteHeader(http.StatusInternalServerError)
+				json.NewEncoder(rw).Encode(outcome)
 			}
 		}
 	}()
 
-	var result []models.Supply
-	c := Database.C("supplies")
+	var result []models.MedicationOrder
+	c := Database.C("medicationorders")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -44,18 +50,18 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 		}
 	} else {
 		searcher := search.NewMongoSearcher(Database)
-		query := search.Query{Resource: "Supply", Query: r.URL.RawQuery}
+		query := search.Query{Resource: "MedicationOrder", Query: r.URL.RawQuery}
 		err := searcher.CreateQuery(query).All(&result)
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
-	var supplyEntryList []models.BundleEntryComponent
+	var medicationorderEntryList []models.BundleEntryComponent
 	for i := range result {
 		var entry models.BundleEntryComponent
 		entry.Resource = &result[i]
-		supplyEntryList = append(supplyEntryList, entry)
+		medicationorderEntryList = append(medicationorderEntryList, entry)
 	}
 
 	var bundle models.Bundle
@@ -63,11 +69,11 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	bundle.Type = "searchset"
 	var total = uint32(len(result))
 	bundle.Total = &total
-	bundle.Entry = supplyEntryList
+	bundle.Entry = medicationorderEntryList
 
-	log.Println("Setting supply search context")
-	context.Set(r, "Supply", result)
-	context.Set(r, "Resource", "Supply")
+	log.Println("Setting medicationorder search context")
+	context.Set(r, "MedicationOrder", result)
+	context.Set(r, "Resource", "MedicationOrder")
 	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -75,7 +81,7 @@ func SupplyIndexHandler(rw http.ResponseWriter, r *http.Request, next http.Handl
 	json.NewEncoder(rw).Encode(&bundle)
 }
 
-func LoadSupply(r *http.Request) (*models.Supply, error) {
+func LoadMedicationOrder(r *http.Request) (*models.MedicationOrder, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -85,63 +91,63 @@ func LoadSupply(r *http.Request) (*models.Supply, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("supplies")
-	result := models.Supply{}
+	c := Database.C("medicationorders")
+	result := models.MedicationOrder{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("Setting supply read context")
-	context.Set(r, "Supply", result)
-	context.Set(r, "Resource", "Supply")
+	log.Println("Setting medicationorder read context")
+	context.Set(r, "MedicationOrder", result)
+	context.Set(r, "Resource", "MedicationOrder")
 	return &result, nil
 }
 
-func SupplyShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func MedicationOrderShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	context.Set(r, "Action", "read")
-	_, err := LoadSupply(r)
+	_, err := LoadMedicationOrder(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(context.Get(r, "Supply"))
+	json.NewEncoder(rw).Encode(context.Get(r, "MedicationOrder"))
 }
 
-func SupplyCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func MedicationOrderCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
-	supply := &models.Supply{}
-	err := decoder.Decode(supply)
+	medicationorder := &models.MedicationOrder{}
+	err := decoder.Decode(medicationorder)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("supplies")
+	c := Database.C("medicationorders")
 	i := bson.NewObjectId()
-	supply.Id = i.Hex()
-	err = c.Insert(supply)
+	medicationorder.Id = i.Hex()
+	err = c.Insert(medicationorder)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting supply create context")
-	context.Set(r, "Supply", supply)
-	context.Set(r, "Resource", "Supply")
+	log.Println("Setting medicationorder create context")
+	context.Set(r, "MedicationOrder", medicationorder)
+	context.Set(r, "Resource", "MedicationOrder")
 	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-	rw.Header().Add("Location", "http://"+host+":3001/Supply/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/MedicationOrder/"+i.Hex())
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
-	json.NewEncoder(rw).Encode(supply)
+	json.NewEncoder(rw).Encode(medicationorder)
 }
 
-func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func MedicationOrderUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -153,30 +159,30 @@ func SupplyUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	supply := &models.Supply{}
-	err := decoder.Decode(supply)
+	medicationorder := &models.MedicationOrder{}
+	err := decoder.Decode(medicationorder)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("supplies")
-	supply.Id = id.Hex()
-	err = c.Update(bson.M{"_id": id.Hex()}, supply)
+	c := Database.C("medicationorders")
+	medicationorder.Id = id.Hex()
+	err = c.Update(bson.M{"_id": id.Hex()}, medicationorder)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting supply update context")
-	context.Set(r, "Supply", supply)
-	context.Set(r, "Resource", "Supply")
+	log.Println("Setting medicationorder update context")
+	context.Set(r, "MedicationOrder", medicationorder)
+	context.Set(r, "Resource", "MedicationOrder")
 	context.Set(r, "Action", "update")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(supply)
+	json.NewEncoder(rw).Encode(medicationorder)
 }
 
-func SupplyDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func MedicationOrderDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -186,7 +192,7 @@ func SupplyDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("supplies")
+	c := Database.C("medicationorders")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
@@ -194,8 +200,8 @@ func SupplyDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.Hand
 		return
 	}
 
-	log.Println("Setting supply delete context")
-	context.Set(r, "Supply", id.Hex())
-	context.Set(r, "Resource", "Supply")
+	log.Println("Setting medicationorder delete context")
+	context.Set(r, "MedicationOrder", id.Hex())
+	context.Set(r, "Resource", "MedicationOrder")
 	context.Set(r, "Action", "delete")
 }

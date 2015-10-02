@@ -32,7 +32,7 @@ type Device struct {
 	Id              string           `json:"id" bson:"_id"`
 	Identifier      []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Note            []string         `bson:"note,omitempty" json:"note,omitempty"`
+	Note            []Annotation     `bson:"note,omitempty" json:"note,omitempty"`
 	Status          string           `bson:"status,omitempty" json:"status,omitempty"`
 	Manufacturer    string           `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
 	Model           string           `bson:"model,omitempty" json:"model,omitempty"`

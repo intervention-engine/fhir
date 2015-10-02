@@ -31,6 +31,7 @@ import "encoding/json"
 type Practitioner struct {
 	Id               string                                  `json:"id" bson:"_id"`
 	Identifier       []Identifier                            `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Active           *bool                                   `bson:"active,omitempty" json:"active,omitempty"`
 	Name             *HumanName                              `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom          []ContactPoint                          `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address          []Address                               `bson:"address,omitempty" json:"address,omitempty"`

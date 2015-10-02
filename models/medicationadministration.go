@@ -61,10 +61,12 @@ func (resource *MedicationAdministration) MarshalJSON() ([]byte, error) {
 }
 
 type MedicationAdministrationDosageComponent struct {
-	Text     string           `bson:"text,omitempty" json:"text,omitempty"`
-	Site     *CodeableConcept `bson:"site,omitempty" json:"site,omitempty"`
-	Route    *CodeableConcept `bson:"route,omitempty" json:"route,omitempty"`
-	Method   *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
-	Quantity *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Rate     *Ratio           `bson:"rate,omitempty" json:"rate,omitempty"`
+	Text                string           `bson:"text,omitempty" json:"text,omitempty"`
+	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
+	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`
+	Route               *CodeableConcept `bson:"route,omitempty" json:"route,omitempty"`
+	Method              *CodeableConcept `bson:"method,omitempty" json:"method,omitempty"`
+	Quantity            *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	RateRatio           *Ratio           `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
+	RateRange           *Range           `bson:"rateRange,omitempty" json:"rateRange,omitempty"`
 }

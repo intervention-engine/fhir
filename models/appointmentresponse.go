@@ -32,12 +32,12 @@ type AppointmentResponse struct {
 	Id                string            `json:"id" bson:"_id"`
 	Identifier        []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Appointment       *Reference        `bson:"appointment,omitempty" json:"appointment,omitempty"`
+	Start             *FHIRDateTime     `bson:"start,omitempty" json:"start,omitempty"`
+	End               *FHIRDateTime     `bson:"end,omitempty" json:"end,omitempty"`
 	ParticipantType   []CodeableConcept `bson:"participantType,omitempty" json:"participantType,omitempty"`
 	Actor             *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
 	ParticipantStatus string            `bson:"participantStatus,omitempty" json:"participantStatus,omitempty"`
 	Comment           string            `bson:"comment,omitempty" json:"comment,omitempty"`
-	Start             *FHIRDateTime     `bson:"start,omitempty" json:"start,omitempty"`
-	End               *FHIRDateTime     `bson:"end,omitempty" json:"end,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification

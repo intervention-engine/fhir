@@ -27,7 +27,6 @@
 package models
 
 type Ratio struct {
-	Id          string    `json:"id" bson:"_id"`
 	Numerator   *Quantity `bson:"numerator,omitempty" json:"numerator,omitempty"`
 	Denominator *Quantity `bson:"denominator,omitempty" json:"denominator,omitempty"`
 }

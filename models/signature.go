@@ -27,10 +27,10 @@
 package models
 
 type Signature struct {
-	Id           string        `json:"id" bson:"_id"`
 	Type         []Coding      `bson:"type,omitempty" json:"type,omitempty"`
 	When         *FHIRDateTime `bson:"when,omitempty" json:"when,omitempty"`
 	WhoUri       string        `bson:"whoUri,omitempty" json:"whoUri,omitempty"`
 	WhoReference *Reference    `bson:"whoReference,omitempty" json:"whoReference,omitempty"`
+	ContentType  string        `bson:"contentType,omitempty" json:"contentType,omitempty"`
 	Blob         string        `bson:"blob,omitempty" json:"blob,omitempty"`
 }

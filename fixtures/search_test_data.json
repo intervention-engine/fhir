@@ -237,14 +237,13 @@
 	},
 	"valueQuantity": {
 		"value": 8,
-		"units": "%"
+		"unit": "%"
 	},
 	"effectivePeriod": {
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T08:16:40-04:00"
 	},
 	"status": "final",
-	"reliability": "ok",
 	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -254,10 +253,10 @@
 }, {
 	"resourceType": "Procedure",
 	"id": "1203028907289396691",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
-	"type": {
+	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
 			"code": "116783008"
@@ -274,7 +273,9 @@
 	"report": [{
 		"reference": "DiagnosticReport/551262234714579397"
 	}],
-	"notes": "Procedure, Result: Clinical Staging Procedure"
+	"notes": [{
+    "text": "Procedure, Result: Clinical Staging Procedure"
+  }]
 }, {
 	"resourceType": "DiagnosticReport",
 	"id": "551262234714579397",
@@ -310,7 +311,6 @@
 		"end": "2011-11-01T11:03:20-04:00"
 	},
 	"status": "final",
-	"reliability": "ok",
 	"subject": {
 		"reference": "Patient/4954037118555241963"
 	}
@@ -336,7 +336,6 @@
 		"end": "2011-11-01T11:03:20-04:00"
 	},
 	"status": "final",
-	"reliability": "ok",
 	"subject": {
 		"reference": "Patient/4954037118555241963"
 	}
@@ -362,17 +361,16 @@
 		"end": "2011-11-01T11:03:20-04:00"
 	},
 	"status": "final",
-	"reliability": "ok",
 	"subject": {
 		"reference": "Patient/4954037118555241963"
 	}
 }, {
 	"resourceType": "Procedure",
 	"id": "6400692968849601141",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
-	"type": {
+	"code": {
 		"coding": [{
 			"system": "http://hl7.org/fhir/sid/icd-9",
 			"code": "36.10"
@@ -389,7 +387,9 @@
 		"start": "2013-03-02T10:45:00-05:00",
 		"end": "2013-03-02T11:45:00-05:00"
 	},
-	"notes": "Procedure, Performed: Hospital measures-CABG"
+	"notes": [{
+    "text": "Procedure, Performed: Hospital measures-CABG"
+  }]
 }, {
 	"resourceType": "MedicationStatement",
 	"id": "3284098338643216325",
@@ -411,7 +411,7 @@
 	"resourceType": "Immunization",
 	"id": "7045606679745526993",
 	"date": "2011-08-15T08:00:00-04:00",
-	"vaccineType": {
+	"vaccineCode": {
 		"coding": [{
 			"system": "http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx",
 			"code": "33"
@@ -545,7 +545,7 @@
   },
   "valueQuantity": {
     "value": 185,
-    "units": "lbs",
+    "unit": "lbs",
     "system": "http://unitsofmeasure.org",
     "code": "[lb_av]"
   }

@@ -31,8 +31,9 @@ import "encoding/json"
 type Immunization struct {
 	Id                  string                                     `json:"id" bson:"_id"`
 	Identifier          []Identifier                               `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status              string                                     `bson:"status,omitempty" json:"status,omitempty"`
 	Date                *FHIRDateTime                              `bson:"date,omitempty" json:"date,omitempty"`
-	VaccineType         *CodeableConcept                           `bson:"vaccineType,omitempty" json:"vaccineType,omitempty"`
+	VaccineCode         *CodeableConcept                           `bson:"vaccineCode,omitempty" json:"vaccineCode,omitempty"`
 	Patient             *Reference                                 `bson:"patient,omitempty" json:"patient,omitempty"`
 	WasNotGiven         *bool                                      `bson:"wasNotGiven,omitempty" json:"wasNotGiven,omitempty"`
 	Reported            *bool                                      `bson:"reported,omitempty" json:"reported,omitempty"`
@@ -46,6 +47,7 @@ type Immunization struct {
 	Site                *CodeableConcept                           `bson:"site,omitempty" json:"site,omitempty"`
 	Route               *CodeableConcept                           `bson:"route,omitempty" json:"route,omitempty"`
 	DoseQuantity        *Quantity                                  `bson:"doseQuantity,omitempty" json:"doseQuantity,omitempty"`
+	Note                []Annotation                               `bson:"note,omitempty" json:"note,omitempty"`
 	Explanation         *ImmunizationExplanationComponent          `bson:"explanation,omitempty" json:"explanation,omitempty"`
 	Reaction            []ImmunizationReactionComponent            `bson:"reaction,omitempty" json:"reaction,omitempty"`
 	VaccinationProtocol []ImmunizationVaccinationProtocolComponent `bson:"vaccinationProtocol,omitempty" json:"vaccinationProtocol,omitempty"`
@@ -75,12 +77,12 @@ type ImmunizationReactionComponent struct {
 }
 
 type ImmunizationVaccinationProtocolComponent struct {
-	DoseSequence     *uint32          `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
-	Description      string           `bson:"description,omitempty" json:"description,omitempty"`
-	Authority        *Reference       `bson:"authority,omitempty" json:"authority,omitempty"`
-	Series           string           `bson:"series,omitempty" json:"series,omitempty"`
-	SeriesDoses      *uint32          `bson:"seriesDoses,omitempty" json:"seriesDoses,omitempty"`
-	DoseTarget       *CodeableConcept `bson:"doseTarget,omitempty" json:"doseTarget,omitempty"`
-	DoseStatus       *CodeableConcept `bson:"doseStatus,omitempty" json:"doseStatus,omitempty"`
-	DoseStatusReason *CodeableConcept `bson:"doseStatusReason,omitempty" json:"doseStatusReason,omitempty"`
+	DoseSequence     *uint32           `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
+	Description      string            `bson:"description,omitempty" json:"description,omitempty"`
+	Authority        *Reference        `bson:"authority,omitempty" json:"authority,omitempty"`
+	Series           string            `bson:"series,omitempty" json:"series,omitempty"`
+	SeriesDoses      *uint32           `bson:"seriesDoses,omitempty" json:"seriesDoses,omitempty"`
+	TargetDisease    []CodeableConcept `bson:"targetDisease,omitempty" json:"targetDisease,omitempty"`
+	DoseStatus       *CodeableConcept  `bson:"doseStatus,omitempty" json:"doseStatus,omitempty"`
+	DoseStatusReason *CodeableConcept  `bson:"doseStatusReason,omitempty" json:"doseStatusReason,omitempty"`
 }

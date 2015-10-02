@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,25 +14,32 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func QuestionnaireResponseIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	defer func() {
 		if r := recover(); r != nil {
 			rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 			switch x := r.(type) {
-			case search.SearchError:
-				rw.WriteHeader(x.HTTPStatus())
-				json.NewEncoder(rw).Encode(x.OperationOutcome())
+			case search.Error:
+				rw.WriteHeader(x.HTTPStatus)
+				json.NewEncoder(rw).Encode(x.OperationOutcome)
 				return
 			default:
-				e := search.InternalServerError(fmt.Sprintf("%s", x))
-				rw.WriteHeader(e.HTTPStatus())
-				json.NewEncoder(rw).Encode(e.OperationOutcome())
+				outcome := &models.OperationOutcome{
+					Issue: []models.OperationOutcomeIssueComponent{
+						models.OperationOutcomeIssueComponent{
+							Severity: "fatal",
+							Code:     "exception",
+						},
+					},
+				}
+				rw.WriteHeader(http.StatusInternalServerError)
+				json.NewEncoder(rw).Encode(outcome)
 			}
 		}
 	}()
 
-	var result []models.Contraindication
-	c := Database.C("contraindications")
+	var result []models.QuestionnaireResponse
+	c := Database.C("questionnaireresponses")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -44,18 +50,18 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 		}
 	} else {
 		searcher := search.NewMongoSearcher(Database)
-		query := search.Query{Resource: "Contraindication", Query: r.URL.RawQuery}
+		query := search.Query{Resource: "QuestionnaireResponse", Query: r.URL.RawQuery}
 		err := searcher.CreateQuery(query).All(&result)
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
-	var contraindicationEntryList []models.BundleEntryComponent
+	var questionnaireresponseEntryList []models.BundleEntryComponent
 	for i := range result {
 		var entry models.BundleEntryComponent
 		entry.Resource = &result[i]
-		contraindicationEntryList = append(contraindicationEntryList, entry)
+		questionnaireresponseEntryList = append(questionnaireresponseEntryList, entry)
 	}
 
 	var bundle models.Bundle
@@ -63,11 +69,11 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	bundle.Type = "searchset"
 	var total = uint32(len(result))
 	bundle.Total = &total
-	bundle.Entry = contraindicationEntryList
+	bundle.Entry = questionnaireresponseEntryList
 
-	log.Println("Setting contraindication search context")
-	context.Set(r, "Contraindication", result)
-	context.Set(r, "Resource", "Contraindication")
+	log.Println("Setting questionnaireresponse search context")
+	context.Set(r, "QuestionnaireResponse", result)
+	context.Set(r, "Resource", "QuestionnaireResponse")
 	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -75,7 +81,7 @@ func ContraindicationIndexHandler(rw http.ResponseWriter, r *http.Request, next 
 	json.NewEncoder(rw).Encode(&bundle)
 }
 
-func LoadContraindication(r *http.Request) (*models.Contraindication, error) {
+func LoadQuestionnaireResponse(r *http.Request) (*models.QuestionnaireResponse, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -85,63 +91,63 @@ func LoadContraindication(r *http.Request) (*models.Contraindication, error) {
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("contraindications")
-	result := models.Contraindication{}
+	c := Database.C("questionnaireresponses")
+	result := models.QuestionnaireResponse{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("Setting contraindication read context")
-	context.Set(r, "Contraindication", result)
-	context.Set(r, "Resource", "Contraindication")
+	log.Println("Setting questionnaireresponse read context")
+	context.Set(r, "QuestionnaireResponse", result)
+	context.Set(r, "Resource", "QuestionnaireResponse")
 	return &result, nil
 }
 
-func ContraindicationShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func QuestionnaireResponseShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	context.Set(r, "Action", "read")
-	_, err := LoadContraindication(r)
+	_, err := LoadQuestionnaireResponse(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(context.Get(r, "Contraindication"))
+	json.NewEncoder(rw).Encode(context.Get(r, "QuestionnaireResponse"))
 }
 
-func ContraindicationCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func QuestionnaireResponseCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
-	contraindication := &models.Contraindication{}
-	err := decoder.Decode(contraindication)
+	questionnaireresponse := &models.QuestionnaireResponse{}
+	err := decoder.Decode(questionnaireresponse)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("contraindications")
+	c := Database.C("questionnaireresponses")
 	i := bson.NewObjectId()
-	contraindication.Id = i.Hex()
-	err = c.Insert(contraindication)
+	questionnaireresponse.Id = i.Hex()
+	err = c.Insert(questionnaireresponse)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting contraindication create context")
-	context.Set(r, "Contraindication", contraindication)
-	context.Set(r, "Resource", "Contraindication")
+	log.Println("Setting questionnaireresponse create context")
+	context.Set(r, "QuestionnaireResponse", questionnaireresponse)
+	context.Set(r, "Resource", "QuestionnaireResponse")
 	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-	rw.Header().Add("Location", "http://"+host+":3001/Contraindication/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/QuestionnaireResponse/"+i.Hex())
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
-	json.NewEncoder(rw).Encode(contraindication)
+	json.NewEncoder(rw).Encode(questionnaireresponse)
 }
 
-func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func QuestionnaireResponseUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -153,30 +159,30 @@ func ContraindicationUpdateHandler(rw http.ResponseWriter, r *http.Request, next
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	contraindication := &models.Contraindication{}
-	err := decoder.Decode(contraindication)
+	questionnaireresponse := &models.QuestionnaireResponse{}
+	err := decoder.Decode(questionnaireresponse)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("contraindications")
-	contraindication.Id = id.Hex()
-	err = c.Update(bson.M{"_id": id.Hex()}, contraindication)
+	c := Database.C("questionnaireresponses")
+	questionnaireresponse.Id = id.Hex()
+	err = c.Update(bson.M{"_id": id.Hex()}, questionnaireresponse)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting contraindication update context")
-	context.Set(r, "Contraindication", contraindication)
-	context.Set(r, "Resource", "Contraindication")
+	log.Println("Setting questionnaireresponse update context")
+	context.Set(r, "QuestionnaireResponse", questionnaireresponse)
+	context.Set(r, "Resource", "QuestionnaireResponse")
 	context.Set(r, "Action", "update")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(contraindication)
+	json.NewEncoder(rw).Encode(questionnaireresponse)
 }
 
-func ContraindicationDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func QuestionnaireResponseDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -186,7 +192,7 @@ func ContraindicationDeleteHandler(rw http.ResponseWriter, r *http.Request, next
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("contraindications")
+	c := Database.C("questionnaireresponses")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
@@ -194,8 +200,8 @@ func ContraindicationDeleteHandler(rw http.ResponseWriter, r *http.Request, next
 		return
 	}
 
-	log.Println("Setting contraindication delete context")
-	context.Set(r, "Contraindication", id.Hex())
-	context.Set(r, "Resource", "Contraindication")
+	log.Println("Setting questionnaireresponse delete context")
+	context.Set(r, "QuestionnaireResponse", id.Hex())
+	context.Set(r, "Resource", "QuestionnaireResponse")
 	context.Set(r, "Action", "delete")
 }

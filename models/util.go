@@ -9,6 +9,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 	m := resourceMap.(map[string]interface{})
 	t := m["resourceType"]
 	switch t {
+	case "Account":
+		x := Account{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "AllergyIntolerance":
 		x := AllergyIntolerance{}
 		json.Unmarshal(b, &x)
@@ -161,14 +169,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "Contraindication":
-		x := Contraindication{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
 	case "Coverage":
 		x := Coverage{}
 		json.Unmarshal(b, &x)
@@ -179,6 +179,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "DataElement":
 		x := DataElement{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "DetectedIssue":
+		x := DetectedIssue{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -385,6 +393,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "ImplementationGuide":
+		x := ImplementationGuide{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "List":
 		x := List{}
 		json.Unmarshal(b, &x)
@@ -433,8 +449,8 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "MedicationPrescription":
-		x := MedicationPrescription{}
+	case "MedicationOrder":
+		x := MedicationOrder{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -609,8 +625,8 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "QuestionnaireAnswers":
-		x := QuestionnaireAnswers{}
+	case "QuestionnaireResponse":
+		x := QuestionnaireResponse{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -691,14 +707,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "Substance":
 		x := Substance{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "Supply":
-		x := Supply{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x

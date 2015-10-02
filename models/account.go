@@ -28,34 +28,29 @@ package models
 
 import "encoding/json"
 
-type Contraindication struct {
-	Id         string                                `json:"id" bson:"_id"`
-	Patient    *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
-	Category   *CodeableConcept                      `bson:"category,omitempty" json:"category,omitempty"`
-	Severity   string                                `bson:"severity,omitempty" json:"severity,omitempty"`
-	Implicated []Reference                           `bson:"implicated,omitempty" json:"implicated,omitempty"`
-	Detail     string                                `bson:"detail,omitempty" json:"detail,omitempty"`
-	Date       *FHIRDateTime                         `bson:"date,omitempty" json:"date,omitempty"`
-	Author     *Reference                            `bson:"author,omitempty" json:"author,omitempty"`
-	Identifier *Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Reference  string                                `bson:"reference,omitempty" json:"reference,omitempty"`
-	Mitigation []ContraindicationMitigationComponent `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
+type Account struct {
+	Id             string           `json:"id" bson:"_id"`
+	Identifier     []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Name           string           `bson:"name,omitempty" json:"name,omitempty"`
+	Type           *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Status         string           `bson:"status,omitempty" json:"status,omitempty"`
+	ActivePeriod   *Period          `bson:"activePeriod,omitempty" json:"activePeriod,omitempty"`
+	Currency       *Coding          `bson:"currency,omitempty" json:"currency,omitempty"`
+	Balance        *Quantity        `bson:"balance,omitempty" json:"balance,omitempty"`
+	CoveragePeriod *Period          `bson:"coveragePeriod,omitempty" json:"coveragePeriod,omitempty"`
+	Subject        *Reference       `bson:"subject,omitempty" json:"subject,omitempty"`
+	Owner          *Reference       `bson:"owner,omitempty" json:"owner,omitempty"`
+	Description    string           `bson:"description,omitempty" json:"description,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
-func (resource *Contraindication) MarshalJSON() ([]byte, error) {
+func (resource *Account) MarshalJSON() ([]byte, error) {
 	x := struct {
 		ResourceType string `json:"resourceType"`
-		Contraindication
+		Account
 	}{
-		ResourceType:     "Contraindication",
-		Contraindication: *resource,
+		ResourceType: "Account",
+		Account:      *resource,
 	}
 	return json.Marshal(x)
-}
-
-type ContraindicationMitigationComponent struct {
-	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
-	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
-	Author *Reference       `bson:"author,omitempty" json:"author,omitempty"`
 }

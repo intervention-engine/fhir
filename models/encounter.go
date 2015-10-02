@@ -29,26 +29,26 @@ package models
 import "encoding/json"
 
 type Encounter struct {
-	Id                      string                             `json:"id" bson:"_id"`
-	Identifier              []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status                  string                             `bson:"status,omitempty" json:"status,omitempty"`
-	StatusHistory           []EncounterStatusHistoryComponent  `bson:"statusHistory,omitempty" json:"statusHistory,omitempty"`
-	Class                   string                             `bson:"class,omitempty" json:"class,omitempty"`
-	Type                    []CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
-	Patient                 *Reference                         `bson:"patient,omitempty" json:"patient,omitempty"`
-	EpisodeOfCare           *Reference                         `bson:"episodeOfCare,omitempty" json:"episodeOfCare,omitempty"`
-	IncomingReferralRequest []Reference                        `bson:"incomingReferralRequest,omitempty" json:"incomingReferralRequest,omitempty"`
-	Participant             []EncounterParticipantComponent    `bson:"participant,omitempty" json:"participant,omitempty"`
-	Fulfills                *Reference                         `bson:"fulfills,omitempty" json:"fulfills,omitempty"`
-	Period                  *Period                            `bson:"period,omitempty" json:"period,omitempty"`
-	Length                  *Quantity                          `bson:"length,omitempty" json:"length,omitempty"`
-	Reason                  []CodeableConcept                  `bson:"reason,omitempty" json:"reason,omitempty"`
-	Indication              []Reference                        `bson:"indication,omitempty" json:"indication,omitempty"`
-	Priority                *CodeableConcept                   `bson:"priority,omitempty" json:"priority,omitempty"`
-	Hospitalization         *EncounterHospitalizationComponent `bson:"hospitalization,omitempty" json:"hospitalization,omitempty"`
-	Location                []EncounterLocationComponent       `bson:"location,omitempty" json:"location,omitempty"`
-	ServiceProvider         *Reference                         `bson:"serviceProvider,omitempty" json:"serviceProvider,omitempty"`
-	PartOf                  *Reference                         `bson:"partOf,omitempty" json:"partOf,omitempty"`
+	Id               string                             `json:"id" bson:"_id"`
+	Identifier       []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status           string                             `bson:"status,omitempty" json:"status,omitempty"`
+	StatusHistory    []EncounterStatusHistoryComponent  `bson:"statusHistory,omitempty" json:"statusHistory,omitempty"`
+	Class            string                             `bson:"class,omitempty" json:"class,omitempty"`
+	Type             []CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
+	Priority         *CodeableConcept                   `bson:"priority,omitempty" json:"priority,omitempty"`
+	Patient          *Reference                         `bson:"patient,omitempty" json:"patient,omitempty"`
+	EpisodeOfCare    []Reference                        `bson:"episodeOfCare,omitempty" json:"episodeOfCare,omitempty"`
+	IncomingReferral []Reference                        `bson:"incomingReferral,omitempty" json:"incomingReferral,omitempty"`
+	Participant      []EncounterParticipantComponent    `bson:"participant,omitempty" json:"participant,omitempty"`
+	Appointment      *Reference                         `bson:"appointment,omitempty" json:"appointment,omitempty"`
+	Period           *Period                            `bson:"period,omitempty" json:"period,omitempty"`
+	Length           *Quantity                          `bson:"length,omitempty" json:"length,omitempty"`
+	Reason           []CodeableConcept                  `bson:"reason,omitempty" json:"reason,omitempty"`
+	Indication       []Reference                        `bson:"indication,omitempty" json:"indication,omitempty"`
+	Hospitalization  *EncounterHospitalizationComponent `bson:"hospitalization,omitempty" json:"hospitalization,omitempty"`
+	Location         []EncounterLocationComponent       `bson:"location,omitempty" json:"location,omitempty"`
+	ServiceProvider  *Reference                         `bson:"serviceProvider,omitempty" json:"serviceProvider,omitempty"`
+	PartOf           *Reference                         `bson:"partOf,omitempty" json:"partOf,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -78,13 +78,14 @@ type EncounterHospitalizationComponent struct {
 	PreAdmissionIdentifier *Identifier       `bson:"preAdmissionIdentifier,omitempty" json:"preAdmissionIdentifier,omitempty"`
 	Origin                 *Reference        `bson:"origin,omitempty" json:"origin,omitempty"`
 	AdmitSource            *CodeableConcept  `bson:"admitSource,omitempty" json:"admitSource,omitempty"`
-	DietPreference         *CodeableConcept  `bson:"dietPreference,omitempty" json:"dietPreference,omitempty"`
+	AdmittingDiagnosis     []Reference       `bson:"admittingDiagnosis,omitempty" json:"admittingDiagnosis,omitempty"`
+	ReAdmission            *CodeableConcept  `bson:"reAdmission,omitempty" json:"reAdmission,omitempty"`
+	DietPreference         []CodeableConcept `bson:"dietPreference,omitempty" json:"dietPreference,omitempty"`
 	SpecialCourtesy        []CodeableConcept `bson:"specialCourtesy,omitempty" json:"specialCourtesy,omitempty"`
 	SpecialArrangement     []CodeableConcept `bson:"specialArrangement,omitempty" json:"specialArrangement,omitempty"`
 	Destination            *Reference        `bson:"destination,omitempty" json:"destination,omitempty"`
 	DischargeDisposition   *CodeableConcept  `bson:"dischargeDisposition,omitempty" json:"dischargeDisposition,omitempty"`
-	DischargeDiagnosis     *Reference        `bson:"dischargeDiagnosis,omitempty" json:"dischargeDiagnosis,omitempty"`
-	ReAdmission            *bool             `bson:"reAdmission,omitempty" json:"reAdmission,omitempty"`
+	DischargeDiagnosis     []Reference       `bson:"dischargeDiagnosis,omitempty" json:"dischargeDiagnosis,omitempty"`
 }
 
 type EncounterLocationComponent struct {

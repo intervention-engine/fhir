@@ -29,31 +29,32 @@ package models
 import "encoding/json"
 
 type StructureDefinition struct {
-	Id           string                                    `json:"id" bson:"_id"`
-	Url          string                                    `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier   []Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                                    `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                                    `bson:"name,omitempty" json:"name,omitempty"`
-	UseContext   []CodeableConcept                         `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Display      string                                    `bson:"display,omitempty" json:"display,omitempty"`
-	Publisher    string                                    `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []StructureDefinitionContactComponent     `bson:"contact,omitempty" json:"contact,omitempty"`
-	Description  string                                    `bson:"description,omitempty" json:"description,omitempty"`
-	Requirements string                                    `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright    string                                    `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Code         []Coding                                  `bson:"code,omitempty" json:"code,omitempty"`
-	Status       string                                    `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                                     `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Date         *FHIRDateTime                             `bson:"date,omitempty" json:"date,omitempty"`
-	FhirVersion  string                                    `bson:"fhirVersion,omitempty" json:"fhirVersion,omitempty"`
-	Mapping      []StructureDefinitionMappingComponent     `bson:"mapping,omitempty" json:"mapping,omitempty"`
-	Type         string                                    `bson:"type,omitempty" json:"type,omitempty"`
-	Abstract     *bool                                     `bson:"abstract,omitempty" json:"abstract,omitempty"`
-	ContextType  string                                    `bson:"contextType,omitempty" json:"contextType,omitempty"`
-	Context      []string                                  `bson:"context,omitempty" json:"context,omitempty"`
-	Base         string                                    `bson:"base,omitempty" json:"base,omitempty"`
-	Snapshot     *StructureDefinitionSnapshotComponent     `bson:"snapshot,omitempty" json:"snapshot,omitempty"`
-	Differential *StructureDefinitionDifferentialComponent `bson:"differential,omitempty" json:"differential,omitempty"`
+	Id              string                                    `json:"id" bson:"_id"`
+	Url             string                                    `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier      []Identifier                              `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version         string                                    `bson:"version,omitempty" json:"version,omitempty"`
+	Name            string                                    `bson:"name,omitempty" json:"name,omitempty"`
+	Display         string                                    `bson:"display,omitempty" json:"display,omitempty"`
+	Status          string                                    `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental    *bool                                     `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher       string                                    `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact         []StructureDefinitionContactComponent     `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date            *FHIRDateTime                             `bson:"date,omitempty" json:"date,omitempty"`
+	Description     string                                    `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext      []CodeableConcept                         `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Requirements    string                                    `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright       string                                    `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Code            []Coding                                  `bson:"code,omitempty" json:"code,omitempty"`
+	FhirVersion     string                                    `bson:"fhirVersion,omitempty" json:"fhirVersion,omitempty"`
+	Mapping         []StructureDefinitionMappingComponent     `bson:"mapping,omitempty" json:"mapping,omitempty"`
+	Kind            string                                    `bson:"kind,omitempty" json:"kind,omitempty"`
+	ConstrainedType string                                    `bson:"constrainedType,omitempty" json:"constrainedType,omitempty"`
+	Abstract        *bool                                     `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	ContextType     string                                    `bson:"contextType,omitempty" json:"contextType,omitempty"`
+	Context         []string                                  `bson:"context,omitempty" json:"context,omitempty"`
+	Base            string                                    `bson:"base,omitempty" json:"base,omitempty"`
+	Snapshot        *StructureDefinitionSnapshotComponent     `bson:"snapshot,omitempty" json:"snapshot,omitempty"`
+	Differential    *StructureDefinitionDifferentialComponent `bson:"differential,omitempty" json:"differential,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification

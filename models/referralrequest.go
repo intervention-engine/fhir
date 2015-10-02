@@ -32,6 +32,7 @@ type ReferralRequest struct {
 	Id                    string            `json:"id" bson:"_id"`
 	Status                string            `bson:"status,omitempty" json:"status,omitempty"`
 	Identifier            []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Date                  *FHIRDateTime     `bson:"date,omitempty" json:"date,omitempty"`
 	Type                  *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Specialty             *CodeableConcept  `bson:"specialty,omitempty" json:"specialty,omitempty"`
 	Priority              *CodeableConcept  `bson:"priority,omitempty" json:"priority,omitempty"`

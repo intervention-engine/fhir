@@ -5,7 +5,6 @@
     "lastUpdated": "2015-07-10T01:43:30Z"
   },
   "type": "searchset",
-  "base": "http://example.com/base",
   "total": 2,
   "link": [{
     "relation": "self",

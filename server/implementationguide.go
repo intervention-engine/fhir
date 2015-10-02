@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -15,25 +14,32 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func ImplementationGuideIndexHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	defer func() {
 		if r := recover(); r != nil {
 			rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 			switch x := r.(type) {
-			case search.SearchError:
-				rw.WriteHeader(x.HTTPStatus())
-				json.NewEncoder(rw).Encode(x.OperationOutcome())
+			case search.Error:
+				rw.WriteHeader(x.HTTPStatus)
+				json.NewEncoder(rw).Encode(x.OperationOutcome)
 				return
 			default:
-				e := search.InternalServerError(fmt.Sprintf("%s", x))
-				rw.WriteHeader(e.HTTPStatus())
-				json.NewEncoder(rw).Encode(e.OperationOutcome())
+				outcome := &models.OperationOutcome{
+					Issue: []models.OperationOutcomeIssueComponent{
+						models.OperationOutcomeIssueComponent{
+							Severity: "fatal",
+							Code:     "exception",
+						},
+					},
+				}
+				rw.WriteHeader(http.StatusInternalServerError)
+				json.NewEncoder(rw).Encode(outcome)
 			}
 		}
 	}()
 
-	var result []models.MedicationPrescription
-	c := Database.C("medicationprescriptions")
+	var result []models.ImplementationGuide
+	c := Database.C("implementationguides")
 
 	r.ParseForm()
 	if len(r.Form) == 0 {
@@ -44,18 +50,18 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request,
 		}
 	} else {
 		searcher := search.NewMongoSearcher(Database)
-		query := search.Query{Resource: "MedicationPrescription", Query: r.URL.RawQuery}
+		query := search.Query{Resource: "ImplementationGuide", Query: r.URL.RawQuery}
 		err := searcher.CreateQuery(query).All(&result)
 		if err != nil {
 			http.Error(rw, err.Error(), http.StatusInternalServerError)
 		}
 	}
 
-	var medicationprescriptionEntryList []models.BundleEntryComponent
+	var implementationguideEntryList []models.BundleEntryComponent
 	for i := range result {
 		var entry models.BundleEntryComponent
 		entry.Resource = &result[i]
-		medicationprescriptionEntryList = append(medicationprescriptionEntryList, entry)
+		implementationguideEntryList = append(implementationguideEntryList, entry)
 	}
 
 	var bundle models.Bundle
@@ -63,11 +69,11 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request,
 	bundle.Type = "searchset"
 	var total = uint32(len(result))
 	bundle.Total = &total
-	bundle.Entry = medicationprescriptionEntryList
+	bundle.Entry = implementationguideEntryList
 
-	log.Println("Setting medicationprescription search context")
-	context.Set(r, "MedicationPrescription", result)
-	context.Set(r, "Resource", "MedicationPrescription")
+	log.Println("Setting implementationguide search context")
+	context.Set(r, "ImplementationGuide", result)
+	context.Set(r, "Resource", "ImplementationGuide")
 	context.Set(r, "Action", "search")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -75,7 +81,7 @@ func MedicationPrescriptionIndexHandler(rw http.ResponseWriter, r *http.Request,
 	json.NewEncoder(rw).Encode(&bundle)
 }
 
-func LoadMedicationPrescription(r *http.Request) (*models.MedicationPrescription, error) {
+func LoadImplementationGuide(r *http.Request) (*models.ImplementationGuide, error) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -85,63 +91,63 @@ func LoadMedicationPrescription(r *http.Request) (*models.MedicationPrescription
 		return nil, errors.New("Invalid id")
 	}
 
-	c := Database.C("medicationprescriptions")
-	result := models.MedicationPrescription{}
+	c := Database.C("implementationguides")
+	result := models.ImplementationGuide{}
 	err := c.Find(bson.M{"_id": id.Hex()}).One(&result)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("Setting medicationprescription read context")
-	context.Set(r, "MedicationPrescription", result)
-	context.Set(r, "Resource", "MedicationPrescription")
+	log.Println("Setting implementationguide read context")
+	context.Set(r, "ImplementationGuide", result)
+	context.Set(r, "Resource", "ImplementationGuide")
 	return &result, nil
 }
 
-func MedicationPrescriptionShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func ImplementationGuideShowHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	context.Set(r, "Action", "read")
-	_, err := LoadMedicationPrescription(r)
+	_, err := LoadImplementationGuide(r)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(context.Get(r, "MedicationPrescription"))
+	json.NewEncoder(rw).Encode(context.Get(r, "ImplementationGuide"))
 }
 
-func MedicationPrescriptionCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func ImplementationGuideCreateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	decoder := json.NewDecoder(r.Body)
-	medicationprescription := &models.MedicationPrescription{}
-	err := decoder.Decode(medicationprescription)
+	implementationguide := &models.ImplementationGuide{}
+	err := decoder.Decode(implementationguide)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("medicationprescriptions")
+	c := Database.C("implementationguides")
 	i := bson.NewObjectId()
-	medicationprescription.Id = i.Hex()
-	err = c.Insert(medicationprescription)
+	implementationguide.Id = i.Hex()
+	err = c.Insert(implementationguide)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting medicationprescription create context")
-	context.Set(r, "MedicationPrescription", medicationprescription)
-	context.Set(r, "Resource", "MedicationPrescription")
+	log.Println("Setting implementationguide create context")
+	context.Set(r, "ImplementationGuide", implementationguide)
+	context.Set(r, "Resource", "ImplementationGuide")
 	context.Set(r, "Action", "create")
 
 	host, err := os.Hostname()
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
-	rw.Header().Add("Location", "http://"+host+":3001/MedicationPrescription/"+i.Hex())
+	rw.Header().Add("Location", "http://"+host+":3001/ImplementationGuide/"+i.Hex())
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
-	json.NewEncoder(rw).Encode(medicationprescription)
+	json.NewEncoder(rw).Encode(implementationguide)
 }
 
-func MedicationPrescriptionUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func ImplementationGuideUpdateHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 
 	var id bson.ObjectId
 
@@ -153,30 +159,30 @@ func MedicationPrescriptionUpdateHandler(rw http.ResponseWriter, r *http.Request
 	}
 
 	decoder := json.NewDecoder(r.Body)
-	medicationprescription := &models.MedicationPrescription{}
-	err := decoder.Decode(medicationprescription)
+	implementationguide := &models.ImplementationGuide{}
+	err := decoder.Decode(implementationguide)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	c := Database.C("medicationprescriptions")
-	medicationprescription.Id = id.Hex()
-	err = c.Update(bson.M{"_id": id.Hex()}, medicationprescription)
+	c := Database.C("implementationguides")
+	implementationguide.Id = id.Hex()
+	err = c.Update(bson.M{"_id": id.Hex()}, implementationguide)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
-	log.Println("Setting medicationprescription update context")
-	context.Set(r, "MedicationPrescription", medicationprescription)
-	context.Set(r, "Resource", "MedicationPrescription")
+	log.Println("Setting implementationguide update context")
+	context.Set(r, "ImplementationGuide", implementationguide)
+	context.Set(r, "Resource", "ImplementationGuide")
 	context.Set(r, "Action", "update")
 
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(rw).Encode(medicationprescription)
+	json.NewEncoder(rw).Encode(implementationguide)
 }
 
-func MedicationPrescriptionDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func ImplementationGuideDeleteHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	var id bson.ObjectId
 
 	idString := mux.Vars(r)["id"]
@@ -186,7 +192,7 @@ func MedicationPrescriptionDeleteHandler(rw http.ResponseWriter, r *http.Request
 		http.Error(rw, "Invalid id", http.StatusBadRequest)
 	}
 
-	c := Database.C("medicationprescriptions")
+	c := Database.C("implementationguides")
 
 	err := c.Remove(bson.M{"_id": id.Hex()})
 	if err != nil {
@@ -194,8 +200,8 @@ func MedicationPrescriptionDeleteHandler(rw http.ResponseWriter, r *http.Request
 		return
 	}
 
-	log.Println("Setting medicationprescription delete context")
-	context.Set(r, "MedicationPrescription", id.Hex())
-	context.Set(r, "Resource", "MedicationPrescription")
+	log.Println("Setting implementationguide delete context")
+	context.Set(r, "ImplementationGuide", id.Hex())
+	context.Set(r, "Resource", "ImplementationGuide")
 	context.Set(r, "Action", "delete")
 }

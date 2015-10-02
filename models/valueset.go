@@ -29,26 +29,26 @@ package models
 import "encoding/json"
 
 type ValueSet struct {
-	Id           string                      `json:"id" bson:"_id"`
-	Url          string                      `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier   *Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                      `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                      `bson:"name,omitempty" json:"name,omitempty"`
-	UseContext   []CodeableConcept           `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Immutable    *bool                       `bson:"immutable,omitempty" json:"immutable,omitempty"`
-	Publisher    string                      `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []ValueSetContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
-	Description  string                      `bson:"description,omitempty" json:"description,omitempty"`
-	Requirements string                      `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright    string                      `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Status       string                      `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                       `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Extensible   *bool                       `bson:"extensible,omitempty" json:"extensible,omitempty"`
-	Date         *FHIRDateTime               `bson:"date,omitempty" json:"date,omitempty"`
-	LockedDate   *FHIRDateTime               `bson:"lockedDate,omitempty" json:"lockedDate,omitempty"`
-	Define       *ValueSetDefineComponent    `bson:"define,omitempty" json:"define,omitempty"`
-	Compose      *ValueSetComposeComponent   `bson:"compose,omitempty" json:"compose,omitempty"`
-	Expansion    *ValueSetExpansionComponent `bson:"expansion,omitempty" json:"expansion,omitempty"`
+	Id           string                       `json:"id" bson:"_id"`
+	Url          string                       `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier   *Identifier                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version      string                       `bson:"version,omitempty" json:"version,omitempty"`
+	Name         string                       `bson:"name,omitempty" json:"name,omitempty"`
+	Status       string                       `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental *bool                        `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher    string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact      []ValueSetContactComponent   `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date         *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
+	LockedDate   *FHIRDateTime                `bson:"lockedDate,omitempty" json:"lockedDate,omitempty"`
+	Description  string                       `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext   []CodeableConcept            `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Immutable    *bool                        `bson:"immutable,omitempty" json:"immutable,omitempty"`
+	Requirements string                       `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright    string                       `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Extensible   *bool                        `bson:"extensible,omitempty" json:"extensible,omitempty"`
+	CodeSystem   *ValueSetCodeSystemComponent `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Compose      *ValueSetComposeComponent    `bson:"compose,omitempty" json:"compose,omitempty"`
+	Expansion    *ValueSetExpansionComponent  `bson:"expansion,omitempty" json:"expansion,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -68,7 +68,7 @@ type ValueSetContactComponent struct {
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
-type ValueSetDefineComponent struct {
+type ValueSetCodeSystemComponent struct {
 	System        string                               `bson:"system,omitempty" json:"system,omitempty"`
 	Version       string                               `bson:"version,omitempty" json:"version,omitempty"`
 	CaseSensitive *bool                                `bson:"caseSensitive,omitempty" json:"caseSensitive,omitempty"`
@@ -118,6 +118,8 @@ type ValueSetConceptSetFilterComponent struct {
 type ValueSetExpansionComponent struct {
 	Identifier string                                `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Timestamp  *FHIRDateTime                         `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
+	Total      *int32                                `bson:"total,omitempty" json:"total,omitempty"`
+	Offset     *int32                                `bson:"offset,omitempty" json:"offset,omitempty"`
 	Parameter  []ValueSetExpansionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
 	Contains   []ValueSetExpansionContainsComponent  `bson:"contains,omitempty" json:"contains,omitempty"`
 }

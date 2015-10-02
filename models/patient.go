@@ -31,6 +31,7 @@ import "encoding/json"
 type Patient struct {
 	Id                   string                          `json:"id" bson:"_id"`
 	Identifier           []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Active               *bool                           `bson:"active,omitempty" json:"active,omitempty"`
 	Name                 []HumanName                     `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom              []ContactPoint                  `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Gender               string                          `bson:"gender,omitempty" json:"gender,omitempty"`
@@ -48,7 +49,6 @@ type Patient struct {
 	CareProvider         []Reference                     `bson:"careProvider,omitempty" json:"careProvider,omitempty"`
 	ManagingOrganization *Reference                      `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
 	Link                 []PatientLinkComponent          `bson:"link,omitempty" json:"link,omitempty"`
-	Active               *bool                           `bson:"active,omitempty" json:"active,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification

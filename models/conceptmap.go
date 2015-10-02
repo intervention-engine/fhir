@@ -34,15 +34,15 @@ type ConceptMap struct {
 	Identifier      *Identifier                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Version         string                             `bson:"version,omitempty" json:"version,omitempty"`
 	Name            string                             `bson:"name,omitempty" json:"name,omitempty"`
-	UseContext      []CodeableConcept                  `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Publisher       string                             `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact         []ConceptMapContactComponent       `bson:"contact,omitempty" json:"contact,omitempty"`
-	Description     string                             `bson:"description,omitempty" json:"description,omitempty"`
-	Requirements    string                             `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright       string                             `bson:"copyright,omitempty" json:"copyright,omitempty"`
 	Status          string                             `bson:"status,omitempty" json:"status,omitempty"`
 	Experimental    *bool                              `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher       string                             `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact         []ConceptMapContactComponent       `bson:"contact,omitempty" json:"contact,omitempty"`
 	Date            *FHIRDateTime                      `bson:"date,omitempty" json:"date,omitempty"`
+	Description     string                             `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext      []CodeableConcept                  `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Requirements    string                             `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright       string                             `bson:"copyright,omitempty" json:"copyright,omitempty"`
 	SourceUri       string                             `bson:"sourceUri,omitempty" json:"sourceUri,omitempty"`
 	SourceReference *Reference                         `bson:"sourceReference,omitempty" json:"sourceReference,omitempty"`
 	TargetUri       string                             `bson:"targetUri,omitempty" json:"targetUri,omitempty"`
