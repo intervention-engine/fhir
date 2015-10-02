@@ -57,6 +57,7 @@ func UploadResource(resource interface{}, baseURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer response.Body.Close()
 	loc := response.Header.Get("Location")
 
 	regs := []string{".*/([^/]+)/_history/.*", ".*/([^/]+)"}
