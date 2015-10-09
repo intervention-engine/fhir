@@ -1,0 +1,130 @@
+[{
+	"resourceType": "Patient",
+	"id": "8374637118556222846",
+	"name": [{
+		"family": ["Abbott"],
+		"given": ["Clint"]
+	}],
+	"gender": "male",
+	"birthDate": "1950-09-02"
+}, {
+	"resourceType": "Encounter",
+	"id": "6648204100111347627",
+	"type": [{
+		"coding": [{
+			"system": "http://www.ama-assn.org/go/cpt",
+			"code": "99201"
+		}],
+		"text": "Office Visit"
+	}],
+	"patient": {
+		"reference": "cid:8374637118556222846"
+	},
+	"period": {
+		"start": "2012-09-20T08:00:00-05:00"
+	}
+}, {
+	"resourceType": "Condition",
+	"id": "8664777288161029461",
+	"patient": {
+		"reference": "cid:8374637118556222846"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "426749004"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-9",
+			"code": "427.31"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-10",
+			"code": "I48.2"
+		}],
+		"text": "Atrial Fibrillation"
+	},
+	"onsetDateTime": "2012-09-20T08:00:00-05:00"
+}, {
+	"resourceType": "Encounter",
+	"id": "6648204100111363635",
+	"type": [{
+		"coding": [{
+			"system": "http://www.ama-assn.org/go/cpt",
+			"code": "99201"
+		}],
+		"text": "Office Visit"
+	}],
+	"patient": {
+		"reference": "cid:8374637118556222846"
+	},
+	"period": {
+		"start": "2013-09-02T10:00:00-05:00"
+	}
+}, {
+	"resourceType": "Condition",
+	"id": "8664777288161045458",
+	"patient": {
+		"reference": "cid:8374637118556222846"
+	},
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "59621000"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-9",
+			"code": "401.9"
+		}, {
+			"system": "http://hl7.org/fhir/sid/icd-10",
+			"code": "I10"
+		}],
+		"text": "Hypertension"
+	},
+	"onsetDateTime": "2013-09-02T10:00:00-05:00"
+}, {
+	"resourceType": "MedicationStatement",
+	"id": "3284098338643295123",
+	"patient": {
+		"reference": "cid:8374637118556222846"
+	},
+	"effectivePeriod": {
+		"start": "2013-09-02T10:00:00-05:00"
+	},
+	"medicationCodeableConcept": {
+		"coding": [{
+			"system": "http://www.nlm.nih.gov/research/umls/rxnorm/",
+			"code": "104377"
+		}],
+		"text": "Lisinopril 10mg Oral Tablet"
+	}
+}, {
+	"resourceType": "Encounter",
+	"id": "6648204100111375786",
+	"type": [{
+		"coding": [{
+			"system": "http://www.ama-assn.org/go/cpt",
+			"code": "99201"
+		}],
+		"text": "Office Visit"
+	}],
+	"patient": {
+		"reference": "cid:8374637118556222846"
+	},
+	"period": {
+		"start": "2014-10-15T13:00:00-05:00"
+	}
+}, {
+	"resourceType": "Encounter",
+	"id": "6648204100111335754",
+	"type": [{
+		"coding": [{
+			"system": "http://www.ama-assn.org/go/cpt",
+			"code": "99201"
+		}],
+		"text": "Office Visit"
+	}],
+	"patient": {
+		"reference": "cid:8374637118556222846"
+	},
+	"period": {
+		"start": "2015-10-05T11:30:00-05:00"
+	}
+}]
