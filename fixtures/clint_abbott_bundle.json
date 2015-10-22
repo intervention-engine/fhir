@@ -1,0 +1,200 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a",
+      "resource": {
+      	"resourceType": "Patient",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f2a",
+      	"name": [{
+      		"family": ["Abbott"],
+      		"given": ["Clint"]
+      	}],
+      	"gender": "male",
+      	"birthDate": "1950-09-02"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2b",
+      "resource": {
+      	"resourceType": "Encounter",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f2b",
+      	"type": [{
+      		"coding": [{
+      			"system": "http://www.ama-assn.org/go/cpt",
+      			"code": "99201"
+      		}],
+      		"text": "Office Visit"
+      	}],
+      	"patient": {
+      		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
+      	},
+      	"period": {
+      		"start": "2012-09-20T08:00:00-05:00"
+      	}
+      },
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2c",
+      "resource": {
+      	"resourceType": "Encounter",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f2c",
+      	"type": [{
+      		"coding": [{
+      			"system": "http://www.ama-assn.org/go/cpt",
+      			"code": "99201"
+      		}],
+      		"text": "Office Visit"
+      	}],
+      	"patient": {
+      		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
+      	},
+      	"period": {
+      		"start": "2013-09-02T10:00:00-05:00"
+      	}
+      },
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2d",
+      "resource": {
+      	"resourceType": "Encounter",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f2d",
+      	"type": [{
+      		"coding": [{
+      			"system": "http://www.ama-assn.org/go/cpt",
+      			"code": "99201"
+      		}],
+      		"text": "Office Visit"
+      	}],
+      	"patient": {
+      		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
+      	},
+      	"period": {
+      		"start": "2014-10-15T13:00:00-05:00"
+      	}
+      },
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2e",
+      "resource": {
+      	"resourceType": "Encounter",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f2e",
+      	"type": [{
+      		"coding": [{
+      			"system": "http://www.ama-assn.org/go/cpt",
+      			"code": "99201"
+      		}],
+      		"text": "Office Visit"
+      	}],
+      	"patient": {
+      		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
+      	},
+      	"period": {
+      		"start": "2015-10-05T11:30:00-05:00"
+      	}
+      },
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2f",
+      "resource": {
+      	"resourceType": "Condition",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f2f",
+      	"patient": {
+      		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
+      	},
+      	"code": {
+      		"coding": [{
+      			"system": "http://snomed.info/sct",
+      			"code": "426749004"
+      		}, {
+      			"system": "http://hl7.org/fhir/sid/icd-9",
+      			"code": "427.31"
+      		}, {
+      			"system": "http://hl7.org/fhir/sid/icd-10",
+      			"code": "I48.2"
+      		}],
+      		"text": "Atrial Fibrillation"
+      	},
+      	"onsetDateTime": "2012-09-20T08:00:00-05:00"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f30",
+      "resource": {
+      	"resourceType": "Condition",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f30",
+      	"patient": {
+      		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
+      	},
+      	"code": {
+      		"coding": [{
+      			"system": "http://snomed.info/sct",
+      			"code": "59621000"
+      		}, {
+      			"system": "http://hl7.org/fhir/sid/icd-9",
+      			"code": "401.9"
+      		}, {
+      			"system": "http://hl7.org/fhir/sid/icd-10",
+      			"code": "I10"
+      		}],
+      		"text": "Hypertension"
+      	},
+      	"onsetDateTime": "2013-09-02T10:00:00-05:00"
+      },
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f3b",
+      "resource": {
+      	"resourceType": "MedicationStatement",
+      	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f3b",
+      	"patient": {
+      		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
+      	},
+      	"effectivePeriod": {
+      		"start": "2013-09-02T10:00:00-05:00"
+      	},
+      	"medicationCodeableConcept": {
+      		"coding": [{
+      			"system": "http://www.nlm.nih.gov/research/umls/rxnorm/",
+      			"code": "104377"
+      		}],
+      		"text": "Lisinopril 10mg Oral Tablet"
+      	}
+      },
+      "request": {
+        "method": "POST",
+        "url": "MedicationStatement"
+      }
+    }
+  ]
+}
