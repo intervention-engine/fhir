@@ -46,22 +46,14 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	}()
 
 	result := models.NewSliceForResourceName(rc.Name, 0, 0)
-	c := Database.C(models.PluralizeLowerResourceName(rc.Name))
 
-	r.ParseForm()
-	if len(r.Form) == 0 {
-		iter := c.Find(nil).Limit(100).Iter()
-		err := iter.All(result)
-		if err != nil {
-			http.Error(rw, err.Error(), http.StatusInternalServerError)
-		}
-	} else {
-		searcher := search.NewMongoSearcher(Database)
-		query := search.Query{Resource: rc.Name, Query: r.URL.RawQuery}
-		err := searcher.CreateQuery(query).All(result)
-		if err != nil {
-			http.Error(rw, err.Error(), http.StatusInternalServerError)
-		}
+	// Create and execute the Mongo query based on the http query params
+	searcher := search.NewMongoSearcher(Database)
+	searchQuery := search.Query{Resource: rc.Name, Query: r.URL.RawQuery}
+	mgoQuery := searcher.CreateQuery(searchQuery)
+	err := mgoQuery.All(result)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
 	}
 
 	var entryList []models.BundleEntryComponent
@@ -75,9 +67,23 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	var bundle models.Bundle
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
-	var total = uint32(resultVal.Len())
-	bundle.Total = &total
 	bundle.Entry = entryList
+
+	// Need to get the true total (not just how many were returned in this response)
+	options := searchQuery.Options()
+	var total uint32
+	if resultVal.Len() == options.Count || resultVal.Len() == 0 {
+		// Need to get total count from the server, since there may be more or the offset was too high
+		intTotal, err := searcher.CreateQueryWithoutOptions(searchQuery).Count()
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusInternalServerError)
+		}
+		total = uint32(intTotal)
+	} else {
+		// We can figure out the total by adding the offset and # results returned
+		total = uint32(options.Offset + resultVal.Len())
+	}
+	bundle.Total = &total
 
 	context.Set(r, rc.Name, reflect.ValueOf(result).Elem().Interface())
 	context.Set(r, "Resource", rc.Name)

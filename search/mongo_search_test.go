@@ -1120,6 +1120,130 @@ func (m *MongoSearchSuite) TestConditionMultiplePatientAndMultipleCodesQueryObje
 	})
 }
 
+// Test Encounter query with _count
+func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsWithDefaultOptions(c *C) {
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201"}
+	opt := q.Options()
+	c.Assert(opt.Count, Equals, 100)
+	c.Assert(opt.Offset, Equals, 0)
+}
+
+func (m *MongoSearchSuite) TestEncounterTypeQueryWithDefaultOptions(c *C) {
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201"}
+	mq := m.MongoSearcher.CreateQuery(q)
+
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 3)
+}
+
+func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsWithCount(c *C) {
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_count=2"}
+
+	// Make sure it doesn't somehow mess up the query object
+	obj := m.MongoSearcher.createQueryObject(q)
+	c.Assert(obj, DeepEquals, bson.M{
+		"type.coding": bson.M{
+			"$elemMatch": bson.M{
+				"system": bson.RegEx{Pattern: "^http://www\\.ama-assn\\.org/go/cpt$", Options: "i"},
+				"code":   bson.RegEx{Pattern: "^99201$", Options: "i"},
+			},
+		},
+	})
+
+	// Check that the options are parsed correctly
+	opt := q.Options()
+	c.Assert(opt.Count, Equals, 2)
+	c.Assert(opt.Offset, Equals, 0)
+}
+
+func (m *MongoSearchSuite) TestEncounterTypeQueryWithCount(c *C) {
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_count=2"}
+	mq := m.MongoSearcher.CreateQuery(q)
+
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 2)
+}
+
+func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForOffset(c *C) {
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_offset=2"}
+
+	// Make sure it doesn't somehow mess up the query object
+	obj := m.MongoSearcher.createQueryObject(q)
+	c.Assert(obj, DeepEquals, bson.M{
+		"type.coding": bson.M{
+			"$elemMatch": bson.M{
+				"system": bson.RegEx{Pattern: "^http://www\\.ama-assn\\.org/go/cpt$", Options: "i"},
+				"code":   bson.RegEx{Pattern: "^99201$", Options: "i"},
+			},
+		},
+	})
+
+	// Check that the options are parsed correctly
+	opt := q.Options()
+	c.Assert(opt.Count, Equals, 100)
+	c.Assert(opt.Offset, Equals, 2)
+}
+
+func (m *MongoSearchSuite) TestEncounterTypeQueryWithOffset(c *C) {
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_offset=1"}
+	mq := m.MongoSearcher.CreateQuery(q)
+
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 2)
+}
+
+func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForCountAndOffset(c *C) {
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_count=2&_offset=1"}
+
+	// Make sure it doesn't somehow mess up the query object
+	obj := m.MongoSearcher.createQueryObject(q)
+	c.Assert(obj, DeepEquals, bson.M{
+		"type.coding": bson.M{
+			"$elemMatch": bson.M{
+				"system": bson.RegEx{Pattern: "^http://www\\.ama-assn\\.org/go/cpt$", Options: "i"},
+				"code":   bson.RegEx{Pattern: "^99201$", Options: "i"},
+			},
+		},
+	})
+
+	// Check that the options are parsed correctly
+	opt := q.Options()
+	c.Assert(opt.Count, Equals, 2)
+	c.Assert(opt.Offset, Equals, 1)
+}
+
+func (m *MongoSearchSuite) TestEncounterTypeQueryWithCountAndOffset(c *C) {
+	// First do with an offset of 1
+	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_offset=1&_count=1"}
+	mq := m.MongoSearcher.CreateQuery(q)
+
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+
+	offset1 := &models.Encounter{}
+	err = mq.One(offset1)
+	util.CheckErr(err)
+
+	// Now do an offset of 2
+	q = Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_offset=2&_count=1"}
+	mq = m.MongoSearcher.CreateQuery(q)
+
+	num, err = mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+
+	offset2 := &models.Encounter{}
+	err = mq.One(offset2)
+	util.CheckErr(err)
+
+	// Now make sure they are not the same
+	c.Assert(offset1.Id, Not(Equals), offset2.Id)
+}
+
 // Test that invalid search parameters PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestInvalidSearchParameterPanics(c *C) {
 	q := Query{"Condition", "abatement=2012"}
@@ -1152,9 +1276,14 @@ func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
 	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"code\" modifier is invalid"))
 }
 
-func (m *MongoSearchSuite) TestSpecialSearchParameterPanics(c *C) {
-	q := Query{"Condition", "onset=2012&_sort:asc=onset"}
+func (m *MongoSearchSuite) TestUnsupportedSearchResultParameterPanics(c *C) {
+	q := Query{"Condition", "_sort:asc=onset"}
 	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_sort\" not understood"))
+}
+
+func (m *MongoSearchSuite) TestUsupportedGlobalSearchParameterPanics(c *C) {
+	q := Query{"Condition", "_text=diabetes"}
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_text\" not understood"))
 }
 
 // Test internally used functions

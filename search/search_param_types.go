@@ -10,6 +10,46 @@ import (
 	"time"
 )
 
+// Constant values for search paramaters and search result parameters
+const (
+	IDParam            = "_id"
+	LastUpdatedParam   = "_lastUpdate"
+	TagParam           = "_tag"
+	ProfileParam       = "_profile"
+	SecurityParam      = "_security"
+	TextParam          = "_text"
+	ContentParam       = "_content"
+	ListParam          = "_list"
+	QueryParam         = "_query"
+	SortParam          = "_sort"
+	CountParam         = "_count"
+	IncludeParam       = "_include"
+	RevIncludeParam    = "_revinclude"
+	SummaryParam       = "_summary"
+	ElementsParam      = "_elements"
+	ContainedParam     = "_contained"
+	ContainedTypeParam = "_containedType"
+	OffsetParam        = "_offset" // Custom param, not in FHIR spec
+)
+
+var globalSearchParams = map[string]bool{IDParam: true, LastUpdatedParam: true, TagParam: true,
+	ProfileParam: true, SecurityParam: true, TextParam: true, ContentParam: true, ListParam: true,
+	QueryParam: true}
+
+func isGlobalSearchParam(param string) bool {
+	_, found := globalSearchParams[param]
+	return found
+}
+
+var searchResultParams = map[string]bool{SortParam: true, CountParam: true, IncludeParam: true,
+	RevIncludeParam: true, SummaryParam: true, ElementsParam: true, ContainedParam: true,
+	ContainedTypeParam: true, OffsetParam: true}
+
+func isSearchResultParam(param string) bool {
+	_, found := searchResultParams[param]
+	return found
+}
+
 // Query describes a string-based FHIR query and the resource it is associated
 // with.  For example, the URL http://acme.com/Condition?patient=123&onset=2012
 // should be represented as:
@@ -27,16 +67,9 @@ func (q *Query) Params() []SearchParam {
 	var results []SearchParam
 	queryMap, _ := url.ParseQuery(q.Query)
 	for param, values := range queryMap {
-		var postfix, modifier string
-		if strings.Contains(param, ".") {
-			split := strings.SplitN(param, ".", 2)
-			param = split[0]
-			postfix = split[1]
-		}
-		if strings.Contains(param, ":") {
-			split := strings.SplitN(param, ":", 2)
-			param = split[0]
-			modifier = split[1]
+		param, modifier, postfix := ParseParamNameModifierAndPostFix(param)
+		if isSearchResultParam(param) {
+			continue
 		}
 
 		info, ok := SearchParameterDictionary[q.Resource][param]
@@ -47,7 +80,8 @@ func (q *Query) Params() []SearchParam {
 				results = append(results, info.CreateSearchParam(value))
 			}
 		} else {
-			if strings.HasPrefix(param, "_") {
+			// Check if it's a global search parameter. If so, we must not support it yet.
+			if isGlobalSearchParam(param) {
 				panic(createUnsupportedSearchError("MSG_PARAM_UNKNOWN", fmt.Sprintf("Parameter \"%s\" not understood", param)))
 			} else {
 				panic(createInvalidSearchError("SEARCH_NONE", fmt.Sprintf("Error: no processable search found for %s search parameters \"%s\"", q.Resource, param)))
@@ -55,6 +89,47 @@ func (q *Query) Params() []SearchParam {
 		}
 	}
 	return results
+}
+
+// Options parses the query string and returns the QueryOptions.
+func (q *Query) Options() *QueryOptions {
+	options := &QueryOptions{Offset: 0, Count: 100}
+	queryMap, _ := url.ParseQuery(q.Query)
+	for param, values := range queryMap {
+		param, _, _ := ParseParamNameModifierAndPostFix(param)
+		if !strings.HasPrefix(param, "_") || isGlobalSearchParam(param) {
+			continue
+		}
+
+		if len(values) != 1 {
+			panic(createInvalidSearchError("MSG_PARAM_NO_REPEAT", fmt.Sprintf("Parameter \"%s\" is not allowed to repeat", param)))
+		}
+		value := values[0]
+
+		switch param {
+		case CountParam:
+			count, err := strconv.Atoi(value)
+			if err != nil {
+				panic(createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_count\" content is invalid"))
+			}
+			options.Count = count
+		case OffsetParam:
+			offset, err := strconv.Atoi(value)
+			if err != nil {
+				panic(createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_offset\" content is invalid"))
+			}
+			options.Offset = offset
+		default:
+			panic(createUnsupportedSearchError("MSG_PARAM_UNKNOWN", fmt.Sprintf("Parameter \"%s\" not understood", param)))
+		}
+	}
+	return options
+}
+
+// QueryOptions contains option values such as count and offset.
+type QueryOptions struct {
+	Count  int
+	Offset int
 }
 
 // SearchParam is an interface for all search parameter classes that exposes
@@ -632,6 +707,23 @@ func ParseOrParam(paramStr []string, info SearchParamInfo) *OrParam {
 		ors[i] = info.CreateSearchParam(paramStr[i])
 	}
 	return &OrParam{SearchParamInfo{Name: info.Name, Type: "or"}, ors}
+}
+
+// ParseParamNameModifierAndPostFix parses a full parameter key and returns the parameter name,
+// modifier, and postfix components.  For example, "foo:bar.baz" would return ["foo","bar","baz"].
+func ParseParamNameModifierAndPostFix(fullParam string) (param string, modifier string, postfix string) {
+	param = fullParam
+	if strings.Contains(fullParam, ".") {
+		split := strings.SplitN(fullParam, ".", 2)
+		param = split[0]
+		postfix = split[1]
+	}
+	if strings.Contains(fullParam, ":") {
+		split := strings.SplitN(fullParam, ":", 2)
+		param = split[0]
+		modifier = split[1]
+	}
+	return
 }
 
 // Prefix is an enum representing FHIR parameter prefixes.  The following

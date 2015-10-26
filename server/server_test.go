@@ -44,21 +44,50 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Router)
+}
 
+func (s *ServerSuite) SetUpTest(c *C) {
 	// Add patient fixture
-	patientCollection := Database.C("patients")
-	patient := LoadPatientFromFixture("../fixtures/patient-example-a.json")
-	i := bson.NewObjectId()
-	s.FixtureId = i.Hex()
-	patient.Id = s.FixtureId
-	err = patientCollection.Insert(patient)
-	util.CheckErr(err)
+	p := insertPatientFromFixture("../fixtures/patient-example-a.json")
+	s.FixtureId = p.Id
+}
+
+func (s *ServerSuite) TearDownTest(c *C) {
+	Database.C("patients").DropCollection()
 }
 
 func (s *ServerSuite) TearDownSuite(c *C) {
 	Database.DropDatabase()
 	s.Session.Close()
 	s.Server.Close()
+}
+
+func (s *ServerSuite) TestGetPatients(c *C) {
+	// Add 4 more patients
+	for i := 0; i < 4; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+	assertBundleCount(c, s.Server.URL+"/Patient", 5, 5)
+}
+
+func (s *ServerSuite) TestGetPatientsWithOptions(c *C) {
+	// Add 4 more patients
+	for i := 0; i < 4; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+	assertBundleCount(c, s.Server.URL+"/Patient?_count=2", 2, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_offset=2", 3, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_count=2&_offset=1", 2, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_count=2&_offset=4", 1, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_offset=100", 0, 5)
+}
+
+func (s *ServerSuite) TestGetPatientsDefaultLimitIs100(c *C) {
+	// Add 100 more patients
+	for i := 0; i < 100; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+	assertBundleCount(c, s.Server.URL+"/Patient", 100, 101)
 }
 
 func (s *ServerSuite) TestGetPatient(c *C) {
@@ -146,7 +175,29 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	c.Assert(count, Equals, 0)
 }
 
-func LoadPatientFromFixture(fileName string) *models.Patient {
+func assertBundleCount(c *C, url string, expectedResults int, expectedTotal int) {
+	res, err := http.Get(url)
+	util.CheckErr(err)
+
+	decoder := json.NewDecoder(res.Body)
+	bundle := &models.Bundle{}
+	err = decoder.Decode(bundle)
+	util.CheckErr(err)
+
+	c.Assert(len(bundle.Entry), Equals, expectedResults)
+	c.Assert(*bundle.Total, Equals, uint32(expectedTotal))
+}
+
+func insertPatientFromFixture(filePath string) *models.Patient {
+	patientCollection := Database.C("patients")
+	patient := loadPatientFromFixture(filePath)
+	patient.Id = bson.NewObjectId().Hex()
+	err := patientCollection.Insert(patient)
+	util.CheckErr(err)
+	return patient
+}
+
+func loadPatientFromFixture(fileName string) *models.Patient {
 	data, err := os.Open(fileName)
 	defer data.Close()
 	util.CheckErr(err)
