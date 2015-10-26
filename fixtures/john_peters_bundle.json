@@ -1,0 +1,507 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a",
+      "resource": {
+				"resourceType": "Patient",
+				"name": [{
+					"family": ["Peters"],
+					"given": ["John"]
+				}],
+				"gender": "male",
+				"birthDate": "1991-02-01"
+			},
+      "request": {
+        "method": "POST",
+        "url": "Patient"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0b",
+      "resource": {
+				"resourceType": "Encounter",
+				"type": [{
+					"coding": [{
+						"system": "http://www.ama-assn.org/go/cpt",
+						"code": "99201"
+					}],
+					"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
+				}],
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"period": {
+					"start": "2011-11-01T08:00:00-04:00",
+					"end": "2011-11-01T09:00:00-04:00"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0c",
+      "resource": {
+				"resourceType": "Encounter",
+				"type": [{
+					"coding": [{
+						"system": "http://www.ama-assn.org/go/cpt",
+						"code": "99201"
+					}],
+					"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
+				}],
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"period": {
+					"start": "2012-10-01T08:00:00-04:00",
+					"end": "2012-10-01T09:00:00-04:00"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0d",
+      "resource": {
+				"resourceType": "Encounter",
+				"type": [{
+					"coding": [{
+						"system": "http://www.ama-assn.org/go/cpt",
+						"code": "99201"
+					}],
+					"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
+				}],
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"period": {
+					"start": "2012-11-01T08:00:00-04:00",
+					"end": "2012-11-01T09:00:00-04:00"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0e",
+      "resource": {
+				"resourceType": "Encounter",
+				"type": [{
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "171047005"
+					}],
+					"text": "Encounter, Performed: Alcohol and Drug Dependence Treatment (Code List: 2.16.840.1.113883.3.464.1003.106.12.1005)"
+				}],
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"period": {
+					"start": "2012-11-01T08:45:00-04:00",
+					"end": "2012-11-01T09:00:00-04:00"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Encounter"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0f",
+      "resource": {
+				"resourceType": "Condition",
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "10091002"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-9",
+						"code": "428.0"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-10",
+						"code": "I50.1"
+					}],
+					"text": "Diagnosis, Active: Heart Failure (Code List: 2.16.840.1.113883.3.526.3.376)"
+				},
+				"onsetDateTime": "2012-03-01T07:00:00-05:00"
+			},
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f10",
+      "resource": {
+				"resourceType": "Condition",
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "981000124106"
+					}],
+					"text": "Diagnosis, Active: Moderate or Severe LVSD (Code List: 2.16.840.1.113883.3.526.3.1090)"
+				},
+				"onsetDateTime": "2012-03-01T07:05:00-05:00"
+			},
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f11",
+      "resource": {
+				"resourceType": "Condition",
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "123641001"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-9",
+						"code": "411.0"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-10",
+						"code": "I20.0"
+					}],
+					"text": "Diagnosis, Active: Ischemic Vascular Disease (Code List: 2.16.840.1.113883.3.464.1003.104.12.1003)"
+				},
+				"onsetDateTime": "2012-03-01T07:05:00-05:00"
+			},
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f12",
+      "resource": {
+				"resourceType": "Condition",
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "123641001"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-9",
+						"code": "411.0"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-10",
+						"code": "I20.0"
+					}],
+					"text": "Diagnosis, Active: Coronary Artery Disease No MI (Code List: 2.16.840.1.113883.3.526.3.369)"
+				},
+				"onsetDateTime": "2012-03-01T07:05:00-05:00"
+			},
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f13",
+      "resource": {
+				"resourceType": "Condition",
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "10725009"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-9",
+						"code": "401.1"
+					}],
+					"text": "Diagnosis, Active: Hypertension (Code List: 2.16.840.1.113883.3.464.1003.104.12.1016)"
+				},
+				"onsetDateTime": "2012-03-01T07:30:00-05:00"
+			},
+      "request": {
+        "method": "POST",
+        "url": "Condition"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f14",
+      "resource": {
+				"resourceType": "Observation",
+				"code": {
+					"coding": [{
+						"system": "http://loinc.org",
+						"code": "17856-6"
+					}],
+					"text": "Laboratory Test, Result: HbA1c Laboratory Test"
+				},
+				"valueQuantity": {
+					"value": 8,
+					"unit": "%"
+				},
+				"effectivePeriod": {
+					"start": "2011-11-01T08:16:40-04:00",
+					"end": "2011-11-01T08:16:40-04:00"
+				},
+				"status": "final",
+				"subject": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"encounter": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0b"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Observation"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f15",
+      "resource": {
+				"resourceType": "Procedure",
+				"subject": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "116783008"
+					}],
+					"text": "Procedure, Result: Clinical Staging Procedure"
+				},
+				"performedPeriod": {
+					"start": "2011-11-01T08:16:40-04:00",
+					"end": "2011-11-01T11:03:20-04:00"
+				},
+				"encounter": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0b"
+				},
+				"report": [{
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f16"
+				}],
+				"notes": [{
+			    "text": "Procedure, Result: Clinical Staging Procedure"
+			  }]
+			},
+      "request": {
+        "method": "POST",
+        "url": "Procedure"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f16",
+      "resource": {
+				"resourceType": "DiagnosticReport",
+				"subject": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"result": [{
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f17"
+				}, {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f18"
+				}, {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f19"
+				}]
+			},
+      "request": {
+        "method": "POST",
+        "url": "DiagnosticReport"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f17",
+      "resource": {
+				"resourceType": "Observation",
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "116783008"
+					}],
+					"text": "Procedure, Result: Clinical Staging Procedure"
+				},
+				"valueCodeableConcept": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "433581000124101"
+					}],
+					"text": "Colon Distant Metastasis Status M0"
+				},
+				"effectivePeriod": {
+					"start": "2011-11-01T08:16:40-04:00",
+					"end": "2011-11-01T11:03:20-04:00"
+				},
+				"status": "final",
+				"subject": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Observation"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f18",
+      "resource": {
+				"resourceType": "Observation",
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "116783008"
+					}],
+					"text": "Procedure, Result: Clinical Staging Procedure"
+				},
+				"valueCodeableConcept": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "433571000124104"
+					}],
+					"text": "Colon Cancer Regional Lymph Node Status N2b"
+				},
+				"effectivePeriod": {
+					"start": "2011-11-01T08:16:40-04:00",
+					"end": "2011-11-01T11:03:20-04:00"
+				},
+				"status": "final",
+				"subject": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Observation"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f19",
+      "resource": {
+				"resourceType": "Observation",
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "116783008"
+					}],
+					"text": "Procedure, Result: Clinical Staging Procedure"
+				},
+				"valueCodeableConcept": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "433491000124102"
+					}],
+					"text": "Colon Cancer Primary Tumor Size T4a"
+				},
+				"effectivePeriod": {
+					"start": "2011-11-01T08:16:40-04:00",
+					"end": "2011-11-01T11:03:20-04:00"
+				},
+				"status": "final",
+				"subject": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Observation"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f1a",
+      "resource": {
+				"resourceType": "Procedure",
+				"id": "6400692968849601141",
+				"subject": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"code": {
+					"coding": [{
+						"system": "http://hl7.org/fhir/sid/icd-9",
+						"code": "36.10"
+					}, {
+						"system": "http://hl7.org/fhir/sid/icd-10",
+						"code": "0210093"
+					}, {
+						"system": "http://snomed.info/sct",
+						"code": "10190003"
+					}],
+					"text": "Procedure, Performed: Hospital measures-CABG"
+				},
+				"performedPeriod": {
+					"start": "2013-03-02T10:45:00-05:00",
+					"end": "2013-03-02T11:45:00-05:00"
+				},
+				"notes": [{
+			    "text": "Procedure, Performed: Hospital measures-CABG"
+			  }]
+			},
+      "request": {
+        "method": "POST",
+        "url": "Procedure"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f1b",
+      "resource": {
+				"resourceType": "MedicationStatement",
+				"id": "3284098338643216325",
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"effectivePeriod": {
+					"start": "2012-10-01T08:00:00-04:00",
+					"end": "2012-10-01T08:00:00-04:00"
+				},
+				"medicationCodeableConcept": {
+					"coding": [{
+						"system": "http://www.nlm.nih.gov/research/umls/rxnorm/",
+						"code": "1000048"
+					}],
+					"text": "Medication, Order: BH Antidepressant medication (Code List: 2.16.840.1.113883.3.1257.1.972)"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "MedicationStatement"
+      }
+    },
+		{
+      "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f1c",
+      "resource": {
+				"resourceType": "Immunization",
+				"id": "7045606679745526993",
+				"date": "2011-08-15T08:00:00-04:00",
+				"vaccineCode": {
+					"coding": [{
+						"system": "http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx",
+						"code": "33"
+					}],
+					"text": "Medication, Administered: Pneumococcal Vaccine (Code List: 2.16.840.1.113883.3.464.1003.110.12.1027)"
+				},
+				"patient": {
+					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				}
+			},
+      "request": {
+        "method": "POST",
+        "url": "Immunization"
+      }
+    }
+	]
+}

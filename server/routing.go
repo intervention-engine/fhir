@@ -7,6 +7,13 @@ import (
 
 func RegisterRoutes(router *mux.Router, config map[string][]negroni.Handler) {
 
+	// Batch Support
+
+	batchBase := router.Path("/").Subrouter()
+	batchBase.Methods("POST").Handler(negroni.New(append(config["Batch"], negroni.HandlerFunc(BatchHandler))...))
+
+	// Resources
+
 	appointmentController := ResourceController{"Appointment"}
 	appointmentBase := router.Path("/Appointment").Subrouter()
 	appointmentBase.Methods("GET").Handler(negroni.New(append(config["AppointmentIndex"], negroni.HandlerFunc(appointmentController.IndexHandler))...))

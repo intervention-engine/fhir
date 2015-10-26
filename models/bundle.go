@@ -70,7 +70,9 @@ type bundleEntryComponent BundleEntryComponent
 func (x *BundleEntryComponent) UnmarshalJSON(data []byte) (err error) {
 	x2 := bundleEntryComponent{}
 	if err = json.Unmarshal(data, &x2); err == nil {
-		x2.Resource = MapToResource(x2.Resource, false)
+		if x2.Resource != nil {
+			x2.Resource = MapToResource(x2.Resource, true)
+		}
 		*x = BundleEntryComponent(x2)
 	}
 	return
