@@ -126,16 +126,48 @@ func (q *Query) Options() *QueryOptions {
 	return options
 }
 
+// NormalizedQueryValues reconstructs the URL-encoded query based on parsed
+// parameters.  This ensures better uniformity/consistency and also removes any
+// garbage parameters or bad formatting in the passed in parameters.  If
+// withOptions is specified, the query options will also be included in the
+// values.
+func (q *Query) NormalizedQueryValues(withOptions bool) url.Values {
+	values := url.Values{}
+	for _, param := range q.Params() {
+		k, v := param.getQueryParamAndValue()
+		values.Add(k, v)
+	}
+
+	if withOptions {
+		oValues := q.Options().QueryValues()
+		for k, v := range oValues {
+			values.Set(k, v[0])
+		}
+	}
+
+	return values
+}
+
 // QueryOptions contains option values such as count and offset.
 type QueryOptions struct {
 	Count  int
 	Offset int
 }
 
+// QueryValues returns values representing the query options.
+func (o *QueryOptions) QueryValues() url.Values {
+	values := url.Values{}
+	values.Set(CountParam, strconv.Itoa(o.Count))
+	values.Set(OffsetParam, strconv.Itoa(o.Offset))
+
+	return values
+}
+
 // SearchParam is an interface for all search parameter classes that exposes
 // the SearchParamInfo.
 type SearchParam interface {
 	getInfo() SearchParamInfo
+	getQueryParamAndValue() (string, string)
 }
 
 // SearchParamInfo contains information about a FHIR search parameter,
@@ -208,6 +240,11 @@ func (c *CompositeParam) getInfo() SearchParamInfo {
 	return c.SearchParamInfo
 }
 
+func (c *CompositeParam) getQueryParamAndValue() (string, string) {
+	value := strings.Join(c.CompositeValues, "$")
+	return queryParamAndValue(c.SearchParamInfo, value)
+}
+
 // ParseCompositeParam parses a composite query string and returns a pointer to
 // a CompositeParam based on the query and the parameter definition.
 func ParseCompositeParam(paramString string, info SearchParamInfo) *CompositeParam {
@@ -228,6 +265,10 @@ type DateParam struct {
 
 func (d *DateParam) getInfo() SearchParamInfo {
 	return d.SearchParamInfo
+}
+
+func (d *DateParam) getQueryParamAndValue() (string, string) {
+	return queryParamAndValue(d.SearchParamInfo, d.Date.String())
 }
 
 // ParseDateParam parses a date-based query string and returns a pointer to a
@@ -254,7 +295,11 @@ type Date struct {
 // String returns a string representation of the date, honoring the supplied
 // precision.
 func (d *Date) String() string {
-	return d.Value.Format(d.Precision.layout())
+	s := d.Value.Format(d.Precision.layout())
+	if strings.HasSuffix(s, "+00:00") {
+		s = strings.Replace(s, "+00:00", "Z", 1)
+	}
+	return s
 }
 
 // RangeLowIncl represents the low end of a date range to match against.  As
@@ -410,6 +455,10 @@ func (n *NumberParam) getInfo() SearchParamInfo {
 	return n.SearchParamInfo
 }
 
+func (n *NumberParam) getQueryParamAndValue() (string, string) {
+	return queryParamAndValue(n.SearchParamInfo, n.Number.String())
+}
+
 // ParseNumberParam parses a number-based query string and returns a pointer to
 // a NumberParam based on the query and the parameter definition.
 func ParseNumberParam(paramStr string, info SearchParamInfo) *NumberParam {
@@ -497,6 +546,14 @@ func (q *QuantityParam) getInfo() SearchParamInfo {
 	return q.SearchParamInfo
 }
 
+func (q *QuantityParam) getQueryParamAndValue() (string, string) {
+	value := q.Number.String()
+	if q.Code != "" {
+		value = fmt.Sprintf("%s|%s|%s", value, escape(q.System), escape(q.Code))
+	}
+	return queryParamAndValue(q.SearchParamInfo, value)
+}
+
 // ParseQuantityParam parses a quantity-based query string and returns a
 // pointer to a QuantityParam based on the query and the parameter definition.
 func ParseQuantityParam(paramStr string, info SearchParamInfo) *QuantityParam {
@@ -528,6 +585,28 @@ type ReferenceParam struct {
 
 func (r *ReferenceParam) getInfo() SearchParamInfo {
 	return r.SearchParamInfo
+}
+
+func (r *ReferenceParam) getQueryParamAndValue() (string, string) {
+	switch t := r.Reference.(type) {
+	case ChainedQueryReference:
+		// This is a weird one, so don't use the general encodedQueryParam function
+		// First get the chained query param (e.g., "gender=male")
+		chainedParams := t.ChainedQuery.Params()
+		if len(chainedParams) != 1 {
+			panic(createInternalServerError("MSG_PARAM_CHAINED", "Unknown chained parameter name \"\""))
+		}
+		cqParam, cqValue := chainedParams[0].getQueryParamAndValue()
+		// Then get the LHS representing the reference (e.g., "subject:Patient")
+		referenceParam := fmt.Sprintf("%s:%s", r.Name, t.Type)
+		// Then put them together to get the full param / value (e.g., "subject:Patient.gender", "male")
+		return fmt.Sprintf("%s.%s", referenceParam, cqParam), cqValue
+	case ExternalReference:
+		return r.Name, escape(t.URL)
+	case LocalReference:
+		return r.Name, fmt.Sprintf("%s/%s", t.Type, escape(t.ID))
+	}
+	panic(createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", r.Name)))
 }
 
 // ParseReferenceParam parses a reference-based query string and returns a
@@ -622,6 +701,10 @@ func (s *StringParam) getInfo() SearchParamInfo {
 	return s.SearchParamInfo
 }
 
+func (s *StringParam) getQueryParamAndValue() (string, string) {
+	return queryParamAndValue(s.SearchParamInfo, escape(s.String))
+}
+
 // ParseStringParam parses a string-based query string and returns a pointer to
 // a StringParam based on the query and the parameter definition.
 func ParseStringParam(paramString string, info SearchParamInfo) *StringParam {
@@ -644,6 +727,14 @@ type TokenParam struct {
 
 func (t *TokenParam) getInfo() SearchParamInfo {
 	return t.SearchParamInfo
+}
+
+func (t *TokenParam) getQueryParamAndValue() (string, string) {
+	value := escape(t.Code)
+	if !t.AnySystem || t.System != "" {
+		value = fmt.Sprintf("%s|%s", escape(t.System), escape(t.Code))
+	}
+	return queryParamAndValue(t.SearchParamInfo, value)
 }
 
 // ParseTokenParam parses a token-based query string and returns a pointer to
@@ -676,6 +767,10 @@ func (u *URIParam) getInfo() SearchParamInfo {
 	return u.SearchParamInfo
 }
 
+func (u *URIParam) getQueryParamAndValue() (string, string) {
+	return queryParamAndValue(u.SearchParamInfo, escape(u.URI))
+}
+
 // ParseURIParam parses an uri-based query string and returns a pointer to
 // an URIParam based on the query and the parameter definition.
 func ParseURIParam(paramStr string, info SearchParamInfo) *URIParam {
@@ -697,6 +792,19 @@ type OrParam struct {
 
 func (o *OrParam) getInfo() SearchParamInfo {
 	return o.SearchParamInfo
+}
+
+func (o *OrParam) getQueryParamAndValue() (string, string) {
+	if len(o.Items) == 0 {
+		panic(createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", o.Name)))
+	}
+	param, _ := o.Items[0].getQueryParamAndValue()
+	values := make([]string, len(o.Items))
+	for i := range o.Items {
+		_, values[i] = o.Items[i].getQueryParamAndValue()
+	}
+	value := strings.Join(values, ",")
+	return param, value
 }
 
 // ParseOrParam parses a slice of values to be ORed and returns a pointer to
@@ -760,6 +868,26 @@ func ExtractPrefixAndValue(s string) (Prefix, string) {
 		}
 	}
 	return prefix, strings.TrimPrefix(s, prefix.String())
+}
+
+func queryParamAndValue(info SearchParamInfo, value string) (string, string) {
+	return queryParam(info), queryParamValue(info, value)
+}
+
+func queryParam(info SearchParamInfo) string {
+	modifier := ""
+	if info.Modifier != "" {
+		modifier = ":" + info.Modifier
+	}
+	return fmt.Sprintf("%s%s%s", info.Name, modifier, info.Postfix)
+}
+
+func queryParamValue(info SearchParamInfo, value string) string {
+	prefix := ""
+	if info.Prefix != EQ {
+		prefix = info.Prefix.String()
+	}
+	return fmt.Sprintf("%s%s", prefix, value)
 }
 
 // escapeFriendlySplit splits a FHIR parameter value, properly handling special

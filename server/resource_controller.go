@@ -6,7 +6,9 @@ package server
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"reflect"
 
@@ -69,8 +71,9 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	bundle.Type = "searchset"
 	bundle.Entry = entryList
 
-	// Need to get the true total (not just how many were returned in this response)
 	options := searchQuery.Options()
+
+	// Need to get the true total (not just how many were returned in this response)
 	var total uint32
 	if resultVal.Len() == options.Count || resultVal.Len() == 0 {
 		// Need to get total count from the server, since there may be more or the offset was too high
@@ -85,6 +88,12 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	}
 	bundle.Total = &total
 
+	// Add links for paging
+	bundle.Link, err = generatePagingLinks(searchQuery, total)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+	}
+
 	context.Set(r, rc.Name, reflect.ValueOf(result).Elem().Interface())
 	context.Set(r, "Resource", rc.Name)
 	context.Set(r, "Action", "search")
@@ -92,6 +101,62 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(rw).Encode(&bundle)
+}
+
+func generatePagingLinks(query search.Query, total uint32) ([]models.BundleLinkComponent, error) {
+	links := make([]models.BundleLinkComponent, 0, 5)
+	values := query.NormalizedQueryValues(false)
+	options := query.Options()
+	count := uint32(options.Count)
+	offset := uint32(options.Offset)
+
+	// First create the base URL for paging
+	host, err := os.Hostname()
+	if err != nil {
+		return nil, err
+	}
+	baseURL := url.URL{}
+	baseURL.Scheme = "http"
+	baseURL.Host = fmt.Sprintf("%s:%d", host, 3001)
+	baseURL.Path = fmt.Sprintf("/%s", query.Resource)
+
+	// Self link
+	links = append(links, newLink("self", baseURL, values, count, offset))
+
+	// First link
+	links = append(links, newLink("first", baseURL, values, count, uint32(0)))
+
+	// Previous link
+	if offset > uint32(0) {
+		newOffset := offset - count
+		// Handle case where paging is uneven (e.g., count=10&offset=5)
+		if count > offset {
+			newOffset = uint32(0)
+		}
+		links = append(links, newLink("previous", baseURL, values, offset-newOffset, newOffset))
+	}
+
+	// Next Link
+	if total > (offset + count) {
+		links = append(links, newLink("next", baseURL, values, count, offset+count))
+	}
+
+	// Last Link
+	remainder := (total - offset) % count
+	newOffset := total - remainder
+	if remainder == 0 {
+		newOffset = total - count
+	}
+	links = append(links, newLink("last", baseURL, values, count, newOffset))
+
+	return links, err
+}
+
+func newLink(relation string, baseURL url.URL, values url.Values, count uint32, offset uint32) models.BundleLinkComponent {
+	values.Set(search.CountParam, fmt.Sprint(count))
+	values.Set(search.OffsetParam, fmt.Sprint(offset))
+	baseURL.RawQuery = values.Encode()
+	return models.BundleLinkComponent{Relation: relation, Url: baseURL.String()}
 }
 
 func (rc *ResourceController) LoadResource(r *http.Request) (interface{}, error) {

@@ -50,6 +50,18 @@ func (s *SearchPTSuite) TestCompositeParamWithTokenAndQuantity(c *C) {
 	c.Assert(t.CompositeValues, DeepEquals, []string{"http://hl7.org/fhir/v2/0001|M", "5.4|http://unitsofmeasure.org|mg"})
 }
 
+func (s *SearchPTSuite) TestCompositeParamReconstitution(c *C) {
+	t := ParseCompositeParam("abc$123", compositeParamInfo)
+	p, v := t.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "abc$123")
+
+	t = ParseCompositeParam("abc$1\\$23", compositeParamInfo)
+	p, v = t.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "abc$1\\$23")
+}
+
 /******************************************************************************
  * DATE (Type)
  ******************************************************************************/
@@ -66,7 +78,7 @@ func (s *SearchPTSuite) TestDatesToMilliseconds(c *C) {
 	d = ParseDate("2013-01-02T12:13:14.999Z")
 	c.Assert(d.Precision, Equals, Millisecond)
 	c.Assert(d.Value.UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 999000000, time.UTC).UnixNano())
-	c.Assert(d.String(), Equals, "2013-01-02T12:13:14.999+00:00")
+	c.Assert(d.String(), Equals, "2013-01-02T12:13:14.999Z")
 	c.Assert(d.RangeLowIncl().UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 999000000, time.UTC).UnixNano())
 	c.Assert(d.RangeHighExcl().UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 15, 0, time.UTC).UnixNano())
 
@@ -119,7 +131,7 @@ func (s *SearchPTSuite) TestDatesToSeconds(c *C) {
 	d = ParseDate("2013-01-02T12:13:14Z")
 	c.Assert(d.Precision, Equals, Second)
 	c.Assert(d.Value.UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 0, time.UTC).UnixNano())
-	c.Assert(d.String(), Equals, "2013-01-02T12:13:14+00:00")
+	c.Assert(d.String(), Equals, "2013-01-02T12:13:14Z")
 	c.Assert(d.RangeLowIncl().UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 0, time.UTC).UnixNano())
 	c.Assert(d.RangeHighExcl().UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 15, 0, time.UTC).UnixNano())
 
@@ -143,7 +155,7 @@ func (s *SearchPTSuite) TestDatesToMinutes(c *C) {
 	d = ParseDate("2013-01-02T12:13Z")
 	c.Assert(d.Precision, Equals, Minute)
 	c.Assert(d.Value.UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 0, 0, time.UTC).UnixNano())
-	c.Assert(d.String(), Equals, "2013-01-02T12:13+00:00")
+	c.Assert(d.String(), Equals, "2013-01-02T12:13Z")
 	c.Assert(d.RangeLowIncl().UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 0, 0, time.UTC).UnixNano())
 	c.Assert(d.RangeHighExcl().UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 14, 0, 0, time.UTC).UnixNano())
 
@@ -437,6 +449,51 @@ func (s *SearchPTSuite) TestDateParamPrefixes(c *C) {
 	c.Assert(d.Date.Value.UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 0, time.UTC).UnixNano())
 }
 
+func (s *SearchPTSuite) TestDateParamReconstitution(c *C) {
+	// Test Time Zones
+	d := ParseDateParam("2013-01-02T12:13:14.567-05:00", dateParamInfo)
+	p, v := d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013-01-02T12:13:14.567-05:00")
+
+	d = ParseDateParam("2013-01-02T12:13:14.567Z", dateParamInfo)
+	p, v = d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013-01-02T12:13:14.567Z")
+
+	// Test Lesser Precision
+	d = ParseDateParam("2013-01-02T12:13:14Z", dateParamInfo)
+	p, v = d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013-01-02T12:13:14Z")
+
+	d = ParseDateParam("2013-01-02T12:13Z", dateParamInfo)
+	p, v = d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013-01-02T12:13Z")
+
+	d = ParseDateParam("2013-01-02", dateParamInfo)
+	p, v = d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013-01-02")
+
+	d = ParseDateParam("2013-01", dateParamInfo)
+	p, v = d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013-01")
+
+	d = ParseDateParam("2013", dateParamInfo)
+	p, v = d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013")
+
+	// Test Prefix
+	d = ParseDateParam("lt2013-01-02T12:13:14Z", dateParamInfo)
+	p, v = d.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "lt2013-01-02T12:13:14Z")
+}
+
 /******************************************************************************
  * NUMBER (Type)
  ******************************************************************************/
@@ -579,6 +636,30 @@ func (s *SearchPTSuite) TestNumberParamPrefixes(c *C) {
 	n = ParseNumberParam("ap100", numberParamInfo)
 	c.Assert(n.Prefix, Equals, AP)
 	c.Assert(n.Number.String(), Equals, "100")
+}
+
+func (s *SearchPTSuite) TestNumberParamReconstitution(c *C) {
+	n := ParseNumberParam("123", numberParamInfo)
+	p, v := n.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "123")
+
+	// Test Precision
+	n = ParseNumberParam("123.00001", numberParamInfo)
+	p, v = n.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "123.00001")
+
+	n = ParseNumberParam("123.10000", numberParamInfo)
+	p, v = n.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "123.10000")
+
+	// Test Prefix
+	n = ParseNumberParam("lt123", numberParamInfo)
+	p, v = n.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "lt123")
 }
 
 /******************************************************************************
@@ -738,6 +819,43 @@ func (s *SearchPTSuite) TestQuantityPrefixes(c *C) {
 	c.Assert(q.Code, Equals, "mg")
 }
 
+func (s *SearchPTSuite) TestQuantityParamReconstitution(c *C) {
+	q := ParseQuantityParam("5.4|http://unitsofmeasure.org|mg", quantityParamInfo)
+	p, v := q.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "5.4|http://unitsofmeasure.org|mg")
+
+	// Test with no system
+	q = ParseQuantityParam("5.4||mg", quantityParamInfo)
+	p, v = q.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "5.4||mg")
+
+	// Test with no unit or system
+	q = ParseQuantityParam("5.4", quantityParamInfo)
+	p, v = q.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "5.4")
+
+	// Test Precision
+	q = ParseQuantityParam("5.40|http://unitsofmeasure.org|mg", quantityParamInfo)
+	p, v = q.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "5.40|http://unitsofmeasure.org|mg")
+
+	// Test Prefix
+	q = ParseQuantityParam("lt5.4|http://unitsofmeasure.org|mg", quantityParamInfo)
+	p, v = q.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "lt5.4|http://unitsofmeasure.org|mg")
+
+	// Test with Escapes
+	q = ParseQuantityParam("5.4|http://unitsofmeasure.org|ab\\|cd", quantityParamInfo)
+	p, v = q.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "5.4|http://unitsofmeasure.org|ab\\|cd")
+}
+
 /******************************************************************************
  * REFERENCE
  ******************************************************************************/
@@ -786,6 +904,28 @@ func (s *SearchPTSuite) TestReferenceIDWithMismatchedModifier(c *C) {
 	c.Assert(func() { ParseReferenceParam("23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
 }
 
+func (s *SearchPTSuite) TestReferenceIDReconstitution(c *C) {
+	// Always reconstitute as "Type/ID" with no modifier
+	r := ParseReferenceParam("23", referenceParamInfo)
+	p, v := r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/23")
+
+	// Test with modifier
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	r = ParseReferenceParam("23", modInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/23")
+
+	// Test with Escape
+	r = ParseReferenceParam("23\\$45", referenceParamInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/23\\$45")
+}
+
 func (s *SearchPTSuite) TestReferenceTypeAndId(c *C) {
 	r := ParseReferenceParam("Patient/23", referenceParamInfo)
 
@@ -826,6 +966,28 @@ func (s *SearchPTSuite) TestReferenceTypeAndIdWithMismatchedModifier(c *C) {
 	modInfo := referenceParamInfo
 	modInfo.Modifier = "Condition"
 	c.Assert(func() { ParseReferenceParam("Patient/23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
+}
+
+func (s *SearchPTSuite) TestReferenceTypeAndIDReconstitution(c *C) {
+	// Always reconstitute as "Type/ID" with no modifier
+	r := ParseReferenceParam("Patient/23", referenceParamInfo)
+	p, v := r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/23")
+
+	// Test with modifier
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	r = ParseReferenceParam("Patient/23", modInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/23")
+
+	// Test with Escape
+	r = ParseReferenceParam("Patient/23\\$45", referenceParamInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/23\\$45")
 }
 
 func (s *SearchPTSuite) TestReferenceAbsoluteURL(c *C) {
@@ -870,6 +1032,28 @@ func (s *SearchPTSuite) TestReferenceAbsoluteURLWithMismatchedModifier(c *C) {
 	c.Assert(func() { ParseReferenceParam("http://acme.org/fhir/Patient/23", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
 }
 
+func (s *SearchPTSuite) TestReferenceAbsolutURLReconstitution(c *C) {
+	// Always reconstitute as URL with no modifier
+	r := ParseReferenceParam("http://acme.org/fhir/Patient/23", referenceParamInfo)
+	p, v := r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://acme.org/fhir/Patient/23")
+
+	// Test with modifier
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	r = ParseReferenceParam("http://acme.org/fhir/Patient/23", modInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://acme.org/fhir/Patient/23")
+
+	// Test with Escape
+	r = ParseReferenceParam("http://acme.org/fhir/Patient/23\\$45", referenceParamInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://acme.org/fhir/Patient/23\\$45")
+}
+
 func (s *SearchPTSuite) TestReferenceChainedQuery(c *C) {
 	modInfo := referenceParamInfo
 	modInfo.Postfix = "name"
@@ -910,6 +1094,30 @@ func (s *SearchPTSuite) TestReferenceChainedQueryWithMismatchedModifier(c *C) {
 	c.Assert(func() { ParseReferenceParam("Peter", modInfo) }, Panics, createInvalidSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"foo\" modifier is invalid"))
 }
 
+func (s *SearchPTSuite) TestReferenceChainedQueryReconstitution(c *C) {
+	// Always reconstitute with modifier
+	modInfo := referenceParamInfo
+	modInfo.Postfix = "name"
+	r := ParseReferenceParam("Peter", modInfo)
+	p, v := r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:Patient.name")
+	c.Assert(v, Equals, "Peter")
+
+	// Test with modifier
+	modInfo.Modifier = "Patient"
+	r = ParseReferenceParam("Peter", modInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:Patient.name")
+	c.Assert(v, Equals, "Peter")
+
+	// Test with Escape
+	modInfo.Modifier = ""
+	r = ParseReferenceParam("Peter\\$on", modInfo)
+	p, v = r.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:Patient.name")
+	c.Assert(v, Equals, "Peter\\$on")
+}
+
 /******************************************************************************
  * STRING
  ******************************************************************************/
@@ -928,6 +1136,27 @@ func (s *SearchPTSuite) TestStringParam(c *C) {
 	c.Assert(st.Paths, HasLen, 1)
 	c.Assert(st.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "string"})
 	c.Assert(st.String, Equals, "Hello World")
+}
+
+func (s *SearchPTSuite) TestStringReconstitution(c *C) {
+	st := ParseStringParam("Hello World", stringParamInfo)
+	p, v := st.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Hello World")
+
+	// Test with modifier
+	modInfo := stringParamInfo
+	modInfo.Modifier = "exact"
+	st = ParseStringParam("Hello World", modInfo)
+	p, v = st.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:exact")
+	c.Assert(v, Equals, "Hello World")
+
+	// Test with Escape
+	st = ParseStringParam("Hello World\\$", stringParamInfo)
+	p, v = st.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Hello World\\$")
 }
 
 /******************************************************************************
@@ -998,6 +1227,39 @@ func (s *SearchPTSuite) TestTokenParamsWithEscapedPipesAndSlashes(c *C) {
 	c.Assert(t.System, Equals, "foo|bar")
 }
 
+func (s *SearchPTSuite) TestTokenParamReconstitution(c *C) {
+	t := ParseTokenParam("http://hl7.org/fhir/v2/0001|M", tokenParamInfo)
+	p, v := t.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://hl7.org/fhir/v2/0001|M")
+
+	// Test with no system
+	t = ParseTokenParam("|M", tokenParamInfo)
+	p, v = t.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "|M")
+
+	// Test with code only
+	t = ParseTokenParam("M", tokenParamInfo)
+	p, v = t.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "M")
+
+	// Test with Modifier
+	modInfo := tokenParamInfo
+	modInfo.Modifier = "text"
+	t = ParseTokenParam("M", modInfo)
+	p, v = t.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:text")
+	c.Assert(v, Equals, "M")
+
+	// Test with Escapes
+	t = ParseTokenParam("http://hl7.org/fhir/v2/0001|M\\|F", tokenParamInfo)
+	p, v = t.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://hl7.org/fhir/v2/0001|M\\|F")
+}
+
 /******************************************************************************
  * URI
  ******************************************************************************/
@@ -1016,6 +1278,27 @@ func (s *SearchPTSuite) TestURIParam(c *C) {
 	c.Assert(u.Paths, HasLen, 1)
 	c.Assert(u.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "uri"})
 	c.Assert(u.URI, Equals, "http://acme.org/fhir/ValueSet/123")
+}
+
+func (s *SearchPTSuite) TestURIReconstitution(c *C) {
+	u := ParseURIParam("http://acme.org/fhir/ValueSet/123", uriParamInfo)
+	p, v := u.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://acme.org/fhir/ValueSet/123")
+
+	// Test with modifier
+	modInfo := uriParamInfo
+	modInfo.Modifier = "below"
+	u = ParseURIParam("http://acme.org/fhir/ValueSet/", modInfo)
+	p, v = u.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:below")
+	c.Assert(v, Equals, "http://acme.org/fhir/ValueSet/")
+
+	// Test with Escape
+	u = ParseURIParam("http://acme.org/fhir/ValueSet/123\\$45", uriParamInfo)
+	p, v = u.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://acme.org/fhir/ValueSet/123\\$45")
 }
 
 /******************************************************************************
@@ -1094,6 +1377,84 @@ func (s *SearchPTSuite) TestOrQueryIsParsedCorrectly(c *C) {
 	c.Assert(p[code].(*TokenParam).AnySystem, Equals, false)
 }
 
+func (s *SearchPTSuite) TestOrReconstitution(c *C) {
+	// Test OR with composites
+	o := ParseOrParam([]string{"abc$123", "def$456", "ghi$789"}, compositeParamInfo)
+	p, v := o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "abc$123,def$456,ghi$789")
+
+	// Test OR with dates
+	o = ParseOrParam([]string{"2013-01-02T12:13:14.999-07:00", "2013-01-02T12:13:14.999Z", "2013-01-02"}, dateParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "2013-01-02T12:13:14.999-07:00,2013-01-02T12:13:14.999Z,2013-01-02")
+
+	// Test OR with numbers
+	o = ParseOrParam([]string{"123", "123.45", "123.45000"}, numberParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "123,123.45,123.45000")
+
+	// Test OR with quantities
+	o = ParseOrParam([]string{"5.4|http://unitsofmeasure.org|mg", "5.4||mg", "5.40"}, quantityParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "5.4|http://unitsofmeasure.org|mg,5.4||mg,5.40")
+
+	// Test OR with references
+	o = ParseOrParam([]string{"123", "Patient/456", "http://acme.org/fhir/Patient/789"}, referenceParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/123,Patient/456,http://acme.org/fhir/Patient/789")
+
+	modInfo := referenceParamInfo
+	modInfo.Modifier = "Patient"
+	o = ParseOrParam([]string{"123", "Patient/456", "http://acme.org/fhir/Patient/789"}, modInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "Patient/123,Patient/456,http://acme.org/fhir/Patient/789")
+
+	modInfo.Modifier = ""
+	modInfo.Postfix = "name"
+	o = ParseOrParam([]string{"Peter", "John", "Joy"}, modInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:Patient.name")
+	c.Assert(v, Equals, "Peter,John,Joy")
+
+	// Test Or with strings
+	o = ParseOrParam([]string{"foo", "bar", "baz"}, stringParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "foo,bar,baz")
+
+	// Test OR with tokens
+	o = ParseOrParam([]string{"http://hl7.org/fhir/v2/0001|M", "|M", "M"}, tokenParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://hl7.org/fhir/v2/0001|M,|M,M")
+
+	// Test Or with uris
+	o = ParseOrParam([]string{"http://acme.org/fhir/ValueSet/123", "http://acme.org/fhir/Patient/456", "http://acme.org/fhir/Condition/789"}, uriParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "http://acme.org/fhir/ValueSet/123,http://acme.org/fhir/Patient/456,http://acme.org/fhir/Condition/789")
+
+	// Test OR with prefixes
+	o = ParseOrParam([]string{"lt123", "gt123.45", "ge123.45000"}, numberParamInfo)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo")
+	c.Assert(v, Equals, "lt123,gt123.45,ge123.45000")
+
+	// Test Or with modifier
+	modInfo2 := stringParamInfo
+	modInfo2.Modifier = "exact"
+	o = ParseOrParam([]string{"foo", "bar", "baz"}, modInfo2)
+	p, v = o.getQueryParamAndValue()
+	c.Assert(p, Equals, "foo:exact")
+	c.Assert(v, Equals, "foo,bar,baz")
+}
+
 /******************************************************************************
  * PREFIX
  ******************************************************************************/
@@ -1132,4 +1493,44 @@ func (s *SearchPTSuite) TestPrefixDefault(c *C) {
 	x, y := ExtractPrefixAndValue("10")
 	c.Assert(x, Equals, EQ)
 	c.Assert(y, Equals, "10")
+}
+
+/******************************************************************************
+ * QUERY
+ ******************************************************************************/
+
+func (s *SearchPTSuite) TestNormalizedQueryValue(c *C) {
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M"}
+	v := q.NormalizedQueryValues(false)
+	c.Assert(v, HasLen, 2)
+	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
+	c.Assert(v.Get("gender"), Equals, "M")
+}
+
+func (s *SearchPTSuite) TestReconstructQueryWithDefaultOptions(c *C) {
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M"}
+	v := q.NormalizedQueryValues(true)
+	c.Assert(v, HasLen, 4)
+	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
+	c.Assert(v.Get("gender"), Equals, "M")
+	c.Assert(v.Get(CountParam), Equals, "100")
+	c.Assert(v.Get(OffsetParam), Equals, "0")
+}
+
+func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20"}
+	v := q.NormalizedQueryValues(true)
+	c.Assert(v, HasLen, 4)
+	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
+	c.Assert(v.Get("gender"), Equals, "M")
+	c.Assert(v.Get(CountParam), Equals, "10")
+	c.Assert(v.Get(OffsetParam), Equals, "20")
+}
+
+func (s *SearchPTSuite) TestQueryOptionsQueryValues(c *C) {
+	q := QueryOptions{Count: 123, Offset: 456}
+	v := q.QueryValues()
+	c.Assert(v, HasLen, 2)
+	c.Assert(v.Get(CountParam), Equals, "123")
+	c.Assert(v.Get(OffsetParam), Equals, "456")
 }
