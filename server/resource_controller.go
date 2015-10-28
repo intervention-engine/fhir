@@ -53,6 +53,16 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	searcher := search.NewMongoSearcher(Database)
 	searchQuery := search.Query{Resource: rc.Name, Query: r.URL.RawQuery}
 	mgoQuery := searcher.CreateQuery(searchQuery)
+
+	// Horrible, horrible hack (for now) to ensure patients are sorted by name.  This is needed by
+	// the frontend, else paging won't work correctly.  This should be removed when the general
+	// sorting feature is implemented.
+	if rc.Name == "Patient" {
+		// To add insult to injury, mongo will not let us sort by family *and* given name:
+		// Executor error: BadValue cannot sort with keys that are parallel arrays
+		mgoQuery = mgoQuery.Sort("name.0.family.0" /*", name.0.given.0"*/, "_id")
+	}
+
 	err := mgoQuery.All(result)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
