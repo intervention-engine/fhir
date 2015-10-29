@@ -153,8 +153,11 @@ func generatePagingLinks(query search.Query, total uint32) ([]models.BundleLinkC
 
 	// Last Link
 	remainder := (total - offset) % count
+	if total < offset {
+		remainder = uint32(0)
+	}
 	newOffset := total - remainder
-	if remainder == 0 {
+	if remainder == uint32(0) && total > count {
 		newOffset = total - count
 	}
 	links = append(links, newLink("last", baseURL, values, count, newOffset))

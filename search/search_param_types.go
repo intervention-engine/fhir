@@ -93,7 +93,7 @@ func (q *Query) Params() []SearchParam {
 
 // Options parses the query string and returns the QueryOptions.
 func (q *Query) Options() *QueryOptions {
-	options := &QueryOptions{Offset: 0, Count: 100}
+	options := NewQueryOptions()
 	queryMap, _ := url.ParseQuery(q.Query)
 	for param, values := range queryMap {
 		param, _, _ := ParseParamNameModifierAndPostFix(param)
@@ -112,13 +112,17 @@ func (q *Query) Options() *QueryOptions {
 			if err != nil {
 				panic(createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_count\" content is invalid"))
 			}
-			options.Count = count
+			if count >= 0 {
+				options.Count = count
+			}
 		case OffsetParam:
 			offset, err := strconv.Atoi(value)
 			if err != nil {
 				panic(createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_offset\" content is invalid"))
 			}
-			options.Offset = offset
+			if offset >= 0 {
+				options.Offset = offset
+			}
 		default:
 			panic(createUnsupportedSearchError("MSG_PARAM_UNKNOWN", fmt.Sprintf("Parameter \"%s\" not understood", param)))
 		}
@@ -152,6 +156,10 @@ func (q *Query) NormalizedQueryValues(withOptions bool) url.Values {
 type QueryOptions struct {
 	Count  int
 	Offset int
+}
+
+func NewQueryOptions() *QueryOptions {
+	return &QueryOptions{Offset: 0, Count: 100}
 }
 
 // QueryValues returns values representing the query options.

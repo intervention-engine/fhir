@@ -148,6 +148,43 @@ func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 	assertPagingLink(c, bundle.Link[2], "previous", 5, 0)
 	assertPagingLink(c, bundle.Link[3], "next", 10, 15)
 	assertPagingLink(c, bundle.Link[4], "last", 10, 35)
+
+	// Search with other search criteria and results
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&gender=male")
+	c.Assert(bundle.Link, HasLen, 4)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "next", 10, 10)
+	assertPagingLink(c, bundle.Link[3], "last", 10, 30)
+
+	// Search with no results
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&gender=FOO")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "last", 10, 0)
+
+	// Search with out of bounds offset
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&_offset=1000")
+	c.Assert(bundle.Link, HasLen, 4)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 1000)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "previous", 10, 990)
+	assertPagingLink(c, bundle.Link[3], "last", 10, 30)
+
+	// Search with negative offset
+	bundle = performSearch(c, s.Server.URL+"/Patient?_offset=-10")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLink(c, bundle.Link[0], "self", 100, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 100, 0)
+	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
+
+	// Search with negative count
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=-10")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLink(c, bundle.Link[0], "self", 100, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 100, 0)
+	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
 }
 
 func (s *ServerSuite) TestGetPatient(c *C) {
