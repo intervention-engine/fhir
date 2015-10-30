@@ -2,8 +2,10 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"strings"
 	"testing"
@@ -11,6 +13,7 @@ import (
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
 	"gopkg.in/mgo.v2"
@@ -44,21 +47,144 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Router)
+}
 
+func (s *ServerSuite) SetUpTest(c *C) {
 	// Add patient fixture
-	patientCollection := Database.C("patients")
-	patient := LoadPatientFromFixture("../fixtures/patient-example-a.json")
-	i := bson.NewObjectId()
-	s.FixtureId = i.Hex()
-	patient.Id = s.FixtureId
-	err = patientCollection.Insert(patient)
-	util.CheckErr(err)
+	p := insertPatientFromFixture("../fixtures/patient-example-a.json")
+	s.FixtureId = p.Id
+}
+
+func (s *ServerSuite) TearDownTest(c *C) {
+	Database.C("patients").DropCollection()
 }
 
 func (s *ServerSuite) TearDownSuite(c *C) {
 	Database.DropDatabase()
 	s.Session.Close()
 	s.Server.Close()
+}
+
+func (s *ServerSuite) TestGetPatients(c *C) {
+	// Add 4 more patients
+	for i := 0; i < 4; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+	assertBundleCount(c, s.Server.URL+"/Patient", 5, 5)
+}
+
+func (s *ServerSuite) TestGetPatientsWithOptions(c *C) {
+	// Add 4 more patients
+	for i := 0; i < 4; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+	assertBundleCount(c, s.Server.URL+"/Patient?_count=2", 2, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_offset=2", 3, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_count=2&_offset=1", 2, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_count=2&_offset=4", 1, 5)
+	assertBundleCount(c, s.Server.URL+"/Patient?_offset=100", 0, 5)
+}
+
+func (s *ServerSuite) TestGetPatientsDefaultLimitIs100(c *C) {
+	// Add 100 more patients
+	for i := 0; i < 100; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+	assertBundleCount(c, s.Server.URL+"/Patient", 100, 101)
+}
+
+func (s *ServerSuite) TestGetPatientsPaging(c *C) {
+	// Add 39 more patients
+	for i := 0; i < 39; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+
+	// Default counts and less results than count
+	bundle := performSearch(c, s.Server.URL+"/Patient")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLink(c, bundle.Link[0], "self", 100, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 100, 0)
+	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
+
+	// More results than count, first page
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10")
+	c.Assert(bundle.Link, HasLen, 4)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "next", 10, 10)
+	assertPagingLink(c, bundle.Link[3], "last", 10, 30)
+
+	// More results than count, middle page
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&_offset=20")
+	c.Assert(bundle.Link, HasLen, 5)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 20)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "previous", 10, 10)
+	assertPagingLink(c, bundle.Link[3], "next", 10, 30)
+	assertPagingLink(c, bundle.Link[4], "last", 10, 30)
+
+	// More results than count, last page
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&_offset=30")
+	c.Assert(bundle.Link, HasLen, 4)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 30)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "previous", 10, 20)
+	assertPagingLink(c, bundle.Link[3], "last", 10, 30)
+
+	// More results than count, uneven last page
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&_offset=25")
+	c.Assert(bundle.Link, HasLen, 5)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 25)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "previous", 10, 15)
+	assertPagingLink(c, bundle.Link[3], "next", 10, 35)
+	assertPagingLink(c, bundle.Link[4], "last", 10, 35)
+
+	// More results than count, uneven previous page and last page
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&_offset=5")
+	c.Assert(bundle.Link, HasLen, 5)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 5)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "previous", 5, 0)
+	assertPagingLink(c, bundle.Link[3], "next", 10, 15)
+	assertPagingLink(c, bundle.Link[4], "last", 10, 35)
+
+	// Search with other search criteria and results
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&gender=male")
+	c.Assert(bundle.Link, HasLen, 4)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "next", 10, 10)
+	assertPagingLink(c, bundle.Link[3], "last", 10, 30)
+
+	// Search with no results
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&gender=FOO")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "last", 10, 0)
+
+	// Search with out of bounds offset
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=10&_offset=1000")
+	c.Assert(bundle.Link, HasLen, 4)
+	assertPagingLink(c, bundle.Link[0], "self", 10, 1000)
+	assertPagingLink(c, bundle.Link[1], "first", 10, 0)
+	assertPagingLink(c, bundle.Link[2], "previous", 10, 990)
+	assertPagingLink(c, bundle.Link[3], "last", 10, 30)
+
+	// Search with negative offset
+	bundle = performSearch(c, s.Server.URL+"/Patient?_offset=-10")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLink(c, bundle.Link[0], "self", 100, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 100, 0)
+	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
+
+	// Search with negative count
+	bundle = performSearch(c, s.Server.URL+"/Patient?_count=-10")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLink(c, bundle.Link[0], "self", 100, 0)
+	assertPagingLink(c, bundle.Link[1], "first", 100, 0)
+	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
 }
 
 func (s *ServerSuite) TestGetPatient(c *C) {
@@ -146,7 +272,44 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	c.Assert(count, Equals, 0)
 }
 
-func LoadPatientFromFixture(fileName string) *models.Patient {
+func performSearch(c *C, url string) *models.Bundle {
+	res, err := http.Get(url)
+	util.CheckErr(err)
+	decoder := json.NewDecoder(res.Body)
+	bundle := &models.Bundle{}
+	err = decoder.Decode(bundle)
+	util.CheckErr(err)
+	return bundle
+}
+
+func assertBundleCount(c *C, url string, expectedResults int, expectedTotal int) {
+	bundle := performSearch(c, url)
+	c.Assert(len(bundle.Entry), Equals, expectedResults)
+	c.Assert(*bundle.Total, Equals, uint32(expectedTotal))
+}
+
+func assertPagingLink(c *C, link models.BundleLinkComponent, relation string, count int, offset int) {
+	c.Assert(link.Relation, Equals, relation)
+
+	urlStr := link.Url
+	urlUrl, err := url.Parse(urlStr)
+	util.CheckErr(err)
+	v := urlUrl.Query()
+
+	c.Assert(v.Get(search.CountParam), Equals, fmt.Sprint(count))
+	c.Assert(v.Get(search.OffsetParam), Equals, fmt.Sprint(offset))
+}
+
+func insertPatientFromFixture(filePath string) *models.Patient {
+	patientCollection := Database.C("patients")
+	patient := loadPatientFromFixture(filePath)
+	patient.Id = bson.NewObjectId().Hex()
+	err := patientCollection.Insert(patient)
+	util.CheckErr(err)
+	return patient
+}
+
+func loadPatientFromFixture(fileName string) *models.Patient {
 	data, err := os.Open(fileName)
 	defer data.Close()
 	util.CheckErr(err)

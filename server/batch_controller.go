@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"reflect"
 	"sort"
 	"strings"
@@ -47,10 +46,6 @@ func BatchHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc
 	// Kind of pointless since we only support POST, but will be useful soon
 	sort.Sort(byRequestMethod(entries))
 
-	host, err := os.Hostname()
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-	}
 	// Create a map containing references that can be looked up by passed in FullURL.  This allows the
 	// existing references to be updated to new references (using newly assigned IDs).
 	refMap := make(map[string]models.Reference)
@@ -63,7 +58,7 @@ func BatchHandler(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc
 			External:     new(bool),
 		}
 		// Update the entry with the new FullURL and Id
-		entry.FullUrl = fmt.Sprintf("http://%s:3001/%s/%s", host, entry.Request.Url, id.Hex())
+		entry.FullUrl = responseURL(r, entry.Request.Url, id.Hex()).String()
 		reflect.ValueOf(entry.Resource).Elem().FieldByName("Id").SetString(id.Hex())
 	}
 	// Update all the references to the entries (to reflect newly assigned IDs)
