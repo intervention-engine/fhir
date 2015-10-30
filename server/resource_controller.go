@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 	"reflect"
+	"strings"
 
 	"github.com/gorilla/context"
 	"github.com/gorilla/mux"
@@ -99,10 +99,7 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	bundle.Total = &total
 
 	// Add links for paging
-	bundle.Link, err = generatePagingLinks(searchQuery, total)
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-	}
+	bundle.Link = generatePagingLinks(r, searchQuery, total)
 
 	context.Set(r, rc.Name, reflect.ValueOf(result).Elem().Interface())
 	context.Set(r, "Resource", rc.Name)
@@ -113,7 +110,7 @@ func (rc *ResourceController) IndexHandler(rw http.ResponseWriter, r *http.Reque
 	json.NewEncoder(rw).Encode(&bundle)
 }
 
-func generatePagingLinks(query search.Query, total uint32) ([]models.BundleLinkComponent, error) {
+func generatePagingLinks(r *http.Request, query search.Query, total uint32) []models.BundleLinkComponent {
 	links := make([]models.BundleLinkComponent, 0, 5)
 	values := query.NormalizedQueryValues(false)
 	options := query.Options()
@@ -121,14 +118,7 @@ func generatePagingLinks(query search.Query, total uint32) ([]models.BundleLinkC
 	offset := uint32(options.Offset)
 
 	// First create the base URL for paging
-	host, err := os.Hostname()
-	if err != nil {
-		return nil, err
-	}
-	baseURL := url.URL{}
-	baseURL.Scheme = "http"
-	baseURL.Host = fmt.Sprintf("%s:%d", host, 3001)
-	baseURL.Path = fmt.Sprintf("/%s", query.Resource)
+	baseURL := responseURL(r, query.Resource)
 
 	// Self link
 	links = append(links, newLink("self", baseURL, values, count, offset))
@@ -162,10 +152,10 @@ func generatePagingLinks(query search.Query, total uint32) ([]models.BundleLinkC
 	}
 	links = append(links, newLink("last", baseURL, values, count, newOffset))
 
-	return links, err
+	return links
 }
 
-func newLink(relation string, baseURL url.URL, values url.Values, count uint32, offset uint32) models.BundleLinkComponent {
+func newLink(relation string, baseURL *url.URL, values url.Values, count uint32, offset uint32) models.BundleLinkComponent {
 	values.Set(search.CountParam, fmt.Sprint(count))
 	values.Set(search.OffsetParam, fmt.Sprint(offset))
 	baseURL.RawQuery = values.Encode()
@@ -225,11 +215,7 @@ func (rc *ResourceController) CreateHandler(rw http.ResponseWriter, r *http.Requ
 	context.Set(r, "Resource", rc.Name)
 	context.Set(r, "Action", "create")
 
-	host, err := os.Hostname()
-	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
-	}
-	rw.Header().Add("Location", "http://"+host+":3001/"+rc.Name+"/"+i.Hex())
+	rw.Header().Add("Location", responseURL(r, rc.Name, i.Hex()).String())
 	rw.Header().Set("Content-Type", "application/json; charset=utf-8")
 	rw.Header().Set("Access-Control-Allow-Origin", "*")
 	rw.WriteHeader(http.StatusCreated)
@@ -291,4 +277,17 @@ func (rc *ResourceController) DeleteHandler(rw http.ResponseWriter, r *http.Requ
 	context.Set(r, rc.Name, id.Hex())
 	context.Set(r, "Resource", rc.Name)
 	context.Set(r, "Action", "delete")
+}
+
+func responseURL(r *http.Request, paths ...string) *url.URL {
+	responseURL := url.URL{}
+	if r.TLS == nil {
+		responseURL.Scheme = "http"
+	} else {
+		responseURL.Scheme = "https"
+	}
+	responseURL.Host = r.Host
+	responseURL.Path = fmt.Sprintf("/%s", strings.Join(paths, "/"))
+
+	return &responseURL
 }
