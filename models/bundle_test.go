@@ -128,8 +128,9 @@ func (s *BundleSuite) TestUnmarshalJSON(c *check.C) {
 
 func LoadBundleFromFixture(fileName string) *Bundle {
 	data, err := os.Open(fileName)
-	defer data.Close()
 	util.CheckErr(err)
+	defer data.Close()
+
 	decoder := json.NewDecoder(data)
 	bundle := &Bundle{}
 	err = decoder.Decode(bundle)

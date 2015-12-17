@@ -32,8 +32,9 @@ func (s *UtilSuite) TestUnmarshalJSON(c *check.C) {
 
 func LoadMapFromFixture(fileName string) interface{} {
 	data, err := os.Open(fileName)
-	defer data.Close()
 	util.CheckErr(err)
+	defer data.Close()
+
 	decoder := json.NewDecoder(data)
 	i := make(map[string]interface{})
 	err = decoder.Decode(&i)

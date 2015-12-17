@@ -218,8 +218,9 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 
 func (s *ServerSuite) TestCreatePatient(c *C) {
 	data, err := os.Open("../fixtures/patient-example-b.json")
-	defer data.Close()
 	util.CheckErr(err)
+	defer data.Close()
+
 	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
 	util.CheckErr(err)
 
@@ -235,8 +236,8 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 
 func (s *ServerSuite) TestUpdatePatient(c *C) {
 	data, err := os.Open("../fixtures/patient-example-c.json")
-	defer data.Close()
 	util.CheckErr(err)
+	defer data.Close()
 
 	client := &http.Client{}
 	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+s.FixtureId, data)
@@ -253,8 +254,9 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 func (s *ServerSuite) TestDeletePatient(c *C) {
 
 	data, err := os.Open("../fixtures/patient-example-d.json")
-	defer data.Close()
 	util.CheckErr(err)
+	defer data.Close()
+
 	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
 	util.CheckErr(err)
 
@@ -311,8 +313,9 @@ func insertPatientFromFixture(filePath string) *models.Patient {
 
 func loadPatientFromFixture(fileName string) *models.Patient {
 	data, err := os.Open(fileName)
-	defer data.Close()
 	util.CheckErr(err)
+	defer data.Close()
+
 	decoder := json.NewDecoder(data)
 	patient := &models.Patient{}
 	err = decoder.Decode(patient)

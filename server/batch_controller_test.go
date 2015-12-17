@@ -51,8 +51,8 @@ func (s *BatchControllerSuite) TearDownSuite(c *C) {
 
 func (s *BatchControllerSuite) TestUploadPatientBundle(c *C) {
 	data, err := os.Open("../fixtures/john_peters_bundle.json")
-	defer data.Close()
 	util.CheckErr(err)
+	defer data.Close()
 
 	decoder := json.NewDecoder(data)
 	requestBundle := &models.Bundle{}
