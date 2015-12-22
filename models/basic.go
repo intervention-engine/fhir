@@ -29,12 +29,12 @@ package models
 import "encoding/json"
 
 type Basic struct {
-	Id         string           `json:"id" bson:"_id"`
-	Identifier []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Subject    *Reference       `bson:"subject,omitempty" json:"subject,omitempty"`
-	Author     *Reference       `bson:"author,omitempty" json:"author,omitempty"`
-	Created    *FHIRDateTime    `bson:"created,omitempty" json:"created,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Code           *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Subject        *Reference       `bson:"subject,omitempty" json:"subject,omitempty"`
+	Author         *Reference       `bson:"author,omitempty" json:"author,omitempty"`
+	Created        *FHIRDateTime    `bson:"created,omitempty" json:"created,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -47,4 +47,21 @@ func (resource *Basic) MarshalJSON() ([]byte, error) {
 		Basic:        *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "basic" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type basic Basic
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Basic) UnmarshalJSON(data []byte) (err error) {
+	x2 := basic{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Basic(x2)
+	}
+	return
 }

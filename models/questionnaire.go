@@ -29,15 +29,15 @@ package models
 import "encoding/json"
 
 type Questionnaire struct {
-	Id          string                       `json:"id" bson:"_id"`
-	Identifier  []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version     string                       `bson:"version,omitempty" json:"version,omitempty"`
-	Status      string                       `bson:"status,omitempty" json:"status,omitempty"`
-	Date        *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
-	Publisher   string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Telecom     []ContactPoint               `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	SubjectType []string                     `bson:"subjectType,omitempty" json:"subjectType,omitempty"`
-	Group       *QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier                 `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version        string                       `bson:"version,omitempty" json:"version,omitempty"`
+	Status         string                       `bson:"status,omitempty" json:"status,omitempty"`
+	Date           *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
+	Publisher      string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Telecom        []ContactPoint               `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	SubjectType    []string                     `bson:"subjectType,omitempty" json:"subjectType,omitempty"`
+	Group          *QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -50,6 +50,23 @@ func (resource *Questionnaire) MarshalJSON() ([]byte, error) {
 		Questionnaire: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "questionnaire" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type questionnaire Questionnaire
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Questionnaire) UnmarshalJSON(data []byte) (err error) {
+	x2 := questionnaire{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Questionnaire(x2)
+	}
+	return
 }
 
 type QuestionnaireGroupComponent struct {

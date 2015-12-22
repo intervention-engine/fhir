@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DeviceUseRequest struct {
-	Id                      string            `json:"id" bson:"_id"`
+	DomainResource          `bson:",inline"`
 	BodySiteCodeableConcept *CodeableConcept  `bson:"bodySiteCodeableConcept,omitempty" json:"bodySiteCodeableConcept,omitempty"`
 	BodySiteReference       *Reference        `bson:"bodySiteReference,omitempty" json:"bodySiteReference,omitempty"`
 	Status                  string            `bson:"status,omitempty" json:"status,omitempty"`
@@ -58,4 +58,21 @@ func (resource *DeviceUseRequest) MarshalJSON() ([]byte, error) {
 		DeviceUseRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "deviceUseRequest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type deviceUseRequest DeviceUseRequest
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *DeviceUseRequest) UnmarshalJSON(data []byte) (err error) {
+	x2 := deviceUseRequest{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = DeviceUseRequest(x2)
+	}
+	return
 }

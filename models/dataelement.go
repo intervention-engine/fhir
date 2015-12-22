@@ -29,21 +29,21 @@ package models
 import "encoding/json"
 
 type DataElement struct {
-	Id           string                        `json:"id" bson:"_id"`
-	Url          string                        `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier   []Identifier                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                        `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                        `bson:"name,omitempty" json:"name,omitempty"`
-	Status       string                        `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                         `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher    string                        `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []DataElementContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date         *FHIRDateTime                 `bson:"date,omitempty" json:"date,omitempty"`
-	UseContext   []CodeableConcept             `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Copyright    string                        `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Stringency   string                        `bson:"stringency,omitempty" json:"stringency,omitempty"`
-	Mapping      []DataElementMappingComponent `bson:"mapping,omitempty" json:"mapping,omitempty"`
-	Element      []ElementDefinition           `bson:"element,omitempty" json:"element,omitempty"`
+	DomainResource `bson:",inline"`
+	Url            string                        `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier     []Identifier                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version        string                        `bson:"version,omitempty" json:"version,omitempty"`
+	Name           string                        `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                        `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental   *bool                         `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher      string                        `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []DataElementContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date           *FHIRDateTime                 `bson:"date,omitempty" json:"date,omitempty"`
+	UseContext     []CodeableConcept             `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Copyright      string                        `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Stringency     string                        `bson:"stringency,omitempty" json:"stringency,omitempty"`
+	Mapping        []DataElementMappingComponent `bson:"mapping,omitempty" json:"mapping,omitempty"`
+	Element        []ElementDefinition           `bson:"element,omitempty" json:"element,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -56,6 +56,23 @@ func (resource *DataElement) MarshalJSON() ([]byte, error) {
 		DataElement:  *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "dataElement" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type dataElement DataElement
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *DataElement) UnmarshalJSON(data []byte) (err error) {
+	x2 := dataElement{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = DataElement(x2)
+	}
+	return
 }
 
 type DataElementContactComponent struct {

@@ -29,23 +29,23 @@ package models
 import "encoding/json"
 
 type CarePlan struct {
-	Id          string                         `json:"id" bson:"_id"`
-	Identifier  []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Subject     *Reference                     `bson:"subject,omitempty" json:"subject,omitempty"`
-	Status      string                         `bson:"status,omitempty" json:"status,omitempty"`
-	Context     *Reference                     `bson:"context,omitempty" json:"context,omitempty"`
-	Period      *Period                        `bson:"period,omitempty" json:"period,omitempty"`
-	Author      []Reference                    `bson:"author,omitempty" json:"author,omitempty"`
-	Modified    *FHIRDateTime                  `bson:"modified,omitempty" json:"modified,omitempty"`
-	Category    []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
-	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
-	Addresses   []Reference                    `bson:"addresses,omitempty" json:"addresses,omitempty"`
-	Support     []Reference                    `bson:"support,omitempty" json:"support,omitempty"`
-	RelatedPlan []CarePlanRelatedPlanComponent `bson:"relatedPlan,omitempty" json:"relatedPlan,omitempty"`
-	Participant []CarePlanParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
-	Goal        []Reference                    `bson:"goal,omitempty" json:"goal,omitempty"`
-	Activity    []CarePlanActivityComponent    `bson:"activity,omitempty" json:"activity,omitempty"`
-	Note        *Annotation                    `bson:"note,omitempty" json:"note,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Subject        *Reference                     `bson:"subject,omitempty" json:"subject,omitempty"`
+	Status         string                         `bson:"status,omitempty" json:"status,omitempty"`
+	Context        *Reference                     `bson:"context,omitempty" json:"context,omitempty"`
+	Period         *Period                        `bson:"period,omitempty" json:"period,omitempty"`
+	Author         []Reference                    `bson:"author,omitempty" json:"author,omitempty"`
+	Modified       *FHIRDateTime                  `bson:"modified,omitempty" json:"modified,omitempty"`
+	Category       []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
+	Description    string                         `bson:"description,omitempty" json:"description,omitempty"`
+	Addresses      []Reference                    `bson:"addresses,omitempty" json:"addresses,omitempty"`
+	Support        []Reference                    `bson:"support,omitempty" json:"support,omitempty"`
+	RelatedPlan    []CarePlanRelatedPlanComponent `bson:"relatedPlan,omitempty" json:"relatedPlan,omitempty"`
+	Participant    []CarePlanParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	Goal           []Reference                    `bson:"goal,omitempty" json:"goal,omitempty"`
+	Activity       []CarePlanActivityComponent    `bson:"activity,omitempty" json:"activity,omitempty"`
+	Note           *Annotation                    `bson:"note,omitempty" json:"note,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -58,6 +58,23 @@ func (resource *CarePlan) MarshalJSON() ([]byte, error) {
 		CarePlan:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "carePlan" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type carePlan CarePlan
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *CarePlan) UnmarshalJSON(data []byte) (err error) {
+	x2 := carePlan{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = CarePlan(x2)
+	}
+	return
 }
 
 type CarePlanRelatedPlanComponent struct {

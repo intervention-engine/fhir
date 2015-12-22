@@ -29,17 +29,17 @@ package models
 import "encoding/json"
 
 type RiskAssessment struct {
-	Id         string                              `json:"id" bson:"_id"`
-	Subject    *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
-	Date       *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
-	Condition  *Reference                          `bson:"condition,omitempty" json:"condition,omitempty"`
-	Encounter  *Reference                          `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Performer  *Reference                          `bson:"performer,omitempty" json:"performer,omitempty"`
-	Identifier *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Method     *CodeableConcept                    `bson:"method,omitempty" json:"method,omitempty"`
-	Basis      []Reference                         `bson:"basis,omitempty" json:"basis,omitempty"`
-	Prediction []RiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
-	Mitigation string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
+	DomainResource `bson:",inline"`
+	Subject        *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
+	Date           *FHIRDateTime                       `bson:"date,omitempty" json:"date,omitempty"`
+	Condition      *Reference                          `bson:"condition,omitempty" json:"condition,omitempty"`
+	Encounter      *Reference                          `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Performer      *Reference                          `bson:"performer,omitempty" json:"performer,omitempty"`
+	Identifier     *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Method         *CodeableConcept                    `bson:"method,omitempty" json:"method,omitempty"`
+	Basis          []Reference                         `bson:"basis,omitempty" json:"basis,omitempty"`
+	Prediction     []RiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
+	Mitigation     string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -52,6 +52,23 @@ func (resource *RiskAssessment) MarshalJSON() ([]byte, error) {
 		RiskAssessment: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "riskAssessment" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type riskAssessment RiskAssessment
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *RiskAssessment) UnmarshalJSON(data []byte) (err error) {
+	x2 := riskAssessment{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = RiskAssessment(x2)
+	}
+	return
 }
 
 type RiskAssessmentPredictionComponent struct {

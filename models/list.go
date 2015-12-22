@@ -29,20 +29,20 @@ package models
 import "encoding/json"
 
 type List struct {
-	Id          string               `json:"id" bson:"_id"`
-	Identifier  []Identifier         `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Title       string               `bson:"title,omitempty" json:"title,omitempty"`
-	Code        *CodeableConcept     `bson:"code,omitempty" json:"code,omitempty"`
-	Subject     *Reference           `bson:"subject,omitempty" json:"subject,omitempty"`
-	Source      *Reference           `bson:"source,omitempty" json:"source,omitempty"`
-	Encounter   *Reference           `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Status      string               `bson:"status,omitempty" json:"status,omitempty"`
-	Date        *FHIRDateTime        `bson:"date,omitempty" json:"date,omitempty"`
-	OrderedBy   *CodeableConcept     `bson:"orderedBy,omitempty" json:"orderedBy,omitempty"`
-	Mode        string               `bson:"mode,omitempty" json:"mode,omitempty"`
-	Note        string               `bson:"note,omitempty" json:"note,omitempty"`
-	Entry       []ListEntryComponent `bson:"entry,omitempty" json:"entry,omitempty"`
-	EmptyReason *CodeableConcept     `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier         `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Title          string               `bson:"title,omitempty" json:"title,omitempty"`
+	Code           *CodeableConcept     `bson:"code,omitempty" json:"code,omitempty"`
+	Subject        *Reference           `bson:"subject,omitempty" json:"subject,omitempty"`
+	Source         *Reference           `bson:"source,omitempty" json:"source,omitempty"`
+	Encounter      *Reference           `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Status         string               `bson:"status,omitempty" json:"status,omitempty"`
+	Date           *FHIRDateTime        `bson:"date,omitempty" json:"date,omitempty"`
+	OrderedBy      *CodeableConcept     `bson:"orderedBy,omitempty" json:"orderedBy,omitempty"`
+	Mode           string               `bson:"mode,omitempty" json:"mode,omitempty"`
+	Note           string               `bson:"note,omitempty" json:"note,omitempty"`
+	Entry          []ListEntryComponent `bson:"entry,omitempty" json:"entry,omitempty"`
+	EmptyReason    *CodeableConcept     `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -55,6 +55,23 @@ func (resource *List) MarshalJSON() ([]byte, error) {
 		List:         *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "list" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type list List
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *List) UnmarshalJSON(data []byte) (err error) {
+	x2 := list{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = List(x2)
+	}
+	return
 }
 
 type ListEntryComponent struct {

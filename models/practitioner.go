@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Practitioner struct {
-	Id               string                                  `json:"id" bson:"_id"`
+	DomainResource   `bson:",inline"`
 	Identifier       []Identifier                            `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Active           *bool                                   `bson:"active,omitempty" json:"active,omitempty"`
 	Name             *HumanName                              `bson:"name,omitempty" json:"name,omitempty"`
@@ -53,6 +53,23 @@ func (resource *Practitioner) MarshalJSON() ([]byte, error) {
 		Practitioner: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "practitioner" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type practitioner Practitioner
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Practitioner) UnmarshalJSON(data []byte) (err error) {
+	x2 := practitioner{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Practitioner(x2)
+	}
+	return
 }
 
 type PractitionerPractitionerRoleComponent struct {

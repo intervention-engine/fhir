@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type EpisodeOfCare struct {
-	Id                   string                                `json:"id" bson:"_id"`
+	DomainResource       `bson:",inline"`
 	Identifier           []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Status               string                                `bson:"status,omitempty" json:"status,omitempty"`
 	StatusHistory        []EpisodeOfCareStatusHistoryComponent `bson:"statusHistory,omitempty" json:"statusHistory,omitempty"`
@@ -53,6 +53,23 @@ func (resource *EpisodeOfCare) MarshalJSON() ([]byte, error) {
 		EpisodeOfCare: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "episodeOfCare" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type episodeOfCare EpisodeOfCare
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *EpisodeOfCare) UnmarshalJSON(data []byte) (err error) {
+	x2 := episodeOfCare{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = EpisodeOfCare(x2)
+	}
+	return
 }
 
 type EpisodeOfCareStatusHistoryComponent struct {

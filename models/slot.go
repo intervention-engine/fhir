@@ -29,15 +29,15 @@ package models
 import "encoding/json"
 
 type Slot struct {
-	Id           string           `json:"id" bson:"_id"`
-	Identifier   []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Type         *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Schedule     *Reference       `bson:"schedule,omitempty" json:"schedule,omitempty"`
-	FreeBusyType string           `bson:"freeBusyType,omitempty" json:"freeBusyType,omitempty"`
-	Start        *FHIRDateTime    `bson:"start,omitempty" json:"start,omitempty"`
-	End          *FHIRDateTime    `bson:"end,omitempty" json:"end,omitempty"`
-	Overbooked   *bool            `bson:"overbooked,omitempty" json:"overbooked,omitempty"`
-	Comment      string           `bson:"comment,omitempty" json:"comment,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Type           *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Schedule       *Reference       `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	FreeBusyType   string           `bson:"freeBusyType,omitempty" json:"freeBusyType,omitempty"`
+	Start          *FHIRDateTime    `bson:"start,omitempty" json:"start,omitempty"`
+	End            *FHIRDateTime    `bson:"end,omitempty" json:"end,omitempty"`
+	Overbooked     *bool            `bson:"overbooked,omitempty" json:"overbooked,omitempty"`
+	Comment        string           `bson:"comment,omitempty" json:"comment,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -50,4 +50,21 @@ func (resource *Slot) MarshalJSON() ([]byte, error) {
 		Slot:         *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "slot" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type slot Slot
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Slot) UnmarshalJSON(data []byte) (err error) {
+	x2 := slot{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Slot(x2)
+	}
+	return
 }

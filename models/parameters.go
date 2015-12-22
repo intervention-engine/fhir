@@ -28,44 +28,34 @@ package models
 
 import "encoding/json"
 
-type OperationOutcome struct {
-	DomainResource `bson:",inline"`
-	Issue          []OperationOutcomeIssueComponent `bson:"issue,omitempty" json:"issue,omitempty"`
+type Parameters struct {
+	Resource  `bson:",inline"`
+	Parameter []ParametersParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
 }
 
-// Custom marshaller to add the resourceType property, as required by the specification
-func (resource *OperationOutcome) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		OperationOutcome
-	}{
-		ResourceType:     "OperationOutcome",
-		OperationOutcome: *resource,
-	}
-	return json.Marshal(x)
+type ParametersParameterComponent struct {
+	Name                 string                         `bson:"name,omitempty" json:"name,omitempty"`
+	ValueString          string                         `bson:"valueString,omitempty" json:"valueString,omitempty"`
+	ValueInteger         *int32                         `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
+	ValueDateTime        *FHIRDateTime                  `bson:"valueDateTime,omitempty" json:"valueDateTime,omitempty"`
+	ValueBoolean         *bool                          `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
+	ValueCodeableConcept *CodeableConcept               `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
+	ValueRange           *Range                         `bson:"valueRange,omitempty" json:"valueRange,omitempty"`
+	Resource             interface{}                    `bson:"resource,omitempty" json:"resource,omitempty"`
+	Part                 []ParametersParameterComponent `bson:"part,omitempty" json:"part,omitempty"`
 }
 
-// The "operationOutcome" sub-type is needed to avoid infinite recursion in UnmarshalJSON
-type operationOutcome OperationOutcome
+// The "parametersParameterComponent" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type parametersParameterComponent ParametersParameterComponent
 
 // Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
-func (x *OperationOutcome) UnmarshalJSON(data []byte) (err error) {
-	x2 := operationOutcome{}
+func (x *ParametersParameterComponent) UnmarshalJSON(data []byte) (err error) {
+	x2 := parametersParameterComponent{}
 	if err = json.Unmarshal(data, &x2); err == nil {
-		if x2.Contained != nil {
-			for i := range x2.Contained {
-				x2.Contained[i] = MapToResource(x2.Contained[i], true)
-			}
+		if x2.Resource != nil {
+			x2.Resource = MapToResource(x2.Resource, true)
 		}
-		*x = OperationOutcome(x2)
+		*x = ParametersParameterComponent(x2)
 	}
 	return
-}
-
-type OperationOutcomeIssueComponent struct {
-	Severity    string           `bson:"severity,omitempty" json:"severity,omitempty"`
-	Code        string           `bson:"code,omitempty" json:"code,omitempty"`
-	Details     *CodeableConcept `bson:"details,omitempty" json:"details,omitempty"`
-	Diagnostics string           `bson:"diagnostics,omitempty" json:"diagnostics,omitempty"`
-	Location    []string         `bson:"location,omitempty" json:"location,omitempty"`
 }

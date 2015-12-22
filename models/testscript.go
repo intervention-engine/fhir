@@ -29,28 +29,28 @@ package models
 import "encoding/json"
 
 type TestScript struct {
-	Id           string                        `json:"id" bson:"_id"`
-	Url          string                        `bson:"url,omitempty" json:"url,omitempty"`
-	Version      string                        `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                        `bson:"name,omitempty" json:"name,omitempty"`
-	Status       string                        `bson:"status,omitempty" json:"status,omitempty"`
-	Identifier   *Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Experimental *bool                         `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher    string                        `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []TestScriptContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date         *FHIRDateTime                 `bson:"date,omitempty" json:"date,omitempty"`
-	Description  string                        `bson:"description,omitempty" json:"description,omitempty"`
-	UseContext   []CodeableConcept             `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Requirements string                        `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright    string                        `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Metadata     *TestScriptMetadataComponent  `bson:"metadata,omitempty" json:"metadata,omitempty"`
-	Multiserver  *bool                         `bson:"multiserver,omitempty" json:"multiserver,omitempty"`
-	Fixture      []TestScriptFixtureComponent  `bson:"fixture,omitempty" json:"fixture,omitempty"`
-	Profile      []Reference                   `bson:"profile,omitempty" json:"profile,omitempty"`
-	Variable     []TestScriptVariableComponent `bson:"variable,omitempty" json:"variable,omitempty"`
-	Setup        *TestScriptSetupComponent     `bson:"setup,omitempty" json:"setup,omitempty"`
-	Test         []TestScriptTestComponent     `bson:"test,omitempty" json:"test,omitempty"`
-	Teardown     *TestScriptTeardownComponent  `bson:"teardown,omitempty" json:"teardown,omitempty"`
+	DomainResource `bson:",inline"`
+	Url            string                        `bson:"url,omitempty" json:"url,omitempty"`
+	Version        string                        `bson:"version,omitempty" json:"version,omitempty"`
+	Name           string                        `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                        `bson:"status,omitempty" json:"status,omitempty"`
+	Identifier     *Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Experimental   *bool                         `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher      string                        `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []TestScriptContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date           *FHIRDateTime                 `bson:"date,omitempty" json:"date,omitempty"`
+	Description    string                        `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext     []CodeableConcept             `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Requirements   string                        `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright      string                        `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Metadata       *TestScriptMetadataComponent  `bson:"metadata,omitempty" json:"metadata,omitempty"`
+	Multiserver    *bool                         `bson:"multiserver,omitempty" json:"multiserver,omitempty"`
+	Fixture        []TestScriptFixtureComponent  `bson:"fixture,omitempty" json:"fixture,omitempty"`
+	Profile        []Reference                   `bson:"profile,omitempty" json:"profile,omitempty"`
+	Variable       []TestScriptVariableComponent `bson:"variable,omitempty" json:"variable,omitempty"`
+	Setup          *TestScriptSetupComponent     `bson:"setup,omitempty" json:"setup,omitempty"`
+	Test           []TestScriptTestComponent     `bson:"test,omitempty" json:"test,omitempty"`
+	Teardown       *TestScriptTeardownComponent  `bson:"teardown,omitempty" json:"teardown,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -63,6 +63,23 @@ func (resource *TestScript) MarshalJSON() ([]byte, error) {
 		TestScript:   *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "testScript" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type testScript TestScript
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *TestScript) UnmarshalJSON(data []byte) (err error) {
+	x2 := testScript{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = TestScript(x2)
+	}
+	return
 }
 
 type TestScriptContactComponent struct {

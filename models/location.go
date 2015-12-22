@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Location struct {
-	Id                   string                     `json:"id" bson:"_id"`
+	DomainResource       `bson:",inline"`
 	Identifier           []Identifier               `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Status               string                     `bson:"status,omitempty" json:"status,omitempty"`
 	Name                 string                     `bson:"name,omitempty" json:"name,omitempty"`
@@ -54,6 +54,23 @@ func (resource *Location) MarshalJSON() ([]byte, error) {
 		Location:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "location" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type location Location
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Location) UnmarshalJSON(data []byte) (err error) {
+	x2 := location{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Location(x2)
+	}
+	return
 }
 
 type LocationPositionComponent struct {

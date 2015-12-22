@@ -29,15 +29,15 @@ package models
 import "encoding/json"
 
 type Subscription struct {
-	Id       string                        `json:"id" bson:"_id"`
-	Criteria string                        `bson:"criteria,omitempty" json:"criteria,omitempty"`
-	Contact  []ContactPoint                `bson:"contact,omitempty" json:"contact,omitempty"`
-	Reason   string                        `bson:"reason,omitempty" json:"reason,omitempty"`
-	Status   string                        `bson:"status,omitempty" json:"status,omitempty"`
-	Error    string                        `bson:"error,omitempty" json:"error,omitempty"`
-	Channel  *SubscriptionChannelComponent `bson:"channel,omitempty" json:"channel,omitempty"`
-	End      *FHIRDateTime                 `bson:"end,omitempty" json:"end,omitempty"`
-	Tag      []Coding                      `bson:"tag,omitempty" json:"tag,omitempty"`
+	DomainResource `bson:",inline"`
+	Criteria       string                        `bson:"criteria,omitempty" json:"criteria,omitempty"`
+	Contact        []ContactPoint                `bson:"contact,omitempty" json:"contact,omitempty"`
+	Reason         string                        `bson:"reason,omitempty" json:"reason,omitempty"`
+	Status         string                        `bson:"status,omitempty" json:"status,omitempty"`
+	Error          string                        `bson:"error,omitempty" json:"error,omitempty"`
+	Channel        *SubscriptionChannelComponent `bson:"channel,omitempty" json:"channel,omitempty"`
+	End            *FHIRDateTime                 `bson:"end,omitempty" json:"end,omitempty"`
+	Tag            []Coding                      `bson:"tag,omitempty" json:"tag,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -50,6 +50,23 @@ func (resource *Subscription) MarshalJSON() ([]byte, error) {
 		Subscription: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "subscription" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type subscription Subscription
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Subscription) UnmarshalJSON(data []byte) (err error) {
+	x2 := subscription{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Subscription(x2)
+	}
+	return
 }
 
 type SubscriptionChannelComponent struct {

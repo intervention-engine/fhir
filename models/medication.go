@@ -29,12 +29,12 @@ package models
 import "encoding/json"
 
 type Medication struct {
-	Id           string                      `json:"id" bson:"_id"`
-	Code         *CodeableConcept            `bson:"code,omitempty" json:"code,omitempty"`
-	IsBrand      *bool                       `bson:"isBrand,omitempty" json:"isBrand,omitempty"`
-	Manufacturer *Reference                  `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
-	Product      *MedicationProductComponent `bson:"product,omitempty" json:"product,omitempty"`
-	Package      *MedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
+	DomainResource `bson:",inline"`
+	Code           *CodeableConcept            `bson:"code,omitempty" json:"code,omitempty"`
+	IsBrand        *bool                       `bson:"isBrand,omitempty" json:"isBrand,omitempty"`
+	Manufacturer   *Reference                  `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
+	Product        *MedicationProductComponent `bson:"product,omitempty" json:"product,omitempty"`
+	Package        *MedicationPackageComponent `bson:"package,omitempty" json:"package,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -47,6 +47,23 @@ func (resource *Medication) MarshalJSON() ([]byte, error) {
 		Medication:   *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "medication" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type medication Medication
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Medication) UnmarshalJSON(data []byte) (err error) {
+	x2 := medication{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Medication(x2)
+	}
+	return
 }
 
 type MedicationProductComponent struct {

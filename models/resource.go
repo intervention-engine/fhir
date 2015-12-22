@@ -26,7 +26,9 @@
 
 package models
 
-type Element struct {
-	Id        string      `bson:"_id,omitempty" json:"id,omitempty"`
-	Extension []Extension `bson:"extension,omitempty" json:"extension,omitempty"`
+type Resource struct {
+	Id            string `bson:"_id,omitempty" json:"id,omitempty"`
+	Meta          *Meta  `bson:"meta,omitempty" json:"meta,omitempty"`
+	ImplicitRules string `bson:"implicitRules,omitempty" json:"implicitRules,omitempty"`
+	Language      string `bson:"language,omitempty" json:"language,omitempty"`
 }

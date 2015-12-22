@@ -29,26 +29,26 @@ package models
 import "encoding/json"
 
 type ValueSet struct {
-	Id           string                       `json:"id" bson:"_id"`
-	Url          string                       `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier   *Identifier                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version      string                       `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                       `bson:"name,omitempty" json:"name,omitempty"`
-	Status       string                       `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                        `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher    string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []ValueSetContactComponent   `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date         *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
-	LockedDate   *FHIRDateTime                `bson:"lockedDate,omitempty" json:"lockedDate,omitempty"`
-	Description  string                       `bson:"description,omitempty" json:"description,omitempty"`
-	UseContext   []CodeableConcept            `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Immutable    *bool                        `bson:"immutable,omitempty" json:"immutable,omitempty"`
-	Requirements string                       `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Copyright    string                       `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Extensible   *bool                        `bson:"extensible,omitempty" json:"extensible,omitempty"`
-	CodeSystem   *ValueSetCodeSystemComponent `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
-	Compose      *ValueSetComposeComponent    `bson:"compose,omitempty" json:"compose,omitempty"`
-	Expansion    *ValueSetExpansionComponent  `bson:"expansion,omitempty" json:"expansion,omitempty"`
+	DomainResource `bson:",inline"`
+	Url            string                       `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier     *Identifier                  `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version        string                       `bson:"version,omitempty" json:"version,omitempty"`
+	Name           string                       `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                       `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental   *bool                        `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher      string                       `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []ValueSetContactComponent   `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date           *FHIRDateTime                `bson:"date,omitempty" json:"date,omitempty"`
+	LockedDate     *FHIRDateTime                `bson:"lockedDate,omitempty" json:"lockedDate,omitempty"`
+	Description    string                       `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext     []CodeableConcept            `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Immutable      *bool                        `bson:"immutable,omitempty" json:"immutable,omitempty"`
+	Requirements   string                       `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Copyright      string                       `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	Extensible     *bool                        `bson:"extensible,omitempty" json:"extensible,omitempty"`
+	CodeSystem     *ValueSetCodeSystemComponent `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Compose        *ValueSetComposeComponent    `bson:"compose,omitempty" json:"compose,omitempty"`
+	Expansion      *ValueSetExpansionComponent  `bson:"expansion,omitempty" json:"expansion,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -61,6 +61,23 @@ func (resource *ValueSet) MarshalJSON() ([]byte, error) {
 		ValueSet:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "valueSet" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type valueSet ValueSet
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *ValueSet) UnmarshalJSON(data []byte) (err error) {
+	x2 := valueSet{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = ValueSet(x2)
+	}
+	return
 }
 
 type ValueSetContactComponent struct {

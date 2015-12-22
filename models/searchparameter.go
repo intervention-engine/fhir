@@ -29,22 +29,22 @@ package models
 import "encoding/json"
 
 type SearchParameter struct {
-	Id           string                            `json:"id" bson:"_id"`
-	Url          string                            `bson:"url,omitempty" json:"url,omitempty"`
-	Name         string                            `bson:"name,omitempty" json:"name,omitempty"`
-	Status       string                            `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                             `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher    string                            `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []SearchParameterContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date         *FHIRDateTime                     `bson:"date,omitempty" json:"date,omitempty"`
-	Requirements string                            `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Code         string                            `bson:"code,omitempty" json:"code,omitempty"`
-	Base         string                            `bson:"base,omitempty" json:"base,omitempty"`
-	Type         string                            `bson:"type,omitempty" json:"type,omitempty"`
-	Description  string                            `bson:"description,omitempty" json:"description,omitempty"`
-	Xpath        string                            `bson:"xpath,omitempty" json:"xpath,omitempty"`
-	XpathUsage   string                            `bson:"xpathUsage,omitempty" json:"xpathUsage,omitempty"`
-	Target       []string                          `bson:"target,omitempty" json:"target,omitempty"`
+	DomainResource `bson:",inline"`
+	Url            string                            `bson:"url,omitempty" json:"url,omitempty"`
+	Name           string                            `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                            `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental   *bool                             `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher      string                            `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []SearchParameterContactComponent `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date           *FHIRDateTime                     `bson:"date,omitempty" json:"date,omitempty"`
+	Requirements   string                            `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Code           string                            `bson:"code,omitempty" json:"code,omitempty"`
+	Base           string                            `bson:"base,omitempty" json:"base,omitempty"`
+	Type           string                            `bson:"type,omitempty" json:"type,omitempty"`
+	Description    string                            `bson:"description,omitempty" json:"description,omitempty"`
+	Xpath          string                            `bson:"xpath,omitempty" json:"xpath,omitempty"`
+	XpathUsage     string                            `bson:"xpathUsage,omitempty" json:"xpathUsage,omitempty"`
+	Target         []string                          `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -57,6 +57,23 @@ func (resource *SearchParameter) MarshalJSON() ([]byte, error) {
 		SearchParameter: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "searchParameter" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type searchParameter SearchParameter
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *SearchParameter) UnmarshalJSON(data []byte) (err error) {
+	x2 := searchParameter{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = SearchParameter(x2)
+	}
+	return
 }
 
 type SearchParameterContactComponent struct {

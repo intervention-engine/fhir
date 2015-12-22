@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DeviceMetric struct {
-	Id                string                             `json:"id" bson:"_id"`
+	DomainResource    `bson:",inline"`
 	Type              *CodeableConcept                   `bson:"type,omitempty" json:"type,omitempty"`
 	Identifier        *Identifier                        `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Unit              *CodeableConcept                   `bson:"unit,omitempty" json:"unit,omitempty"`
@@ -52,6 +52,23 @@ func (resource *DeviceMetric) MarshalJSON() ([]byte, error) {
 		DeviceMetric: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "deviceMetric" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type deviceMetric DeviceMetric
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *DeviceMetric) UnmarshalJSON(data []byte) (err error) {
+	x2 := deviceMetric{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = DeviceMetric(x2)
+	}
+	return
 }
 
 type DeviceMetricCalibrationComponent struct {

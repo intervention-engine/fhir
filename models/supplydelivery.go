@@ -29,18 +29,18 @@ package models
 import "encoding/json"
 
 type SupplyDelivery struct {
-	Id           string           `json:"id" bson:"_id"`
-	Identifier   *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status       string           `bson:"status,omitempty" json:"status,omitempty"`
-	Patient      *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
-	Type         *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Quantity     *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	SuppliedItem *Reference       `bson:"suppliedItem,omitempty" json:"suppliedItem,omitempty"`
-	Supplier     *Reference       `bson:"supplier,omitempty" json:"supplier,omitempty"`
-	WhenPrepared *Period          `bson:"whenPrepared,omitempty" json:"whenPrepared,omitempty"`
-	Time         *FHIRDateTime    `bson:"time,omitempty" json:"time,omitempty"`
-	Destination  *Reference       `bson:"destination,omitempty" json:"destination,omitempty"`
-	Receiver     []Reference      `bson:"receiver,omitempty" json:"receiver,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status         string           `bson:"status,omitempty" json:"status,omitempty"`
+	Patient        *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
+	Type           *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Quantity       *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	SuppliedItem   *Reference       `bson:"suppliedItem,omitempty" json:"suppliedItem,omitempty"`
+	Supplier       *Reference       `bson:"supplier,omitempty" json:"supplier,omitempty"`
+	WhenPrepared   *Period          `bson:"whenPrepared,omitempty" json:"whenPrepared,omitempty"`
+	Time           *FHIRDateTime    `bson:"time,omitempty" json:"time,omitempty"`
+	Destination    *Reference       `bson:"destination,omitempty" json:"destination,omitempty"`
+	Receiver       []Reference      `bson:"receiver,omitempty" json:"receiver,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -53,4 +53,21 @@ func (resource *SupplyDelivery) MarshalJSON() ([]byte, error) {
 		SupplyDelivery: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "supplyDelivery" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type supplyDelivery SupplyDelivery
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *SupplyDelivery) UnmarshalJSON(data []byte) (err error) {
+	x2 := supplyDelivery{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = SupplyDelivery(x2)
+	}
+	return
 }

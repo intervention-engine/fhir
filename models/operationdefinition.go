@@ -29,26 +29,26 @@ package models
 import "encoding/json"
 
 type OperationDefinition struct {
-	Id           string                                  `json:"id" bson:"_id"`
-	Url          string                                  `bson:"url,omitempty" json:"url,omitempty"`
-	Version      string                                  `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                                  `bson:"name,omitempty" json:"name,omitempty"`
-	Status       string                                  `bson:"status,omitempty" json:"status,omitempty"`
-	Kind         string                                  `bson:"kind,omitempty" json:"kind,omitempty"`
-	Experimental *bool                                   `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher    string                                  `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []OperationDefinitionContactComponent   `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date         *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
-	Description  string                                  `bson:"description,omitempty" json:"description,omitempty"`
-	Requirements string                                  `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Idempotent   *bool                                   `bson:"idempotent,omitempty" json:"idempotent,omitempty"`
-	Code         string                                  `bson:"code,omitempty" json:"code,omitempty"`
-	Notes        string                                  `bson:"notes,omitempty" json:"notes,omitempty"`
-	Base         *Reference                              `bson:"base,omitempty" json:"base,omitempty"`
-	System       *bool                                   `bson:"system,omitempty" json:"system,omitempty"`
-	Type         []string                                `bson:"type,omitempty" json:"type,omitempty"`
-	Instance     *bool                                   `bson:"instance,omitempty" json:"instance,omitempty"`
-	Parameter    []OperationDefinitionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
+	DomainResource `bson:",inline"`
+	Url            string                                  `bson:"url,omitempty" json:"url,omitempty"`
+	Version        string                                  `bson:"version,omitempty" json:"version,omitempty"`
+	Name           string                                  `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                                  `bson:"status,omitempty" json:"status,omitempty"`
+	Kind           string                                  `bson:"kind,omitempty" json:"kind,omitempty"`
+	Experimental   *bool                                   `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher      string                                  `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []OperationDefinitionContactComponent   `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date           *FHIRDateTime                           `bson:"date,omitempty" json:"date,omitempty"`
+	Description    string                                  `bson:"description,omitempty" json:"description,omitempty"`
+	Requirements   string                                  `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Idempotent     *bool                                   `bson:"idempotent,omitempty" json:"idempotent,omitempty"`
+	Code           string                                  `bson:"code,omitempty" json:"code,omitempty"`
+	Notes          string                                  `bson:"notes,omitempty" json:"notes,omitempty"`
+	Base           *Reference                              `bson:"base,omitempty" json:"base,omitempty"`
+	System         *bool                                   `bson:"system,omitempty" json:"system,omitempty"`
+	Type           []string                                `bson:"type,omitempty" json:"type,omitempty"`
+	Instance       *bool                                   `bson:"instance,omitempty" json:"instance,omitempty"`
+	Parameter      []OperationDefinitionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -61,6 +61,23 @@ func (resource *OperationDefinition) MarshalJSON() ([]byte, error) {
 		OperationDefinition: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "operationDefinition" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type operationDefinition OperationDefinition
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *OperationDefinition) UnmarshalJSON(data []byte) (err error) {
+	x2 := operationDefinition{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = OperationDefinition(x2)
+	}
+	return
 }
 
 type OperationDefinitionContactComponent struct {

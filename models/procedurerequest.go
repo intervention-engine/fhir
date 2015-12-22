@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ProcedureRequest struct {
-	Id                      string            `json:"id" bson:"_id"`
+	DomainResource          `bson:",inline"`
 	Identifier              []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Subject                 *Reference        `bson:"subject,omitempty" json:"subject,omitempty"`
 	Code                    *CodeableConcept  `bson:"code,omitempty" json:"code,omitempty"`
@@ -60,4 +60,21 @@ func (resource *ProcedureRequest) MarshalJSON() ([]byte, error) {
 		ProcedureRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "procedureRequest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type procedureRequest ProcedureRequest
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *ProcedureRequest) UnmarshalJSON(data []byte) (err error) {
+	x2 := procedureRequest{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = ProcedureRequest(x2)
+	}
+	return
 }

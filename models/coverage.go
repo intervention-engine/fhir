@@ -29,21 +29,21 @@ package models
 import "encoding/json"
 
 type Coverage struct {
-	Id           string       `json:"id" bson:"_id"`
-	Issuer       *Reference   `bson:"issuer,omitempty" json:"issuer,omitempty"`
-	Bin          *Identifier  `bson:"bin,omitempty" json:"bin,omitempty"`
-	Period       *Period      `bson:"period,omitempty" json:"period,omitempty"`
-	Type         *Coding      `bson:"type,omitempty" json:"type,omitempty"`
-	SubscriberId *Identifier  `bson:"subscriberId,omitempty" json:"subscriberId,omitempty"`
-	Identifier   []Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Group        string       `bson:"group,omitempty" json:"group,omitempty"`
-	Plan         string       `bson:"plan,omitempty" json:"plan,omitempty"`
-	SubPlan      string       `bson:"subPlan,omitempty" json:"subPlan,omitempty"`
-	Dependent    *uint32      `bson:"dependent,omitempty" json:"dependent,omitempty"`
-	Sequence     *uint32      `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Subscriber   *Reference   `bson:"subscriber,omitempty" json:"subscriber,omitempty"`
-	Network      *Identifier  `bson:"network,omitempty" json:"network,omitempty"`
-	Contract     []Reference  `bson:"contract,omitempty" json:"contract,omitempty"`
+	DomainResource `bson:",inline"`
+	Issuer         *Reference   `bson:"issuer,omitempty" json:"issuer,omitempty"`
+	Bin            *Identifier  `bson:"bin,omitempty" json:"bin,omitempty"`
+	Period         *Period      `bson:"period,omitempty" json:"period,omitempty"`
+	Type           *Coding      `bson:"type,omitempty" json:"type,omitempty"`
+	SubscriberId   *Identifier  `bson:"subscriberId,omitempty" json:"subscriberId,omitempty"`
+	Identifier     []Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Group          string       `bson:"group,omitempty" json:"group,omitempty"`
+	Plan           string       `bson:"plan,omitempty" json:"plan,omitempty"`
+	SubPlan        string       `bson:"subPlan,omitempty" json:"subPlan,omitempty"`
+	Dependent      *uint32      `bson:"dependent,omitempty" json:"dependent,omitempty"`
+	Sequence       *uint32      `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Subscriber     *Reference   `bson:"subscriber,omitempty" json:"subscriber,omitempty"`
+	Network        *Identifier  `bson:"network,omitempty" json:"network,omitempty"`
+	Contract       []Reference  `bson:"contract,omitempty" json:"contract,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -56,4 +56,21 @@ func (resource *Coverage) MarshalJSON() ([]byte, error) {
 		Coverage:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "coverage" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type coverage Coverage
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Coverage) UnmarshalJSON(data []byte) (err error) {
+	x2 := coverage{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Coverage(x2)
+	}
+	return
 }

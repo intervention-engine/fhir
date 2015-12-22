@@ -29,24 +29,24 @@ package models
 import "encoding/json"
 
 type ImplementationGuide struct {
-	Id           string                                   `json:"id" bson:"_id"`
-	Url          string                                   `bson:"url,omitempty" json:"url,omitempty"`
-	Version      string                                   `bson:"version,omitempty" json:"version,omitempty"`
-	Name         string                                   `bson:"name,omitempty" json:"name,omitempty"`
-	Status       string                                   `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental *bool                                    `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher    string                                   `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact      []ImplementationGuideContactComponent    `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date         *FHIRDateTime                            `bson:"date,omitempty" json:"date,omitempty"`
-	Description  string                                   `bson:"description,omitempty" json:"description,omitempty"`
-	UseContext   []CodeableConcept                        `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Copyright    string                                   `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	FhirVersion  string                                   `bson:"fhirVersion,omitempty" json:"fhirVersion,omitempty"`
-	Dependency   []ImplementationGuideDependencyComponent `bson:"dependency,omitempty" json:"dependency,omitempty"`
-	Package      []ImplementationGuidePackageComponent    `bson:"package,omitempty" json:"package,omitempty"`
-	Global       []ImplementationGuideGlobalComponent     `bson:"global,omitempty" json:"global,omitempty"`
-	Binary       []string                                 `bson:"binary,omitempty" json:"binary,omitempty"`
-	Page         *ImplementationGuidePageComponent        `bson:"page,omitempty" json:"page,omitempty"`
+	DomainResource `bson:",inline"`
+	Url            string                                   `bson:"url,omitempty" json:"url,omitempty"`
+	Version        string                                   `bson:"version,omitempty" json:"version,omitempty"`
+	Name           string                                   `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                                   `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental   *bool                                    `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Publisher      string                                   `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []ImplementationGuideContactComponent    `bson:"contact,omitempty" json:"contact,omitempty"`
+	Date           *FHIRDateTime                            `bson:"date,omitempty" json:"date,omitempty"`
+	Description    string                                   `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext     []CodeableConcept                        `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Copyright      string                                   `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	FhirVersion    string                                   `bson:"fhirVersion,omitempty" json:"fhirVersion,omitempty"`
+	Dependency     []ImplementationGuideDependencyComponent `bson:"dependency,omitempty" json:"dependency,omitempty"`
+	Package        []ImplementationGuidePackageComponent    `bson:"package,omitempty" json:"package,omitempty"`
+	Global         []ImplementationGuideGlobalComponent     `bson:"global,omitempty" json:"global,omitempty"`
+	Binary         []string                                 `bson:"binary,omitempty" json:"binary,omitempty"`
+	Page           *ImplementationGuidePageComponent        `bson:"page,omitempty" json:"page,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -59,6 +59,23 @@ func (resource *ImplementationGuide) MarshalJSON() ([]byte, error) {
 		ImplementationGuide: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "implementationGuide" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type implementationGuide ImplementationGuide
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *ImplementationGuide) UnmarshalJSON(data []byte) (err error) {
+	x2 := implementationGuide{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = ImplementationGuide(x2)
+	}
+	return
 }
 
 type ImplementationGuideContactComponent struct {

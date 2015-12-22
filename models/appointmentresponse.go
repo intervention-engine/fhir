@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type AppointmentResponse struct {
-	Id                string            `json:"id" bson:"_id"`
+	DomainResource    `bson:",inline"`
 	Identifier        []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Appointment       *Reference        `bson:"appointment,omitempty" json:"appointment,omitempty"`
 	Start             *FHIRDateTime     `bson:"start,omitempty" json:"start,omitempty"`
@@ -50,4 +50,21 @@ func (resource *AppointmentResponse) MarshalJSON() ([]byte, error) {
 		AppointmentResponse: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "appointmentResponse" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type appointmentResponse AppointmentResponse
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *AppointmentResponse) UnmarshalJSON(data []byte) (err error) {
+	x2 := appointmentResponse{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = AppointmentResponse(x2)
+	}
+	return
 }

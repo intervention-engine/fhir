@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DeviceComponent struct {
-	Id                      string                                            `json:"id" bson:"_id"`
+	DomainResource          `bson:",inline"`
 	Type                    *CodeableConcept                                  `bson:"type,omitempty" json:"type,omitempty"`
 	Identifier              *Identifier                                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	LastSystemChange        *FHIRDateTime                                     `bson:"lastSystemChange,omitempty" json:"lastSystemChange,omitempty"`
@@ -52,6 +52,23 @@ func (resource *DeviceComponent) MarshalJSON() ([]byte, error) {
 		DeviceComponent: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "deviceComponent" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type deviceComponent DeviceComponent
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *DeviceComponent) UnmarshalJSON(data []byte) (err error) {
+	x2 := deviceComponent{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = DeviceComponent(x2)
+	}
+	return
 }
 
 type DeviceComponentProductionSpecificationComponent struct {
