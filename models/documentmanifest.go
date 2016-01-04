@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type DocumentManifest struct {
-	Id               string                             `json:"id" bson:"_id"`
+	DomainResource   `bson:",inline"`
 	MasterIdentifier *Identifier                        `bson:"masterIdentifier,omitempty" json:"masterIdentifier,omitempty"`
 	Identifier       []Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Subject          *Reference                         `bson:"subject,omitempty" json:"subject,omitempty"`
@@ -54,6 +54,23 @@ func (resource *DocumentManifest) MarshalJSON() ([]byte, error) {
 		DocumentManifest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "documentManifest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type documentManifest DocumentManifest
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *DocumentManifest) UnmarshalJSON(data []byte) (err error) {
+	x2 := documentManifest{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = DocumentManifest(x2)
+	}
+	return
 }
 
 type DocumentManifestContentComponent struct {

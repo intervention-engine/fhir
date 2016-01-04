@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type SupplyRequest struct {
-	Id                    string                      `json:"id" bson:"_id"`
+	DomainResource        `bson:",inline"`
 	Patient               *Reference                  `bson:"patient,omitempty" json:"patient,omitempty"`
 	Source                *Reference                  `bson:"source,omitempty" json:"source,omitempty"`
 	Date                  *FHIRDateTime               `bson:"date,omitempty" json:"date,omitempty"`
@@ -53,6 +53,23 @@ func (resource *SupplyRequest) MarshalJSON() ([]byte, error) {
 		SupplyRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "supplyRequest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type supplyRequest SupplyRequest
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *SupplyRequest) UnmarshalJSON(data []byte) (err error) {
+	x2 := supplyRequest{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = SupplyRequest(x2)
+	}
+	return
 }
 
 type SupplyRequestWhenComponent struct {

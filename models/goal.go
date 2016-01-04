@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Goal struct {
-	Id                   string                 `json:"id" bson:"_id"`
+	DomainResource       `bson:",inline"`
 	Identifier           []Identifier           `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Subject              *Reference             `bson:"subject,omitempty" json:"subject,omitempty"`
 	StartDate            *FHIRDateTime          `bson:"startDate,omitempty" json:"startDate,omitempty"`
@@ -58,6 +58,23 @@ func (resource *Goal) MarshalJSON() ([]byte, error) {
 		Goal:         *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "goal" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type goal Goal
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Goal) UnmarshalJSON(data []byte) (err error) {
+	x2 := goal{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Goal(x2)
+	}
+	return
 }
 
 type GoalOutcomeComponent struct {

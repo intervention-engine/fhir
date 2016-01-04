@@ -29,20 +29,20 @@ package models
 import "encoding/json"
 
 type NamingSystem struct {
-	Id          string                          `json:"id" bson:"_id"`
-	Name        string                          `bson:"name,omitempty" json:"name,omitempty"`
-	Status      string                          `bson:"status,omitempty" json:"status,omitempty"`
-	Kind        string                          `bson:"kind,omitempty" json:"kind,omitempty"`
-	Publisher   string                          `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact     []NamingSystemContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
-	Responsible string                          `bson:"responsible,omitempty" json:"responsible,omitempty"`
-	Date        *FHIRDateTime                   `bson:"date,omitempty" json:"date,omitempty"`
-	Type        *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
-	Description string                          `bson:"description,omitempty" json:"description,omitempty"`
-	UseContext  []CodeableConcept               `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Usage       string                          `bson:"usage,omitempty" json:"usage,omitempty"`
-	UniqueId    []NamingSystemUniqueIdComponent `bson:"uniqueId,omitempty" json:"uniqueId,omitempty"`
-	ReplacedBy  *Reference                      `bson:"replacedBy,omitempty" json:"replacedBy,omitempty"`
+	DomainResource `bson:",inline"`
+	Name           string                          `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Kind           string                          `bson:"kind,omitempty" json:"kind,omitempty"`
+	Publisher      string                          `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []NamingSystemContactComponent  `bson:"contact,omitempty" json:"contact,omitempty"`
+	Responsible    string                          `bson:"responsible,omitempty" json:"responsible,omitempty"`
+	Date           *FHIRDateTime                   `bson:"date,omitempty" json:"date,omitempty"`
+	Type           *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
+	Description    string                          `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext     []CodeableConcept               `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Usage          string                          `bson:"usage,omitempty" json:"usage,omitempty"`
+	UniqueId       []NamingSystemUniqueIdComponent `bson:"uniqueId,omitempty" json:"uniqueId,omitempty"`
+	ReplacedBy     *Reference                      `bson:"replacedBy,omitempty" json:"replacedBy,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -55,6 +55,23 @@ func (resource *NamingSystem) MarshalJSON() ([]byte, error) {
 		NamingSystem: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "namingSystem" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type namingSystem NamingSystem
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *NamingSystem) UnmarshalJSON(data []byte) (err error) {
+	x2 := namingSystem{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = NamingSystem(x2)
+	}
+	return
 }
 
 type NamingSystemContactComponent struct {

@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ImagingStudy struct {
-	Id                string                        `json:"id" bson:"_id"`
+	DomainResource    `bson:",inline"`
 	Started           *FHIRDateTime                 `bson:"started,omitempty" json:"started,omitempty"`
 	Patient           *Reference                    `bson:"patient,omitempty" json:"patient,omitempty"`
 	Uid               string                        `bson:"uid,omitempty" json:"uid,omitempty"`
@@ -58,6 +58,23 @@ func (resource *ImagingStudy) MarshalJSON() ([]byte, error) {
 		ImagingStudy: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "imagingStudy" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type imagingStudy ImagingStudy
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *ImagingStudy) UnmarshalJSON(data []byte) (err error) {
+	x2 := imagingStudy{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = ImagingStudy(x2)
+	}
+	return
 }
 
 type ImagingStudySeriesComponent struct {

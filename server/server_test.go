@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
@@ -232,6 +233,12 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 	err = patientCollection.Find(bson.M{"_id": createdPatientId}).One(&patient)
 	util.CheckErr(err)
 	c.Assert(patient.Name[0].Family[0], Equals, "Daffy")
+	c.Assert(patient.Meta, NotNil)
+	c.Assert(patient.Meta.LastUpdated, NotNil)
+	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	since := time.Since(patient.Meta.LastUpdated.Time)
+	c.Assert(since.Hours() < float64(1), Equals, true)
+	c.Assert(since.Minutes() < float64(1), Equals, true)
 }
 
 func (s *ServerSuite) TestUpdatePatient(c *C) {
@@ -249,6 +256,12 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 	err = patientCollection.Find(bson.M{"_id": s.FixtureId}).One(&patient)
 	util.CheckErr(err)
 	c.Assert(patient.Name[0].Family[0], Equals, "Darkwing")
+	c.Assert(patient.Meta, NotNil)
+	c.Assert(patient.Meta.LastUpdated, NotNil)
+	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	since := time.Since(patient.Meta.LastUpdated.Time)
+	c.Assert(since.Hours() < float64(1), Equals, true)
+	c.Assert(since.Minutes() < float64(1), Equals, true)
 }
 
 func (s *ServerSuite) TestDeletePatient(c *C) {

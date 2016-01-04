@@ -7,6 +7,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
@@ -86,6 +87,15 @@ func (s *BatchControllerSuite) TestUploadPatientBundle(c *C) {
 
 		// full URL in response should contain the new ID
 		c.Assert(strings.HasSuffix(resEntry.FullUrl, s.getResourceID(resEntry)), Equals, true)
+
+		// resource should have lastUpdatedTime
+		m := reflect.ValueOf(resEntry.Resource).Elem().FieldByName("Meta").Interface().(*models.Meta)
+		c.Assert(m, NotNil)
+		c.Assert(m.LastUpdated, NotNil)
+		c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+		since := time.Since(m.LastUpdated.Time)
+		c.Assert(since.Hours() < float64(1), Equals, true)
+		c.Assert(since.Minutes() < float64(1), Equals, true)
 
 		// response should not contain the request
 		c.Assert(resEntry.Request, IsNil)

@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type MedicationStatement struct {
-	Id                          string                               `json:"id" bson:"_id"`
+	DomainResource              `bson:",inline"`
 	Identifier                  []Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Patient                     *Reference                           `bson:"patient,omitempty" json:"patient,omitempty"`
 	InformationSource           *Reference                           `bson:"informationSource,omitempty" json:"informationSource,omitempty"`
@@ -58,6 +58,23 @@ func (resource *MedicationStatement) MarshalJSON() ([]byte, error) {
 		MedicationStatement: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "medicationStatement" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type medicationStatement MedicationStatement
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *MedicationStatement) UnmarshalJSON(data []byte) (err error) {
+	x2 := medicationStatement{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = MedicationStatement(x2)
+	}
+	return
 }
 
 type MedicationStatementDosageComponent struct {

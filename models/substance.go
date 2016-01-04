@@ -29,13 +29,13 @@ package models
 import "encoding/json"
 
 type Substance struct {
-	Id          string                         `json:"id" bson:"_id"`
-	Identifier  []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Category    []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
-	Code        *CodeableConcept               `bson:"code,omitempty" json:"code,omitempty"`
-	Description string                         `bson:"description,omitempty" json:"description,omitempty"`
-	Instance    []SubstanceInstanceComponent   `bson:"instance,omitempty" json:"instance,omitempty"`
-	Ingredient  []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Category       []CodeableConcept              `bson:"category,omitempty" json:"category,omitempty"`
+	Code           *CodeableConcept               `bson:"code,omitempty" json:"code,omitempty"`
+	Description    string                         `bson:"description,omitempty" json:"description,omitempty"`
+	Instance       []SubstanceInstanceComponent   `bson:"instance,omitempty" json:"instance,omitempty"`
+	Ingredient     []SubstanceIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -48,6 +48,23 @@ func (resource *Substance) MarshalJSON() ([]byte, error) {
 		Substance:    *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "substance" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type substance Substance
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Substance) UnmarshalJSON(data []byte) (err error) {
+	x2 := substance{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Substance(x2)
+	}
+	return
 }
 
 type SubstanceInstanceComponent struct {

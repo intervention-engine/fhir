@@ -29,20 +29,20 @@ package models
 import "encoding/json"
 
 type Communication struct {
-	Id            string                          `json:"id" bson:"_id"`
-	Identifier    []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Category      *CodeableConcept                `bson:"category,omitempty" json:"category,omitempty"`
-	Sender        *Reference                      `bson:"sender,omitempty" json:"sender,omitempty"`
-	Recipient     []Reference                     `bson:"recipient,omitempty" json:"recipient,omitempty"`
-	Payload       []CommunicationPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
-	Medium        []CodeableConcept               `bson:"medium,omitempty" json:"medium,omitempty"`
-	Status        string                          `bson:"status,omitempty" json:"status,omitempty"`
-	Encounter     *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Sent          *FHIRDateTime                   `bson:"sent,omitempty" json:"sent,omitempty"`
-	Received      *FHIRDateTime                   `bson:"received,omitempty" json:"received,omitempty"`
-	Reason        []CodeableConcept               `bson:"reason,omitempty" json:"reason,omitempty"`
-	Subject       *Reference                      `bson:"subject,omitempty" json:"subject,omitempty"`
-	RequestDetail *Reference                      `bson:"requestDetail,omitempty" json:"requestDetail,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier                    `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Category       *CodeableConcept                `bson:"category,omitempty" json:"category,omitempty"`
+	Sender         *Reference                      `bson:"sender,omitempty" json:"sender,omitempty"`
+	Recipient      []Reference                     `bson:"recipient,omitempty" json:"recipient,omitempty"`
+	Payload        []CommunicationPayloadComponent `bson:"payload,omitempty" json:"payload,omitempty"`
+	Medium         []CodeableConcept               `bson:"medium,omitempty" json:"medium,omitempty"`
+	Status         string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Encounter      *Reference                      `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Sent           *FHIRDateTime                   `bson:"sent,omitempty" json:"sent,omitempty"`
+	Received       *FHIRDateTime                   `bson:"received,omitempty" json:"received,omitempty"`
+	Reason         []CodeableConcept               `bson:"reason,omitempty" json:"reason,omitempty"`
+	Subject        *Reference                      `bson:"subject,omitempty" json:"subject,omitempty"`
+	RequestDetail  *Reference                      `bson:"requestDetail,omitempty" json:"requestDetail,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -55,6 +55,23 @@ func (resource *Communication) MarshalJSON() ([]byte, error) {
 		Communication: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "communication" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type communication Communication
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Communication) UnmarshalJSON(data []byte) (err error) {
+	x2 := communication{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Communication(x2)
+	}
+	return
 }
 
 type CommunicationPayloadComponent struct {

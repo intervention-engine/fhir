@@ -29,17 +29,17 @@ package models
 import "encoding/json"
 
 type RelatedPerson struct {
-	Id           string           `json:"id" bson:"_id"`
-	Identifier   []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Patient      *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
-	Relationship *CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
-	Name         *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom      []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Gender       string           `bson:"gender,omitempty" json:"gender,omitempty"`
-	BirthDate    *FHIRDateTime    `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
-	Address      []Address        `bson:"address,omitempty" json:"address,omitempty"`
-	Photo        []Attachment     `bson:"photo,omitempty" json:"photo,omitempty"`
-	Period       *Period          `bson:"period,omitempty" json:"period,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Patient        *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
+	Relationship   *CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
+	Name           *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom        []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Gender         string           `bson:"gender,omitempty" json:"gender,omitempty"`
+	BirthDate      *FHIRDateTime    `bson:"birthDate,omitempty" json:"birthDate,omitempty"`
+	Address        []Address        `bson:"address,omitempty" json:"address,omitempty"`
+	Photo          []Attachment     `bson:"photo,omitempty" json:"photo,omitempty"`
+	Period         *Period          `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -52,4 +52,21 @@ func (resource *RelatedPerson) MarshalJSON() ([]byte, error) {
 		RelatedPerson: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "relatedPerson" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type relatedPerson RelatedPerson
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *RelatedPerson) UnmarshalJSON(data []byte) (err error) {
+	x2 := relatedPerson{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = RelatedPerson(x2)
+	}
+	return
 }

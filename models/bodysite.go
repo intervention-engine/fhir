@@ -29,13 +29,13 @@ package models
 import "encoding/json"
 
 type BodySite struct {
-	Id          string            `json:"id" bson:"_id"`
-	Patient     *Reference        `bson:"patient,omitempty" json:"patient,omitempty"`
-	Identifier  []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Code        *CodeableConcept  `bson:"code,omitempty" json:"code,omitempty"`
-	Modifier    []CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
-	Description string            `bson:"description,omitempty" json:"description,omitempty"`
-	Image       []Attachment      `bson:"image,omitempty" json:"image,omitempty"`
+	DomainResource `bson:",inline"`
+	Patient        *Reference        `bson:"patient,omitempty" json:"patient,omitempty"`
+	Identifier     []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Code           *CodeableConcept  `bson:"code,omitempty" json:"code,omitempty"`
+	Modifier       []CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	Description    string            `bson:"description,omitempty" json:"description,omitempty"`
+	Image          []Attachment      `bson:"image,omitempty" json:"image,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -48,4 +48,21 @@ func (resource *BodySite) MarshalJSON() ([]byte, error) {
 		BodySite:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "bodySite" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type bodySite BodySite
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *BodySite) UnmarshalJSON(data []byte) (err error) {
+	x2 := bodySite{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = BodySite(x2)
+	}
+	return
 }

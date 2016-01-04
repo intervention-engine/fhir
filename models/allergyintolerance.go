@@ -29,21 +29,21 @@ package models
 import "encoding/json"
 
 type AllergyIntolerance struct {
-	Id            string                                `json:"id" bson:"_id"`
-	Identifier    []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Onset         *FHIRDateTime                         `bson:"onset,omitempty" json:"onset,omitempty"`
-	RecordedDate  *FHIRDateTime                         `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
-	Recorder      *Reference                            `bson:"recorder,omitempty" json:"recorder,omitempty"`
-	Patient       *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
-	Reporter      *Reference                            `bson:"reporter,omitempty" json:"reporter,omitempty"`
-	Substance     *CodeableConcept                      `bson:"substance,omitempty" json:"substance,omitempty"`
-	Status        string                                `bson:"status,omitempty" json:"status,omitempty"`
-	Criticality   string                                `bson:"criticality,omitempty" json:"criticality,omitempty"`
-	Type          string                                `bson:"type,omitempty" json:"type,omitempty"`
-	Category      string                                `bson:"category,omitempty" json:"category,omitempty"`
-	LastOccurence *FHIRDateTime                         `bson:"lastOccurence,omitempty" json:"lastOccurence,omitempty"`
-	Note          *Annotation                           `bson:"note,omitempty" json:"note,omitempty"`
-	Reaction      []AllergyIntoleranceReactionComponent `bson:"reaction,omitempty" json:"reaction,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Onset          *FHIRDateTime                         `bson:"onset,omitempty" json:"onset,omitempty"`
+	RecordedDate   *FHIRDateTime                         `bson:"recordedDate,omitempty" json:"recordedDate,omitempty"`
+	Recorder       *Reference                            `bson:"recorder,omitempty" json:"recorder,omitempty"`
+	Patient        *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
+	Reporter       *Reference                            `bson:"reporter,omitempty" json:"reporter,omitempty"`
+	Substance      *CodeableConcept                      `bson:"substance,omitempty" json:"substance,omitempty"`
+	Status         string                                `bson:"status,omitempty" json:"status,omitempty"`
+	Criticality    string                                `bson:"criticality,omitempty" json:"criticality,omitempty"`
+	Type           string                                `bson:"type,omitempty" json:"type,omitempty"`
+	Category       string                                `bson:"category,omitempty" json:"category,omitempty"`
+	LastOccurence  *FHIRDateTime                         `bson:"lastOccurence,omitempty" json:"lastOccurence,omitempty"`
+	Note           *Annotation                           `bson:"note,omitempty" json:"note,omitempty"`
+	Reaction       []AllergyIntoleranceReactionComponent `bson:"reaction,omitempty" json:"reaction,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -56,6 +56,23 @@ func (resource *AllergyIntolerance) MarshalJSON() ([]byte, error) {
 		AllergyIntolerance: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "allergyIntolerance" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type allergyIntolerance AllergyIntolerance
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *AllergyIntolerance) UnmarshalJSON(data []byte) (err error) {
+	x2 := allergyIntolerance{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = AllergyIntolerance(x2)
+	}
+	return
 }
 
 type AllergyIntoleranceReactionComponent struct {

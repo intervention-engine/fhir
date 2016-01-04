@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Group struct {
-	Id             string                         `json:"id" bson:"_id"`
+	DomainResource `bson:",inline"`
 	Identifier     []Identifier                   `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type           string                         `bson:"type,omitempty" json:"type,omitempty"`
 	Actual         *bool                          `bson:"actual,omitempty" json:"actual,omitempty"`
@@ -50,6 +50,23 @@ func (resource *Group) MarshalJSON() ([]byte, error) {
 		Group:        *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "group" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type group Group
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Group) UnmarshalJSON(data []byte) (err error) {
+	x2 := group{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Group(x2)
+	}
+	return
 }
 
 type GroupCharacteristicComponent struct {

@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Contract struct {
-	Id                string                                `json:"id" bson:"_id"`
+	DomainResource    `bson:",inline"`
 	Identifier        *Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Issued            *FHIRDateTime                         `bson:"issued,omitempty" json:"issued,omitempty"`
 	Applies           *Period                               `bson:"applies,omitempty" json:"applies,omitempty"`
@@ -61,6 +61,23 @@ func (resource *Contract) MarshalJSON() ([]byte, error) {
 		Contract:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "contract" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type contract Contract
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Contract) UnmarshalJSON(data []byte) (err error) {
+	x2 := contract{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Contract(x2)
+	}
+	return
 }
 
 type ContractActorComponent struct {

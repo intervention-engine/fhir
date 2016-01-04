@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Binary struct {
-	Id          string `json:"id" bson:"_id"`
+	Resource    `bson:",inline"`
 	ContentType string `bson:"contentType,omitempty" json:"contentType,omitempty"`
 	Content     string `bson:"content,omitempty" json:"content,omitempty"`
 }

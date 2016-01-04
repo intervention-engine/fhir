@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Conformance struct {
-	Id             string                              `json:"id" bson:"_id"`
+	DomainResource `bson:",inline"`
 	Url            string                              `bson:"url,omitempty" json:"url,omitempty"`
 	Version        string                              `bson:"version,omitempty" json:"version,omitempty"`
 	Name           string                              `bson:"name,omitempty" json:"name,omitempty"`
@@ -63,6 +63,23 @@ func (resource *Conformance) MarshalJSON() ([]byte, error) {
 		Conformance:  *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "conformance" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type conformance Conformance
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Conformance) UnmarshalJSON(data []byte) (err error) {
+	x2 := conformance{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Conformance(x2)
+	}
+	return
 }
 
 type ConformanceContactComponent struct {

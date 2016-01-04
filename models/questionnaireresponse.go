@@ -29,16 +29,16 @@ package models
 import "encoding/json"
 
 type QuestionnaireResponse struct {
-	Id            string                               `json:"id" bson:"_id"`
-	Identifier    *Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Questionnaire *Reference                           `bson:"questionnaire,omitempty" json:"questionnaire,omitempty"`
-	Status        string                               `bson:"status,omitempty" json:"status,omitempty"`
-	Subject       *Reference                           `bson:"subject,omitempty" json:"subject,omitempty"`
-	Author        *Reference                           `bson:"author,omitempty" json:"author,omitempty"`
-	Authored      *FHIRDateTime                        `bson:"authored,omitempty" json:"authored,omitempty"`
-	Source        *Reference                           `bson:"source,omitempty" json:"source,omitempty"`
-	Encounter     *Reference                           `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Group         *QuestionnaireResponseGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     *Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Questionnaire  *Reference                           `bson:"questionnaire,omitempty" json:"questionnaire,omitempty"`
+	Status         string                               `bson:"status,omitempty" json:"status,omitempty"`
+	Subject        *Reference                           `bson:"subject,omitempty" json:"subject,omitempty"`
+	Author         *Reference                           `bson:"author,omitempty" json:"author,omitempty"`
+	Authored       *FHIRDateTime                        `bson:"authored,omitempty" json:"authored,omitempty"`
+	Source         *Reference                           `bson:"source,omitempty" json:"source,omitempty"`
+	Encounter      *Reference                           `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Group          *QuestionnaireResponseGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -51,6 +51,23 @@ func (resource *QuestionnaireResponse) MarshalJSON() ([]byte, error) {
 		QuestionnaireResponse: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "questionnaireResponse" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type questionnaireResponse QuestionnaireResponse
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *QuestionnaireResponse) UnmarshalJSON(data []byte) (err error) {
+	x2 := questionnaireResponse{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = QuestionnaireResponse(x2)
+	}
+	return
 }
 
 type QuestionnaireResponseGroupComponent struct {

@@ -29,17 +29,17 @@ package models
 import "encoding/json"
 
 type Provenance struct {
-	Id        string                      `json:"id" bson:"_id"`
-	Target    []Reference                 `bson:"target,omitempty" json:"target,omitempty"`
-	Period    *Period                     `bson:"period,omitempty" json:"period,omitempty"`
-	Recorded  *FHIRDateTime               `bson:"recorded,omitempty" json:"recorded,omitempty"`
-	Reason    []CodeableConcept           `bson:"reason,omitempty" json:"reason,omitempty"`
-	Activity  *CodeableConcept            `bson:"activity,omitempty" json:"activity,omitempty"`
-	Location  *Reference                  `bson:"location,omitempty" json:"location,omitempty"`
-	Policy    []string                    `bson:"policy,omitempty" json:"policy,omitempty"`
-	Agent     []ProvenanceAgentComponent  `bson:"agent,omitempty" json:"agent,omitempty"`
-	Entity    []ProvenanceEntityComponent `bson:"entity,omitempty" json:"entity,omitempty"`
-	Signature []Signature                 `bson:"signature,omitempty" json:"signature,omitempty"`
+	DomainResource `bson:",inline"`
+	Target         []Reference                 `bson:"target,omitempty" json:"target,omitempty"`
+	Period         *Period                     `bson:"period,omitempty" json:"period,omitempty"`
+	Recorded       *FHIRDateTime               `bson:"recorded,omitempty" json:"recorded,omitempty"`
+	Reason         []CodeableConcept           `bson:"reason,omitempty" json:"reason,omitempty"`
+	Activity       *CodeableConcept            `bson:"activity,omitempty" json:"activity,omitempty"`
+	Location       *Reference                  `bson:"location,omitempty" json:"location,omitempty"`
+	Policy         []string                    `bson:"policy,omitempty" json:"policy,omitempty"`
+	Agent          []ProvenanceAgentComponent  `bson:"agent,omitempty" json:"agent,omitempty"`
+	Entity         []ProvenanceEntityComponent `bson:"entity,omitempty" json:"entity,omitempty"`
+	Signature      []Signature                 `bson:"signature,omitempty" json:"signature,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -52,6 +52,23 @@ func (resource *Provenance) MarshalJSON() ([]byte, error) {
 		Provenance:   *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "provenance" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type provenance Provenance
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Provenance) UnmarshalJSON(data []byte) (err error) {
+	x2 := provenance{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Provenance(x2)
+	}
+	return
 }
 
 type ProvenanceAgentComponent struct {

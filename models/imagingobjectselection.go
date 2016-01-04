@@ -29,14 +29,14 @@ package models
 import "encoding/json"
 
 type ImagingObjectSelection struct {
-	Id            string                                 `json:"id" bson:"_id"`
-	Uid           string                                 `bson:"uid,omitempty" json:"uid,omitempty"`
-	Patient       *Reference                             `bson:"patient,omitempty" json:"patient,omitempty"`
-	Title         *CodeableConcept                       `bson:"title,omitempty" json:"title,omitempty"`
-	Description   string                                 `bson:"description,omitempty" json:"description,omitempty"`
-	Author        *Reference                             `bson:"author,omitempty" json:"author,omitempty"`
-	AuthoringTime *FHIRDateTime                          `bson:"authoringTime,omitempty" json:"authoringTime,omitempty"`
-	Study         []ImagingObjectSelectionStudyComponent `bson:"study,omitempty" json:"study,omitempty"`
+	DomainResource `bson:",inline"`
+	Uid            string                                 `bson:"uid,omitempty" json:"uid,omitempty"`
+	Patient        *Reference                             `bson:"patient,omitempty" json:"patient,omitempty"`
+	Title          *CodeableConcept                       `bson:"title,omitempty" json:"title,omitempty"`
+	Description    string                                 `bson:"description,omitempty" json:"description,omitempty"`
+	Author         *Reference                             `bson:"author,omitempty" json:"author,omitempty"`
+	AuthoringTime  *FHIRDateTime                          `bson:"authoringTime,omitempty" json:"authoringTime,omitempty"`
+	Study          []ImagingObjectSelectionStudyComponent `bson:"study,omitempty" json:"study,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -49,6 +49,23 @@ func (resource *ImagingObjectSelection) MarshalJSON() ([]byte, error) {
 		ImagingObjectSelection: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "imagingObjectSelection" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type imagingObjectSelection ImagingObjectSelection
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *ImagingObjectSelection) UnmarshalJSON(data []byte) (err error) {
+	x2 := imagingObjectSelection{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = ImagingObjectSelection(x2)
+	}
+	return
 }
 
 type ImagingObjectSelectionStudyComponent struct {

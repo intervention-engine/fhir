@@ -1,0 +1,48 @@
+{
+  "resourceType": "Condition",
+  "id": "8664777288161060797",
+  "meta": {
+    "versionId": "8664777288161060797-1",
+    "lastUpdated": "2014-02-12T07:30:00-05:00",
+    "tag": [{
+      "system": "http://intervention-engine.org/tag",
+      "code": "FOO"
+    }, {
+      "system": "http://intervention-engine.org/tag",
+      "code": "BAR"
+    }]
+  },
+  "text": {
+    "status": "additional",
+    "div": "<div>HTML in JavaScript.  Wow.</div>"
+  },
+  "contained": [{
+    "resourceType": "Practitioner",
+    "id": "pract1",
+    "name": {
+      "family": ["Doofenshmirtz"],
+      "given": ["Heinz"],
+      "suffix": ["MD"]
+    }
+  }],
+  "patient": {
+    "reference": "https://example.com/base/Patient/4954037118555241963"
+  },
+  "asserter": {
+    "reference": "#pract1"
+  },
+  "code": {
+    "coding": [{
+      "system": "http://snomed.info/sct",
+      "code": "10091002"
+    }, {
+      "system": "http://hl7.org/fhir/sid/icd-9",
+      "code": "428.0"
+    }, {
+      "system": "http://hl7.org/fhir/sid/icd-10",
+      "code": "I50.1"
+    }],
+    "text": "Heart failure"
+  },
+  "onsetDateTime": "2012-03-01T07:00:00-05:00"
+}

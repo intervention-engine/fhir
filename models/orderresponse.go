@@ -29,14 +29,14 @@ package models
 import "encoding/json"
 
 type OrderResponse struct {
-	Id          string        `json:"id" bson:"_id"`
-	Identifier  []Identifier  `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Request     *Reference    `bson:"request,omitempty" json:"request,omitempty"`
-	Date        *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
-	Who         *Reference    `bson:"who,omitempty" json:"who,omitempty"`
-	OrderStatus string        `bson:"orderStatus,omitempty" json:"orderStatus,omitempty"`
-	Description string        `bson:"description,omitempty" json:"description,omitempty"`
-	Fulfillment []Reference   `bson:"fulfillment,omitempty" json:"fulfillment,omitempty"`
+	DomainResource `bson:",inline"`
+	Identifier     []Identifier  `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Request        *Reference    `bson:"request,omitempty" json:"request,omitempty"`
+	Date           *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
+	Who            *Reference    `bson:"who,omitempty" json:"who,omitempty"`
+	OrderStatus    string        `bson:"orderStatus,omitempty" json:"orderStatus,omitempty"`
+	Description    string        `bson:"description,omitempty" json:"description,omitempty"`
+	Fulfillment    []Reference   `bson:"fulfillment,omitempty" json:"fulfillment,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -49,4 +49,21 @@ func (resource *OrderResponse) MarshalJSON() ([]byte, error) {
 		OrderResponse: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "orderResponse" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type orderResponse OrderResponse
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *OrderResponse) UnmarshalJSON(data []byte) (err error) {
+	x2 := orderResponse{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = OrderResponse(x2)
+	}
+	return
 }

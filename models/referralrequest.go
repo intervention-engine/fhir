@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type ReferralRequest struct {
-	Id                    string            `json:"id" bson:"_id"`
+	DomainResource        `bson:",inline"`
 	Status                string            `bson:"status,omitempty" json:"status,omitempty"`
 	Identifier            []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Date                  *FHIRDateTime     `bson:"date,omitempty" json:"date,omitempty"`
@@ -58,4 +58,21 @@ func (resource *ReferralRequest) MarshalJSON() ([]byte, error) {
 		ReferralRequest: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "referralRequest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type referralRequest ReferralRequest
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *ReferralRequest) UnmarshalJSON(data []byte) (err error) {
+	x2 := referralRequest{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = ReferralRequest(x2)
+	}
+	return
 }

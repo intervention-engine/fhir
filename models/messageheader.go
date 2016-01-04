@@ -29,18 +29,18 @@ package models
 import "encoding/json"
 
 type MessageHeader struct {
-	Id          string                                     `json:"id" bson:"_id"`
-	Timestamp   *FHIRDateTime                              `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
-	Event       *Coding                                    `bson:"event,omitempty" json:"event,omitempty"`
-	Response    *MessageHeaderResponseComponent            `bson:"response,omitempty" json:"response,omitempty"`
-	Source      *MessageHeaderMessageSourceComponent       `bson:"source,omitempty" json:"source,omitempty"`
-	Destination []MessageHeaderMessageDestinationComponent `bson:"destination,omitempty" json:"destination,omitempty"`
-	Enterer     *Reference                                 `bson:"enterer,omitempty" json:"enterer,omitempty"`
-	Author      *Reference                                 `bson:"author,omitempty" json:"author,omitempty"`
-	Receiver    *Reference                                 `bson:"receiver,omitempty" json:"receiver,omitempty"`
-	Responsible *Reference                                 `bson:"responsible,omitempty" json:"responsible,omitempty"`
-	Reason      *CodeableConcept                           `bson:"reason,omitempty" json:"reason,omitempty"`
-	Data        []Reference                                `bson:"data,omitempty" json:"data,omitempty"`
+	DomainResource `bson:",inline"`
+	Timestamp      *FHIRDateTime                              `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
+	Event          *Coding                                    `bson:"event,omitempty" json:"event,omitempty"`
+	Response       *MessageHeaderResponseComponent            `bson:"response,omitempty" json:"response,omitempty"`
+	Source         *MessageHeaderMessageSourceComponent       `bson:"source,omitempty" json:"source,omitempty"`
+	Destination    []MessageHeaderMessageDestinationComponent `bson:"destination,omitempty" json:"destination,omitempty"`
+	Enterer        *Reference                                 `bson:"enterer,omitempty" json:"enterer,omitempty"`
+	Author         *Reference                                 `bson:"author,omitempty" json:"author,omitempty"`
+	Receiver       *Reference                                 `bson:"receiver,omitempty" json:"receiver,omitempty"`
+	Responsible    *Reference                                 `bson:"responsible,omitempty" json:"responsible,omitempty"`
+	Reason         *CodeableConcept                           `bson:"reason,omitempty" json:"reason,omitempty"`
+	Data           []Reference                                `bson:"data,omitempty" json:"data,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -53,6 +53,23 @@ func (resource *MessageHeader) MarshalJSON() ([]byte, error) {
 		MessageHeader: *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "messageHeader" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type messageHeader MessageHeader
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *MessageHeader) UnmarshalJSON(data []byte) (err error) {
+	x2 := messageHeader{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = MessageHeader(x2)
+	}
+	return
 }
 
 type MessageHeaderResponseComponent struct {

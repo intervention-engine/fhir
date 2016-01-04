@@ -29,7 +29,7 @@ package models
 import "encoding/json"
 
 type Schedule struct {
-	Id              string            `json:"id" bson:"_id"`
+	DomainResource  `bson:",inline"`
 	Identifier      []Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Type            []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Actor           *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
@@ -47,4 +47,21 @@ func (resource *Schedule) MarshalJSON() ([]byte, error) {
 		Schedule:     *resource,
 	}
 	return json.Marshal(x)
+}
+
+// The "schedule" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type schedule Schedule
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Schedule) UnmarshalJSON(data []byte) (err error) {
+	x2 := schedule{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		if x2.Contained != nil {
+			for i := range x2.Contained {
+				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+			}
+		}
+		*x = Schedule(x2)
+	}
+	return
 }

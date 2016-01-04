@@ -119,7 +119,8 @@ func (s *UploadSuite) TestExternalReferences(c *C) {
 	}))
 	defer ts.Close()
 
-	condition := &models.Condition{Id: "123"}
+	condition := &models.Condition{}
+	condition.Id = "123"
 	condition.Patient = &models.Reference{Reference: "Patient/0"}
 
 	// Upload the resource
@@ -154,8 +155,10 @@ func (s *UploadSuite) TestUnorderedDependencies(c *C) {
 	}))
 	defer ts.Close()
 
-	patient := &models.Patient{Id: "a1"}
-	condition := &models.Condition{Id: "b2"}
+	patient := &models.Patient{}
+	patient.Id = "a1"
+	condition := &models.Condition{}
+	condition.Id = "b2"
 	condition.Patient = &models.Reference{Reference: "cid:a1"}
 
 	// Upload the resources in the wrong order
