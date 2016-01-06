@@ -9,9 +9,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Account": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"balance": SearchParamInfo{
@@ -95,9 +123,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"AllergyIntolerance": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -222,9 +278,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Appointment": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"actor": SearchParamInfo{
@@ -304,9 +388,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"AppointmentResponse": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"actor": SearchParamInfo{
@@ -382,9 +494,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"AuditEvent": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"action": SearchParamInfo{
@@ -524,9 +664,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Basic": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"author": SearchParamInfo{
@@ -586,9 +754,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Binary": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"contenttype": SearchParamInfo{
@@ -602,9 +798,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"BodySite": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -635,9 +859,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Bundle": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"composition": SearchParamInfo{
@@ -665,9 +917,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"CarePlan": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"activitycode": SearchParamInfo{
@@ -809,9 +1089,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Claim": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -859,9 +1167,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ClaimResponse": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -875,9 +1211,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ClinicalImpression": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"action": SearchParamInfo{
@@ -1029,9 +1393,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Communication": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -1149,9 +1541,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"CommunicationRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -1277,9 +1697,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Composition": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"attester": SearchParamInfo{
@@ -1421,9 +1869,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ConceptMap": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"context": SearchParamInfo{
@@ -1565,9 +2041,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Condition": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"asserter": SearchParamInfo{
@@ -1683,9 +2187,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Conformance": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"date": SearchParamInfo{
@@ -1810,9 +2342,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Contract": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"actor": SearchParamInfo{
@@ -1877,9 +2437,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Coverage": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"dependent": SearchParamInfo{
@@ -1945,9 +2533,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DataElement": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -2031,9 +2647,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DetectedIssue": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"author": SearchParamInfo{
@@ -2092,9 +2736,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Device": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -2173,9 +2845,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DeviceComponent": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"parent": SearchParamInfo{
@@ -2209,9 +2909,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DeviceMetric": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -2259,9 +2987,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DeviceUseRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"device": SearchParamInfo{
@@ -2298,9 +3054,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DeviceUseStatement": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"device": SearchParamInfo{
@@ -2337,9 +3121,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DiagnosticOrder": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"actor": SearchParamInfo{
@@ -2491,9 +3303,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DiagnosticReport": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -2636,9 +3476,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DocumentManifest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"author": SearchParamInfo{
@@ -2765,9 +3633,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"DocumentReference": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"authenticator": SearchParamInfo{
@@ -2990,9 +3886,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"EligibilityRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -3006,9 +3930,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"EligibilityResponse": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -3022,9 +3974,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Encounter": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"appointment": SearchParamInfo{
@@ -3206,9 +4186,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"EnrollmentRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -3242,9 +4250,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"EnrollmentResponse": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -3258,9 +4294,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"EpisodeOfCare": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"care-manager": SearchParamInfo{
@@ -3356,9 +4420,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ExplanationOfBenefit": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -3372,9 +4464,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"FamilyMemberHistory": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -3426,9 +4546,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Flag": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"author": SearchParamInfo{
@@ -3489,9 +4637,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Goal": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -3548,9 +4724,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Group": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"actual": SearchParamInfo{
@@ -3629,9 +4833,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"HealthcareService": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"characteristic": SearchParamInfo{
@@ -3700,9 +4932,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ImagingObjectSelection": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"author": SearchParamInfo{
@@ -3761,9 +5021,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ImagingStudy": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"accession": SearchParamInfo{
@@ -3846,9 +5134,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Immunization": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"date": SearchParamInfo{
@@ -3985,9 +5301,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ImmunizationRecommendation": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"date": SearchParamInfo{
@@ -4067,9 +5411,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ImplementationGuide": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"context": SearchParamInfo{
@@ -4146,9 +5518,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"List": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -4252,9 +5652,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Location": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"address": SearchParamInfo{
@@ -4359,9 +5787,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Media": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"created": SearchParamInfo{
@@ -4437,9 +5893,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Medication": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -4498,9 +5982,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"MedicationAdministration": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -4605,9 +6117,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"MedicationDispense": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -4727,9 +6267,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"MedicationOrder": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -4804,9 +6372,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"MedicationStatement": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -4874,9 +6470,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"MessageHeader": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"author": SearchParamInfo{
@@ -5001,9 +6625,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"NamingSystem": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"contact": SearchParamInfo{
@@ -5111,9 +6763,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"NutritionOrder": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"additive": SearchParamInfo{
@@ -5199,9 +6879,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Observation": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -5424,9 +7132,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"OperationDefinition": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"base": SearchParamInfo{
@@ -5530,18 +7266,74 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"OperationOutcome": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 	},
 	"Order": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"date": SearchParamInfo{
@@ -5632,9 +7424,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"OrderResponse": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -5694,9 +7514,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Organization": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"active": SearchParamInfo{
@@ -5790,9 +7638,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Patient": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"active": SearchParamInfo{
@@ -5978,9 +7854,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"PaymentNotice": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -5994,9 +7898,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"PaymentReconciliation": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -6010,9 +7942,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Person": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"address": SearchParamInfo{
@@ -6164,9 +8124,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Practitioner": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"address": SearchParamInfo{
@@ -6313,9 +8301,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Procedure": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -6398,9 +8414,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ProcedureRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"encounter": SearchParamInfo{
@@ -6471,9 +8515,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ProcessRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"action": SearchParamInfo{
@@ -6514,9 +8586,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ProcessResponse": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -6570,9 +8670,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Provenance": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"agent": SearchParamInfo{
@@ -6665,9 +8793,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Questionnaire": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -6723,9 +8879,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"QuestionnaireResponse": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"author": SearchParamInfo{
@@ -6811,9 +8995,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ReferralRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"date": SearchParamInfo{
@@ -6888,9 +9100,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"RelatedPerson": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"address": SearchParamInfo{
@@ -6999,9 +9239,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"RiskAssessment": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"condition": SearchParamInfo{
@@ -7081,9 +9349,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Schedule": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"actor": SearchParamInfo{
@@ -7126,9 +9422,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"SearchParameter": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"base": SearchParamInfo{
@@ -7184,9 +9508,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Slot": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"fb-type": SearchParamInfo{
@@ -7231,9 +9583,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Specimen": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"accession": SearchParamInfo{
@@ -7333,9 +9713,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"StructureDefinition": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"abstract": SearchParamInfo{
@@ -7494,9 +9902,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Subscription": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"contact": SearchParamInfo{
@@ -7552,9 +9988,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"Substance": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"category": SearchParamInfo{
@@ -7613,9 +10077,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"SupplyDelivery": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"identifier": SearchParamInfo{
@@ -7666,9 +10158,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"SupplyRequest": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"date": SearchParamInfo{
@@ -7735,9 +10255,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"TestScript": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"description": SearchParamInfo{
@@ -7793,9 +10341,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"ValueSet": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"code": SearchParamInfo{
@@ -7893,9 +10469,37 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 	"VisionPrescription": map[string]SearchParamInfo{
 		"_id": SearchParamInfo{
 			Name: "_id",
-			Type: "string",
+			Type: "token",
 			Paths: []SearchParamPath{
-				SearchParamPath{Path: "_id", Type: "string"},
+				SearchParamPath{Path: "_id", Type: "id"},
+			},
+		},
+		"_lastUpdated": SearchParamInfo{
+			Name: "_lastUpdated",
+			Type: "date",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.lastUpdated", Type: "instant"},
+			},
+		},
+		"_profile": SearchParamInfo{
+			Name: "_profile",
+			Type: "uri",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]profile", Type: "uri"},
+			},
+		},
+		"_security": SearchParamInfo{
+			Name: "_security",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]security", Type: "Coding"},
+			},
+		},
+		"_tag": SearchParamInfo{
+			Name: "_tag",
+			Type: "token",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "meta.[]tag", Type: "Coding"},
 			},
 		},
 		"datewritten": SearchParamInfo{
