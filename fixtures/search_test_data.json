@@ -197,6 +197,9 @@
 }, {
 	"resourceType": "Condition",
 	"id": "4072118967138896162",
+	"meta": {
+		"tag": [{ "system": "foo", "code": "bar" }]
+	},
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},

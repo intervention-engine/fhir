@@ -917,7 +917,37 @@ func (m *MongoSearchSuite) TestConditionIdQuery(c *C) {
 	c.Assert(cond, DeepEquals, cond2)
 }
 
-// TODO: Test special searches: _content, _lastUpdated, _profile, _query, _security, _tag, _text
+func (m *MongoSearchSuite) TestConditionTagQueryObject(c *C) {
+	q := Query{"Condition", "_tag=foo|bar"}
+
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"meta.tag": bson.M{
+			"$elemMatch": bson.M{
+				"system": bson.RegEx{Pattern: "^foo$", Options: "i"},
+				"code":   bson.RegEx{Pattern: "^bar$", Options: "i"},
+			}},
+	})
+}
+
+func (m *MongoSearchSuite) TestConditionTagQuery(c *C) {
+	q := Query{"Condition", "_tag=foo|bar"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+
+	cond := &models.Condition{}
+	err = mq.One(cond)
+	util.CheckErr(err)
+
+	cond2 := &models.Condition{}
+	err = m.Session.DB("fhir-test").C("conditions").FindId("4072118967138896162").One(cond2)
+
+	c.Assert(cond, DeepEquals, cond2)
+}
+
+// TODO: Test special searches: _content, _lastUpdated, _profile, _query, _security, _text
 
 // Test searches with multiple values
 func (m *MongoSearchSuite) TestConditionMultipleCodesQueryObject(c *C) {
