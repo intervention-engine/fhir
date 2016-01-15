@@ -11,10 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/codegangsta/negroni"
-	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
 	"github.com/intervention-engine/fhir/search"
+	"github.com/labstack/echo"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
 	"gopkg.in/mgo.v2"
@@ -23,7 +22,7 @@ import (
 
 type ServerSuite struct {
 	Session   *mgo.Session
-	Router    *mux.Router
+	Echo      *echo.Echo
 	Server    *httptest.Server
 	FixtureId string
 }
@@ -41,13 +40,11 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 	Database = s.Session.DB("fhir-test")
 
 	// Build routes for testing
-	s.Router = mux.NewRouter()
-	s.Router.StrictSlash(true)
-	s.Router.KeepContext = true
-	RegisterRoutes(s.Router, make(map[string][]negroni.Handler))
+	s.Echo = echo.New()
+	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware))
 
 	// Create httptest server
-	s.Server = httptest.NewServer(s.Router)
+	s.Server = httptest.NewServer(s.Echo.Router())
 }
 
 func (s *ServerSuite) SetUpTest(c *C) {
@@ -248,6 +245,7 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+s.FixtureId, data)
+	req.Header.Add("Content-Type", "application/json")
 	util.CheckErr(err)
 	_, err = client.Do(req)
 

@@ -9,9 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/codegangsta/negroni"
-	"github.com/gorilla/mux"
 	"github.com/intervention-engine/fhir/models"
+	"github.com/labstack/echo"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
 	"gopkg.in/mgo.v2"
@@ -20,7 +19,7 @@ import (
 
 type BatchControllerSuite struct {
 	Session *mgo.Session
-	Router  *mux.Router
+	Echo    *echo.Echo
 	Server  *httptest.Server
 }
 
@@ -35,13 +34,11 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 	Database = s.Session.DB("fhir-test")
 
 	// Build routes for testing
-	s.Router = mux.NewRouter()
-	s.Router.StrictSlash(true)
-	s.Router.KeepContext = true
-	RegisterRoutes(s.Router, make(map[string][]negroni.Handler))
+	s.Echo = echo.New()
+	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware))
 
 	// Create httptest server
-	s.Server = httptest.NewServer(s.Router)
+	s.Server = httptest.NewServer(s.Echo.Router())
 }
 
 func (s *BatchControllerSuite) TearDownSuite(c *C) {
