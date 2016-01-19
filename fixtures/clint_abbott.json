@@ -10,6 +10,7 @@
 }, {
 	"resourceType": "Encounter",
 	"id": "6648204100111347627",
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://www.ama-assn.org/go/cpt",
@@ -26,6 +27,7 @@
 }, {
 	"resourceType": "Condition",
 	"id": "8664777288161029461",
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "cid:8374637118556222846"
 	},
@@ -46,6 +48,7 @@
 }, {
 	"resourceType": "Encounter",
 	"id": "6648204100111363635",
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://www.ama-assn.org/go/cpt",
@@ -62,6 +65,7 @@
 }, {
 	"resourceType": "Condition",
 	"id": "8664777288161045458",
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "cid:8374637118556222846"
 	},
@@ -82,6 +86,7 @@
 }, {
 	"resourceType": "MedicationStatement",
 	"id": "3284098338643295123",
+	"status": "active",
 	"patient": {
 		"reference": "cid:8374637118556222846"
 	},
@@ -98,6 +103,7 @@
 }, {
 	"resourceType": "Encounter",
 	"id": "6648204100111375786",
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://www.ama-assn.org/go/cpt",
@@ -114,6 +120,7 @@
 }, {
 	"resourceType": "Encounter",
 	"id": "6648204100111335754",
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://www.ama-assn.org/go/cpt",

@@ -48,6 +48,7 @@
 		"system": "http://example.com",
 		"value": "a"
 	}],
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://www.ama-assn.org/go/cpt",
@@ -72,6 +73,7 @@
 		"system": "http://example.com",
 		"value": "b"
 	}],
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://www.ama-assn.org/go/cpt",
@@ -89,6 +91,7 @@
 }, {
 	"resourceType": "Encounter",
 	"id": "8321553112379843342",
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://www.ama-assn.org/go/cpt",
@@ -106,6 +109,7 @@
 }, {
 	"resourceType": "Encounter",
 	"id": "5982681932300579709",
+	"status": "finished",
 	"type": [{
 		"coding": [{
 			"system": "http://snomed.info/sct",
@@ -123,6 +127,7 @@
 }, {
 	"resourceType": "Condition",
 	"id": "8664777288161060797",
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -146,6 +151,7 @@
 }, {
 	"resourceType": "Condition",
 	"id": "4248502720904412195",
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -160,6 +166,7 @@
 }, {
 	"resourceType": "Condition",
 	"id": "8382342521862968868",
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -180,6 +187,7 @@
 }, {
 	"resourceType": "Condition",
 	"id": "5852315345721171557",
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -203,6 +211,7 @@
 	"meta": {
 		"tag": [{ "system": "foo", "code": "bar" }]
 	},
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -223,6 +232,7 @@
 }, {
 	"resourceType": "Condition",
 	"id": "8664777288161038467",
+	"verificationStatus": "confirmed",
 	"patient": {
 		"reference": "Patient/4954037118555579315"
 	},
@@ -237,6 +247,7 @@
 }, {
 	"resourceType": "Observation",
 	"id": "5637152931209212154",
+	"status": "final",
 	"code": {
 		"coding": [{
 			"system": "http://loinc.org",
@@ -265,6 +276,7 @@
 }, {
 	"resourceType": "Procedure",
 	"id": "1203028907289396691",
+	"status": "completed",
 	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -291,8 +303,22 @@
 }, {
 	"resourceType": "DiagnosticReport",
 	"id": "551262234714579397",
+	"status": "final",
+	"code": {
+		"coding": [{
+			"system": "http://snomed.info/sct",
+			"code": "116783008"
+		}],
+		"text": "Procedure, Result: Clinical Staging Procedure"
+	},
 	"subject": {
 		"reference": "Patient/4954037118555241963"
+	},
+	"effectiveDateTime": "2011-11-01T11:03:20-04:00",
+	"issued": "2011-11-02T13:30:00-04:00",
+	"performer": {
+		"reference": "Organization/4072118964683285544",
+		"display": "Acme Laboratory, Inc"
 	},
 	"result": [{
 		"reference": "Observation/5433989216383325950"
@@ -304,6 +330,7 @@
 }, {
 	"resourceType": "Observation",
 	"id": "5433989216383325950",
+	"status": "final",
 	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
@@ -332,6 +359,7 @@
 }, {
 	"resourceType": "Observation",
 	"id": "3436673599267881943",
+	"status": "final",
 	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
@@ -357,6 +385,7 @@
 }, {
 	"resourceType": "Observation",
 	"id": "2098437086268740293",
+	"status": "final",
 	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
@@ -382,6 +411,7 @@
 }, {
 	"resourceType": "Procedure",
 	"id": "6400692968849601141",
+	"status": "completed",
 	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -408,6 +438,7 @@
 }, {
 	"resourceType": "MedicationStatement",
 	"id": "3284098338643216325",
+	"status": "completed",
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
@@ -425,6 +456,7 @@
 }, {
 	"resourceType": "Immunization",
 	"id": "7045606679745526993",
+	"status": "completed",
 	"date": "2011-08-15T08:00:00-04:00",
 	"vaccineCode": {
 		"coding": [{
@@ -434,11 +466,33 @@
 		"text": "Medication, Administered: Pneumococcal Vaccine (Code List: 2.16.840.1.113883.3.464.1003.110.12.1027)"
 	},
 	"vaccinationProtocol": [{
-    "doseSequence": 1
+    "doseSequence": 1,
+		"targetDisease": [{
+	    "coding": [
+	      {
+	        "system": "http://snomed.info/sct",
+	        "code": "16814004",
+	        "display": "Pneumococcal infectious disease"
+	      }
+	    ],
+	    "text": "Pneumococcal infectious disease"
+	  }],
+		"doseStatus": {
+	    "coding": [
+	      {
+	        "system": "http://hl7.org/fhir/vaccination-protocol-dose-status",
+	        "code": "count",
+	        "display": "Counts"
+	      }
+	    ],
+	    "text": "Counts"
+	  }
 	}],
 	"patient": {
 		"reference": "Patient/4954037118555241963"
-	}
+	},
+	"wasNotGiven": false,
+	"reported": false
 }, {
   "resourceType": "ImagingStudy",
   "id": "7045606679745526994",
