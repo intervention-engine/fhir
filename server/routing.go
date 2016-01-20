@@ -1,8 +1,6 @@
 package server
 
-import (
-	"github.com/labstack/echo"
-)
+import "github.com/labstack/echo"
 
 func RegisterController(name string, e *echo.Echo, m []echo.Middleware) {
 	rc := ResourceController{name}
@@ -16,7 +14,7 @@ func RegisterController(name string, e *echo.Echo, m []echo.Middleware) {
 	rcItem.Delete("", rc.DeleteHandler)
 
 	if len(m) > 0 {
-		rcBase.Use(m)
+		rcBase.Use(m...)
 	}
 }
 
