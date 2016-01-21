@@ -159,3 +159,16 @@ type ValueSetExpansionContainsComponent struct {
 	Display  string                               `bson:"display,omitempty" json:"display,omitempty"`
 	Contains []ValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
 }
+
+type ValueSetPlus struct {
+	ValueSet             `bson:",inline"`
+	ValueSetPlusIncludes `bson:",inline"`
+}
+
+type ValueSetPlusIncludes struct {
+}
+
+func (v *ValueSetPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

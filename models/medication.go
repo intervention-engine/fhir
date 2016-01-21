@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Medication struct {
 	DomainResource `bson:",inline"`
@@ -90,4 +94,85 @@ type MedicationPackageComponent struct {
 type MedicationPackageContentComponent struct {
 	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
 	Amount *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
+}
+
+type MedicationPlus struct {
+	Medication             `bson:",inline"`
+	MedicationPlusIncludes `bson:",inline"`
+}
+
+type MedicationPlusIncludes struct {
+	IncludedIngredientMedicationResources *[]Medication   `bson:"_includedIngredientMedicationResources,omitempty"`
+	IncludedIngredientSubstanceResources  *[]Substance    `bson:"_includedIngredientSubstanceResources,omitempty"`
+	IncludedContentResources              *[]Medication   `bson:"_includedContentResources,omitempty"`
+	IncludedManufacturerResources         *[]Organization `bson:"_includedManufacturerResources,omitempty"`
+}
+
+func (m *MedicationPlusIncludes) GetIncludedIngredientMedicationResource() (medication *Medication, err error) {
+	if m.IncludedIngredientMedicationResources == nil {
+		err = errors.New("Included medications not requested")
+	} else if len(*m.IncludedIngredientMedicationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 medication, but found %d", len(*m.IncludedIngredientMedicationResources))
+	} else if len(*m.IncludedIngredientMedicationResources) == 1 {
+		medication = &(*m.IncludedIngredientMedicationResources)[0]
+	}
+	return
+}
+
+func (m *MedicationPlusIncludes) GetIncludedIngredientSubstanceResource() (substance *Substance, err error) {
+	if m.IncludedIngredientSubstanceResources == nil {
+		err = errors.New("Included substances not requested")
+	} else if len(*m.IncludedIngredientSubstanceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 substance, but found %d", len(*m.IncludedIngredientSubstanceResources))
+	} else if len(*m.IncludedIngredientSubstanceResources) == 1 {
+		substance = &(*m.IncludedIngredientSubstanceResources)[0]
+	}
+	return
+}
+
+func (m *MedicationPlusIncludes) GetIncludedContentResource() (medication *Medication, err error) {
+	if m.IncludedContentResources == nil {
+		err = errors.New("Included medications not requested")
+	} else if len(*m.IncludedContentResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 medication, but found %d", len(*m.IncludedContentResources))
+	} else if len(*m.IncludedContentResources) == 1 {
+		medication = &(*m.IncludedContentResources)[0]
+	}
+	return
+}
+
+func (m *MedicationPlusIncludes) GetIncludedManufacturerResource() (organization *Organization, err error) {
+	if m.IncludedManufacturerResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*m.IncludedManufacturerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*m.IncludedManufacturerResources))
+	} else if len(*m.IncludedManufacturerResources) == 1 {
+		organization = &(*m.IncludedManufacturerResources)[0]
+	}
+	return
+}
+
+func (m *MedicationPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if m.IncludedIngredientMedicationResources != nil {
+		for _, r := range *m.IncludedIngredientMedicationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedIngredientSubstanceResources != nil {
+		for _, r := range *m.IncludedIngredientSubstanceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedContentResources != nil {
+		for _, r := range *m.IncludedContentResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedManufacturerResources != nil {
+		for _, r := range *m.IncludedManufacturerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

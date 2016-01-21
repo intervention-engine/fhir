@@ -173,3 +173,16 @@ type ClaimResponseCoverageComponent struct {
 	ClaimResponse       *Reference `bson:"claimResponse,omitempty" json:"claimResponse,omitempty"`
 	OriginalRuleset     *Coding    `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`
 }
+
+type ClaimResponsePlus struct {
+	ClaimResponse             `bson:",inline"`
+	ClaimResponsePlusIncludes `bson:",inline"`
+}
+
+type ClaimResponsePlusIncludes struct {
+}
+
+func (c *ClaimResponsePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

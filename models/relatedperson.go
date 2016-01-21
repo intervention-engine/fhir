@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type RelatedPerson struct {
 	DomainResource `bson:",inline"`
@@ -69,4 +73,34 @@ func (x *RelatedPerson) UnmarshalJSON(data []byte) (err error) {
 		*x = RelatedPerson(x2)
 	}
 	return
+}
+
+type RelatedPersonPlus struct {
+	RelatedPerson             `bson:",inline"`
+	RelatedPersonPlusIncludes `bson:",inline"`
+}
+
+type RelatedPersonPlusIncludes struct {
+	IncludedPatientResources *[]Patient `bson:"_includedPatientResources,omitempty"`
+}
+
+func (r *RelatedPersonPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if r.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*r.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*r.IncludedPatientResources))
+	} else if len(*r.IncludedPatientResources) == 1 {
+		patient = &(*r.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (r *RelatedPersonPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if r.IncludedPatientResources != nil {
+		for _, r := range *r.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type SupplyDelivery struct {
 	DomainResource `bson:",inline"`
@@ -70,4 +74,66 @@ func (x *SupplyDelivery) UnmarshalJSON(data []byte) (err error) {
 		*x = SupplyDelivery(x2)
 	}
 	return
+}
+
+type SupplyDeliveryPlus struct {
+	SupplyDelivery             `bson:",inline"`
+	SupplyDeliveryPlusIncludes `bson:",inline"`
+}
+
+type SupplyDeliveryPlusIncludes struct {
+	IncludedReceiverResources *[]Practitioner `bson:"_includedReceiverResources,omitempty"`
+	IncludedPatientResources  *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedSupplierResources *[]Practitioner `bson:"_includedSupplierResources,omitempty"`
+}
+
+func (s *SupplyDeliveryPlusIncludes) GetIncludedReceiverResources() (practitioners []Practitioner, err error) {
+	if s.IncludedReceiverResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else {
+		practitioners = *s.IncludedReceiverResources
+	}
+	return
+}
+
+func (s *SupplyDeliveryPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if s.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*s.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*s.IncludedPatientResources))
+	} else if len(*s.IncludedPatientResources) == 1 {
+		patient = &(*s.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (s *SupplyDeliveryPlusIncludes) GetIncludedSupplierResource() (practitioner *Practitioner, err error) {
+	if s.IncludedSupplierResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*s.IncludedSupplierResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*s.IncludedSupplierResources))
+	} else if len(*s.IncludedSupplierResources) == 1 {
+		practitioner = &(*s.IncludedSupplierResources)[0]
+	}
+	return
+}
+
+func (s *SupplyDeliveryPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if s.IncludedReceiverResources != nil {
+		for _, r := range *s.IncludedReceiverResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedPatientResources != nil {
+		for _, r := range *s.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSupplierResources != nil {
+		for _, r := range *s.IncludedSupplierResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

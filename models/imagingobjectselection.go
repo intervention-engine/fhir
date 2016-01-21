@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ImagingObjectSelection struct {
 	DomainResource `bson:",inline"`
@@ -91,4 +95,119 @@ type ImagingObjectSelectionInstanceComponent struct {
 type ImagingObjectSelectionFramesComponent struct {
 	FrameNumbers []uint32 `bson:"frameNumbers,omitempty" json:"frameNumbers,omitempty"`
 	Url          string   `bson:"url,omitempty" json:"url,omitempty"`
+}
+
+type ImagingObjectSelectionPlus struct {
+	ImagingObjectSelection             `bson:",inline"`
+	ImagingObjectSelectionPlusIncludes `bson:",inline"`
+}
+
+type ImagingObjectSelectionPlusIncludes struct {
+	IncludedAuthorPractitionerResources  *[]Practitioner  `bson:"_includedAuthorPractitionerResources,omitempty"`
+	IncludedAuthorOrganizationResources  *[]Organization  `bson:"_includedAuthorOrganizationResources,omitempty"`
+	IncludedAuthorDeviceResources        *[]Device        `bson:"_includedAuthorDeviceResources,omitempty"`
+	IncludedAuthorPatientResources       *[]Patient       `bson:"_includedAuthorPatientResources,omitempty"`
+	IncludedAuthorRelatedPersonResources *[]RelatedPerson `bson:"_includedAuthorRelatedPersonResources,omitempty"`
+	IncludedPatientResources             *[]Patient       `bson:"_includedPatientResources,omitempty"`
+}
+
+func (i *ImagingObjectSelectionPlusIncludes) GetIncludedAuthorPractitionerResource() (practitioner *Practitioner, err error) {
+	if i.IncludedAuthorPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*i.IncludedAuthorPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*i.IncludedAuthorPractitionerResources))
+	} else if len(*i.IncludedAuthorPractitionerResources) == 1 {
+		practitioner = &(*i.IncludedAuthorPractitionerResources)[0]
+	}
+	return
+}
+
+func (i *ImagingObjectSelectionPlusIncludes) GetIncludedAuthorOrganizationResource() (organization *Organization, err error) {
+	if i.IncludedAuthorOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*i.IncludedAuthorOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*i.IncludedAuthorOrganizationResources))
+	} else if len(*i.IncludedAuthorOrganizationResources) == 1 {
+		organization = &(*i.IncludedAuthorOrganizationResources)[0]
+	}
+	return
+}
+
+func (i *ImagingObjectSelectionPlusIncludes) GetIncludedAuthorDeviceResource() (device *Device, err error) {
+	if i.IncludedAuthorDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*i.IncludedAuthorDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*i.IncludedAuthorDeviceResources))
+	} else if len(*i.IncludedAuthorDeviceResources) == 1 {
+		device = &(*i.IncludedAuthorDeviceResources)[0]
+	}
+	return
+}
+
+func (i *ImagingObjectSelectionPlusIncludes) GetIncludedAuthorPatientResource() (patient *Patient, err error) {
+	if i.IncludedAuthorPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*i.IncludedAuthorPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*i.IncludedAuthorPatientResources))
+	} else if len(*i.IncludedAuthorPatientResources) == 1 {
+		patient = &(*i.IncludedAuthorPatientResources)[0]
+	}
+	return
+}
+
+func (i *ImagingObjectSelectionPlusIncludes) GetIncludedAuthorRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if i.IncludedAuthorRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*i.IncludedAuthorRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*i.IncludedAuthorRelatedPersonResources))
+	} else if len(*i.IncludedAuthorRelatedPersonResources) == 1 {
+		relatedPerson = &(*i.IncludedAuthorRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (i *ImagingObjectSelectionPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if i.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*i.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*i.IncludedPatientResources))
+	} else if len(*i.IncludedPatientResources) == 1 {
+		patient = &(*i.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (i *ImagingObjectSelectionPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if i.IncludedAuthorPractitionerResources != nil {
+		for _, r := range *i.IncludedAuthorPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedAuthorOrganizationResources != nil {
+		for _, r := range *i.IncludedAuthorOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedAuthorDeviceResources != nil {
+		for _, r := range *i.IncludedAuthorDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedAuthorPatientResources != nil {
+		for _, r := range *i.IncludedAuthorPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedAuthorRelatedPersonResources != nil {
+		for _, r := range *i.IncludedAuthorRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedPatientResources != nil {
+		for _, r := range *i.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

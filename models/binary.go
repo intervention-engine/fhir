@@ -45,3 +45,16 @@ func (resource *Binary) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(x)
 }
+
+type BinaryPlus struct {
+	Binary             `bson:",inline"`
+	BinaryPlusIncludes `bson:",inline"`
+}
+
+type BinaryPlusIncludes struct {
+}
+
+func (b *BinaryPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

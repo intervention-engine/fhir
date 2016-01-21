@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type VisionPrescription struct {
 	DomainResource        `bson:",inline"`
@@ -85,4 +89,68 @@ type VisionPrescriptionDispenseComponent struct {
 	Color     string    `bson:"color,omitempty" json:"color,omitempty"`
 	Brand     string    `bson:"brand,omitempty" json:"brand,omitempty"`
 	Notes     string    `bson:"notes,omitempty" json:"notes,omitempty"`
+}
+
+type VisionPrescriptionPlus struct {
+	VisionPrescription             `bson:",inline"`
+	VisionPrescriptionPlusIncludes `bson:",inline"`
+}
+
+type VisionPrescriptionPlusIncludes struct {
+	IncludedPrescriberResources *[]Practitioner `bson:"_includedPrescriberResources,omitempty"`
+	IncludedPatientResources    *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedEncounterResources  *[]Encounter    `bson:"_includedEncounterResources,omitempty"`
+}
+
+func (v *VisionPrescriptionPlusIncludes) GetIncludedPrescriberResource() (practitioner *Practitioner, err error) {
+	if v.IncludedPrescriberResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*v.IncludedPrescriberResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*v.IncludedPrescriberResources))
+	} else if len(*v.IncludedPrescriberResources) == 1 {
+		practitioner = &(*v.IncludedPrescriberResources)[0]
+	}
+	return
+}
+
+func (v *VisionPrescriptionPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if v.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*v.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*v.IncludedPatientResources))
+	} else if len(*v.IncludedPatientResources) == 1 {
+		patient = &(*v.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (v *VisionPrescriptionPlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
+	if v.IncludedEncounterResources == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*v.IncludedEncounterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*v.IncludedEncounterResources))
+	} else if len(*v.IncludedEncounterResources) == 1 {
+		encounter = &(*v.IncludedEncounterResources)[0]
+	}
+	return
+}
+
+func (v *VisionPrescriptionPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if v.IncludedPrescriberResources != nil {
+		for _, r := range *v.IncludedPrescriberResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if v.IncludedPatientResources != nil {
+		for _, r := range *v.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if v.IncludedEncounterResources != nil {
+		for _, r := range *v.IncludedEncounterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

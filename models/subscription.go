@@ -75,3 +75,16 @@ type SubscriptionChannelComponent struct {
 	Payload  string `bson:"payload,omitempty" json:"payload,omitempty"`
 	Header   string `bson:"header,omitempty" json:"header,omitempty"`
 }
+
+type SubscriptionPlus struct {
+	Subscription             `bson:",inline"`
+	SubscriptionPlusIncludes `bson:",inline"`
+}
+
+type SubscriptionPlusIncludes struct {
+}
+
+func (s *SubscriptionPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

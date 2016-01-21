@@ -70,3 +70,16 @@ func (x *EnrollmentResponse) UnmarshalJSON(data []byte) (err error) {
 	}
 	return
 }
+
+type EnrollmentResponsePlus struct {
+	EnrollmentResponse             `bson:",inline"`
+	EnrollmentResponsePlusIncludes `bson:",inline"`
+}
+
+type EnrollmentResponsePlusIncludes struct {
+}
+
+func (e *EnrollmentResponsePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

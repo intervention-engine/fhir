@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type DiagnosticOrder struct {
 	DomainResource        `bson:",inline"`
@@ -86,4 +90,234 @@ type DiagnosticOrderItemComponent struct {
 	BodySite *CodeableConcept                `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
 	Status   string                          `bson:"status,omitempty" json:"status,omitempty"`
 	Event    []DiagnosticOrderEventComponent `bson:"event,omitempty" json:"event,omitempty"`
+}
+
+type DiagnosticOrderPlus struct {
+	DiagnosticOrder             `bson:",inline"`
+	DiagnosticOrderPlusIncludes `bson:",inline"`
+}
+
+type DiagnosticOrderPlusIncludes struct {
+	IncludedSubjectGroupResources           *[]Group        `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectDeviceResources          *[]Device       `bson:"_includedSubjectDeviceResources,omitempty"`
+	IncludedSubjectPatientResources         *[]Patient      `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedSubjectLocationResources        *[]Location     `bson:"_includedSubjectLocationResources,omitempty"`
+	IncludedEncounterResources              *[]Encounter    `bson:"_includedEncounterResources,omitempty"`
+	IncludedActorPractitionerPath1Resources *[]Practitioner `bson:"_includedActorPractitionerPath1Resources,omitempty"`
+	IncludedActorPractitionerPath2Resources *[]Practitioner `bson:"_includedActorPractitionerPath2Resources,omitempty"`
+	IncludedActorDevicePath1Resources       *[]Device       `bson:"_includedActorDevicePath1Resources,omitempty"`
+	IncludedActorDevicePath2Resources       *[]Device       `bson:"_includedActorDevicePath2Resources,omitempty"`
+	IncludedPatientResources                *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedOrdererResources                *[]Practitioner `bson:"_includedOrdererResources,omitempty"`
+	IncludedSpecimenPath1Resources          *[]Specimen     `bson:"_includedSpecimenPath1Resources,omitempty"`
+	IncludedSpecimenPath2Resources          *[]Specimen     `bson:"_includedSpecimenPath2Resources,omitempty"`
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if d.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*d.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*d.IncludedSubjectGroupResources))
+	} else if len(*d.IncludedSubjectGroupResources) == 1 {
+		group = &(*d.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedSubjectDeviceResource() (device *Device, err error) {
+	if d.IncludedSubjectDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*d.IncludedSubjectDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*d.IncludedSubjectDeviceResources))
+	} else if len(*d.IncludedSubjectDeviceResources) == 1 {
+		device = &(*d.IncludedSubjectDeviceResources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if d.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedSubjectPatientResources))
+	} else if len(*d.IncludedSubjectPatientResources) == 1 {
+		patient = &(*d.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedSubjectLocationResource() (location *Location, err error) {
+	if d.IncludedSubjectLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*d.IncludedSubjectLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*d.IncludedSubjectLocationResources))
+	} else if len(*d.IncludedSubjectLocationResources) == 1 {
+		location = &(*d.IncludedSubjectLocationResources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
+	if d.IncludedEncounterResources == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*d.IncludedEncounterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*d.IncludedEncounterResources))
+	} else if len(*d.IncludedEncounterResources) == 1 {
+		encounter = &(*d.IncludedEncounterResources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedActorPractitionerPath1Resource() (practitioner *Practitioner, err error) {
+	if d.IncludedActorPractitionerPath1Resources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*d.IncludedActorPractitionerPath1Resources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*d.IncludedActorPractitionerPath1Resources))
+	} else if len(*d.IncludedActorPractitionerPath1Resources) == 1 {
+		practitioner = &(*d.IncludedActorPractitionerPath1Resources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedActorPractitionerPath2Resource() (practitioner *Practitioner, err error) {
+	if d.IncludedActorPractitionerPath2Resources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*d.IncludedActorPractitionerPath2Resources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*d.IncludedActorPractitionerPath2Resources))
+	} else if len(*d.IncludedActorPractitionerPath2Resources) == 1 {
+		practitioner = &(*d.IncludedActorPractitionerPath2Resources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedActorDevicePath1Resource() (device *Device, err error) {
+	if d.IncludedActorDevicePath1Resources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*d.IncludedActorDevicePath1Resources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*d.IncludedActorDevicePath1Resources))
+	} else if len(*d.IncludedActorDevicePath1Resources) == 1 {
+		device = &(*d.IncludedActorDevicePath1Resources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedActorDevicePath2Resource() (device *Device, err error) {
+	if d.IncludedActorDevicePath2Resources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*d.IncludedActorDevicePath2Resources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*d.IncludedActorDevicePath2Resources))
+	} else if len(*d.IncludedActorDevicePath2Resources) == 1 {
+		device = &(*d.IncludedActorDevicePath2Resources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if d.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedPatientResources))
+	} else if len(*d.IncludedPatientResources) == 1 {
+		patient = &(*d.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedOrdererResource() (practitioner *Practitioner, err error) {
+	if d.IncludedOrdererResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*d.IncludedOrdererResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*d.IncludedOrdererResources))
+	} else if len(*d.IncludedOrdererResources) == 1 {
+		practitioner = &(*d.IncludedOrdererResources)[0]
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedSpecimenPath1Resources() (specimen []Specimen, err error) {
+	if d.IncludedSpecimenPath1Resources == nil {
+		err = errors.New("Included specimen not requested")
+	} else {
+		specimen = *d.IncludedSpecimenPath1Resources
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedSpecimenPath2Resources() (specimen []Specimen, err error) {
+	if d.IncludedSpecimenPath2Resources == nil {
+		err = errors.New("Included specimen not requested")
+	} else {
+		specimen = *d.IncludedSpecimenPath2Resources
+	}
+	return
+}
+
+func (d *DiagnosticOrderPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if d.IncludedSubjectGroupResources != nil {
+		for _, r := range *d.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSubjectDeviceResources != nil {
+		for _, r := range *d.IncludedSubjectDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSubjectPatientResources != nil {
+		for _, r := range *d.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSubjectLocationResources != nil {
+		for _, r := range *d.IncludedSubjectLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedEncounterResources != nil {
+		for _, r := range *d.IncludedEncounterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedActorPractitionerPath1Resources != nil {
+		for _, r := range *d.IncludedActorPractitionerPath1Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedActorPractitionerPath2Resources != nil {
+		for _, r := range *d.IncludedActorPractitionerPath2Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedActorDevicePath1Resources != nil {
+		for _, r := range *d.IncludedActorDevicePath1Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedActorDevicePath2Resources != nil {
+		for _, r := range *d.IncludedActorDevicePath2Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedPatientResources != nil {
+		for _, r := range *d.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedOrdererResources != nil {
+		for _, r := range *d.IncludedOrdererResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSpecimenPath1Resources != nil {
+		for _, r := range *d.IncludedSpecimenPath1Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSpecimenPath2Resources != nil {
+		for _, r := range *d.IncludedSpecimenPath2Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -217,6 +217,212 @@ func StructForResourceName(name string) interface{} {
 	}
 }
 
+func SlicePlusForResourceName(name string, len int, cap int) interface{} {
+	rType := reflect.TypeOf(StructPlusForResourceName(name))
+	return reflect.MakeSlice(reflect.SliceOf(rType), len, cap).Interface()
+}
+
+func NewSlicePlusForResourceName(name string, len int, cap int) interface{} {
+	rSlice := SlicePlusForResourceName(name, len, cap)
+	rSlicePtr := reflect.New(reflect.TypeOf(rSlice))
+	rSlicePtr.Elem().Set(reflect.ValueOf(rSlice))
+	return rSlicePtr.Interface()
+}
+
+func StructPlusForResourceName(name string) interface{} {
+	switch name {
+	case "Account":
+		return AccountPlus{}
+	case "AllergyIntolerance":
+		return AllergyIntolerancePlus{}
+	case "Appointment":
+		return AppointmentPlus{}
+	case "AppointmentResponse":
+		return AppointmentResponsePlus{}
+	case "AuditEvent":
+		return AuditEventPlus{}
+	case "Basic":
+		return BasicPlus{}
+	case "Binary":
+		return BinaryPlus{}
+	case "BodySite":
+		return BodySitePlus{}
+	case "Bundle":
+		return BundlePlus{}
+	case "CarePlan":
+		return CarePlanPlus{}
+	case "Claim":
+		return ClaimPlus{}
+	case "ClaimResponse":
+		return ClaimResponsePlus{}
+	case "ClinicalImpression":
+		return ClinicalImpressionPlus{}
+	case "Communication":
+		return CommunicationPlus{}
+	case "CommunicationRequest":
+		return CommunicationRequestPlus{}
+	case "Composition":
+		return CompositionPlus{}
+	case "ConceptMap":
+		return ConceptMapPlus{}
+	case "Condition":
+		return ConditionPlus{}
+	case "Conformance":
+		return ConformancePlus{}
+	case "Contract":
+		return ContractPlus{}
+	case "Coverage":
+		return CoveragePlus{}
+	case "DataElement":
+		return DataElementPlus{}
+	case "DetectedIssue":
+		return DetectedIssuePlus{}
+	case "Device":
+		return DevicePlus{}
+	case "DeviceComponent":
+		return DeviceComponentPlus{}
+	case "DeviceMetric":
+		return DeviceMetricPlus{}
+	case "DeviceUseRequest":
+		return DeviceUseRequestPlus{}
+	case "DeviceUseStatement":
+		return DeviceUseStatementPlus{}
+	case "DiagnosticOrder":
+		return DiagnosticOrderPlus{}
+	case "DiagnosticReport":
+		return DiagnosticReportPlus{}
+	case "DocumentManifest":
+		return DocumentManifestPlus{}
+	case "DocumentReference":
+		return DocumentReferencePlus{}
+	case "EligibilityRequest":
+		return EligibilityRequestPlus{}
+	case "EligibilityResponse":
+		return EligibilityResponsePlus{}
+	case "Encounter":
+		return EncounterPlus{}
+	case "EnrollmentRequest":
+		return EnrollmentRequestPlus{}
+	case "EnrollmentResponse":
+		return EnrollmentResponsePlus{}
+	case "EpisodeOfCare":
+		return EpisodeOfCarePlus{}
+	case "ExplanationOfBenefit":
+		return ExplanationOfBenefitPlus{}
+	case "FamilyMemberHistory":
+		return FamilyMemberHistoryPlus{}
+	case "Flag":
+		return FlagPlus{}
+	case "Goal":
+		return GoalPlus{}
+	case "Group":
+		return GroupPlus{}
+	case "HealthcareService":
+		return HealthcareServicePlus{}
+	case "ImagingObjectSelection":
+		return ImagingObjectSelectionPlus{}
+	case "ImagingStudy":
+		return ImagingStudyPlus{}
+	case "Immunization":
+		return ImmunizationPlus{}
+	case "ImmunizationRecommendation":
+		return ImmunizationRecommendationPlus{}
+	case "ImplementationGuide":
+		return ImplementationGuidePlus{}
+	case "List":
+		return ListPlus{}
+	case "Location":
+		return LocationPlus{}
+	case "Media":
+		return MediaPlus{}
+	case "Medication":
+		return MedicationPlus{}
+	case "MedicationAdministration":
+		return MedicationAdministrationPlus{}
+	case "MedicationDispense":
+		return MedicationDispensePlus{}
+	case "MedicationOrder":
+		return MedicationOrderPlus{}
+	case "MedicationStatement":
+		return MedicationStatementPlus{}
+	case "MessageHeader":
+		return MessageHeaderPlus{}
+	case "NamingSystem":
+		return NamingSystemPlus{}
+	case "NutritionOrder":
+		return NutritionOrderPlus{}
+	case "Observation":
+		return ObservationPlus{}
+	case "OperationDefinition":
+		return OperationDefinitionPlus{}
+	case "OperationOutcome":
+		return OperationOutcomePlus{}
+	case "Order":
+		return OrderPlus{}
+	case "OrderResponse":
+		return OrderResponsePlus{}
+	case "Organization":
+		return OrganizationPlus{}
+	case "Patient":
+		return PatientPlus{}
+	case "PaymentNotice":
+		return PaymentNoticePlus{}
+	case "PaymentReconciliation":
+		return PaymentReconciliationPlus{}
+	case "Person":
+		return PersonPlus{}
+	case "Practitioner":
+		return PractitionerPlus{}
+	case "Procedure":
+		return ProcedurePlus{}
+	case "ProcedureRequest":
+		return ProcedureRequestPlus{}
+	case "ProcessRequest":
+		return ProcessRequestPlus{}
+	case "ProcessResponse":
+		return ProcessResponsePlus{}
+	case "Provenance":
+		return ProvenancePlus{}
+	case "Questionnaire":
+		return QuestionnairePlus{}
+	case "QuestionnaireResponse":
+		return QuestionnaireResponsePlus{}
+	case "ReferralRequest":
+		return ReferralRequestPlus{}
+	case "RelatedPerson":
+		return RelatedPersonPlus{}
+	case "RiskAssessment":
+		return RiskAssessmentPlus{}
+	case "Schedule":
+		return SchedulePlus{}
+	case "SearchParameter":
+		return SearchParameterPlus{}
+	case "Slot":
+		return SlotPlus{}
+	case "Specimen":
+		return SpecimenPlus{}
+	case "StructureDefinition":
+		return StructureDefinitionPlus{}
+	case "Subscription":
+		return SubscriptionPlus{}
+	case "Substance":
+		return SubstancePlus{}
+	case "SupplyDelivery":
+		return SupplyDeliveryPlus{}
+	case "SupplyRequest":
+		return SupplyRequestPlus{}
+	case "TestScript":
+		return TestScriptPlus{}
+	case "ValueSet":
+		return ValueSetPlus{}
+	case "VisionPrescription":
+		return VisionPrescriptionPlus{}
+
+	default:
+		return nil
+	}
+}
+
 func PluralizeLowerResourceName(name string) string {
 	switch name {
 	case "Account":

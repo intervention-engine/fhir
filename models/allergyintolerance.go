@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type AllergyIntolerance struct {
 	DomainResource `bson:",inline"`
@@ -84,4 +88,119 @@ type AllergyIntoleranceReactionComponent struct {
 	Severity      string            `bson:"severity,omitempty" json:"severity,omitempty"`
 	ExposureRoute *CodeableConcept  `bson:"exposureRoute,omitempty" json:"exposureRoute,omitempty"`
 	Note          *Annotation       `bson:"note,omitempty" json:"note,omitempty"`
+}
+
+type AllergyIntolerancePlus struct {
+	AllergyIntolerance             `bson:",inline"`
+	AllergyIntolerancePlusIncludes `bson:",inline"`
+}
+
+type AllergyIntolerancePlusIncludes struct {
+	IncludedRecorderPractitionerResources  *[]Practitioner  `bson:"_includedRecorderPractitionerResources,omitempty"`
+	IncludedRecorderPatientResources       *[]Patient       `bson:"_includedRecorderPatientResources,omitempty"`
+	IncludedReporterPractitionerResources  *[]Practitioner  `bson:"_includedReporterPractitionerResources,omitempty"`
+	IncludedReporterPatientResources       *[]Patient       `bson:"_includedReporterPatientResources,omitempty"`
+	IncludedReporterRelatedPersonResources *[]RelatedPerson `bson:"_includedReporterRelatedPersonResources,omitempty"`
+	IncludedPatientResources               *[]Patient       `bson:"_includedPatientResources,omitempty"`
+}
+
+func (a *AllergyIntolerancePlusIncludes) GetIncludedRecorderPractitionerResource() (practitioner *Practitioner, err error) {
+	if a.IncludedRecorderPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*a.IncludedRecorderPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedRecorderPractitionerResources))
+	} else if len(*a.IncludedRecorderPractitionerResources) == 1 {
+		practitioner = &(*a.IncludedRecorderPractitionerResources)[0]
+	}
+	return
+}
+
+func (a *AllergyIntolerancePlusIncludes) GetIncludedRecorderPatientResource() (patient *Patient, err error) {
+	if a.IncludedRecorderPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedRecorderPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedRecorderPatientResources))
+	} else if len(*a.IncludedRecorderPatientResources) == 1 {
+		patient = &(*a.IncludedRecorderPatientResources)[0]
+	}
+	return
+}
+
+func (a *AllergyIntolerancePlusIncludes) GetIncludedReporterPractitionerResource() (practitioner *Practitioner, err error) {
+	if a.IncludedReporterPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*a.IncludedReporterPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedReporterPractitionerResources))
+	} else if len(*a.IncludedReporterPractitionerResources) == 1 {
+		practitioner = &(*a.IncludedReporterPractitionerResources)[0]
+	}
+	return
+}
+
+func (a *AllergyIntolerancePlusIncludes) GetIncludedReporterPatientResource() (patient *Patient, err error) {
+	if a.IncludedReporterPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedReporterPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedReporterPatientResources))
+	} else if len(*a.IncludedReporterPatientResources) == 1 {
+		patient = &(*a.IncludedReporterPatientResources)[0]
+	}
+	return
+}
+
+func (a *AllergyIntolerancePlusIncludes) GetIncludedReporterRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if a.IncludedReporterRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*a.IncludedReporterRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*a.IncludedReporterRelatedPersonResources))
+	} else if len(*a.IncludedReporterRelatedPersonResources) == 1 {
+		relatedPerson = &(*a.IncludedReporterRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (a *AllergyIntolerancePlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if a.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedPatientResources))
+	} else if len(*a.IncludedPatientResources) == 1 {
+		patient = &(*a.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (a *AllergyIntolerancePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if a.IncludedRecorderPractitionerResources != nil {
+		for _, r := range *a.IncludedRecorderPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedRecorderPatientResources != nil {
+		for _, r := range *a.IncludedRecorderPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedReporterPractitionerResources != nil {
+		for _, r := range *a.IncludedReporterPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedReporterPatientResources != nil {
+		for _, r := range *a.IncludedReporterPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedReporterRelatedPersonResources != nil {
+		for _, r := range *a.IncludedReporterRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedPatientResources != nil {
+		for _, r := range *a.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

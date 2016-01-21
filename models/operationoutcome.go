@@ -69,3 +69,16 @@ type OperationOutcomeIssueComponent struct {
 	Diagnostics string           `bson:"diagnostics,omitempty" json:"diagnostics,omitempty"`
 	Location    []string         `bson:"location,omitempty" json:"location,omitempty"`
 }
+
+type OperationOutcomePlus struct {
+	OperationOutcome             `bson:",inline"`
+	OperationOutcomePlusIncludes `bson:",inline"`
+}
+
+type OperationOutcomePlusIncludes struct {
+}
+
+func (o *OperationOutcomePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

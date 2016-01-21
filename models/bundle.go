@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Bundle struct {
 	Resource  `bson:",inline"`
@@ -97,4 +101,51 @@ type BundleEntryResponseComponent struct {
 	Location     string        `bson:"location,omitempty" json:"location,omitempty"`
 	Etag         string        `bson:"etag,omitempty" json:"etag,omitempty"`
 	LastModified *FHIRDateTime `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
+}
+
+type BundlePlus struct {
+	Bundle             `bson:",inline"`
+	BundlePlusIncludes `bson:",inline"`
+}
+
+type BundlePlusIncludes struct {
+	IncludedCompositionResources *[]Composition   `bson:"_includedCompositionResources,omitempty"`
+	IncludedMessageResources     *[]MessageHeader `bson:"_includedMessageResources,omitempty"`
+}
+
+func (b *BundlePlusIncludes) GetIncludedCompositionResource() (composition *Composition, err error) {
+	if b.IncludedCompositionResources == nil {
+		err = errors.New("Included compositions not requested")
+	} else if len(*b.IncludedCompositionResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 composition, but found %d", len(*b.IncludedCompositionResources))
+	} else if len(*b.IncludedCompositionResources) == 1 {
+		composition = &(*b.IncludedCompositionResources)[0]
+	}
+	return
+}
+
+func (b *BundlePlusIncludes) GetIncludedMessageResource() (messageHeader *MessageHeader, err error) {
+	if b.IncludedMessageResources == nil {
+		err = errors.New("Included messageheaders not requested")
+	} else if len(*b.IncludedMessageResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 messageHeader, but found %d", len(*b.IncludedMessageResources))
+	} else if len(*b.IncludedMessageResources) == 1 {
+		messageHeader = &(*b.IncludedMessageResources)[0]
+	}
+	return
+}
+
+func (b *BundlePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if b.IncludedCompositionResources != nil {
+		for _, r := range *b.IncludedCompositionResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if b.IncludedMessageResources != nil {
+		for _, r := range *b.IncludedMessageResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

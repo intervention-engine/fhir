@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Immunization struct {
 	DomainResource      `bson:",inline"`
@@ -102,4 +106,119 @@ type ImmunizationVaccinationProtocolComponent struct {
 	TargetDisease    []CodeableConcept `bson:"targetDisease,omitempty" json:"targetDisease,omitempty"`
 	DoseStatus       *CodeableConcept  `bson:"doseStatus,omitempty" json:"doseStatus,omitempty"`
 	DoseStatusReason *CodeableConcept  `bson:"doseStatusReason,omitempty" json:"doseStatusReason,omitempty"`
+}
+
+type ImmunizationPlus struct {
+	Immunization             `bson:",inline"`
+	ImmunizationPlusIncludes `bson:",inline"`
+}
+
+type ImmunizationPlusIncludes struct {
+	IncludedRequesterResources    *[]Practitioner `bson:"_includedRequesterResources,omitempty"`
+	IncludedPerformerResources    *[]Practitioner `bson:"_includedPerformerResources,omitempty"`
+	IncludedReactionResources     *[]Observation  `bson:"_includedReactionResources,omitempty"`
+	IncludedManufacturerResources *[]Organization `bson:"_includedManufacturerResources,omitempty"`
+	IncludedPatientResources      *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedLocationResources     *[]Location     `bson:"_includedLocationResources,omitempty"`
+}
+
+func (i *ImmunizationPlusIncludes) GetIncludedRequesterResource() (practitioner *Practitioner, err error) {
+	if i.IncludedRequesterResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*i.IncludedRequesterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*i.IncludedRequesterResources))
+	} else if len(*i.IncludedRequesterResources) == 1 {
+		practitioner = &(*i.IncludedRequesterResources)[0]
+	}
+	return
+}
+
+func (i *ImmunizationPlusIncludes) GetIncludedPerformerResource() (practitioner *Practitioner, err error) {
+	if i.IncludedPerformerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*i.IncludedPerformerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*i.IncludedPerformerResources))
+	} else if len(*i.IncludedPerformerResources) == 1 {
+		practitioner = &(*i.IncludedPerformerResources)[0]
+	}
+	return
+}
+
+func (i *ImmunizationPlusIncludes) GetIncludedReactionResource() (observation *Observation, err error) {
+	if i.IncludedReactionResources == nil {
+		err = errors.New("Included observations not requested")
+	} else if len(*i.IncludedReactionResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 observation, but found %d", len(*i.IncludedReactionResources))
+	} else if len(*i.IncludedReactionResources) == 1 {
+		observation = &(*i.IncludedReactionResources)[0]
+	}
+	return
+}
+
+func (i *ImmunizationPlusIncludes) GetIncludedManufacturerResource() (organization *Organization, err error) {
+	if i.IncludedManufacturerResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*i.IncludedManufacturerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*i.IncludedManufacturerResources))
+	} else if len(*i.IncludedManufacturerResources) == 1 {
+		organization = &(*i.IncludedManufacturerResources)[0]
+	}
+	return
+}
+
+func (i *ImmunizationPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if i.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*i.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*i.IncludedPatientResources))
+	} else if len(*i.IncludedPatientResources) == 1 {
+		patient = &(*i.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (i *ImmunizationPlusIncludes) GetIncludedLocationResource() (location *Location, err error) {
+	if i.IncludedLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*i.IncludedLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*i.IncludedLocationResources))
+	} else if len(*i.IncludedLocationResources) == 1 {
+		location = &(*i.IncludedLocationResources)[0]
+	}
+	return
+}
+
+func (i *ImmunizationPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if i.IncludedRequesterResources != nil {
+		for _, r := range *i.IncludedRequesterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedPerformerResources != nil {
+		for _, r := range *i.IncludedPerformerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedReactionResources != nil {
+		for _, r := range *i.IncludedReactionResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedManufacturerResources != nil {
+		for _, r := range *i.IncludedManufacturerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedPatientResources != nil {
+		for _, r := range *i.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedLocationResources != nil {
+		for _, r := range *i.IncludedLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

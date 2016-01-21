@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type DeviceMetric struct {
 	DomainResource    `bson:",inline"`
@@ -75,4 +79,51 @@ type DeviceMetricCalibrationComponent struct {
 	Type  string        `bson:"type,omitempty" json:"type,omitempty"`
 	State string        `bson:"state,omitempty" json:"state,omitempty"`
 	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
+}
+
+type DeviceMetricPlus struct {
+	DeviceMetric             `bson:",inline"`
+	DeviceMetricPlusIncludes `bson:",inline"`
+}
+
+type DeviceMetricPlusIncludes struct {
+	IncludedParentResources *[]DeviceComponent `bson:"_includedParentResources,omitempty"`
+	IncludedSourceResources *[]Device          `bson:"_includedSourceResources,omitempty"`
+}
+
+func (d *DeviceMetricPlusIncludes) GetIncludedParentResource() (deviceComponent *DeviceComponent, err error) {
+	if d.IncludedParentResources == nil {
+		err = errors.New("Included devicecomponents not requested")
+	} else if len(*d.IncludedParentResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 deviceComponent, but found %d", len(*d.IncludedParentResources))
+	} else if len(*d.IncludedParentResources) == 1 {
+		deviceComponent = &(*d.IncludedParentResources)[0]
+	}
+	return
+}
+
+func (d *DeviceMetricPlusIncludes) GetIncludedSourceResource() (device *Device, err error) {
+	if d.IncludedSourceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*d.IncludedSourceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*d.IncludedSourceResources))
+	} else if len(*d.IncludedSourceResources) == 1 {
+		device = &(*d.IncludedSourceResources)[0]
+	}
+	return
+}
+
+func (d *DeviceMetricPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if d.IncludedParentResources != nil {
+		for _, r := range *d.IncludedParentResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSourceResources != nil {
+		for _, r := range *d.IncludedSourceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

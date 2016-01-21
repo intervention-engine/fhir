@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type RiskAssessment struct {
 	DomainResource `bson:",inline"`
@@ -80,4 +84,136 @@ type RiskAssessmentPredictionComponent struct {
 	WhenPeriod                 *Period          `bson:"whenPeriod,omitempty" json:"whenPeriod,omitempty"`
 	WhenRange                  *Range           `bson:"whenRange,omitempty" json:"whenRange,omitempty"`
 	Rationale                  string           `bson:"rationale,omitempty" json:"rationale,omitempty"`
+}
+
+type RiskAssessmentPlus struct {
+	RiskAssessment             `bson:",inline"`
+	RiskAssessmentPlusIncludes `bson:",inline"`
+}
+
+type RiskAssessmentPlusIncludes struct {
+	IncludedConditionResources             *[]Condition    `bson:"_includedConditionResources,omitempty"`
+	IncludedPerformerPractitionerResources *[]Practitioner `bson:"_includedPerformerPractitionerResources,omitempty"`
+	IncludedPerformerDeviceResources       *[]Device       `bson:"_includedPerformerDeviceResources,omitempty"`
+	IncludedSubjectGroupResources          *[]Group        `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectPatientResources        *[]Patient      `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedPatientResources               *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedEncounterResources             *[]Encounter    `bson:"_includedEncounterResources,omitempty"`
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedConditionResource() (condition *Condition, err error) {
+	if r.IncludedConditionResources == nil {
+		err = errors.New("Included conditions not requested")
+	} else if len(*r.IncludedConditionResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 condition, but found %d", len(*r.IncludedConditionResources))
+	} else if len(*r.IncludedConditionResources) == 1 {
+		condition = &(*r.IncludedConditionResources)[0]
+	}
+	return
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedPerformerPractitionerResource() (practitioner *Practitioner, err error) {
+	if r.IncludedPerformerPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*r.IncludedPerformerPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*r.IncludedPerformerPractitionerResources))
+	} else if len(*r.IncludedPerformerPractitionerResources) == 1 {
+		practitioner = &(*r.IncludedPerformerPractitionerResources)[0]
+	}
+	return
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedPerformerDeviceResource() (device *Device, err error) {
+	if r.IncludedPerformerDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*r.IncludedPerformerDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*r.IncludedPerformerDeviceResources))
+	} else if len(*r.IncludedPerformerDeviceResources) == 1 {
+		device = &(*r.IncludedPerformerDeviceResources)[0]
+	}
+	return
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if r.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*r.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*r.IncludedSubjectGroupResources))
+	} else if len(*r.IncludedSubjectGroupResources) == 1 {
+		group = &(*r.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if r.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*r.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*r.IncludedSubjectPatientResources))
+	} else if len(*r.IncludedSubjectPatientResources) == 1 {
+		patient = &(*r.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if r.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*r.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*r.IncludedPatientResources))
+	} else if len(*r.IncludedPatientResources) == 1 {
+		patient = &(*r.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
+	if r.IncludedEncounterResources == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*r.IncludedEncounterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*r.IncludedEncounterResources))
+	} else if len(*r.IncludedEncounterResources) == 1 {
+		encounter = &(*r.IncludedEncounterResources)[0]
+	}
+	return
+}
+
+func (r *RiskAssessmentPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if r.IncludedConditionResources != nil {
+		for _, r := range *r.IncludedConditionResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedPerformerPractitionerResources != nil {
+		for _, r := range *r.IncludedPerformerPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedPerformerDeviceResources != nil {
+		for _, r := range *r.IncludedPerformerDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedSubjectGroupResources != nil {
+		for _, r := range *r.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedSubjectPatientResources != nil {
+		for _, r := range *r.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedPatientResources != nil {
+		for _, r := range *r.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedEncounterResources != nil {
+		for _, r := range *r.IncludedEncounterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

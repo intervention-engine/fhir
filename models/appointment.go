@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Appointment struct {
 	DomainResource  `bson:",inline"`
@@ -78,4 +82,170 @@ type AppointmentParticipantComponent struct {
 	Actor    *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
 	Required string            `bson:"required,omitempty" json:"required,omitempty"`
 	Status   string            `bson:"status,omitempty" json:"status,omitempty"`
+}
+
+type AppointmentPlus struct {
+	Appointment             `bson:",inline"`
+	AppointmentPlusIncludes `bson:",inline"`
+}
+
+type AppointmentPlusIncludes struct {
+	IncludedActorPractitionerResources      *[]Practitioner      `bson:"_includedActorPractitionerResources,omitempty"`
+	IncludedActorDeviceResources            *[]Device            `bson:"_includedActorDeviceResources,omitempty"`
+	IncludedActorPatientResources           *[]Patient           `bson:"_includedActorPatientResources,omitempty"`
+	IncludedActorHealthcareServiceResources *[]HealthcareService `bson:"_includedActorHealthcareServiceResources,omitempty"`
+	IncludedActorRelatedPersonResources     *[]RelatedPerson     `bson:"_includedActorRelatedPersonResources,omitempty"`
+	IncludedActorLocationResources          *[]Location          `bson:"_includedActorLocationResources,omitempty"`
+	IncludedPractitionerResources           *[]Practitioner      `bson:"_includedPractitionerResources,omitempty"`
+	IncludedPatientResources                *[]Patient           `bson:"_includedPatientResources,omitempty"`
+	IncludedLocationResources               *[]Location          `bson:"_includedLocationResources,omitempty"`
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedActorPractitionerResource() (practitioner *Practitioner, err error) {
+	if a.IncludedActorPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*a.IncludedActorPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedActorPractitionerResources))
+	} else if len(*a.IncludedActorPractitionerResources) == 1 {
+		practitioner = &(*a.IncludedActorPractitionerResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedActorDeviceResource() (device *Device, err error) {
+	if a.IncludedActorDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*a.IncludedActorDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*a.IncludedActorDeviceResources))
+	} else if len(*a.IncludedActorDeviceResources) == 1 {
+		device = &(*a.IncludedActorDeviceResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedActorPatientResource() (patient *Patient, err error) {
+	if a.IncludedActorPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedActorPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedActorPatientResources))
+	} else if len(*a.IncludedActorPatientResources) == 1 {
+		patient = &(*a.IncludedActorPatientResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedActorHealthcareServiceResource() (healthcareService *HealthcareService, err error) {
+	if a.IncludedActorHealthcareServiceResources == nil {
+		err = errors.New("Included healthcareservices not requested")
+	} else if len(*a.IncludedActorHealthcareServiceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 healthcareService, but found %d", len(*a.IncludedActorHealthcareServiceResources))
+	} else if len(*a.IncludedActorHealthcareServiceResources) == 1 {
+		healthcareService = &(*a.IncludedActorHealthcareServiceResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedActorRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if a.IncludedActorRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*a.IncludedActorRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*a.IncludedActorRelatedPersonResources))
+	} else if len(*a.IncludedActorRelatedPersonResources) == 1 {
+		relatedPerson = &(*a.IncludedActorRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedActorLocationResource() (location *Location, err error) {
+	if a.IncludedActorLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*a.IncludedActorLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*a.IncludedActorLocationResources))
+	} else if len(*a.IncludedActorLocationResources) == 1 {
+		location = &(*a.IncludedActorLocationResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedPractitionerResource() (practitioner *Practitioner, err error) {
+	if a.IncludedPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*a.IncludedPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedPractitionerResources))
+	} else if len(*a.IncludedPractitionerResources) == 1 {
+		practitioner = &(*a.IncludedPractitionerResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if a.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedPatientResources))
+	} else if len(*a.IncludedPatientResources) == 1 {
+		patient = &(*a.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedLocationResource() (location *Location, err error) {
+	if a.IncludedLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*a.IncludedLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*a.IncludedLocationResources))
+	} else if len(*a.IncludedLocationResources) == 1 {
+		location = &(*a.IncludedLocationResources)[0]
+	}
+	return
+}
+
+func (a *AppointmentPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if a.IncludedActorPractitionerResources != nil {
+		for _, r := range *a.IncludedActorPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedActorDeviceResources != nil {
+		for _, r := range *a.IncludedActorDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedActorPatientResources != nil {
+		for _, r := range *a.IncludedActorPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedActorHealthcareServiceResources != nil {
+		for _, r := range *a.IncludedActorHealthcareServiceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedActorRelatedPersonResources != nil {
+		for _, r := range *a.IncludedActorRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedActorLocationResources != nil {
+		for _, r := range *a.IncludedActorLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedPractitionerResources != nil {
+		for _, r := range *a.IncludedPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedPatientResources != nil {
+		for _, r := range *a.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedLocationResources != nil {
+		for _, r := range *a.IncludedLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

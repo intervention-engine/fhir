@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Basic struct {
 	DomainResource `bson:",inline"`
@@ -64,4 +68,85 @@ func (x *Basic) UnmarshalJSON(data []byte) (err error) {
 		*x = Basic(x2)
 	}
 	return
+}
+
+type BasicPlus struct {
+	Basic             `bson:",inline"`
+	BasicPlusIncludes `bson:",inline"`
+}
+
+type BasicPlusIncludes struct {
+	IncludedPatientResources             *[]Patient       `bson:"_includedPatientResources,omitempty"`
+	IncludedAuthorPractitionerResources  *[]Practitioner  `bson:"_includedAuthorPractitionerResources,omitempty"`
+	IncludedAuthorPatientResources       *[]Patient       `bson:"_includedAuthorPatientResources,omitempty"`
+	IncludedAuthorRelatedPersonResources *[]RelatedPerson `bson:"_includedAuthorRelatedPersonResources,omitempty"`
+}
+
+func (b *BasicPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if b.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*b.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*b.IncludedPatientResources))
+	} else if len(*b.IncludedPatientResources) == 1 {
+		patient = &(*b.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (b *BasicPlusIncludes) GetIncludedAuthorPractitionerResource() (practitioner *Practitioner, err error) {
+	if b.IncludedAuthorPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*b.IncludedAuthorPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*b.IncludedAuthorPractitionerResources))
+	} else if len(*b.IncludedAuthorPractitionerResources) == 1 {
+		practitioner = &(*b.IncludedAuthorPractitionerResources)[0]
+	}
+	return
+}
+
+func (b *BasicPlusIncludes) GetIncludedAuthorPatientResource() (patient *Patient, err error) {
+	if b.IncludedAuthorPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*b.IncludedAuthorPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*b.IncludedAuthorPatientResources))
+	} else if len(*b.IncludedAuthorPatientResources) == 1 {
+		patient = &(*b.IncludedAuthorPatientResources)[0]
+	}
+	return
+}
+
+func (b *BasicPlusIncludes) GetIncludedAuthorRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if b.IncludedAuthorRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*b.IncludedAuthorRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*b.IncludedAuthorRelatedPersonResources))
+	} else if len(*b.IncludedAuthorRelatedPersonResources) == 1 {
+		relatedPerson = &(*b.IncludedAuthorRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (b *BasicPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if b.IncludedPatientResources != nil {
+		for _, r := range *b.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if b.IncludedAuthorPractitionerResources != nil {
+		for _, r := range *b.IncludedAuthorPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if b.IncludedAuthorPatientResources != nil {
+		for _, r := range *b.IncludedAuthorPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if b.IncludedAuthorRelatedPersonResources != nil {
+		for _, r := range *b.IncludedAuthorRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

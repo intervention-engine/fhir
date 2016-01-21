@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Slot struct {
 	DomainResource `bson:",inline"`
@@ -67,4 +71,34 @@ func (x *Slot) UnmarshalJSON(data []byte) (err error) {
 		*x = Slot(x2)
 	}
 	return
+}
+
+type SlotPlus struct {
+	Slot             `bson:",inline"`
+	SlotPlusIncludes `bson:",inline"`
+}
+
+type SlotPlusIncludes struct {
+	IncludedScheduleResources *[]Schedule `bson:"_includedScheduleResources,omitempty"`
+}
+
+func (s *SlotPlusIncludes) GetIncludedScheduleResource() (schedule *Schedule, err error) {
+	if s.IncludedScheduleResources == nil {
+		err = errors.New("Included schedules not requested")
+	} else if len(*s.IncludedScheduleResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 schedule, but found %d", len(*s.IncludedScheduleResources))
+	} else if len(*s.IncludedScheduleResources) == 1 {
+		schedule = &(*s.IncludedScheduleResources)[0]
+	}
+	return
+}
+
+func (s *SlotPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if s.IncludedScheduleResources != nil {
+		for _, r := range *s.IncludedScheduleResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

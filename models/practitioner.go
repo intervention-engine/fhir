@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Practitioner struct {
 	DomainResource   `bson:",inline"`
@@ -86,4 +90,49 @@ type PractitionerQualificationComponent struct {
 	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Period     *Period          `bson:"period,omitempty" json:"period,omitempty"`
 	Issuer     *Reference       `bson:"issuer,omitempty" json:"issuer,omitempty"`
+}
+
+type PractitionerPlus struct {
+	Practitioner             `bson:",inline"`
+	PractitionerPlusIncludes `bson:",inline"`
+}
+
+type PractitionerPlusIncludes struct {
+	IncludedOrganizationResources *[]Organization `bson:"_includedOrganizationResources,omitempty"`
+	IncludedLocationResources     *[]Location     `bson:"_includedLocationResources,omitempty"`
+}
+
+func (p *PractitionerPlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if p.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedOrganizationResources))
+	} else if len(*p.IncludedOrganizationResources) == 1 {
+		organization = &(*p.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (p *PractitionerPlusIncludes) GetIncludedLocationResources() (locations []Location, err error) {
+	if p.IncludedLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else {
+		locations = *p.IncludedLocationResources
+	}
+	return
+}
+
+func (p *PractitionerPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedOrganizationResources != nil {
+		for _, r := range *p.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLocationResources != nil {
+		for _, r := range *p.IncludedLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

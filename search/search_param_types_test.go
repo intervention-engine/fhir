@@ -1507,6 +1507,18 @@ func (s *SearchPTSuite) TestNormalizedQueryValue(c *C) {
 	c.Assert(v.Get("gender"), Equals, "M")
 }
 
+func (s *SearchPTSuite) TestQueryOptions(c *C) {
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization"}
+	o := q.Options()
+	c.Assert(o.Count, Equals, 10)
+	c.Assert(o.Offset, Equals, 20)
+	c.Assert(o.Include, HasLen, 2)
+	c.Assert(o.Include[0].Resource, Equals, "Patient")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[1].Resource, Equals, "Patient")
+	c.Assert(o.Include[1].Parameter.Name, Equals, "organization")
+}
+
 func (s *SearchPTSuite) TestReconstructQueryWithDefaultOptions(c *C) {
 	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M"}
 	v := q.NormalizedQueryValues(true)
@@ -1515,22 +1527,31 @@ func (s *SearchPTSuite) TestReconstructQueryWithDefaultOptions(c *C) {
 	c.Assert(v.Get("gender"), Equals, "M")
 	c.Assert(v.Get(CountParam), Equals, "100")
 	c.Assert(v.Get(OffsetParam), Equals, "0")
+	c.Assert(v.Get(IncludeParam), Equals, "")
 }
 
 func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization"}
 	v := q.NormalizedQueryValues(true)
-	c.Assert(v, HasLen, 4)
+	c.Assert(v, HasLen, 5)
 	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
 	c.Assert(v.Get("gender"), Equals, "M")
+	c.Assert(v[CountParam], HasLen, 1)
 	c.Assert(v.Get(CountParam), Equals, "10")
+	c.Assert(v[OffsetParam], HasLen, 1)
 	c.Assert(v.Get(OffsetParam), Equals, "20")
+	c.Assert(v[IncludeParam], HasLen, 2)
+	c.Assert(v[IncludeParam][0], Equals, "Patient:careprovider")
+	c.Assert(v[IncludeParam][1], Equals, "Patient:organization")
 }
 
 func (s *SearchPTSuite) TestQueryOptionsQueryValues(c *C) {
-	q := QueryOptions{Count: 123, Offset: 456}
+	q := QueryOptions{Count: 123, Offset: 456, Include: []IncludeOption{
+		{Resource: "Patient", Parameter: SearchParameterDictionary["Patient"]["careprovider"]},
+	}}
 	v := q.QueryValues()
-	c.Assert(v, HasLen, 2)
+	c.Assert(v, HasLen, 3)
 	c.Assert(v.Get(CountParam), Equals, "123")
 	c.Assert(v.Get(OffsetParam), Equals, "456")
+	c.Assert(v.Get(IncludeParam), Equals, "Patient:careprovider")
 }

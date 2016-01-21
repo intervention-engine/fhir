@@ -70,3 +70,16 @@ func (x *ExplanationOfBenefit) UnmarshalJSON(data []byte) (err error) {
 	}
 	return
 }
+
+type ExplanationOfBenefitPlus struct {
+	ExplanationOfBenefit             `bson:",inline"`
+	ExplanationOfBenefitPlusIncludes `bson:",inline"`
+}
+
+type ExplanationOfBenefitPlusIncludes struct {
+}
+
+func (e *ExplanationOfBenefitPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

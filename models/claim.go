@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Claim struct {
 	DomainResource        `bson:",inline"`
@@ -168,4 +172,51 @@ type ClaimMissingTeethComponent struct {
 	Tooth          *Coding       `bson:"tooth,omitempty" json:"tooth,omitempty"`
 	Reason         *Coding       `bson:"reason,omitempty" json:"reason,omitempty"`
 	ExtractionDate *FHIRDateTime `bson:"extractionDate,omitempty" json:"extractionDate,omitempty"`
+}
+
+type ClaimPlus struct {
+	Claim             `bson:",inline"`
+	ClaimPlusIncludes `bson:",inline"`
+}
+
+type ClaimPlusIncludes struct {
+	IncludedProviderResources *[]Practitioner `bson:"_includedProviderResources,omitempty"`
+	IncludedPatientResources  *[]Patient      `bson:"_includedPatientResources,omitempty"`
+}
+
+func (c *ClaimPlusIncludes) GetIncludedProviderResource() (practitioner *Practitioner, err error) {
+	if c.IncludedProviderResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*c.IncludedProviderResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*c.IncludedProviderResources))
+	} else if len(*c.IncludedProviderResources) == 1 {
+		practitioner = &(*c.IncludedProviderResources)[0]
+	}
+	return
+}
+
+func (c *ClaimPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if c.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*c.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*c.IncludedPatientResources))
+	} else if len(*c.IncludedPatientResources) == 1 {
+		patient = &(*c.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (c *ClaimPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if c.IncludedProviderResources != nil {
+		for _, r := range *c.IncludedProviderResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedPatientResources != nil {
+		for _, r := range *c.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

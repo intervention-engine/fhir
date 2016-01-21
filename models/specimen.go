@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Specimen struct {
 	DomainResource      `bson:",inline"`
@@ -95,4 +99,134 @@ type SpecimenContainerComponent struct {
 	SpecimenQuantity        *Quantity        `bson:"specimenQuantity,omitempty" json:"specimenQuantity,omitempty"`
 	AdditiveCodeableConcept *CodeableConcept `bson:"additiveCodeableConcept,omitempty" json:"additiveCodeableConcept,omitempty"`
 	AdditiveReference       *Reference       `bson:"additiveReference,omitempty" json:"additiveReference,omitempty"`
+}
+
+type SpecimenPlus struct {
+	Specimen             `bson:",inline"`
+	SpecimenPlusIncludes `bson:",inline"`
+}
+
+type SpecimenPlusIncludes struct {
+	IncludedParentResources           *[]Specimen     `bson:"_includedParentResources,omitempty"`
+	IncludedSubjectGroupResources     *[]Group        `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectDeviceResources    *[]Device       `bson:"_includedSubjectDeviceResources,omitempty"`
+	IncludedSubjectPatientResources   *[]Patient      `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedSubjectSubstanceResources *[]Substance    `bson:"_includedSubjectSubstanceResources,omitempty"`
+	IncludedPatientResources          *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedCollectorResources        *[]Practitioner `bson:"_includedCollectorResources,omitempty"`
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedParentResources() (specimen []Specimen, err error) {
+	if s.IncludedParentResources == nil {
+		err = errors.New("Included specimen not requested")
+	} else {
+		specimen = *s.IncludedParentResources
+	}
+	return
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if s.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*s.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*s.IncludedSubjectGroupResources))
+	} else if len(*s.IncludedSubjectGroupResources) == 1 {
+		group = &(*s.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedSubjectDeviceResource() (device *Device, err error) {
+	if s.IncludedSubjectDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*s.IncludedSubjectDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*s.IncludedSubjectDeviceResources))
+	} else if len(*s.IncludedSubjectDeviceResources) == 1 {
+		device = &(*s.IncludedSubjectDeviceResources)[0]
+	}
+	return
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if s.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*s.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*s.IncludedSubjectPatientResources))
+	} else if len(*s.IncludedSubjectPatientResources) == 1 {
+		patient = &(*s.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedSubjectSubstanceResource() (substance *Substance, err error) {
+	if s.IncludedSubjectSubstanceResources == nil {
+		err = errors.New("Included substances not requested")
+	} else if len(*s.IncludedSubjectSubstanceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 substance, but found %d", len(*s.IncludedSubjectSubstanceResources))
+	} else if len(*s.IncludedSubjectSubstanceResources) == 1 {
+		substance = &(*s.IncludedSubjectSubstanceResources)[0]
+	}
+	return
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if s.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*s.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*s.IncludedPatientResources))
+	} else if len(*s.IncludedPatientResources) == 1 {
+		patient = &(*s.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedCollectorResource() (practitioner *Practitioner, err error) {
+	if s.IncludedCollectorResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*s.IncludedCollectorResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*s.IncludedCollectorResources))
+	} else if len(*s.IncludedCollectorResources) == 1 {
+		practitioner = &(*s.IncludedCollectorResources)[0]
+	}
+	return
+}
+
+func (s *SpecimenPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if s.IncludedParentResources != nil {
+		for _, r := range *s.IncludedParentResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSubjectGroupResources != nil {
+		for _, r := range *s.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSubjectDeviceResources != nil {
+		for _, r := range *s.IncludedSubjectDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSubjectPatientResources != nil {
+		for _, r := range *s.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSubjectSubstanceResources != nil {
+		for _, r := range *s.IncludedSubjectSubstanceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedPatientResources != nil {
+		for _, r := range *s.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedCollectorResources != nil {
+		for _, r := range *s.IncludedCollectorResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

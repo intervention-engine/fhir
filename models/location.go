@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Location struct {
 	DomainResource       `bson:",inline"`
@@ -77,4 +81,51 @@ type LocationPositionComponent struct {
 	Longitude *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
 	Latitude  *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
 	Altitude  *float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
+}
+
+type LocationPlus struct {
+	Location             `bson:",inline"`
+	LocationPlusIncludes `bson:",inline"`
+}
+
+type LocationPlusIncludes struct {
+	IncludedPartofResources       *[]Location     `bson:"_includedPartofResources,omitempty"`
+	IncludedOrganizationResources *[]Organization `bson:"_includedOrganizationResources,omitempty"`
+}
+
+func (l *LocationPlusIncludes) GetIncludedPartofResource() (location *Location, err error) {
+	if l.IncludedPartofResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*l.IncludedPartofResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*l.IncludedPartofResources))
+	} else if len(*l.IncludedPartofResources) == 1 {
+		location = &(*l.IncludedPartofResources)[0]
+	}
+	return
+}
+
+func (l *LocationPlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if l.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*l.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*l.IncludedOrganizationResources))
+	} else if len(*l.IncludedOrganizationResources) == 1 {
+		organization = &(*l.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (l *LocationPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if l.IncludedPartofResources != nil {
+		for _, r := range *l.IncludedPartofResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if l.IncludedOrganizationResources != nil {
+		for _, r := range *l.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

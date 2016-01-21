@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Account struct {
 	DomainResource `bson:",inline"`
@@ -70,4 +74,153 @@ func (x *Account) UnmarshalJSON(data []byte) (err error) {
 		*x = Account(x2)
 	}
 	return
+}
+
+type AccountPlus struct {
+	Account             `bson:",inline"`
+	AccountPlusIncludes `bson:",inline"`
+}
+
+type AccountPlusIncludes struct {
+	IncludedOwnerResources                    *[]Organization      `bson:"_includedOwnerResources,omitempty"`
+	IncludedSubjectPractitionerResources      *[]Practitioner      `bson:"_includedSubjectPractitionerResources,omitempty"`
+	IncludedSubjectOrganizationResources      *[]Organization      `bson:"_includedSubjectOrganizationResources,omitempty"`
+	IncludedSubjectDeviceResources            *[]Device            `bson:"_includedSubjectDeviceResources,omitempty"`
+	IncludedSubjectPatientResources           *[]Patient           `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedSubjectHealthcareServiceResources *[]HealthcareService `bson:"_includedSubjectHealthcareServiceResources,omitempty"`
+	IncludedSubjectLocationResources          *[]Location          `bson:"_includedSubjectLocationResources,omitempty"`
+	IncludedPatientResources                  *[]Patient           `bson:"_includedPatientResources,omitempty"`
+}
+
+func (a *AccountPlusIncludes) GetIncludedOwnerResource() (organization *Organization, err error) {
+	if a.IncludedOwnerResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*a.IncludedOwnerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*a.IncludedOwnerResources))
+	} else if len(*a.IncludedOwnerResources) == 1 {
+		organization = &(*a.IncludedOwnerResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedSubjectPractitionerResource() (practitioner *Practitioner, err error) {
+	if a.IncludedSubjectPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*a.IncludedSubjectPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedSubjectPractitionerResources))
+	} else if len(*a.IncludedSubjectPractitionerResources) == 1 {
+		practitioner = &(*a.IncludedSubjectPractitionerResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedSubjectOrganizationResource() (organization *Organization, err error) {
+	if a.IncludedSubjectOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*a.IncludedSubjectOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*a.IncludedSubjectOrganizationResources))
+	} else if len(*a.IncludedSubjectOrganizationResources) == 1 {
+		organization = &(*a.IncludedSubjectOrganizationResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedSubjectDeviceResource() (device *Device, err error) {
+	if a.IncludedSubjectDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*a.IncludedSubjectDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*a.IncludedSubjectDeviceResources))
+	} else if len(*a.IncludedSubjectDeviceResources) == 1 {
+		device = &(*a.IncludedSubjectDeviceResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if a.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedSubjectPatientResources))
+	} else if len(*a.IncludedSubjectPatientResources) == 1 {
+		patient = &(*a.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedSubjectHealthcareServiceResource() (healthcareService *HealthcareService, err error) {
+	if a.IncludedSubjectHealthcareServiceResources == nil {
+		err = errors.New("Included healthcareservices not requested")
+	} else if len(*a.IncludedSubjectHealthcareServiceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 healthcareService, but found %d", len(*a.IncludedSubjectHealthcareServiceResources))
+	} else if len(*a.IncludedSubjectHealthcareServiceResources) == 1 {
+		healthcareService = &(*a.IncludedSubjectHealthcareServiceResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedSubjectLocationResource() (location *Location, err error) {
+	if a.IncludedSubjectLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*a.IncludedSubjectLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*a.IncludedSubjectLocationResources))
+	} else if len(*a.IncludedSubjectLocationResources) == 1 {
+		location = &(*a.IncludedSubjectLocationResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if a.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedPatientResources))
+	} else if len(*a.IncludedPatientResources) == 1 {
+		patient = &(*a.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (a *AccountPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if a.IncludedOwnerResources != nil {
+		for _, r := range *a.IncludedOwnerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedSubjectPractitionerResources != nil {
+		for _, r := range *a.IncludedSubjectPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedSubjectOrganizationResources != nil {
+		for _, r := range *a.IncludedSubjectOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedSubjectDeviceResources != nil {
+		for _, r := range *a.IncludedSubjectDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedSubjectPatientResources != nil {
+		for _, r := range *a.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedSubjectHealthcareServiceResources != nil {
+		for _, r := range *a.IncludedSubjectHealthcareServiceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedSubjectLocationResources != nil {
+		for _, r := range *a.IncludedSubjectLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedPatientResources != nil {
+		for _, r := range *a.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

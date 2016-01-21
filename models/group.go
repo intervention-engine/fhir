@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Group struct {
 	DomainResource `bson:",inline"`
@@ -83,4 +87,102 @@ type GroupMemberComponent struct {
 	Entity   *Reference `bson:"entity,omitempty" json:"entity,omitempty"`
 	Period   *Period    `bson:"period,omitempty" json:"period,omitempty"`
 	Inactive *bool      `bson:"inactive,omitempty" json:"inactive,omitempty"`
+}
+
+type GroupPlus struct {
+	Group             `bson:",inline"`
+	GroupPlusIncludes `bson:",inline"`
+}
+
+type GroupPlusIncludes struct {
+	IncludedMemberPractitionerResources *[]Practitioner `bson:"_includedMemberPractitionerResources,omitempty"`
+	IncludedMemberDeviceResources       *[]Device       `bson:"_includedMemberDeviceResources,omitempty"`
+	IncludedMemberMedicationResources   *[]Medication   `bson:"_includedMemberMedicationResources,omitempty"`
+	IncludedMemberPatientResources      *[]Patient      `bson:"_includedMemberPatientResources,omitempty"`
+	IncludedMemberSubstanceResources    *[]Substance    `bson:"_includedMemberSubstanceResources,omitempty"`
+}
+
+func (g *GroupPlusIncludes) GetIncludedMemberPractitionerResource() (practitioner *Practitioner, err error) {
+	if g.IncludedMemberPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*g.IncludedMemberPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*g.IncludedMemberPractitionerResources))
+	} else if len(*g.IncludedMemberPractitionerResources) == 1 {
+		practitioner = &(*g.IncludedMemberPractitionerResources)[0]
+	}
+	return
+}
+
+func (g *GroupPlusIncludes) GetIncludedMemberDeviceResource() (device *Device, err error) {
+	if g.IncludedMemberDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*g.IncludedMemberDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*g.IncludedMemberDeviceResources))
+	} else if len(*g.IncludedMemberDeviceResources) == 1 {
+		device = &(*g.IncludedMemberDeviceResources)[0]
+	}
+	return
+}
+
+func (g *GroupPlusIncludes) GetIncludedMemberMedicationResource() (medication *Medication, err error) {
+	if g.IncludedMemberMedicationResources == nil {
+		err = errors.New("Included medications not requested")
+	} else if len(*g.IncludedMemberMedicationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 medication, but found %d", len(*g.IncludedMemberMedicationResources))
+	} else if len(*g.IncludedMemberMedicationResources) == 1 {
+		medication = &(*g.IncludedMemberMedicationResources)[0]
+	}
+	return
+}
+
+func (g *GroupPlusIncludes) GetIncludedMemberPatientResource() (patient *Patient, err error) {
+	if g.IncludedMemberPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*g.IncludedMemberPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*g.IncludedMemberPatientResources))
+	} else if len(*g.IncludedMemberPatientResources) == 1 {
+		patient = &(*g.IncludedMemberPatientResources)[0]
+	}
+	return
+}
+
+func (g *GroupPlusIncludes) GetIncludedMemberSubstanceResource() (substance *Substance, err error) {
+	if g.IncludedMemberSubstanceResources == nil {
+		err = errors.New("Included substances not requested")
+	} else if len(*g.IncludedMemberSubstanceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 substance, but found %d", len(*g.IncludedMemberSubstanceResources))
+	} else if len(*g.IncludedMemberSubstanceResources) == 1 {
+		substance = &(*g.IncludedMemberSubstanceResources)[0]
+	}
+	return
+}
+
+func (g *GroupPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if g.IncludedMemberPractitionerResources != nil {
+		for _, r := range *g.IncludedMemberPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if g.IncludedMemberDeviceResources != nil {
+		for _, r := range *g.IncludedMemberDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if g.IncludedMemberMedicationResources != nil {
+		for _, r := range *g.IncludedMemberMedicationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if g.IncludedMemberPatientResources != nil {
+		for _, r := range *g.IncludedMemberPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if g.IncludedMemberSubstanceResources != nil {
+		for _, r := range *g.IncludedMemberSubstanceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type StructureDefinition struct {
 	DomainResource  `bson:",inline"`
@@ -104,4 +108,34 @@ type StructureDefinitionSnapshotComponent struct {
 
 type StructureDefinitionDifferentialComponent struct {
 	Element []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
+}
+
+type StructureDefinitionPlus struct {
+	StructureDefinition             `bson:",inline"`
+	StructureDefinitionPlusIncludes `bson:",inline"`
+}
+
+type StructureDefinitionPlusIncludes struct {
+	IncludedValuesetResources *[]ValueSet `bson:"_includedValuesetResources,omitempty"`
+}
+
+func (s *StructureDefinitionPlusIncludes) GetIncludedValuesetResource() (valueSet *ValueSet, err error) {
+	if s.IncludedValuesetResources == nil {
+		err = errors.New("Included valuesets not requested")
+	} else if len(*s.IncludedValuesetResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*s.IncludedValuesetResources))
+	} else if len(*s.IncludedValuesetResources) == 1 {
+		valueSet = &(*s.IncludedValuesetResources)[0]
+	}
+	return
+}
+
+func (s *StructureDefinitionPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if s.IncludedValuesetResources != nil {
+		for _, r := range *s.IncludedValuesetResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

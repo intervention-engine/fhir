@@ -70,3 +70,16 @@ func (x *EligibilityResponse) UnmarshalJSON(data []byte) (err error) {
 	}
 	return
 }
+
+type EligibilityResponsePlus struct {
+	EligibilityResponse             `bson:",inline"`
+	EligibilityResponsePlusIncludes `bson:",inline"`
+}
+
+type EligibilityResponsePlusIncludes struct {
+}
+
+func (e *EligibilityResponsePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

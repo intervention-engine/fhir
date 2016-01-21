@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ProcessResponse struct {
 	DomainResource      `bson:",inline"`
@@ -77,4 +81,68 @@ func (x *ProcessResponse) UnmarshalJSON(data []byte) (err error) {
 type ProcessResponseNotesComponent struct {
 	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text string  `bson:"text,omitempty" json:"text,omitempty"`
+}
+
+type ProcessResponsePlus struct {
+	ProcessResponse             `bson:",inline"`
+	ProcessResponsePlusIncludes `bson:",inline"`
+}
+
+type ProcessResponsePlusIncludes struct {
+	IncludedOrganizationResources        *[]Organization `bson:"_includedOrganizationResources,omitempty"`
+	IncludedRequestproviderResources     *[]Practitioner `bson:"_includedRequestproviderResources,omitempty"`
+	IncludedRequestorganizationResources *[]Organization `bson:"_includedRequestorganizationResources,omitempty"`
+}
+
+func (p *ProcessResponsePlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if p.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedOrganizationResources))
+	} else if len(*p.IncludedOrganizationResources) == 1 {
+		organization = &(*p.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (p *ProcessResponsePlusIncludes) GetIncludedRequestproviderResource() (practitioner *Practitioner, err error) {
+	if p.IncludedRequestproviderResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*p.IncludedRequestproviderResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedRequestproviderResources))
+	} else if len(*p.IncludedRequestproviderResources) == 1 {
+		practitioner = &(*p.IncludedRequestproviderResources)[0]
+	}
+	return
+}
+
+func (p *ProcessResponsePlusIncludes) GetIncludedRequestorganizationResource() (organization *Organization, err error) {
+	if p.IncludedRequestorganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedRequestorganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedRequestorganizationResources))
+	} else if len(*p.IncludedRequestorganizationResources) == 1 {
+		organization = &(*p.IncludedRequestorganizationResources)[0]
+	}
+	return
+}
+
+func (p *ProcessResponsePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedOrganizationResources != nil {
+		for _, r := range *p.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedRequestproviderResources != nil {
+		for _, r := range *p.IncludedRequestproviderResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedRequestorganizationResources != nil {
+		for _, r := range *p.IncludedRequestorganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }
