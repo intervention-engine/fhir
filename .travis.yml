@@ -1,7 +1,12 @@
+sudo: false
 language: go
+go:
+- 1.5.3
 services:
-  - mongodb
-
+- mongodb
 branches:
   only:
-    - master
+  - master
+notifications:
+  slack:
+    secure: Sz0HRgIE23pnsneB/jfKP01E2mRLgPUO72bIiCpTkeRZs3GeMso+eijCDSNwiR+429jK0/LlJhMS2c6CqQDuluMk+GvmQuRgqmj7kB0FDGqCqPpPeU7SsotOt27NRa73nyz8wj1ffmSitvL5emjrZsSIS4nIQF6GEobRI1p3xbY=
