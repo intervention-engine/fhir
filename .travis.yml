@@ -4,6 +4,12 @@ go:
 - 1.5.3
 services:
 - mongodb
+addons:
+  apt:
+    sources:
+    - mongodb-3.2-precise
+    packages:
+    - mongodb-org-server
 branches:
   only:
   - master
