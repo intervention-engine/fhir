@@ -191,3 +191,16 @@ type TestScriptTeardownComponent struct {
 type TestScriptTeardownActionComponent struct {
 	Operation *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
+
+type TestScriptPlus struct {
+	TestScript             `bson:",inline"`
+	TestScriptPlusIncludes `bson:",inline"`
+}
+
+type TestScriptPlusIncludes struct {
+}
+
+func (t *TestScriptPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

@@ -70,3 +70,16 @@ func (x *PaymentNotice) UnmarshalJSON(data []byte) (err error) {
 	}
 	return
 }
+
+type PaymentNoticePlus struct {
+	PaymentNotice             `bson:",inline"`
+	PaymentNoticePlusIncludes `bson:",inline"`
+}
+
+type PaymentNoticePlusIncludes struct {
+}
+
+func (p *PaymentNoticePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

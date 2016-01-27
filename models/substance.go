@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Substance struct {
 	DomainResource `bson:",inline"`
@@ -76,4 +80,34 @@ type SubstanceInstanceComponent struct {
 type SubstanceIngredientComponent struct {
 	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
+}
+
+type SubstancePlus struct {
+	Substance             `bson:",inline"`
+	SubstancePlusIncludes `bson:",inline"`
+}
+
+type SubstancePlusIncludes struct {
+	IncludedSubstanceResources *[]Substance `bson:"_includedSubstanceResources,omitempty"`
+}
+
+func (s *SubstancePlusIncludes) GetIncludedSubstanceResource() (substance *Substance, err error) {
+	if s.IncludedSubstanceResources == nil {
+		err = errors.New("Included substances not requested")
+	} else if len(*s.IncludedSubstanceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 substance, but found %d", len(*s.IncludedSubstanceResources))
+	} else if len(*s.IncludedSubstanceResources) == 1 {
+		substance = &(*s.IncludedSubstanceResources)[0]
+	}
+	return
+}
+
+func (s *SubstancePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if s.IncludedSubstanceResources != nil {
+		for _, r := range *s.IncludedSubstanceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

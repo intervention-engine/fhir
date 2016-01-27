@@ -91,3 +91,16 @@ type QuestionnaireQuestionComponent struct {
 	Option   []Coding                      `bson:"option,omitempty" json:"option,omitempty"`
 	Group    []QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
+
+type QuestionnairePlus struct {
+	Questionnaire             `bson:",inline"`
+	QuestionnairePlusIncludes `bson:",inline"`
+}
+
+type QuestionnairePlusIncludes struct {
+}
+
+func (q *QuestionnairePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

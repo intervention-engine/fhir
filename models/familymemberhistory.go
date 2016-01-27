@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type FamilyMemberHistory struct {
 	DomainResource  `bson:",inline"`
@@ -89,4 +93,34 @@ type FamilyMemberHistoryConditionComponent struct {
 	OnsetPeriod *Period          `bson:"onsetPeriod,omitempty" json:"onsetPeriod,omitempty"`
 	OnsetString string           `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
 	Note        *Annotation      `bson:"note,omitempty" json:"note,omitempty"`
+}
+
+type FamilyMemberHistoryPlus struct {
+	FamilyMemberHistory             `bson:",inline"`
+	FamilyMemberHistoryPlusIncludes `bson:",inline"`
+}
+
+type FamilyMemberHistoryPlusIncludes struct {
+	IncludedPatientResources *[]Patient `bson:"_includedPatientResources,omitempty"`
+}
+
+func (f *FamilyMemberHistoryPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if f.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*f.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*f.IncludedPatientResources))
+	} else if len(*f.IncludedPatientResources) == 1 {
+		patient = &(*f.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (f *FamilyMemberHistoryPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if f.IncludedPatientResources != nil {
+		for _, r := range *f.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

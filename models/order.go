@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Order struct {
 	DomainResource        `bson:",inline"`
@@ -73,4 +77,187 @@ func (x *Order) UnmarshalJSON(data []byte) (err error) {
 type OrderWhenComponent struct {
 	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
+}
+
+type OrderPlus struct {
+	Order             `bson:",inline"`
+	OrderPlusIncludes `bson:",inline"`
+}
+
+type OrderPlusIncludes struct {
+	IncludedSubjectGroupResources       *[]Group        `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectDeviceResources      *[]Device       `bson:"_includedSubjectDeviceResources,omitempty"`
+	IncludedSubjectPatientResources     *[]Patient      `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedSubjectSubstanceResources   *[]Substance    `bson:"_includedSubjectSubstanceResources,omitempty"`
+	IncludedPatientResources            *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedSourcePractitionerResources *[]Practitioner `bson:"_includedSourcePractitionerResources,omitempty"`
+	IncludedSourceOrganizationResources *[]Organization `bson:"_includedSourceOrganizationResources,omitempty"`
+	IncludedTargetPractitionerResources *[]Practitioner `bson:"_includedTargetPractitionerResources,omitempty"`
+	IncludedTargetOrganizationResources *[]Organization `bson:"_includedTargetOrganizationResources,omitempty"`
+	IncludedTargetDeviceResources       *[]Device       `bson:"_includedTargetDeviceResources,omitempty"`
+}
+
+func (o *OrderPlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if o.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*o.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*o.IncludedSubjectGroupResources))
+	} else if len(*o.IncludedSubjectGroupResources) == 1 {
+		group = &(*o.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedSubjectDeviceResource() (device *Device, err error) {
+	if o.IncludedSubjectDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*o.IncludedSubjectDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*o.IncludedSubjectDeviceResources))
+	} else if len(*o.IncludedSubjectDeviceResources) == 1 {
+		device = &(*o.IncludedSubjectDeviceResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if o.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*o.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*o.IncludedSubjectPatientResources))
+	} else if len(*o.IncludedSubjectPatientResources) == 1 {
+		patient = &(*o.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedSubjectSubstanceResource() (substance *Substance, err error) {
+	if o.IncludedSubjectSubstanceResources == nil {
+		err = errors.New("Included substances not requested")
+	} else if len(*o.IncludedSubjectSubstanceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 substance, but found %d", len(*o.IncludedSubjectSubstanceResources))
+	} else if len(*o.IncludedSubjectSubstanceResources) == 1 {
+		substance = &(*o.IncludedSubjectSubstanceResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if o.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*o.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*o.IncludedPatientResources))
+	} else if len(*o.IncludedPatientResources) == 1 {
+		patient = &(*o.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedSourcePractitionerResource() (practitioner *Practitioner, err error) {
+	if o.IncludedSourcePractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*o.IncludedSourcePractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*o.IncludedSourcePractitionerResources))
+	} else if len(*o.IncludedSourcePractitionerResources) == 1 {
+		practitioner = &(*o.IncludedSourcePractitionerResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedSourceOrganizationResource() (organization *Organization, err error) {
+	if o.IncludedSourceOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*o.IncludedSourceOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*o.IncludedSourceOrganizationResources))
+	} else if len(*o.IncludedSourceOrganizationResources) == 1 {
+		organization = &(*o.IncludedSourceOrganizationResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedTargetPractitionerResource() (practitioner *Practitioner, err error) {
+	if o.IncludedTargetPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*o.IncludedTargetPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*o.IncludedTargetPractitionerResources))
+	} else if len(*o.IncludedTargetPractitionerResources) == 1 {
+		practitioner = &(*o.IncludedTargetPractitionerResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedTargetOrganizationResource() (organization *Organization, err error) {
+	if o.IncludedTargetOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*o.IncludedTargetOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*o.IncludedTargetOrganizationResources))
+	} else if len(*o.IncludedTargetOrganizationResources) == 1 {
+		organization = &(*o.IncludedTargetOrganizationResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedTargetDeviceResource() (device *Device, err error) {
+	if o.IncludedTargetDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*o.IncludedTargetDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*o.IncludedTargetDeviceResources))
+	} else if len(*o.IncludedTargetDeviceResources) == 1 {
+		device = &(*o.IncludedTargetDeviceResources)[0]
+	}
+	return
+}
+
+func (o *OrderPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if o.IncludedSubjectGroupResources != nil {
+		for _, r := range *o.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedSubjectDeviceResources != nil {
+		for _, r := range *o.IncludedSubjectDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedSubjectPatientResources != nil {
+		for _, r := range *o.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedSubjectSubstanceResources != nil {
+		for _, r := range *o.IncludedSubjectSubstanceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedPatientResources != nil {
+		for _, r := range *o.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedSourcePractitionerResources != nil {
+		for _, r := range *o.IncludedSourcePractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedSourceOrganizationResources != nil {
+		for _, r := range *o.IncludedSourceOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedTargetPractitionerResources != nil {
+		for _, r := range *o.IncludedTargetPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedTargetOrganizationResources != nil {
+		for _, r := range *o.IncludedTargetOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedTargetDeviceResources != nil {
+		for _, r := range *o.IncludedTargetDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

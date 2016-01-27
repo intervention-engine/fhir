@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Patient struct {
 	DomainResource       `bson:",inline"`
@@ -104,4 +108,81 @@ type PatientCommunicationComponent struct {
 type PatientLinkComponent struct {
 	Other *Reference `bson:"other,omitempty" json:"other,omitempty"`
 	Type  string     `bson:"type,omitempty" json:"type,omitempty"`
+}
+
+type PatientPlus struct {
+	Patient             `bson:",inline"`
+	PatientPlusIncludes `bson:",inline"`
+}
+
+type PatientPlusIncludes struct {
+	IncludedLinkResources                     *[]Patient      `bson:"_includedLinkResources,omitempty"`
+	IncludedCareproviderPractitionerResources *[]Practitioner `bson:"_includedCareproviderPractitionerResources,omitempty"`
+	IncludedCareproviderOrganizationResources *[]Organization `bson:"_includedCareproviderOrganizationResources,omitempty"`
+	IncludedOrganizationResources             *[]Organization `bson:"_includedOrganizationResources,omitempty"`
+}
+
+func (p *PatientPlusIncludes) GetIncludedLinkResource() (patient *Patient, err error) {
+	if p.IncludedLinkResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*p.IncludedLinkResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedLinkResources))
+	} else if len(*p.IncludedLinkResources) == 1 {
+		patient = &(*p.IncludedLinkResources)[0]
+	}
+	return
+}
+
+func (p *PatientPlusIncludes) GetIncludedCareproviderPractitionerResources() (practitioners []Practitioner, err error) {
+	if p.IncludedCareproviderPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else {
+		practitioners = *p.IncludedCareproviderPractitionerResources
+	}
+	return
+}
+
+func (p *PatientPlusIncludes) GetIncludedCareproviderOrganizationResources() (organizations []Organization, err error) {
+	if p.IncludedCareproviderOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else {
+		organizations = *p.IncludedCareproviderOrganizationResources
+	}
+	return
+}
+
+func (p *PatientPlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if p.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedOrganizationResources))
+	} else if len(*p.IncludedOrganizationResources) == 1 {
+		organization = &(*p.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (p *PatientPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedLinkResources != nil {
+		for _, r := range *p.IncludedLinkResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedCareproviderPractitionerResources != nil {
+		for _, r := range *p.IncludedCareproviderPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedCareproviderOrganizationResources != nil {
+		for _, r := range *p.IncludedCareproviderOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedOrganizationResources != nil {
+		for _, r := range *p.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Organization struct {
 	DomainResource `bson:",inline"`
@@ -74,4 +78,34 @@ type OrganizationContactComponent struct {
 	Name    *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
 	Address *Address         `bson:"address,omitempty" json:"address,omitempty"`
+}
+
+type OrganizationPlus struct {
+	Organization             `bson:",inline"`
+	OrganizationPlusIncludes `bson:",inline"`
+}
+
+type OrganizationPlusIncludes struct {
+	IncludedPartofResources *[]Organization `bson:"_includedPartofResources,omitempty"`
+}
+
+func (o *OrganizationPlusIncludes) GetIncludedPartofResource() (organization *Organization, err error) {
+	if o.IncludedPartofResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*o.IncludedPartofResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*o.IncludedPartofResources))
+	} else if len(*o.IncludedPartofResources) == 1 {
+		organization = &(*o.IncludedPartofResources)[0]
+	}
+	return
+}
+
+func (o *OrganizationPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if o.IncludedPartofResources != nil {
+		for _, r := range *o.IncludedPartofResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

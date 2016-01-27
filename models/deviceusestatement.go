@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type DeviceUseStatement struct {
 	DomainResource          `bson:",inline"`
@@ -71,4 +75,68 @@ func (x *DeviceUseStatement) UnmarshalJSON(data []byte) (err error) {
 		*x = DeviceUseStatement(x2)
 	}
 	return
+}
+
+type DeviceUseStatementPlus struct {
+	DeviceUseStatement             `bson:",inline"`
+	DeviceUseStatementPlusIncludes `bson:",inline"`
+}
+
+type DeviceUseStatementPlusIncludes struct {
+	IncludedSubjectResources *[]Patient `bson:"_includedSubjectResources,omitempty"`
+	IncludedPatientResources *[]Patient `bson:"_includedPatientResources,omitempty"`
+	IncludedDeviceResources  *[]Device  `bson:"_includedDeviceResources,omitempty"`
+}
+
+func (d *DeviceUseStatementPlusIncludes) GetIncludedSubjectResource() (patient *Patient, err error) {
+	if d.IncludedSubjectResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedSubjectResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedSubjectResources))
+	} else if len(*d.IncludedSubjectResources) == 1 {
+		patient = &(*d.IncludedSubjectResources)[0]
+	}
+	return
+}
+
+func (d *DeviceUseStatementPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if d.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedPatientResources))
+	} else if len(*d.IncludedPatientResources) == 1 {
+		patient = &(*d.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (d *DeviceUseStatementPlusIncludes) GetIncludedDeviceResource() (device *Device, err error) {
+	if d.IncludedDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*d.IncludedDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*d.IncludedDeviceResources))
+	} else if len(*d.IncludedDeviceResources) == 1 {
+		device = &(*d.IncludedDeviceResources)[0]
+	}
+	return
+}
+
+func (d *DeviceUseStatementPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if d.IncludedSubjectResources != nil {
+		for _, r := range *d.IncludedSubjectResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedPatientResources != nil {
+		for _, r := range *d.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedDeviceResources != nil {
+		for _, r := range *d.IncludedDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

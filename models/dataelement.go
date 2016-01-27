@@ -86,3 +86,16 @@ type DataElementMappingComponent struct {
 	Name     string `bson:"name,omitempty" json:"name,omitempty"`
 	Comments string `bson:"comments,omitempty" json:"comments,omitempty"`
 }
+
+type DataElementPlus struct {
+	DataElement             `bson:",inline"`
+	DataElementPlusIncludes `bson:",inline"`
+}
+
+type DataElementPlusIncludes struct {
+}
+
+func (d *DataElementPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

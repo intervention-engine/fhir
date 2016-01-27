@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type NutritionOrder struct {
 	DomainResource         `bson:",inline"`
@@ -117,4 +121,68 @@ type NutritionOrderEnteralFormulaAdministrationComponent struct {
 	Quantity           *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	RateSimpleQuantity *Quantity `bson:"rateSimpleQuantity,omitempty" json:"rateSimpleQuantity,omitempty"`
 	RateRatio          *Ratio    `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
+}
+
+type NutritionOrderPlus struct {
+	NutritionOrder             `bson:",inline"`
+	NutritionOrderPlusIncludes `bson:",inline"`
+}
+
+type NutritionOrderPlusIncludes struct {
+	IncludedProviderResources  *[]Practitioner `bson:"_includedProviderResources,omitempty"`
+	IncludedPatientResources   *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedEncounterResources *[]Encounter    `bson:"_includedEncounterResources,omitempty"`
+}
+
+func (n *NutritionOrderPlusIncludes) GetIncludedProviderResource() (practitioner *Practitioner, err error) {
+	if n.IncludedProviderResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*n.IncludedProviderResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*n.IncludedProviderResources))
+	} else if len(*n.IncludedProviderResources) == 1 {
+		practitioner = &(*n.IncludedProviderResources)[0]
+	}
+	return
+}
+
+func (n *NutritionOrderPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if n.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*n.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*n.IncludedPatientResources))
+	} else if len(*n.IncludedPatientResources) == 1 {
+		patient = &(*n.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (n *NutritionOrderPlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
+	if n.IncludedEncounterResources == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*n.IncludedEncounterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*n.IncludedEncounterResources))
+	} else if len(*n.IncludedEncounterResources) == 1 {
+		encounter = &(*n.IncludedEncounterResources)[0]
+	}
+	return
+}
+
+func (n *NutritionOrderPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if n.IncludedProviderResources != nil {
+		for _, r := range *n.IncludedProviderResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if n.IncludedPatientResources != nil {
+		for _, r := range *n.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if n.IncludedEncounterResources != nil {
+		for _, r := range *n.IncludedEncounterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

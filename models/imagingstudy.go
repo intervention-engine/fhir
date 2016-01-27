@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ImagingStudy struct {
 	DomainResource    `bson:",inline"`
@@ -98,4 +102,49 @@ type ImagingStudySeriesInstanceComponent struct {
 	Type     string       `bson:"type,omitempty" json:"type,omitempty"`
 	Title    string       `bson:"title,omitempty" json:"title,omitempty"`
 	Content  []Attachment `bson:"content,omitempty" json:"content,omitempty"`
+}
+
+type ImagingStudyPlus struct {
+	ImagingStudy             `bson:",inline"`
+	ImagingStudyPlusIncludes `bson:",inline"`
+}
+
+type ImagingStudyPlusIncludes struct {
+	IncludedPatientResources *[]Patient         `bson:"_includedPatientResources,omitempty"`
+	IncludedOrderResources   *[]DiagnosticOrder `bson:"_includedOrderResources,omitempty"`
+}
+
+func (i *ImagingStudyPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if i.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*i.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*i.IncludedPatientResources))
+	} else if len(*i.IncludedPatientResources) == 1 {
+		patient = &(*i.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (i *ImagingStudyPlusIncludes) GetIncludedOrderResources() (diagnosticOrders []DiagnosticOrder, err error) {
+	if i.IncludedOrderResources == nil {
+		err = errors.New("Included diagnosticOrders not requested")
+	} else {
+		diagnosticOrders = *i.IncludedOrderResources
+	}
+	return
+}
+
+func (i *ImagingStudyPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if i.IncludedPatientResources != nil {
+		for _, r := range *i.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedOrderResources != nil {
+		for _, r := range *i.IncludedOrderResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

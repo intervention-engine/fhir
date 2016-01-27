@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Person struct {
 	DomainResource       `bson:",inline"`
@@ -74,4 +78,153 @@ func (x *Person) UnmarshalJSON(data []byte) (err error) {
 type PersonLinkComponent struct {
 	Target    *Reference `bson:"target,omitempty" json:"target,omitempty"`
 	Assurance string     `bson:"assurance,omitempty" json:"assurance,omitempty"`
+}
+
+type PersonPlus struct {
+	Person             `bson:",inline"`
+	PersonPlusIncludes `bson:",inline"`
+}
+
+type PersonPlusIncludes struct {
+	IncludedPractitionerResources      *[]Practitioner  `bson:"_includedPractitionerResources,omitempty"`
+	IncludedLinkPractitionerResources  *[]Practitioner  `bson:"_includedLinkPractitionerResources,omitempty"`
+	IncludedLinkPatientResources       *[]Patient       `bson:"_includedLinkPatientResources,omitempty"`
+	IncludedLinkPersonResources        *[]Person        `bson:"_includedLinkPersonResources,omitempty"`
+	IncludedLinkRelatedPersonResources *[]RelatedPerson `bson:"_includedLinkRelatedPersonResources,omitempty"`
+	IncludedRelatedpersonResources     *[]RelatedPerson `bson:"_includedRelatedpersonResources,omitempty"`
+	IncludedPatientResources           *[]Patient       `bson:"_includedPatientResources,omitempty"`
+	IncludedOrganizationResources      *[]Organization  `bson:"_includedOrganizationResources,omitempty"`
+}
+
+func (p *PersonPlusIncludes) GetIncludedPractitionerResource() (practitioner *Practitioner, err error) {
+	if p.IncludedPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*p.IncludedPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedPractitionerResources))
+	} else if len(*p.IncludedPractitionerResources) == 1 {
+		practitioner = &(*p.IncludedPractitionerResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedLinkPractitionerResource() (practitioner *Practitioner, err error) {
+	if p.IncludedLinkPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*p.IncludedLinkPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedLinkPractitionerResources))
+	} else if len(*p.IncludedLinkPractitionerResources) == 1 {
+		practitioner = &(*p.IncludedLinkPractitionerResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedLinkPatientResource() (patient *Patient, err error) {
+	if p.IncludedLinkPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*p.IncludedLinkPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedLinkPatientResources))
+	} else if len(*p.IncludedLinkPatientResources) == 1 {
+		patient = &(*p.IncludedLinkPatientResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedLinkPersonResource() (person *Person, err error) {
+	if p.IncludedLinkPersonResources == nil {
+		err = errors.New("Included people not requested")
+	} else if len(*p.IncludedLinkPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 person, but found %d", len(*p.IncludedLinkPersonResources))
+	} else if len(*p.IncludedLinkPersonResources) == 1 {
+		person = &(*p.IncludedLinkPersonResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedLinkRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if p.IncludedLinkRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*p.IncludedLinkRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*p.IncludedLinkRelatedPersonResources))
+	} else if len(*p.IncludedLinkRelatedPersonResources) == 1 {
+		relatedPerson = &(*p.IncludedLinkRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedRelatedpersonResource() (relatedPerson *RelatedPerson, err error) {
+	if p.IncludedRelatedpersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*p.IncludedRelatedpersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*p.IncludedRelatedpersonResources))
+	} else if len(*p.IncludedRelatedpersonResources) == 1 {
+		relatedPerson = &(*p.IncludedRelatedpersonResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if p.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*p.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPatientResources))
+	} else if len(*p.IncludedPatientResources) == 1 {
+		patient = &(*p.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if p.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedOrganizationResources))
+	} else if len(*p.IncludedOrganizationResources) == 1 {
+		organization = &(*p.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (p *PersonPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedPractitionerResources != nil {
+		for _, r := range *p.IncludedPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLinkPractitionerResources != nil {
+		for _, r := range *p.IncludedLinkPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLinkPatientResources != nil {
+		for _, r := range *p.IncludedLinkPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLinkPersonResources != nil {
+		for _, r := range *p.IncludedLinkPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLinkRelatedPersonResources != nil {
+		for _, r := range *p.IncludedLinkRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedRelatedpersonResources != nil {
+		for _, r := range *p.IncludedRelatedpersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPatientResources != nil {
+		for _, r := range *p.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedOrganizationResources != nil {
+		for _, r := range *p.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

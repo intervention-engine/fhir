@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type NamingSystem struct {
 	DomainResource `bson:",inline"`
@@ -84,4 +88,34 @@ type NamingSystemUniqueIdComponent struct {
 	Value     string  `bson:"value,omitempty" json:"value,omitempty"`
 	Preferred *bool   `bson:"preferred,omitempty" json:"preferred,omitempty"`
 	Period    *Period `bson:"period,omitempty" json:"period,omitempty"`
+}
+
+type NamingSystemPlus struct {
+	NamingSystem             `bson:",inline"`
+	NamingSystemPlusIncludes `bson:",inline"`
+}
+
+type NamingSystemPlusIncludes struct {
+	IncludedReplacedbyResources *[]NamingSystem `bson:"_includedReplacedbyResources,omitempty"`
+}
+
+func (n *NamingSystemPlusIncludes) GetIncludedReplacedbyResource() (namingSystem *NamingSystem, err error) {
+	if n.IncludedReplacedbyResources == nil {
+		err = errors.New("Included namingsystems not requested")
+	} else if len(*n.IncludedReplacedbyResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 namingSystem, but found %d", len(*n.IncludedReplacedbyResources))
+	} else if len(*n.IncludedReplacedbyResources) == 1 {
+		namingSystem = &(*n.IncludedReplacedbyResources)[0]
+	}
+	return
+}
+
+func (n *NamingSystemPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if n.IncludedReplacedbyResources != nil {
+		for _, r := range *n.IncludedReplacedbyResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

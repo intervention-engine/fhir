@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Media struct {
 	DomainResource `bson:",inline"`
@@ -71,4 +75,136 @@ func (x *Media) UnmarshalJSON(data []byte) (err error) {
 		*x = Media(x2)
 	}
 	return
+}
+
+type MediaPlus struct {
+	Media             `bson:",inline"`
+	MediaPlusIncludes `bson:",inline"`
+}
+
+type MediaPlusIncludes struct {
+	IncludedSubjectPractitionerResources *[]Practitioner `bson:"_includedSubjectPractitionerResources,omitempty"`
+	IncludedSubjectGroupResources        *[]Group        `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectSpecimenResources     *[]Specimen     `bson:"_includedSubjectSpecimenResources,omitempty"`
+	IncludedSubjectDeviceResources       *[]Device       `bson:"_includedSubjectDeviceResources,omitempty"`
+	IncludedSubjectPatientResources      *[]Patient      `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedPatientResources             *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedOperatorResources            *[]Practitioner `bson:"_includedOperatorResources,omitempty"`
+}
+
+func (m *MediaPlusIncludes) GetIncludedSubjectPractitionerResource() (practitioner *Practitioner, err error) {
+	if m.IncludedSubjectPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedSubjectPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedSubjectPractitionerResources))
+	} else if len(*m.IncludedSubjectPractitionerResources) == 1 {
+		practitioner = &(*m.IncludedSubjectPractitionerResources)[0]
+	}
+	return
+}
+
+func (m *MediaPlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if m.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*m.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*m.IncludedSubjectGroupResources))
+	} else if len(*m.IncludedSubjectGroupResources) == 1 {
+		group = &(*m.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (m *MediaPlusIncludes) GetIncludedSubjectSpecimenResource() (specimen *Specimen, err error) {
+	if m.IncludedSubjectSpecimenResources == nil {
+		err = errors.New("Included specimen not requested")
+	} else if len(*m.IncludedSubjectSpecimenResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 specimen, but found %d", len(*m.IncludedSubjectSpecimenResources))
+	} else if len(*m.IncludedSubjectSpecimenResources) == 1 {
+		specimen = &(*m.IncludedSubjectSpecimenResources)[0]
+	}
+	return
+}
+
+func (m *MediaPlusIncludes) GetIncludedSubjectDeviceResource() (device *Device, err error) {
+	if m.IncludedSubjectDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*m.IncludedSubjectDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*m.IncludedSubjectDeviceResources))
+	} else if len(*m.IncludedSubjectDeviceResources) == 1 {
+		device = &(*m.IncludedSubjectDeviceResources)[0]
+	}
+	return
+}
+
+func (m *MediaPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if m.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*m.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*m.IncludedSubjectPatientResources))
+	} else if len(*m.IncludedSubjectPatientResources) == 1 {
+		patient = &(*m.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (m *MediaPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if m.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*m.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*m.IncludedPatientResources))
+	} else if len(*m.IncludedPatientResources) == 1 {
+		patient = &(*m.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (m *MediaPlusIncludes) GetIncludedOperatorResource() (practitioner *Practitioner, err error) {
+	if m.IncludedOperatorResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedOperatorResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedOperatorResources))
+	} else if len(*m.IncludedOperatorResources) == 1 {
+		practitioner = &(*m.IncludedOperatorResources)[0]
+	}
+	return
+}
+
+func (m *MediaPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if m.IncludedSubjectPractitionerResources != nil {
+		for _, r := range *m.IncludedSubjectPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedSubjectGroupResources != nil {
+		for _, r := range *m.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedSubjectSpecimenResources != nil {
+		for _, r := range *m.IncludedSubjectSpecimenResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedSubjectDeviceResources != nil {
+		for _, r := range *m.IncludedSubjectDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedSubjectPatientResources != nil {
+		for _, r := range *m.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedPatientResources != nil {
+		for _, r := range *m.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedOperatorResources != nil {
+		for _, r := range *m.IncludedOperatorResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

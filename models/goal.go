@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Goal struct {
 	DomainResource       `bson:",inline"`
@@ -80,4 +84,85 @@ func (x *Goal) UnmarshalJSON(data []byte) (err error) {
 type GoalOutcomeComponent struct {
 	ResultCodeableConcept *CodeableConcept `bson:"resultCodeableConcept,omitempty" json:"resultCodeableConcept,omitempty"`
 	ResultReference       *Reference       `bson:"resultReference,omitempty" json:"resultReference,omitempty"`
+}
+
+type GoalPlus struct {
+	Goal             `bson:",inline"`
+	GoalPlusIncludes `bson:",inline"`
+}
+
+type GoalPlusIncludes struct {
+	IncludedPatientResources             *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedSubjectGroupResources        *[]Group        `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectOrganizationResources *[]Organization `bson:"_includedSubjectOrganizationResources,omitempty"`
+	IncludedSubjectPatientResources      *[]Patient      `bson:"_includedSubjectPatientResources,omitempty"`
+}
+
+func (g *GoalPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if g.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*g.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*g.IncludedPatientResources))
+	} else if len(*g.IncludedPatientResources) == 1 {
+		patient = &(*g.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (g *GoalPlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if g.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*g.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*g.IncludedSubjectGroupResources))
+	} else if len(*g.IncludedSubjectGroupResources) == 1 {
+		group = &(*g.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (g *GoalPlusIncludes) GetIncludedSubjectOrganizationResource() (organization *Organization, err error) {
+	if g.IncludedSubjectOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*g.IncludedSubjectOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*g.IncludedSubjectOrganizationResources))
+	} else if len(*g.IncludedSubjectOrganizationResources) == 1 {
+		organization = &(*g.IncludedSubjectOrganizationResources)[0]
+	}
+	return
+}
+
+func (g *GoalPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if g.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*g.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*g.IncludedSubjectPatientResources))
+	} else if len(*g.IncludedSubjectPatientResources) == 1 {
+		patient = &(*g.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (g *GoalPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if g.IncludedPatientResources != nil {
+		for _, r := range *g.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if g.IncludedSubjectGroupResources != nil {
+		for _, r := range *g.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if g.IncludedSubjectOrganizationResources != nil {
+		for _, r := range *g.IncludedSubjectOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if g.IncludedSubjectPatientResources != nil {
+		for _, r := range *g.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Conformance struct {
 	DomainResource `bson:",inline"`
@@ -188,4 +192,49 @@ type ConformanceDocumentComponent struct {
 	Mode          string     `bson:"mode,omitempty" json:"mode,omitempty"`
 	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
 	Profile       *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
+}
+
+type ConformancePlus struct {
+	Conformance             `bson:",inline"`
+	ConformancePlusIncludes `bson:",inline"`
+}
+
+type ConformancePlusIncludes struct {
+	IncludedProfileResources          *[]StructureDefinition `bson:"_includedProfileResources,omitempty"`
+	IncludedSupportedprofileResources *[]StructureDefinition `bson:"_includedSupportedprofileResources,omitempty"`
+}
+
+func (c *ConformancePlusIncludes) GetIncludedProfileResource() (structureDefinition *StructureDefinition, err error) {
+	if c.IncludedProfileResources == nil {
+		err = errors.New("Included structuredefinitions not requested")
+	} else if len(*c.IncludedProfileResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedProfileResources))
+	} else if len(*c.IncludedProfileResources) == 1 {
+		structureDefinition = &(*c.IncludedProfileResources)[0]
+	}
+	return
+}
+
+func (c *ConformancePlusIncludes) GetIncludedSupportedprofileResources() (structureDefinitions []StructureDefinition, err error) {
+	if c.IncludedSupportedprofileResources == nil {
+		err = errors.New("Included structureDefinitions not requested")
+	} else {
+		structureDefinitions = *c.IncludedSupportedprofileResources
+	}
+	return
+}
+
+func (c *ConformancePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if c.IncludedProfileResources != nil {
+		for _, r := range *c.IncludedProfileResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedSupportedprofileResources != nil {
+		for _, r := range *c.IncludedSupportedprofileResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

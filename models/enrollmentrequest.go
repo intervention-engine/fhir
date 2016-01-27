@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type EnrollmentRequest struct {
 	DomainResource  `bson:",inline"`
@@ -69,4 +73,51 @@ func (x *EnrollmentRequest) UnmarshalJSON(data []byte) (err error) {
 		*x = EnrollmentRequest(x2)
 	}
 	return
+}
+
+type EnrollmentRequestPlus struct {
+	EnrollmentRequest             `bson:",inline"`
+	EnrollmentRequestPlusIncludes `bson:",inline"`
+}
+
+type EnrollmentRequestPlusIncludes struct {
+	IncludedSubjectResources *[]Patient `bson:"_includedSubjectResources,omitempty"`
+	IncludedPatientResources *[]Patient `bson:"_includedPatientResources,omitempty"`
+}
+
+func (e *EnrollmentRequestPlusIncludes) GetIncludedSubjectResource() (patient *Patient, err error) {
+	if e.IncludedSubjectResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*e.IncludedSubjectResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*e.IncludedSubjectResources))
+	} else if len(*e.IncludedSubjectResources) == 1 {
+		patient = &(*e.IncludedSubjectResources)[0]
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if e.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*e.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*e.IncludedPatientResources))
+	} else if len(*e.IncludedPatientResources) == 1 {
+		patient = &(*e.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if e.IncludedSubjectResources != nil {
+		for _, r := range *e.IncludedSubjectResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if e.IncludedPatientResources != nil {
+		for _, r := range *e.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

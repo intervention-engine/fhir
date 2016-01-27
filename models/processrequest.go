@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ProcessRequest struct {
 	DomainResource  `bson:",inline"`
@@ -79,4 +83,51 @@ func (x *ProcessRequest) UnmarshalJSON(data []byte) (err error) {
 
 type ProcessRequestItemsComponent struct {
 	SequenceLinkId *int32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
+}
+
+type ProcessRequestPlus struct {
+	ProcessRequest             `bson:",inline"`
+	ProcessRequestPlusIncludes `bson:",inline"`
+}
+
+type ProcessRequestPlusIncludes struct {
+	IncludedProviderResources     *[]Practitioner `bson:"_includedProviderResources,omitempty"`
+	IncludedOrganizationResources *[]Organization `bson:"_includedOrganizationResources,omitempty"`
+}
+
+func (p *ProcessRequestPlusIncludes) GetIncludedProviderResource() (practitioner *Practitioner, err error) {
+	if p.IncludedProviderResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*p.IncludedProviderResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedProviderResources))
+	} else if len(*p.IncludedProviderResources) == 1 {
+		practitioner = &(*p.IncludedProviderResources)[0]
+	}
+	return
+}
+
+func (p *ProcessRequestPlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if p.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedOrganizationResources))
+	} else if len(*p.IncludedOrganizationResources) == 1 {
+		organization = &(*p.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (p *ProcessRequestPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedProviderResources != nil {
+		for _, r := range *p.IncludedProviderResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedOrganizationResources != nil {
+		for _, r := range *p.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

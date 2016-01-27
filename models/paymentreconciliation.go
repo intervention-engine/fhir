@@ -90,3 +90,16 @@ type PaymentReconciliationNotesComponent struct {
 	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text string  `bson:"text,omitempty" json:"text,omitempty"`
 }
+
+type PaymentReconciliationPlus struct {
+	PaymentReconciliation             `bson:",inline"`
+	PaymentReconciliationPlusIncludes `bson:",inline"`
+}
+
+type PaymentReconciliationPlusIncludes struct {
+}
+
+func (p *PaymentReconciliationPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

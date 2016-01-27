@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Coverage struct {
 	DomainResource `bson:",inline"`
@@ -73,4 +77,34 @@ func (x *Coverage) UnmarshalJSON(data []byte) (err error) {
 		*x = Coverage(x2)
 	}
 	return
+}
+
+type CoveragePlus struct {
+	Coverage             `bson:",inline"`
+	CoveragePlusIncludes `bson:",inline"`
+}
+
+type CoveragePlusIncludes struct {
+	IncludedIssuerResources *[]Organization `bson:"_includedIssuerResources,omitempty"`
+}
+
+func (c *CoveragePlusIncludes) GetIncludedIssuerResource() (organization *Organization, err error) {
+	if c.IncludedIssuerResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*c.IncludedIssuerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*c.IncludedIssuerResources))
+	} else if len(*c.IncludedIssuerResources) == 1 {
+		organization = &(*c.IncludedIssuerResources)[0]
+	}
+	return
+}
+
+func (c *CoveragePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if c.IncludedIssuerResources != nil {
+		for _, r := range *c.IncludedIssuerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

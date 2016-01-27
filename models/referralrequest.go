@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ReferralRequest struct {
 	DomainResource        `bson:",inline"`
@@ -75,4 +79,115 @@ func (x *ReferralRequest) UnmarshalJSON(data []byte) (err error) {
 		*x = ReferralRequest(x2)
 	}
 	return
+}
+
+type ReferralRequestPlus struct {
+	ReferralRequest             `bson:",inline"`
+	ReferralRequestPlusIncludes `bson:",inline"`
+}
+
+type ReferralRequestPlusIncludes struct {
+	IncludedRequesterPractitionerResources *[]Practitioner `bson:"_includedRequesterPractitionerResources,omitempty"`
+	IncludedRequesterOrganizationResources *[]Organization `bson:"_includedRequesterOrganizationResources,omitempty"`
+	IncludedRequesterPatientResources      *[]Patient      `bson:"_includedRequesterPatientResources,omitempty"`
+	IncludedPatientResources               *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedRecipientPractitionerResources *[]Practitioner `bson:"_includedRecipientPractitionerResources,omitempty"`
+	IncludedRecipientOrganizationResources *[]Organization `bson:"_includedRecipientOrganizationResources,omitempty"`
+}
+
+func (r *ReferralRequestPlusIncludes) GetIncludedRequesterPractitionerResource() (practitioner *Practitioner, err error) {
+	if r.IncludedRequesterPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*r.IncludedRequesterPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*r.IncludedRequesterPractitionerResources))
+	} else if len(*r.IncludedRequesterPractitionerResources) == 1 {
+		practitioner = &(*r.IncludedRequesterPractitionerResources)[0]
+	}
+	return
+}
+
+func (r *ReferralRequestPlusIncludes) GetIncludedRequesterOrganizationResource() (organization *Organization, err error) {
+	if r.IncludedRequesterOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*r.IncludedRequesterOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*r.IncludedRequesterOrganizationResources))
+	} else if len(*r.IncludedRequesterOrganizationResources) == 1 {
+		organization = &(*r.IncludedRequesterOrganizationResources)[0]
+	}
+	return
+}
+
+func (r *ReferralRequestPlusIncludes) GetIncludedRequesterPatientResource() (patient *Patient, err error) {
+	if r.IncludedRequesterPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*r.IncludedRequesterPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*r.IncludedRequesterPatientResources))
+	} else if len(*r.IncludedRequesterPatientResources) == 1 {
+		patient = &(*r.IncludedRequesterPatientResources)[0]
+	}
+	return
+}
+
+func (r *ReferralRequestPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if r.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*r.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*r.IncludedPatientResources))
+	} else if len(*r.IncludedPatientResources) == 1 {
+		patient = &(*r.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (r *ReferralRequestPlusIncludes) GetIncludedRecipientPractitionerResources() (practitioners []Practitioner, err error) {
+	if r.IncludedRecipientPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else {
+		practitioners = *r.IncludedRecipientPractitionerResources
+	}
+	return
+}
+
+func (r *ReferralRequestPlusIncludes) GetIncludedRecipientOrganizationResources() (organizations []Organization, err error) {
+	if r.IncludedRecipientOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else {
+		organizations = *r.IncludedRecipientOrganizationResources
+	}
+	return
+}
+
+func (r *ReferralRequestPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if r.IncludedRequesterPractitionerResources != nil {
+		for _, r := range *r.IncludedRequesterPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedRequesterOrganizationResources != nil {
+		for _, r := range *r.IncludedRequesterOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedRequesterPatientResources != nil {
+		for _, r := range *r.IncludedRequesterPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedPatientResources != nil {
+		for _, r := range *r.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedRecipientPractitionerResources != nil {
+		for _, r := range *r.IncludedRecipientPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if r.IncludedRecipientOrganizationResources != nil {
+		for _, r := range *r.IncludedRecipientOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

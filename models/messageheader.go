@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type MessageHeader struct {
 	DomainResource `bson:",inline"`
@@ -90,4 +94,136 @@ type MessageHeaderMessageDestinationComponent struct {
 	Name     string     `bson:"name,omitempty" json:"name,omitempty"`
 	Target   *Reference `bson:"target,omitempty" json:"target,omitempty"`
 	Endpoint string     `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+}
+
+type MessageHeaderPlus struct {
+	MessageHeader             `bson:",inline"`
+	MessageHeaderPlusIncludes `bson:",inline"`
+}
+
+type MessageHeaderPlusIncludes struct {
+	IncludedReceiverPractitionerResources    *[]Practitioner `bson:"_includedReceiverPractitionerResources,omitempty"`
+	IncludedReceiverOrganizationResources    *[]Organization `bson:"_includedReceiverOrganizationResources,omitempty"`
+	IncludedAuthorResources                  *[]Practitioner `bson:"_includedAuthorResources,omitempty"`
+	IncludedTargetResources                  *[]Device       `bson:"_includedTargetResources,omitempty"`
+	IncludedResponsiblePractitionerResources *[]Practitioner `bson:"_includedResponsiblePractitionerResources,omitempty"`
+	IncludedResponsibleOrganizationResources *[]Organization `bson:"_includedResponsibleOrganizationResources,omitempty"`
+	IncludedEntererResources                 *[]Practitioner `bson:"_includedEntererResources,omitempty"`
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedReceiverPractitionerResource() (practitioner *Practitioner, err error) {
+	if m.IncludedReceiverPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedReceiverPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedReceiverPractitionerResources))
+	} else if len(*m.IncludedReceiverPractitionerResources) == 1 {
+		practitioner = &(*m.IncludedReceiverPractitionerResources)[0]
+	}
+	return
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedReceiverOrganizationResource() (organization *Organization, err error) {
+	if m.IncludedReceiverOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*m.IncludedReceiverOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*m.IncludedReceiverOrganizationResources))
+	} else if len(*m.IncludedReceiverOrganizationResources) == 1 {
+		organization = &(*m.IncludedReceiverOrganizationResources)[0]
+	}
+	return
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedAuthorResource() (practitioner *Practitioner, err error) {
+	if m.IncludedAuthorResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedAuthorResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedAuthorResources))
+	} else if len(*m.IncludedAuthorResources) == 1 {
+		practitioner = &(*m.IncludedAuthorResources)[0]
+	}
+	return
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedTargetResource() (device *Device, err error) {
+	if m.IncludedTargetResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*m.IncludedTargetResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*m.IncludedTargetResources))
+	} else if len(*m.IncludedTargetResources) == 1 {
+		device = &(*m.IncludedTargetResources)[0]
+	}
+	return
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedResponsiblePractitionerResource() (practitioner *Practitioner, err error) {
+	if m.IncludedResponsiblePractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedResponsiblePractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedResponsiblePractitionerResources))
+	} else if len(*m.IncludedResponsiblePractitionerResources) == 1 {
+		practitioner = &(*m.IncludedResponsiblePractitionerResources)[0]
+	}
+	return
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedResponsibleOrganizationResource() (organization *Organization, err error) {
+	if m.IncludedResponsibleOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*m.IncludedResponsibleOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*m.IncludedResponsibleOrganizationResources))
+	} else if len(*m.IncludedResponsibleOrganizationResources) == 1 {
+		organization = &(*m.IncludedResponsibleOrganizationResources)[0]
+	}
+	return
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedEntererResource() (practitioner *Practitioner, err error) {
+	if m.IncludedEntererResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedEntererResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedEntererResources))
+	} else if len(*m.IncludedEntererResources) == 1 {
+		practitioner = &(*m.IncludedEntererResources)[0]
+	}
+	return
+}
+
+func (m *MessageHeaderPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if m.IncludedReceiverPractitionerResources != nil {
+		for _, r := range *m.IncludedReceiverPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedReceiverOrganizationResources != nil {
+		for _, r := range *m.IncludedReceiverOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedAuthorResources != nil {
+		for _, r := range *m.IncludedAuthorResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedTargetResources != nil {
+		for _, r := range *m.IncludedTargetResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedResponsiblePractitionerResources != nil {
+		for _, r := range *m.IncludedResponsiblePractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedResponsibleOrganizationResources != nil {
+		for _, r := range *m.IncludedResponsibleOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedEntererResources != nil {
+		for _, r := range *m.IncludedEntererResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

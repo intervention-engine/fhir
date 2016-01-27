@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type DocumentManifest struct {
 	DomainResource   `bson:",inline"`
@@ -81,4 +85,237 @@ type DocumentManifestContentComponent struct {
 type DocumentManifestRelatedComponent struct {
 	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
+}
+
+type DocumentManifestPlus struct {
+	DocumentManifest             `bson:",inline"`
+	DocumentManifestPlusIncludes `bson:",inline"`
+}
+
+type DocumentManifestPlusIncludes struct {
+	IncludedSubjectPractitionerResources    *[]Practitioner  `bson:"_includedSubjectPractitionerResources,omitempty"`
+	IncludedSubjectGroupResources           *[]Group         `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectDeviceResources          *[]Device        `bson:"_includedSubjectDeviceResources,omitempty"`
+	IncludedSubjectPatientResources         *[]Patient       `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedAuthorPractitionerResources     *[]Practitioner  `bson:"_includedAuthorPractitionerResources,omitempty"`
+	IncludedAuthorOrganizationResources     *[]Organization  `bson:"_includedAuthorOrganizationResources,omitempty"`
+	IncludedAuthorDeviceResources           *[]Device        `bson:"_includedAuthorDeviceResources,omitempty"`
+	IncludedAuthorPatientResources          *[]Patient       `bson:"_includedAuthorPatientResources,omitempty"`
+	IncludedAuthorRelatedPersonResources    *[]RelatedPerson `bson:"_includedAuthorRelatedPersonResources,omitempty"`
+	IncludedPatientResources                *[]Patient       `bson:"_includedPatientResources,omitempty"`
+	IncludedRecipientPractitionerResources  *[]Practitioner  `bson:"_includedRecipientPractitionerResources,omitempty"`
+	IncludedRecipientOrganizationResources  *[]Organization  `bson:"_includedRecipientOrganizationResources,omitempty"`
+	IncludedRecipientPatientResources       *[]Patient       `bson:"_includedRecipientPatientResources,omitempty"`
+	IncludedRecipientRelatedPersonResources *[]RelatedPerson `bson:"_includedRecipientRelatedPersonResources,omitempty"`
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedSubjectPractitionerResource() (practitioner *Practitioner, err error) {
+	if d.IncludedSubjectPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*d.IncludedSubjectPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*d.IncludedSubjectPractitionerResources))
+	} else if len(*d.IncludedSubjectPractitionerResources) == 1 {
+		practitioner = &(*d.IncludedSubjectPractitionerResources)[0]
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if d.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*d.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*d.IncludedSubjectGroupResources))
+	} else if len(*d.IncludedSubjectGroupResources) == 1 {
+		group = &(*d.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedSubjectDeviceResource() (device *Device, err error) {
+	if d.IncludedSubjectDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*d.IncludedSubjectDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*d.IncludedSubjectDeviceResources))
+	} else if len(*d.IncludedSubjectDeviceResources) == 1 {
+		device = &(*d.IncludedSubjectDeviceResources)[0]
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if d.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedSubjectPatientResources))
+	} else if len(*d.IncludedSubjectPatientResources) == 1 {
+		patient = &(*d.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedAuthorPractitionerResources() (practitioners []Practitioner, err error) {
+	if d.IncludedAuthorPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else {
+		practitioners = *d.IncludedAuthorPractitionerResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedAuthorOrganizationResources() (organizations []Organization, err error) {
+	if d.IncludedAuthorOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else {
+		organizations = *d.IncludedAuthorOrganizationResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedAuthorDeviceResources() (devices []Device, err error) {
+	if d.IncludedAuthorDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else {
+		devices = *d.IncludedAuthorDeviceResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedAuthorPatientResources() (patients []Patient, err error) {
+	if d.IncludedAuthorPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else {
+		patients = *d.IncludedAuthorPatientResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedAuthorRelatedPersonResources() (relatedPeople []RelatedPerson, err error) {
+	if d.IncludedAuthorRelatedPersonResources == nil {
+		err = errors.New("Included relatedPeople not requested")
+	} else {
+		relatedPeople = *d.IncludedAuthorRelatedPersonResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if d.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedPatientResources))
+	} else if len(*d.IncludedPatientResources) == 1 {
+		patient = &(*d.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedRecipientPractitionerResources() (practitioners []Practitioner, err error) {
+	if d.IncludedRecipientPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else {
+		practitioners = *d.IncludedRecipientPractitionerResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedRecipientOrganizationResources() (organizations []Organization, err error) {
+	if d.IncludedRecipientOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else {
+		organizations = *d.IncludedRecipientOrganizationResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedRecipientPatientResources() (patients []Patient, err error) {
+	if d.IncludedRecipientPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else {
+		patients = *d.IncludedRecipientPatientResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedRecipientRelatedPersonResources() (relatedPeople []RelatedPerson, err error) {
+	if d.IncludedRecipientRelatedPersonResources == nil {
+		err = errors.New("Included relatedPeople not requested")
+	} else {
+		relatedPeople = *d.IncludedRecipientRelatedPersonResources
+	}
+	return
+}
+
+func (d *DocumentManifestPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if d.IncludedSubjectPractitionerResources != nil {
+		for _, r := range *d.IncludedSubjectPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSubjectGroupResources != nil {
+		for _, r := range *d.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSubjectDeviceResources != nil {
+		for _, r := range *d.IncludedSubjectDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedSubjectPatientResources != nil {
+		for _, r := range *d.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedAuthorPractitionerResources != nil {
+		for _, r := range *d.IncludedAuthorPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedAuthorOrganizationResources != nil {
+		for _, r := range *d.IncludedAuthorOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedAuthorDeviceResources != nil {
+		for _, r := range *d.IncludedAuthorDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedAuthorPatientResources != nil {
+		for _, r := range *d.IncludedAuthorPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedAuthorRelatedPersonResources != nil {
+		for _, r := range *d.IncludedAuthorRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedPatientResources != nil {
+		for _, r := range *d.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedRecipientPractitionerResources != nil {
+		for _, r := range *d.IncludedRecipientPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedRecipientOrganizationResources != nil {
+		for _, r := range *d.IncludedRecipientOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedRecipientPatientResources != nil {
+		for _, r := range *d.IncludedRecipientPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedRecipientRelatedPersonResources != nil {
+		for _, r := range *d.IncludedRecipientRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

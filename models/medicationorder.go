@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type MedicationOrder struct {
 	DomainResource            `bson:",inline"`
@@ -107,4 +111,85 @@ type MedicationOrderDispenseRequestComponent struct {
 type MedicationOrderSubstitutionComponent struct {
 	Type   *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
 	Reason *CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
+}
+
+type MedicationOrderPlus struct {
+	MedicationOrder             `bson:",inline"`
+	MedicationOrderPlusIncludes `bson:",inline"`
+}
+
+type MedicationOrderPlusIncludes struct {
+	IncludedPrescriberResources *[]Practitioner `bson:"_includedPrescriberResources,omitempty"`
+	IncludedPatientResources    *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedMedicationResources *[]Medication   `bson:"_includedMedicationResources,omitempty"`
+	IncludedEncounterResources  *[]Encounter    `bson:"_includedEncounterResources,omitempty"`
+}
+
+func (m *MedicationOrderPlusIncludes) GetIncludedPrescriberResource() (practitioner *Practitioner, err error) {
+	if m.IncludedPrescriberResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedPrescriberResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedPrescriberResources))
+	} else if len(*m.IncludedPrescriberResources) == 1 {
+		practitioner = &(*m.IncludedPrescriberResources)[0]
+	}
+	return
+}
+
+func (m *MedicationOrderPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if m.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*m.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*m.IncludedPatientResources))
+	} else if len(*m.IncludedPatientResources) == 1 {
+		patient = &(*m.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (m *MedicationOrderPlusIncludes) GetIncludedMedicationResource() (medication *Medication, err error) {
+	if m.IncludedMedicationResources == nil {
+		err = errors.New("Included medications not requested")
+	} else if len(*m.IncludedMedicationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 medication, but found %d", len(*m.IncludedMedicationResources))
+	} else if len(*m.IncludedMedicationResources) == 1 {
+		medication = &(*m.IncludedMedicationResources)[0]
+	}
+	return
+}
+
+func (m *MedicationOrderPlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
+	if m.IncludedEncounterResources == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*m.IncludedEncounterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*m.IncludedEncounterResources))
+	} else if len(*m.IncludedEncounterResources) == 1 {
+		encounter = &(*m.IncludedEncounterResources)[0]
+	}
+	return
+}
+
+func (m *MedicationOrderPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if m.IncludedPrescriberResources != nil {
+		for _, r := range *m.IncludedPrescriberResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedPatientResources != nil {
+		for _, r := range *m.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedMedicationResources != nil {
+		for _, r := range *m.IncludedMedicationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedEncounterResources != nil {
+		for _, r := range *m.IncludedEncounterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type OperationDefinition struct {
 	DomainResource `bson:",inline"`
@@ -101,4 +105,51 @@ type OperationDefinitionParameterBindingComponent struct {
 	Strength          string     `bson:"strength,omitempty" json:"strength,omitempty"`
 	ValueSetUri       string     `bson:"valueSetUri,omitempty" json:"valueSetUri,omitempty"`
 	ValueSetReference *Reference `bson:"valueSetReference,omitempty" json:"valueSetReference,omitempty"`
+}
+
+type OperationDefinitionPlus struct {
+	OperationDefinition             `bson:",inline"`
+	OperationDefinitionPlusIncludes `bson:",inline"`
+}
+
+type OperationDefinitionPlusIncludes struct {
+	IncludedProfileResources *[]StructureDefinition `bson:"_includedProfileResources,omitempty"`
+	IncludedBaseResources    *[]OperationDefinition `bson:"_includedBaseResources,omitempty"`
+}
+
+func (o *OperationDefinitionPlusIncludes) GetIncludedProfileResource() (structureDefinition *StructureDefinition, err error) {
+	if o.IncludedProfileResources == nil {
+		err = errors.New("Included structuredefinitions not requested")
+	} else if len(*o.IncludedProfileResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*o.IncludedProfileResources))
+	} else if len(*o.IncludedProfileResources) == 1 {
+		structureDefinition = &(*o.IncludedProfileResources)[0]
+	}
+	return
+}
+
+func (o *OperationDefinitionPlusIncludes) GetIncludedBaseResource() (operationDefinition *OperationDefinition, err error) {
+	if o.IncludedBaseResources == nil {
+		err = errors.New("Included operationdefinitions not requested")
+	} else if len(*o.IncludedBaseResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 operationDefinition, but found %d", len(*o.IncludedBaseResources))
+	} else if len(*o.IncludedBaseResources) == 1 {
+		operationDefinition = &(*o.IncludedBaseResources)[0]
+	}
+	return
+}
+
+func (o *OperationDefinitionPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if o.IncludedProfileResources != nil {
+		for _, r := range *o.IncludedProfileResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedBaseResources != nil {
+		for _, r := range *o.IncludedBaseResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

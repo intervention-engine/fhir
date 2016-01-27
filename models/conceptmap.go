@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ConceptMap struct {
 	DomainResource  `bson:",inline"`
@@ -103,4 +107,119 @@ type ConceptMapOtherElementComponent struct {
 	Element    string `bson:"element,omitempty" json:"element,omitempty"`
 	CodeSystem string `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
 	Code       string `bson:"code,omitempty" json:"code,omitempty"`
+}
+
+type ConceptMapPlus struct {
+	ConceptMap             `bson:",inline"`
+	ConceptMapPlusIncludes `bson:",inline"`
+}
+
+type ConceptMapPlusIncludes struct {
+	IncludedSourceStructureDefinitionResources    *[]StructureDefinition `bson:"_includedSourceStructureDefinitionResources,omitempty"`
+	IncludedSourceValueSetResources               *[]ValueSet            `bson:"_includedSourceValueSetResources,omitempty"`
+	IncludedTargetStructureDefinitionResources    *[]StructureDefinition `bson:"_includedTargetStructureDefinitionResources,omitempty"`
+	IncludedTargetValueSetResources               *[]ValueSet            `bson:"_includedTargetValueSetResources,omitempty"`
+	IncludedSourceuriStructureDefinitionResources *[]StructureDefinition `bson:"_includedSourceuriStructureDefinitionResources,omitempty"`
+	IncludedSourceuriValueSetResources            *[]ValueSet            `bson:"_includedSourceuriValueSetResources,omitempty"`
+}
+
+func (c *ConceptMapPlusIncludes) GetIncludedSourceStructureDefinitionResource() (structureDefinition *StructureDefinition, err error) {
+	if c.IncludedSourceStructureDefinitionResources == nil {
+		err = errors.New("Included structuredefinitions not requested")
+	} else if len(*c.IncludedSourceStructureDefinitionResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedSourceStructureDefinitionResources))
+	} else if len(*c.IncludedSourceStructureDefinitionResources) == 1 {
+		structureDefinition = &(*c.IncludedSourceStructureDefinitionResources)[0]
+	}
+	return
+}
+
+func (c *ConceptMapPlusIncludes) GetIncludedSourceValueSetResource() (valueSet *ValueSet, err error) {
+	if c.IncludedSourceValueSetResources == nil {
+		err = errors.New("Included valuesets not requested")
+	} else if len(*c.IncludedSourceValueSetResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedSourceValueSetResources))
+	} else if len(*c.IncludedSourceValueSetResources) == 1 {
+		valueSet = &(*c.IncludedSourceValueSetResources)[0]
+	}
+	return
+}
+
+func (c *ConceptMapPlusIncludes) GetIncludedTargetStructureDefinitionResource() (structureDefinition *StructureDefinition, err error) {
+	if c.IncludedTargetStructureDefinitionResources == nil {
+		err = errors.New("Included structuredefinitions not requested")
+	} else if len(*c.IncludedTargetStructureDefinitionResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedTargetStructureDefinitionResources))
+	} else if len(*c.IncludedTargetStructureDefinitionResources) == 1 {
+		structureDefinition = &(*c.IncludedTargetStructureDefinitionResources)[0]
+	}
+	return
+}
+
+func (c *ConceptMapPlusIncludes) GetIncludedTargetValueSetResource() (valueSet *ValueSet, err error) {
+	if c.IncludedTargetValueSetResources == nil {
+		err = errors.New("Included valuesets not requested")
+	} else if len(*c.IncludedTargetValueSetResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedTargetValueSetResources))
+	} else if len(*c.IncludedTargetValueSetResources) == 1 {
+		valueSet = &(*c.IncludedTargetValueSetResources)[0]
+	}
+	return
+}
+
+func (c *ConceptMapPlusIncludes) GetIncludedSourceuriStructureDefinitionResource() (structureDefinition *StructureDefinition, err error) {
+	if c.IncludedSourceuriStructureDefinitionResources == nil {
+		err = errors.New("Included structuredefinitions not requested")
+	} else if len(*c.IncludedSourceuriStructureDefinitionResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedSourceuriStructureDefinitionResources))
+	} else if len(*c.IncludedSourceuriStructureDefinitionResources) == 1 {
+		structureDefinition = &(*c.IncludedSourceuriStructureDefinitionResources)[0]
+	}
+	return
+}
+
+func (c *ConceptMapPlusIncludes) GetIncludedSourceuriValueSetResource() (valueSet *ValueSet, err error) {
+	if c.IncludedSourceuriValueSetResources == nil {
+		err = errors.New("Included valuesets not requested")
+	} else if len(*c.IncludedSourceuriValueSetResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedSourceuriValueSetResources))
+	} else if len(*c.IncludedSourceuriValueSetResources) == 1 {
+		valueSet = &(*c.IncludedSourceuriValueSetResources)[0]
+	}
+	return
+}
+
+func (c *ConceptMapPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if c.IncludedSourceStructureDefinitionResources != nil {
+		for _, r := range *c.IncludedSourceStructureDefinitionResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedSourceValueSetResources != nil {
+		for _, r := range *c.IncludedSourceValueSetResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedTargetStructureDefinitionResources != nil {
+		for _, r := range *c.IncludedTargetStructureDefinitionResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedTargetValueSetResources != nil {
+		for _, r := range *c.IncludedTargetValueSetResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedSourceuriStructureDefinitionResources != nil {
+		for _, r := range *c.IncludedSourceuriStructureDefinitionResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedSourceuriValueSetResources != nil {
+		for _, r := range *c.IncludedSourceuriValueSetResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

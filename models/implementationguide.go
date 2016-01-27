@@ -118,3 +118,16 @@ type ImplementationGuidePageComponent struct {
 	Format  string                             `bson:"format,omitempty" json:"format,omitempty"`
 	Page    []ImplementationGuidePageComponent `bson:"page,omitempty" json:"page,omitempty"`
 }
+
+type ImplementationGuidePlus struct {
+	ImplementationGuide             `bson:",inline"`
+	ImplementationGuidePlusIncludes `bson:",inline"`
+}
+
+type ImplementationGuidePlusIncludes struct {
+}
+
+func (i *ImplementationGuidePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

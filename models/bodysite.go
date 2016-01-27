@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type BodySite struct {
 	DomainResource `bson:",inline"`
@@ -65,4 +69,34 @@ func (x *BodySite) UnmarshalJSON(data []byte) (err error) {
 		*x = BodySite(x2)
 	}
 	return
+}
+
+type BodySitePlus struct {
+	BodySite             `bson:",inline"`
+	BodySitePlusIncludes `bson:",inline"`
+}
+
+type BodySitePlusIncludes struct {
+	IncludedPatientResources *[]Patient `bson:"_includedPatientResources,omitempty"`
+}
+
+func (b *BodySitePlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if b.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*b.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*b.IncludedPatientResources))
+	} else if len(*b.IncludedPatientResources) == 1 {
+		patient = &(*b.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (b *BodySitePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if b.IncludedPatientResources != nil {
+		for _, r := range *b.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

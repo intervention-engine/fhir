@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type AuditEvent struct {
 	DomainResource `bson:",inline"`
@@ -116,4 +120,136 @@ type AuditEventObjectComponent struct {
 type AuditEventObjectDetailComponent struct {
 	Type  string `bson:"type,omitempty" json:"type,omitempty"`
 	Value string `bson:"value,omitempty" json:"value,omitempty"`
+}
+
+type AuditEventPlus struct {
+	AuditEvent             `bson:",inline"`
+	AuditEventPlusIncludes `bson:",inline"`
+}
+
+type AuditEventPlusIncludes struct {
+	IncludedParticipantPractitionerResources  *[]Practitioner  `bson:"_includedParticipantPractitionerResources,omitempty"`
+	IncludedParticipantOrganizationResources  *[]Organization  `bson:"_includedParticipantOrganizationResources,omitempty"`
+	IncludedParticipantDeviceResources        *[]Device        `bson:"_includedParticipantDeviceResources,omitempty"`
+	IncludedParticipantPatientResources       *[]Patient       `bson:"_includedParticipantPatientResources,omitempty"`
+	IncludedParticipantRelatedPersonResources *[]RelatedPerson `bson:"_includedParticipantRelatedPersonResources,omitempty"`
+	IncludedPatientPath1Resources             *[]Patient       `bson:"_includedPatientPath1Resources,omitempty"`
+	IncludedPatientPath2Resources             *[]Patient       `bson:"_includedPatientPath2Resources,omitempty"`
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedParticipantPractitionerResource() (practitioner *Practitioner, err error) {
+	if a.IncludedParticipantPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*a.IncludedParticipantPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedParticipantPractitionerResources))
+	} else if len(*a.IncludedParticipantPractitionerResources) == 1 {
+		practitioner = &(*a.IncludedParticipantPractitionerResources)[0]
+	}
+	return
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedParticipantOrganizationResource() (organization *Organization, err error) {
+	if a.IncludedParticipantOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*a.IncludedParticipantOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*a.IncludedParticipantOrganizationResources))
+	} else if len(*a.IncludedParticipantOrganizationResources) == 1 {
+		organization = &(*a.IncludedParticipantOrganizationResources)[0]
+	}
+	return
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedParticipantDeviceResource() (device *Device, err error) {
+	if a.IncludedParticipantDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*a.IncludedParticipantDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*a.IncludedParticipantDeviceResources))
+	} else if len(*a.IncludedParticipantDeviceResources) == 1 {
+		device = &(*a.IncludedParticipantDeviceResources)[0]
+	}
+	return
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedParticipantPatientResource() (patient *Patient, err error) {
+	if a.IncludedParticipantPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedParticipantPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedParticipantPatientResources))
+	} else if len(*a.IncludedParticipantPatientResources) == 1 {
+		patient = &(*a.IncludedParticipantPatientResources)[0]
+	}
+	return
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedParticipantRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if a.IncludedParticipantRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*a.IncludedParticipantRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*a.IncludedParticipantRelatedPersonResources))
+	} else if len(*a.IncludedParticipantRelatedPersonResources) == 1 {
+		relatedPerson = &(*a.IncludedParticipantRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedPatientPath1Resource() (patient *Patient, err error) {
+	if a.IncludedPatientPath1Resources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedPatientPath1Resources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedPatientPath1Resources))
+	} else if len(*a.IncludedPatientPath1Resources) == 1 {
+		patient = &(*a.IncludedPatientPath1Resources)[0]
+	}
+	return
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedPatientPath2Resource() (patient *Patient, err error) {
+	if a.IncludedPatientPath2Resources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*a.IncludedPatientPath2Resources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedPatientPath2Resources))
+	} else if len(*a.IncludedPatientPath2Resources) == 1 {
+		patient = &(*a.IncludedPatientPath2Resources)[0]
+	}
+	return
+}
+
+func (a *AuditEventPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if a.IncludedParticipantPractitionerResources != nil {
+		for _, r := range *a.IncludedParticipantPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedParticipantOrganizationResources != nil {
+		for _, r := range *a.IncludedParticipantOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedParticipantDeviceResources != nil {
+		for _, r := range *a.IncludedParticipantDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedParticipantPatientResources != nil {
+		for _, r := range *a.IncludedParticipantPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedParticipantRelatedPersonResources != nil {
+		for _, r := range *a.IncludedParticipantRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedPatientPath1Resources != nil {
+		for _, r := range *a.IncludedPatientPath1Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if a.IncludedPatientPath2Resources != nil {
+		for _, r := range *a.IncludedPatientPath2Resources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

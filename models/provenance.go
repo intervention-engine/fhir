@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Provenance struct {
 	DomainResource `bson:",inline"`
@@ -89,4 +93,134 @@ type ProvenanceEntityComponent struct {
 	Reference string                    `bson:"reference,omitempty" json:"reference,omitempty"`
 	Display   string                    `bson:"display,omitempty" json:"display,omitempty"`
 	Agent     *ProvenanceAgentComponent `bson:"agent,omitempty" json:"agent,omitempty"`
+}
+
+type ProvenancePlus struct {
+	Provenance             `bson:",inline"`
+	ProvenancePlusIncludes `bson:",inline"`
+}
+
+type ProvenancePlusIncludes struct {
+	IncludedAgentPractitionerResources  *[]Practitioner  `bson:"_includedAgentPractitionerResources,omitempty"`
+	IncludedAgentOrganizationResources  *[]Organization  `bson:"_includedAgentOrganizationResources,omitempty"`
+	IncludedAgentDeviceResources        *[]Device        `bson:"_includedAgentDeviceResources,omitempty"`
+	IncludedAgentPatientResources       *[]Patient       `bson:"_includedAgentPatientResources,omitempty"`
+	IncludedAgentRelatedPersonResources *[]RelatedPerson `bson:"_includedAgentRelatedPersonResources,omitempty"`
+	IncludedPatientResources            *[]Patient       `bson:"_includedPatientResources,omitempty"`
+	IncludedLocationResources           *[]Location      `bson:"_includedLocationResources,omitempty"`
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedAgentPractitionerResource() (practitioner *Practitioner, err error) {
+	if p.IncludedAgentPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*p.IncludedAgentPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedAgentPractitionerResources))
+	} else if len(*p.IncludedAgentPractitionerResources) == 1 {
+		practitioner = &(*p.IncludedAgentPractitionerResources)[0]
+	}
+	return
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedAgentOrganizationResource() (organization *Organization, err error) {
+	if p.IncludedAgentOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedAgentOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedAgentOrganizationResources))
+	} else if len(*p.IncludedAgentOrganizationResources) == 1 {
+		organization = &(*p.IncludedAgentOrganizationResources)[0]
+	}
+	return
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedAgentDeviceResource() (device *Device, err error) {
+	if p.IncludedAgentDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*p.IncludedAgentDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*p.IncludedAgentDeviceResources))
+	} else if len(*p.IncludedAgentDeviceResources) == 1 {
+		device = &(*p.IncludedAgentDeviceResources)[0]
+	}
+	return
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedAgentPatientResource() (patient *Patient, err error) {
+	if p.IncludedAgentPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*p.IncludedAgentPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedAgentPatientResources))
+	} else if len(*p.IncludedAgentPatientResources) == 1 {
+		patient = &(*p.IncludedAgentPatientResources)[0]
+	}
+	return
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedAgentRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if p.IncludedAgentRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*p.IncludedAgentRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*p.IncludedAgentRelatedPersonResources))
+	} else if len(*p.IncludedAgentRelatedPersonResources) == 1 {
+		relatedPerson = &(*p.IncludedAgentRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedPatientResources() (patients []Patient, err error) {
+	if p.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else {
+		patients = *p.IncludedPatientResources
+	}
+	return
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedLocationResource() (location *Location, err error) {
+	if p.IncludedLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*p.IncludedLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*p.IncludedLocationResources))
+	} else if len(*p.IncludedLocationResources) == 1 {
+		location = &(*p.IncludedLocationResources)[0]
+	}
+	return
+}
+
+func (p *ProvenancePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedAgentPractitionerResources != nil {
+		for _, r := range *p.IncludedAgentPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedAgentOrganizationResources != nil {
+		for _, r := range *p.IncludedAgentOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedAgentDeviceResources != nil {
+		for _, r := range *p.IncludedAgentDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedAgentPatientResources != nil {
+		for _, r := range *p.IncludedAgentPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedAgentRelatedPersonResources != nil {
+		for _, r := range *p.IncludedAgentRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPatientResources != nil {
+		for _, r := range *p.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLocationResources != nil {
+		for _, r := range *p.IncludedLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

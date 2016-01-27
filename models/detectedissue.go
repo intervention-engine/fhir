@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type DetectedIssue struct {
 	DomainResource `bson:",inline"`
@@ -75,4 +79,68 @@ type DetectedIssueMitigationComponent struct {
 	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
 	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
 	Author *Reference       `bson:"author,omitempty" json:"author,omitempty"`
+}
+
+type DetectedIssuePlus struct {
+	DetectedIssue             `bson:",inline"`
+	DetectedIssuePlusIncludes `bson:",inline"`
+}
+
+type DetectedIssuePlusIncludes struct {
+	IncludedPatientResources            *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedAuthorPractitionerResources *[]Practitioner `bson:"_includedAuthorPractitionerResources,omitempty"`
+	IncludedAuthorDeviceResources       *[]Device       `bson:"_includedAuthorDeviceResources,omitempty"`
+}
+
+func (d *DetectedIssuePlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if d.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedPatientResources))
+	} else if len(*d.IncludedPatientResources) == 1 {
+		patient = &(*d.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (d *DetectedIssuePlusIncludes) GetIncludedAuthorPractitionerResource() (practitioner *Practitioner, err error) {
+	if d.IncludedAuthorPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*d.IncludedAuthorPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*d.IncludedAuthorPractitionerResources))
+	} else if len(*d.IncludedAuthorPractitionerResources) == 1 {
+		practitioner = &(*d.IncludedAuthorPractitionerResources)[0]
+	}
+	return
+}
+
+func (d *DetectedIssuePlusIncludes) GetIncludedAuthorDeviceResource() (device *Device, err error) {
+	if d.IncludedAuthorDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*d.IncludedAuthorDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*d.IncludedAuthorDeviceResources))
+	} else if len(*d.IncludedAuthorDeviceResources) == 1 {
+		device = &(*d.IncludedAuthorDeviceResources)[0]
+	}
+	return
+}
+
+func (d *DetectedIssuePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if d.IncludedPatientResources != nil {
+		for _, r := range *d.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedAuthorPractitionerResources != nil {
+		for _, r := range *d.IncludedAuthorPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedAuthorDeviceResources != nil {
+		for _, r := range *d.IncludedAuthorDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type SupplyRequest struct {
 	DomainResource        `bson:",inline"`
@@ -75,4 +79,100 @@ func (x *SupplyRequest) UnmarshalJSON(data []byte) (err error) {
 type SupplyRequestWhenComponent struct {
 	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
+}
+
+type SupplyRequestPlus struct {
+	SupplyRequest             `bson:",inline"`
+	SupplyRequestPlusIncludes `bson:",inline"`
+}
+
+type SupplyRequestPlusIncludes struct {
+	IncludedPatientResources            *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedSupplierResources           *[]Organization `bson:"_includedSupplierResources,omitempty"`
+	IncludedSourcePractitionerResources *[]Practitioner `bson:"_includedSourcePractitionerResources,omitempty"`
+	IncludedSourceOrganizationResources *[]Organization `bson:"_includedSourceOrganizationResources,omitempty"`
+	IncludedSourcePatientResources      *[]Patient      `bson:"_includedSourcePatientResources,omitempty"`
+}
+
+func (s *SupplyRequestPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if s.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*s.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*s.IncludedPatientResources))
+	} else if len(*s.IncludedPatientResources) == 1 {
+		patient = &(*s.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (s *SupplyRequestPlusIncludes) GetIncludedSupplierResources() (organizations []Organization, err error) {
+	if s.IncludedSupplierResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else {
+		organizations = *s.IncludedSupplierResources
+	}
+	return
+}
+
+func (s *SupplyRequestPlusIncludes) GetIncludedSourcePractitionerResource() (practitioner *Practitioner, err error) {
+	if s.IncludedSourcePractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*s.IncludedSourcePractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*s.IncludedSourcePractitionerResources))
+	} else if len(*s.IncludedSourcePractitionerResources) == 1 {
+		practitioner = &(*s.IncludedSourcePractitionerResources)[0]
+	}
+	return
+}
+
+func (s *SupplyRequestPlusIncludes) GetIncludedSourceOrganizationResource() (organization *Organization, err error) {
+	if s.IncludedSourceOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*s.IncludedSourceOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*s.IncludedSourceOrganizationResources))
+	} else if len(*s.IncludedSourceOrganizationResources) == 1 {
+		organization = &(*s.IncludedSourceOrganizationResources)[0]
+	}
+	return
+}
+
+func (s *SupplyRequestPlusIncludes) GetIncludedSourcePatientResource() (patient *Patient, err error) {
+	if s.IncludedSourcePatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*s.IncludedSourcePatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*s.IncludedSourcePatientResources))
+	} else if len(*s.IncludedSourcePatientResources) == 1 {
+		patient = &(*s.IncludedSourcePatientResources)[0]
+	}
+	return
+}
+
+func (s *SupplyRequestPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if s.IncludedPatientResources != nil {
+		for _, r := range *s.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSupplierResources != nil {
+		for _, r := range *s.IncludedSupplierResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSourcePractitionerResources != nil {
+		for _, r := range *s.IncludedSourcePractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSourceOrganizationResources != nil {
+		for _, r := range *s.IncludedSourceOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if s.IncludedSourcePatientResources != nil {
+		for _, r := range *s.IncludedSourcePatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

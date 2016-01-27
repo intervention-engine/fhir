@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Procedure struct {
 	DomainResource        `bson:",inline"`
@@ -92,4 +96,170 @@ type ProcedurePerformerComponent struct {
 type ProcedureFocalDeviceComponent struct {
 	Action      *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
 	Manipulated *Reference       `bson:"manipulated,omitempty" json:"manipulated,omitempty"`
+}
+
+type ProcedurePlus struct {
+	Procedure             `bson:",inline"`
+	ProcedurePlusIncludes `bson:",inline"`
+}
+
+type ProcedurePlusIncludes struct {
+	IncludedPerformerPractitionerResources  *[]Practitioner  `bson:"_includedPerformerPractitionerResources,omitempty"`
+	IncludedPerformerOrganizationResources  *[]Organization  `bson:"_includedPerformerOrganizationResources,omitempty"`
+	IncludedPerformerPatientResources       *[]Patient       `bson:"_includedPerformerPatientResources,omitempty"`
+	IncludedPerformerRelatedPersonResources *[]RelatedPerson `bson:"_includedPerformerRelatedPersonResources,omitempty"`
+	IncludedSubjectGroupResources           *[]Group         `bson:"_includedSubjectGroupResources,omitempty"`
+	IncludedSubjectPatientResources         *[]Patient       `bson:"_includedSubjectPatientResources,omitempty"`
+	IncludedPatientResources                *[]Patient       `bson:"_includedPatientResources,omitempty"`
+	IncludedLocationResources               *[]Location      `bson:"_includedLocationResources,omitempty"`
+	IncludedEncounterResources              *[]Encounter     `bson:"_includedEncounterResources,omitempty"`
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedPerformerPractitionerResource() (practitioner *Practitioner, err error) {
+	if p.IncludedPerformerPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*p.IncludedPerformerPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedPerformerPractitionerResources))
+	} else if len(*p.IncludedPerformerPractitionerResources) == 1 {
+		practitioner = &(*p.IncludedPerformerPractitionerResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedPerformerOrganizationResource() (organization *Organization, err error) {
+	if p.IncludedPerformerOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*p.IncludedPerformerOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedPerformerOrganizationResources))
+	} else if len(*p.IncludedPerformerOrganizationResources) == 1 {
+		organization = &(*p.IncludedPerformerOrganizationResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedPerformerPatientResource() (patient *Patient, err error) {
+	if p.IncludedPerformerPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*p.IncludedPerformerPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPerformerPatientResources))
+	} else if len(*p.IncludedPerformerPatientResources) == 1 {
+		patient = &(*p.IncludedPerformerPatientResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedPerformerRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if p.IncludedPerformerRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*p.IncludedPerformerRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*p.IncludedPerformerRelatedPersonResources))
+	} else if len(*p.IncludedPerformerRelatedPersonResources) == 1 {
+		relatedPerson = &(*p.IncludedPerformerRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
+	if p.IncludedSubjectGroupResources == nil {
+		err = errors.New("Included groups not requested")
+	} else if len(*p.IncludedSubjectGroupResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*p.IncludedSubjectGroupResources))
+	} else if len(*p.IncludedSubjectGroupResources) == 1 {
+		group = &(*p.IncludedSubjectGroupResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
+	if p.IncludedSubjectPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*p.IncludedSubjectPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedSubjectPatientResources))
+	} else if len(*p.IncludedSubjectPatientResources) == 1 {
+		patient = &(*p.IncludedSubjectPatientResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if p.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*p.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPatientResources))
+	} else if len(*p.IncludedPatientResources) == 1 {
+		patient = &(*p.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedLocationResource() (location *Location, err error) {
+	if p.IncludedLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*p.IncludedLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*p.IncludedLocationResources))
+	} else if len(*p.IncludedLocationResources) == 1 {
+		location = &(*p.IncludedLocationResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
+	if p.IncludedEncounterResources == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*p.IncludedEncounterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*p.IncludedEncounterResources))
+	} else if len(*p.IncludedEncounterResources) == 1 {
+		encounter = &(*p.IncludedEncounterResources)[0]
+	}
+	return
+}
+
+func (p *ProcedurePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedPerformerPractitionerResources != nil {
+		for _, r := range *p.IncludedPerformerPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPerformerOrganizationResources != nil {
+		for _, r := range *p.IncludedPerformerOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPerformerPatientResources != nil {
+		for _, r := range *p.IncludedPerformerPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPerformerRelatedPersonResources != nil {
+		for _, r := range *p.IncludedPerformerRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedSubjectGroupResources != nil {
+		for _, r := range *p.IncludedSubjectGroupResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedSubjectPatientResources != nil {
+		for _, r := range *p.IncludedSubjectPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPatientResources != nil {
+		for _, r := range *p.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLocationResources != nil {
+		for _, r := range *p.IncludedLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedEncounterResources != nil {
+		for _, r := range *p.IncludedEncounterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -80,3 +80,16 @@ type SearchParameterContactComponent struct {
 	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
 	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
+
+type SearchParameterPlus struct {
+	SearchParameter             `bson:",inline"`
+	SearchParameterPlusIncludes `bson:",inline"`
+}
+
+type SearchParameterPlusIncludes struct {
+}
+
+func (s *SearchParameterPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	return resourceMap
+}

@@ -1274,6 +1274,57 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryWithCountAndOffset(c *C) {
 	c.Assert(offset1.Id, Not(Equals), offset2.Id)
 }
 
+func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
+	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:patient&_include=Observation:encounter"}
+
+	// Make sure it doesn't somehow mess up the query object
+	obj := m.MongoSearcher.createQueryObject(q)
+	c.Assert(obj, DeepEquals, bson.M{
+		"code.coding": bson.M{
+			"$elemMatch": bson.M{
+				"system": bson.RegEx{Pattern: "^http://loinc\\.org$", Options: "i"},
+				"code":   bson.RegEx{Pattern: "^17856-6$", Options: "i"},
+			},
+		},
+	})
+
+	// Check that the options are parsed correctly
+	opt := q.Options()
+	c.Assert(opt.Include, HasLen, 2)
+	c.Assert(opt.Include[0].Resource, Equals, "Observation")
+	c.Assert(opt.Include[0].Parameter.Name, Equals, "patient")
+	c.Assert(opt.Include[1].Resource, Equals, "Observation")
+	c.Assert(opt.Include[1].Parameter.Name, Equals, "encounter")
+}
+
+func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
+	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:patient&_include=Observation:encounter"}
+
+	var results []models.ObservationPlus
+	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+	util.CheckErr(err)
+	c.Assert(results, HasLen, 1)
+
+	obs := results[0]
+	c.Assert(obs.Code.Coding, HasLen, 1)
+	c.Assert(obs.Code.Text, Equals, "Laboratory Test, Result: HbA1c Laboratory Test")
+	c.Assert(obs.Subject.ReferencedID, Equals, "4954037118555241963")
+	c.Assert(obs.Encounter.ReferencedID, Equals, "6648204100111387580")
+
+	patient, err := obs.GetIncludedPatientResource()
+	util.CheckErr(err)
+	c.Assert(patient.Id, Equals, "4954037118555241963")
+	c.Assert(patient.Name[0].Given[0], Equals, "John")
+	c.Assert(patient.Name[0].Family[0], Equals, "Peters")
+
+	encounter, err := obs.GetIncludedEncounterResource()
+	util.CheckErr(err)
+	c.Assert(encounter.Id, Equals, "6648204100111387580")
+	c.Assert(encounter.Type, HasLen, 1)
+	c.Assert(encounter.Type[0].Coding, HasLen, 1)
+	c.Assert(encounter.Type[0].Text, Equals, "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)")
+}
+
 // Test that invalid search parameters PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestInvalidSearchParameterPanics(c *C) {
 	q := Query{"Condition", "abatement=2012"}

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Condition struct {
 	DomainResource     `bson:",inline"`
@@ -94,4 +98,85 @@ type ConditionStageComponent struct {
 type ConditionEvidenceComponent struct {
 	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	Detail []Reference      `bson:"detail,omitempty" json:"detail,omitempty"`
+}
+
+type ConditionPlus struct {
+	Condition             `bson:",inline"`
+	ConditionPlusIncludes `bson:",inline"`
+}
+
+type ConditionPlusIncludes struct {
+	IncludedEncounterResources            *[]Encounter    `bson:"_includedEncounterResources,omitempty"`
+	IncludedAsserterPractitionerResources *[]Practitioner `bson:"_includedAsserterPractitionerResources,omitempty"`
+	IncludedAsserterPatientResources      *[]Patient      `bson:"_includedAsserterPatientResources,omitempty"`
+	IncludedPatientResources              *[]Patient      `bson:"_includedPatientResources,omitempty"`
+}
+
+func (c *ConditionPlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
+	if c.IncludedEncounterResources == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*c.IncludedEncounterResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*c.IncludedEncounterResources))
+	} else if len(*c.IncludedEncounterResources) == 1 {
+		encounter = &(*c.IncludedEncounterResources)[0]
+	}
+	return
+}
+
+func (c *ConditionPlusIncludes) GetIncludedAsserterPractitionerResource() (practitioner *Practitioner, err error) {
+	if c.IncludedAsserterPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*c.IncludedAsserterPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*c.IncludedAsserterPractitionerResources))
+	} else if len(*c.IncludedAsserterPractitionerResources) == 1 {
+		practitioner = &(*c.IncludedAsserterPractitionerResources)[0]
+	}
+	return
+}
+
+func (c *ConditionPlusIncludes) GetIncludedAsserterPatientResource() (patient *Patient, err error) {
+	if c.IncludedAsserterPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*c.IncludedAsserterPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*c.IncludedAsserterPatientResources))
+	} else if len(*c.IncludedAsserterPatientResources) == 1 {
+		patient = &(*c.IncludedAsserterPatientResources)[0]
+	}
+	return
+}
+
+func (c *ConditionPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if c.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*c.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*c.IncludedPatientResources))
+	} else if len(*c.IncludedPatientResources) == 1 {
+		patient = &(*c.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (c *ConditionPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if c.IncludedEncounterResources != nil {
+		for _, r := range *c.IncludedEncounterResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedAsserterPractitionerResources != nil {
+		for _, r := range *c.IncludedAsserterPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedAsserterPatientResources != nil {
+		for _, r := range *c.IncludedAsserterPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedPatientResources != nil {
+		for _, r := range *c.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

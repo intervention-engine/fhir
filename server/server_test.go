@@ -185,6 +185,37 @@ func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
 }
 
+func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
+	// Add 1 more patient
+	patient := insertPatientFromFixture("../fixtures/patient-example-a.json")
+
+	// Add condition
+	data, err := os.Open("../fixtures/condition.json")
+	util.CheckErr(err)
+	defer data.Close()
+	decoder := json.NewDecoder(data)
+	condition := &models.Condition{}
+	err = decoder.Decode(condition)
+	util.CheckErr(err)
+	// Set condition patient
+	condition.Patient = &models.Reference{
+		Reference:    "Patient/" + patient.Id,
+		Type:         "Patient",
+		ReferencedID: patient.Id,
+		External:     new(bool),
+	}
+	condition.Id = bson.NewObjectId().Hex()
+	err = Database.C("conditions").Insert(condition)
+	util.CheckErr(err)
+
+	assertBundleCount(c, s.Server.URL+"/Condition", 1, 1)
+	b := assertBundleCount(c, s.Server.URL+"/Condition?_include=Condition:patient", 2, 1)
+	c.Assert(b.Entry[0].Resource, FitsTypeOf, &models.Condition{})
+	c.Assert(b.Entry[0].Search.Mode, Equals, "match")
+	c.Assert(b.Entry[1].Resource, FitsTypeOf, &models.Patient{})
+	c.Assert(b.Entry[1].Search.Mode, Equals, "include")
+}
+
 func (s *ServerSuite) TestGetPatient(c *C) {
 	res, err := http.Get(s.Server.URL + "/Patient/" + s.FixtureId)
 	util.CheckErr(err)
@@ -295,10 +326,11 @@ func performSearch(c *C, url string) *models.Bundle {
 	return bundle
 }
 
-func assertBundleCount(c *C, url string, expectedResults int, expectedTotal int) {
+func assertBundleCount(c *C, url string, expectedResults int, expectedTotal int) *models.Bundle {
 	bundle := performSearch(c, url)
 	c.Assert(len(bundle.Entry), Equals, expectedResults)
 	c.Assert(*bundle.Total, Equals, uint32(expectedTotal))
+	return bundle
 }
 
 func assertPagingLink(c *C, link models.BundleLinkComponent, relation string, count int, offset int) {

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type EpisodeOfCare struct {
 	DomainResource       `bson:",inline"`
@@ -81,4 +85,132 @@ type EpisodeOfCareCareTeamComponent struct {
 	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`
 	Member *Reference        `bson:"member,omitempty" json:"member,omitempty"`
+}
+
+type EpisodeOfCarePlus struct {
+	EpisodeOfCare             `bson:",inline"`
+	EpisodeOfCarePlusIncludes `bson:",inline"`
+}
+
+type EpisodeOfCarePlusIncludes struct {
+	IncludedConditionResources              *[]Condition       `bson:"_includedConditionResources,omitempty"`
+	IncludedIncomingreferralResources       *[]ReferralRequest `bson:"_includedIncomingreferralResources,omitempty"`
+	IncludedPatientResources                *[]Patient         `bson:"_includedPatientResources,omitempty"`
+	IncludedOrganizationResources           *[]Organization    `bson:"_includedOrganizationResources,omitempty"`
+	IncludedTeammemberPractitionerResources *[]Practitioner    `bson:"_includedTeammemberPractitionerResources,omitempty"`
+	IncludedTeammemberOrganizationResources *[]Organization    `bson:"_includedTeammemberOrganizationResources,omitempty"`
+	IncludedCaremanagerResources            *[]Practitioner    `bson:"_includedCaremanagerResources,omitempty"`
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedConditionResources() (conditions []Condition, err error) {
+	if e.IncludedConditionResources == nil {
+		err = errors.New("Included conditions not requested")
+	} else {
+		conditions = *e.IncludedConditionResources
+	}
+	return
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedIncomingreferralResources() (referralRequests []ReferralRequest, err error) {
+	if e.IncludedIncomingreferralResources == nil {
+		err = errors.New("Included referralRequests not requested")
+	} else {
+		referralRequests = *e.IncludedIncomingreferralResources
+	}
+	return
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if e.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*e.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*e.IncludedPatientResources))
+	} else if len(*e.IncludedPatientResources) == 1 {
+		patient = &(*e.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if e.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*e.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*e.IncludedOrganizationResources))
+	} else if len(*e.IncludedOrganizationResources) == 1 {
+		organization = &(*e.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedTeammemberPractitionerResource() (practitioner *Practitioner, err error) {
+	if e.IncludedTeammemberPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*e.IncludedTeammemberPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*e.IncludedTeammemberPractitionerResources))
+	} else if len(*e.IncludedTeammemberPractitionerResources) == 1 {
+		practitioner = &(*e.IncludedTeammemberPractitionerResources)[0]
+	}
+	return
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedTeammemberOrganizationResource() (organization *Organization, err error) {
+	if e.IncludedTeammemberOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*e.IncludedTeammemberOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*e.IncludedTeammemberOrganizationResources))
+	} else if len(*e.IncludedTeammemberOrganizationResources) == 1 {
+		organization = &(*e.IncludedTeammemberOrganizationResources)[0]
+	}
+	return
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedCaremanagerResource() (practitioner *Practitioner, err error) {
+	if e.IncludedCaremanagerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*e.IncludedCaremanagerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*e.IncludedCaremanagerResources))
+	} else if len(*e.IncludedCaremanagerResources) == 1 {
+		practitioner = &(*e.IncludedCaremanagerResources)[0]
+	}
+	return
+}
+
+func (e *EpisodeOfCarePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if e.IncludedConditionResources != nil {
+		for _, r := range *e.IncludedConditionResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if e.IncludedIncomingreferralResources != nil {
+		for _, r := range *e.IncludedIncomingreferralResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if e.IncludedPatientResources != nil {
+		for _, r := range *e.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if e.IncludedOrganizationResources != nil {
+		for _, r := range *e.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if e.IncludedTeammemberPractitionerResources != nil {
+		for _, r := range *e.IncludedTeammemberPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if e.IncludedTeammemberOrganizationResources != nil {
+		for _, r := range *e.IncludedTeammemberOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if e.IncludedCaremanagerResources != nil {
+		for _, r := range *e.IncludedCaremanagerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Device struct {
 	DomainResource  `bson:",inline"`
@@ -75,4 +79,68 @@ func (x *Device) UnmarshalJSON(data []byte) (err error) {
 		*x = Device(x2)
 	}
 	return
+}
+
+type DevicePlus struct {
+	Device             `bson:",inline"`
+	DevicePlusIncludes `bson:",inline"`
+}
+
+type DevicePlusIncludes struct {
+	IncludedPatientResources      *[]Patient      `bson:"_includedPatientResources,omitempty"`
+	IncludedOrganizationResources *[]Organization `bson:"_includedOrganizationResources,omitempty"`
+	IncludedLocationResources     *[]Location     `bson:"_includedLocationResources,omitempty"`
+}
+
+func (d *DevicePlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if d.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*d.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*d.IncludedPatientResources))
+	} else if len(*d.IncludedPatientResources) == 1 {
+		patient = &(*d.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (d *DevicePlusIncludes) GetIncludedOrganizationResource() (organization *Organization, err error) {
+	if d.IncludedOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*d.IncludedOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*d.IncludedOrganizationResources))
+	} else if len(*d.IncludedOrganizationResources) == 1 {
+		organization = &(*d.IncludedOrganizationResources)[0]
+	}
+	return
+}
+
+func (d *DevicePlusIncludes) GetIncludedLocationResource() (location *Location, err error) {
+	if d.IncludedLocationResources == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*d.IncludedLocationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*d.IncludedLocationResources))
+	} else if len(*d.IncludedLocationResources) == 1 {
+		location = &(*d.IncludedLocationResources)[0]
+	}
+	return
+}
+
+func (d *DevicePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if d.IncludedPatientResources != nil {
+		for _, r := range *d.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedOrganizationResources != nil {
+		for _, r := range *d.IncludedOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if d.IncludedLocationResources != nil {
+		for _, r := range *d.IncludedLocationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

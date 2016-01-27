@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type OrderResponse struct {
 	DomainResource `bson:",inline"`
@@ -66,4 +70,85 @@ func (x *OrderResponse) UnmarshalJSON(data []byte) (err error) {
 		*x = OrderResponse(x2)
 	}
 	return
+}
+
+type OrderResponsePlus struct {
+	OrderResponse             `bson:",inline"`
+	OrderResponsePlusIncludes `bson:",inline"`
+}
+
+type OrderResponsePlusIncludes struct {
+	IncludedRequestResources         *[]Order        `bson:"_includedRequestResources,omitempty"`
+	IncludedWhoPractitionerResources *[]Practitioner `bson:"_includedWhoPractitionerResources,omitempty"`
+	IncludedWhoOrganizationResources *[]Organization `bson:"_includedWhoOrganizationResources,omitempty"`
+	IncludedWhoDeviceResources       *[]Device       `bson:"_includedWhoDeviceResources,omitempty"`
+}
+
+func (o *OrderResponsePlusIncludes) GetIncludedRequestResource() (order *Order, err error) {
+	if o.IncludedRequestResources == nil {
+		err = errors.New("Included orders not requested")
+	} else if len(*o.IncludedRequestResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 order, but found %d", len(*o.IncludedRequestResources))
+	} else if len(*o.IncludedRequestResources) == 1 {
+		order = &(*o.IncludedRequestResources)[0]
+	}
+	return
+}
+
+func (o *OrderResponsePlusIncludes) GetIncludedWhoPractitionerResource() (practitioner *Practitioner, err error) {
+	if o.IncludedWhoPractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*o.IncludedWhoPractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*o.IncludedWhoPractitionerResources))
+	} else if len(*o.IncludedWhoPractitionerResources) == 1 {
+		practitioner = &(*o.IncludedWhoPractitionerResources)[0]
+	}
+	return
+}
+
+func (o *OrderResponsePlusIncludes) GetIncludedWhoOrganizationResource() (organization *Organization, err error) {
+	if o.IncludedWhoOrganizationResources == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*o.IncludedWhoOrganizationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*o.IncludedWhoOrganizationResources))
+	} else if len(*o.IncludedWhoOrganizationResources) == 1 {
+		organization = &(*o.IncludedWhoOrganizationResources)[0]
+	}
+	return
+}
+
+func (o *OrderResponsePlusIncludes) GetIncludedWhoDeviceResource() (device *Device, err error) {
+	if o.IncludedWhoDeviceResources == nil {
+		err = errors.New("Included devices not requested")
+	} else if len(*o.IncludedWhoDeviceResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*o.IncludedWhoDeviceResources))
+	} else if len(*o.IncludedWhoDeviceResources) == 1 {
+		device = &(*o.IncludedWhoDeviceResources)[0]
+	}
+	return
+}
+
+func (o *OrderResponsePlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if o.IncludedRequestResources != nil {
+		for _, r := range *o.IncludedRequestResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedWhoPractitionerResources != nil {
+		for _, r := range *o.IncludedWhoPractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedWhoOrganizationResources != nil {
+		for _, r := range *o.IncludedWhoOrganizationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if o.IncludedWhoDeviceResources != nil {
+		for _, r := range *o.IncludedWhoDeviceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

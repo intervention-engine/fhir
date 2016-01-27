@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type MedicationStatement struct {
 	DomainResource              `bson:",inline"`
@@ -91,4 +95,102 @@ type MedicationStatementDosageComponent struct {
 	RateRatio               *Ratio           `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
 	RateRange               *Range           `bson:"rateRange,omitempty" json:"rateRange,omitempty"`
 	MaxDosePerPeriod        *Ratio           `bson:"maxDosePerPeriod,omitempty" json:"maxDosePerPeriod,omitempty"`
+}
+
+type MedicationStatementPlus struct {
+	MedicationStatement             `bson:",inline"`
+	MedicationStatementPlusIncludes `bson:",inline"`
+}
+
+type MedicationStatementPlusIncludes struct {
+	IncludedPatientResources             *[]Patient       `bson:"_includedPatientResources,omitempty"`
+	IncludedMedicationResources          *[]Medication    `bson:"_includedMedicationResources,omitempty"`
+	IncludedSourcePractitionerResources  *[]Practitioner  `bson:"_includedSourcePractitionerResources,omitempty"`
+	IncludedSourcePatientResources       *[]Patient       `bson:"_includedSourcePatientResources,omitempty"`
+	IncludedSourceRelatedPersonResources *[]RelatedPerson `bson:"_includedSourceRelatedPersonResources,omitempty"`
+}
+
+func (m *MedicationStatementPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if m.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*m.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*m.IncludedPatientResources))
+	} else if len(*m.IncludedPatientResources) == 1 {
+		patient = &(*m.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (m *MedicationStatementPlusIncludes) GetIncludedMedicationResource() (medication *Medication, err error) {
+	if m.IncludedMedicationResources == nil {
+		err = errors.New("Included medications not requested")
+	} else if len(*m.IncludedMedicationResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 medication, but found %d", len(*m.IncludedMedicationResources))
+	} else if len(*m.IncludedMedicationResources) == 1 {
+		medication = &(*m.IncludedMedicationResources)[0]
+	}
+	return
+}
+
+func (m *MedicationStatementPlusIncludes) GetIncludedSourcePractitionerResource() (practitioner *Practitioner, err error) {
+	if m.IncludedSourcePractitionerResources == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*m.IncludedSourcePractitionerResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*m.IncludedSourcePractitionerResources))
+	} else if len(*m.IncludedSourcePractitionerResources) == 1 {
+		practitioner = &(*m.IncludedSourcePractitionerResources)[0]
+	}
+	return
+}
+
+func (m *MedicationStatementPlusIncludes) GetIncludedSourcePatientResource() (patient *Patient, err error) {
+	if m.IncludedSourcePatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*m.IncludedSourcePatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*m.IncludedSourcePatientResources))
+	} else if len(*m.IncludedSourcePatientResources) == 1 {
+		patient = &(*m.IncludedSourcePatientResources)[0]
+	}
+	return
+}
+
+func (m *MedicationStatementPlusIncludes) GetIncludedSourceRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
+	if m.IncludedSourceRelatedPersonResources == nil {
+		err = errors.New("Included relatedpeople not requested")
+	} else if len(*m.IncludedSourceRelatedPersonResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*m.IncludedSourceRelatedPersonResources))
+	} else if len(*m.IncludedSourceRelatedPersonResources) == 1 {
+		relatedPerson = &(*m.IncludedSourceRelatedPersonResources)[0]
+	}
+	return
+}
+
+func (m *MedicationStatementPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if m.IncludedPatientResources != nil {
+		for _, r := range *m.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedMedicationResources != nil {
+		for _, r := range *m.IncludedMedicationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedSourcePractitionerResources != nil {
+		for _, r := range *m.IncludedSourcePractitionerResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedSourcePatientResources != nil {
+		for _, r := range *m.IncludedSourcePatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if m.IncludedSourceRelatedPersonResources != nil {
+		for _, r := range *m.IncludedSourceRelatedPersonResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }

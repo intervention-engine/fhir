@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ImmunizationRecommendation struct {
 	DomainResource `bson:",inline"`
@@ -85,4 +89,79 @@ type ImmunizationRecommendationRecommendationProtocolComponent struct {
 	Description  string     `bson:"description,omitempty" json:"description,omitempty"`
 	Authority    *Reference `bson:"authority,omitempty" json:"authority,omitempty"`
 	Series       string     `bson:"series,omitempty" json:"series,omitempty"`
+}
+
+type ImmunizationRecommendationPlus struct {
+	ImmunizationRecommendation             `bson:",inline"`
+	ImmunizationRecommendationPlusIncludes `bson:",inline"`
+}
+
+type ImmunizationRecommendationPlusIncludes struct {
+	IncludedPatientResources                       *[]Patient            `bson:"_includedPatientResources,omitempty"`
+	IncludedInformationAllergyIntoleranceResources *[]AllergyIntolerance `bson:"_includedInformationAllergyIntoleranceResources,omitempty"`
+	IncludedInformationObservationResources        *[]Observation        `bson:"_includedInformationObservationResources,omitempty"`
+	IncludedSupportResources                       *[]Immunization       `bson:"_includedSupportResources,omitempty"`
+}
+
+func (i *ImmunizationRecommendationPlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
+	if i.IncludedPatientResources == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*i.IncludedPatientResources) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*i.IncludedPatientResources))
+	} else if len(*i.IncludedPatientResources) == 1 {
+		patient = &(*i.IncludedPatientResources)[0]
+	}
+	return
+}
+
+func (i *ImmunizationRecommendationPlusIncludes) GetIncludedInformationAllergyIntoleranceResources() (allergyIntolerances []AllergyIntolerance, err error) {
+	if i.IncludedInformationAllergyIntoleranceResources == nil {
+		err = errors.New("Included allergyIntolerances not requested")
+	} else {
+		allergyIntolerances = *i.IncludedInformationAllergyIntoleranceResources
+	}
+	return
+}
+
+func (i *ImmunizationRecommendationPlusIncludes) GetIncludedInformationObservationResources() (observations []Observation, err error) {
+	if i.IncludedInformationObservationResources == nil {
+		err = errors.New("Included observations not requested")
+	} else {
+		observations = *i.IncludedInformationObservationResources
+	}
+	return
+}
+
+func (i *ImmunizationRecommendationPlusIncludes) GetIncludedSupportResources() (immunizations []Immunization, err error) {
+	if i.IncludedSupportResources == nil {
+		err = errors.New("Included immunizations not requested")
+	} else {
+		immunizations = *i.IncludedSupportResources
+	}
+	return
+}
+
+func (i *ImmunizationRecommendationPlusIncludes) GetIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if i.IncludedPatientResources != nil {
+		for _, r := range *i.IncludedPatientResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedInformationAllergyIntoleranceResources != nil {
+		for _, r := range *i.IncludedInformationAllergyIntoleranceResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedInformationObservationResources != nil {
+		for _, r := range *i.IncludedInformationObservationResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if i.IncludedSupportResources != nil {
+		for _, r := range *i.IncludedSupportResources {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
 }
