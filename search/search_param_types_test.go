@@ -1508,7 +1508,7 @@ func (s *SearchPTSuite) TestNormalizedQueryValue(c *C) {
 }
 
 func (s *SearchPTSuite) TestQueryOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
 	o := q.Options()
 	c.Assert(o.Count, Equals, 10)
 	c.Assert(o.Offset, Equals, 20)
@@ -1517,6 +1517,10 @@ func (s *SearchPTSuite) TestQueryOptions(c *C) {
 	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
 	c.Assert(o.Include[1].Resource, Equals, "Patient")
 	c.Assert(o.Include[1].Parameter.Name, Equals, "organization")
+	c.Assert(o.RevInclude[0].Resource, Equals, "Condition")
+	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "patient")
+	c.Assert(o.RevInclude[1].Resource, Equals, "Encounter")
+	c.Assert(o.RevInclude[1].Parameter.Name, Equals, "patient")
 }
 
 func (s *SearchPTSuite) TestReconstructQueryWithDefaultOptions(c *C) {
@@ -1531,9 +1535,9 @@ func (s *SearchPTSuite) TestReconstructQueryWithDefaultOptions(c *C) {
 }
 
 func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
 	v := q.NormalizedQueryValues(true)
-	c.Assert(v, HasLen, 5)
+	c.Assert(v, HasLen, 6)
 	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
 	c.Assert(v.Get("gender"), Equals, "M")
 	c.Assert(v[CountParam], HasLen, 1)
@@ -1543,6 +1547,9 @@ func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
 	c.Assert(v[IncludeParam], HasLen, 2)
 	c.Assert(v[IncludeParam][0], Equals, "Patient:careprovider")
 	c.Assert(v[IncludeParam][1], Equals, "Patient:organization")
+	c.Assert(v[RevIncludeParam], HasLen, 2)
+	c.Assert(v[RevIncludeParam][0], Equals, "Condition:patient")
+	c.Assert(v[RevIncludeParam][1], Equals, "Encounter:patient")
 }
 
 func (s *SearchPTSuite) TestQueryOptionsQueryValues(c *C) {

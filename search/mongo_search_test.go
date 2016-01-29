@@ -1311,18 +1311,86 @@ func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
 	c.Assert(obs.Subject.ReferencedID, Equals, "4954037118555241963")
 	c.Assert(obs.Encounter.ReferencedID, Equals, "6648204100111387580")
 
-	patient, err := obs.GetIncludedPatientResource()
+	inclRevIncl := obs.GetIncludedAndRevIncludedResources()
+	c.Assert(inclRevIncl, HasLen, 2)
+
+	incl := obs.GetIncludedResources()
+	c.Assert(incl, HasLen, 2)
+
+	revincl := obs.GetRevIncludedResources()
+	c.Assert(revincl, HasLen, 0)
+
+	patient, err := obs.GetIncludedPatientResourceReferencedByPatient()
 	util.CheckErr(err)
 	c.Assert(patient.Id, Equals, "4954037118555241963")
 	c.Assert(patient.Name[0].Given[0], Equals, "John")
 	c.Assert(patient.Name[0].Family[0], Equals, "Peters")
 
-	encounter, err := obs.GetIncludedEncounterResource()
+	encounter, err := obs.GetIncludedEncounterResourceReferencedByEncounter()
 	util.CheckErr(err)
 	c.Assert(encounter.Id, Equals, "6648204100111387580")
 	c.Assert(encounter.Type, HasLen, 1)
 	c.Assert(encounter.Type[0].Coding, HasLen, 1)
 	c.Assert(encounter.Type[0].Text, Equals, "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)")
+}
+
+func (m *MongoSearchSuite) TestPatientGenderQueryOptionsForRevInclude(c *C) {
+	q := Query{"Patient", "gender=male&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
+
+	// Make sure it doesn't somehow mess up the query object
+	obj := m.MongoSearcher.createQueryObject(q)
+	c.Assert(obj, DeepEquals, bson.M{
+		"gender": bson.RegEx{Pattern: "^male$", Options: "i"},
+	})
+
+	// Check that the options are parsed correctly
+	opt := q.Options()
+	c.Assert(opt.RevInclude, HasLen, 2)
+	c.Assert(opt.RevInclude[0].Resource, Equals, "Condition")
+	c.Assert(opt.RevInclude[0].Parameter.Name, Equals, "patient")
+	c.Assert(opt.RevInclude[1].Resource, Equals, "Encounter")
+	c.Assert(opt.RevInclude[1].Parameter.Name, Equals, "patient")
+}
+
+func (m *MongoSearchSuite) TestPatientGenderQueryForRevInclude(c *C) {
+	q := Query{"Patient", "gender=male&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
+
+	var results []models.PatientPlus
+	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+	util.CheckErr(err)
+	c.Assert(results, HasLen, 1)
+
+	patient := results[0]
+	c.Assert(patient.Id, Equals, "4954037118555241963")
+	c.Assert(patient.Name[0].Given[0], Equals, "John")
+	c.Assert(patient.Name[0].Family[0], Equals, "Peters")
+
+	inclRevIncl := patient.GetIncludedAndRevIncludedResources()
+	c.Assert(inclRevIncl, HasLen, 9)
+
+	incl := patient.GetIncludedResources()
+	c.Assert(incl, HasLen, 0)
+
+	revincl := patient.GetRevIncludedResources()
+	c.Assert(revincl, HasLen, 9)
+
+	conditions, err := patient.GetRevIncludedConditionResourcesReferencingPatient()
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 5)
+	// Just ensure they are populated to some degree
+	for _, condition := range conditions {
+		c.Assert(condition.Id, NotNil)
+		c.Assert(condition.Patient.ReferencedID, Equals, "4954037118555241963")
+	}
+
+	encounters, err := patient.GetRevIncludedEncounterResourcesReferencingPatient()
+	util.CheckErr(err)
+	c.Assert(encounters, HasLen, 4)
+	// Just ensure they are populated to some degree
+	for _, encounter := range encounters {
+		c.Assert(encounter.Id, NotNil)
+		c.Assert(encounter.Patient.ReferencedID, Equals, "4954037118555241963")
+	}
 }
 
 // Test that invalid search parameters PANIC (to ensure people know they are broken)

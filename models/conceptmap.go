@@ -123,114 +123,474 @@ type ConceptMapOtherElementComponent struct {
 }
 
 type ConceptMapPlus struct {
-	ConceptMap             `bson:",inline"`
-	ConceptMapPlusIncludes `bson:",inline"`
+	ConceptMap                     `bson:",inline"`
+	ConceptMapPlusRelatedResources `bson:",inline"`
 }
 
-type ConceptMapPlusIncludes struct {
-	IncludedSourceStructureDefinitionResources    *[]StructureDefinition `bson:"_includedSourceStructureDefinitionResources,omitempty"`
-	IncludedSourceValueSetResources               *[]ValueSet            `bson:"_includedSourceValueSetResources,omitempty"`
-	IncludedTargetStructureDefinitionResources    *[]StructureDefinition `bson:"_includedTargetStructureDefinitionResources,omitempty"`
-	IncludedTargetValueSetResources               *[]ValueSet            `bson:"_includedTargetValueSetResources,omitempty"`
-	IncludedSourceuriStructureDefinitionResources *[]StructureDefinition `bson:"_includedSourceuriStructureDefinitionResources,omitempty"`
-	IncludedSourceuriValueSetResources            *[]ValueSet            `bson:"_includedSourceuriValueSetResources,omitempty"`
+type ConceptMapPlusRelatedResources struct {
+	IncludedStructureDefinitionResourcesReferencedBySource      *[]StructureDefinition   `bson:"_includedStructureDefinitionResourcesReferencedBySource,omitempty"`
+	IncludedValueSetResourcesReferencedBySource                 *[]ValueSet              `bson:"_includedValueSetResourcesReferencedBySource,omitempty"`
+	IncludedStructureDefinitionResourcesReferencedByTarget      *[]StructureDefinition   `bson:"_includedStructureDefinitionResourcesReferencedByTarget,omitempty"`
+	IncludedValueSetResourcesReferencedByTarget                 *[]ValueSet              `bson:"_includedValueSetResourcesReferencedByTarget,omitempty"`
+	IncludedStructureDefinitionResourcesReferencedBySourceuri   *[]StructureDefinition   `bson:"_includedStructureDefinitionResourcesReferencedBySourceuri,omitempty"`
+	IncludedValueSetResourcesReferencedBySourceuri              *[]ValueSet              `bson:"_includedValueSetResourcesReferencedBySourceuri,omitempty"`
+	RevIncludedProvenanceResourcesReferencingTarget             *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingContentref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingRelatedref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
+	RevIncludedListResourcesReferencingItem                     *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
+	RevIncludedDocumentReferenceResourcesReferencingRelatedref  *[]DocumentReference     `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
+	RevIncludedOrderResourcesReferencingDetail                  *[]Order                 `bson:"_revIncludedOrderResourcesReferencingDetail,omitempty"`
+	RevIncludedBasicResourcesReferencingSubject                 *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
+	RevIncludedAuditEventResourcesReferencingReference          *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingReference,omitempty"`
+	RevIncludedCompositionResourcesReferencingSubject           *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
+	RevIncludedCompositionResourcesReferencingEntry             *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
+	RevIncludedDetectedIssueResourcesReferencingImplicated      *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
+	RevIncludedOrderResponseResourcesReferencingFulfillment     *[]OrderResponse         `bson:"_revIncludedOrderResponseResourcesReferencingFulfillment,omitempty"`
+	RevIncludedQuestionnaireResponseResourcesReferencingSubject *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
+	RevIncludedProcessResponseResourcesReferencingRequest       *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
+	RevIncludedClinicalImpressionResourcesReferencingTrigger    *[]ClinicalImpression    `bson:"_revIncludedClinicalImpressionResourcesReferencingTrigger,omitempty"`
+	RevIncludedMessageHeaderResourcesReferencingData            *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
 }
 
-func (c *ConceptMapPlusIncludes) GetIncludedSourceStructureDefinitionResource() (structureDefinition *StructureDefinition, err error) {
-	if c.IncludedSourceStructureDefinitionResources == nil {
+func (c *ConceptMapPlusRelatedResources) GetIncludedStructureDefinitionResourceReferencedBySource() (structureDefinition *StructureDefinition, err error) {
+	if c.IncludedStructureDefinitionResourcesReferencedBySource == nil {
 		err = errors.New("Included structuredefinitions not requested")
-	} else if len(*c.IncludedSourceStructureDefinitionResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedSourceStructureDefinitionResources))
-	} else if len(*c.IncludedSourceStructureDefinitionResources) == 1 {
-		structureDefinition = &(*c.IncludedSourceStructureDefinitionResources)[0]
+	} else if len(*c.IncludedStructureDefinitionResourcesReferencedBySource) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedStructureDefinitionResourcesReferencedBySource))
+	} else if len(*c.IncludedStructureDefinitionResourcesReferencedBySource) == 1 {
+		structureDefinition = &(*c.IncludedStructureDefinitionResourcesReferencedBySource)[0]
 	}
 	return
 }
 
-func (c *ConceptMapPlusIncludes) GetIncludedSourceValueSetResource() (valueSet *ValueSet, err error) {
-	if c.IncludedSourceValueSetResources == nil {
+func (c *ConceptMapPlusRelatedResources) GetIncludedValueSetResourceReferencedBySource() (valueSet *ValueSet, err error) {
+	if c.IncludedValueSetResourcesReferencedBySource == nil {
 		err = errors.New("Included valuesets not requested")
-	} else if len(*c.IncludedSourceValueSetResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedSourceValueSetResources))
-	} else if len(*c.IncludedSourceValueSetResources) == 1 {
-		valueSet = &(*c.IncludedSourceValueSetResources)[0]
+	} else if len(*c.IncludedValueSetResourcesReferencedBySource) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedValueSetResourcesReferencedBySource))
+	} else if len(*c.IncludedValueSetResourcesReferencedBySource) == 1 {
+		valueSet = &(*c.IncludedValueSetResourcesReferencedBySource)[0]
 	}
 	return
 }
 
-func (c *ConceptMapPlusIncludes) GetIncludedTargetStructureDefinitionResource() (structureDefinition *StructureDefinition, err error) {
-	if c.IncludedTargetStructureDefinitionResources == nil {
+func (c *ConceptMapPlusRelatedResources) GetIncludedStructureDefinitionResourceReferencedByTarget() (structureDefinition *StructureDefinition, err error) {
+	if c.IncludedStructureDefinitionResourcesReferencedByTarget == nil {
 		err = errors.New("Included structuredefinitions not requested")
-	} else if len(*c.IncludedTargetStructureDefinitionResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedTargetStructureDefinitionResources))
-	} else if len(*c.IncludedTargetStructureDefinitionResources) == 1 {
-		structureDefinition = &(*c.IncludedTargetStructureDefinitionResources)[0]
+	} else if len(*c.IncludedStructureDefinitionResourcesReferencedByTarget) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedStructureDefinitionResourcesReferencedByTarget))
+	} else if len(*c.IncludedStructureDefinitionResourcesReferencedByTarget) == 1 {
+		structureDefinition = &(*c.IncludedStructureDefinitionResourcesReferencedByTarget)[0]
 	}
 	return
 }
 
-func (c *ConceptMapPlusIncludes) GetIncludedTargetValueSetResource() (valueSet *ValueSet, err error) {
-	if c.IncludedTargetValueSetResources == nil {
+func (c *ConceptMapPlusRelatedResources) GetIncludedValueSetResourceReferencedByTarget() (valueSet *ValueSet, err error) {
+	if c.IncludedValueSetResourcesReferencedByTarget == nil {
 		err = errors.New("Included valuesets not requested")
-	} else if len(*c.IncludedTargetValueSetResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedTargetValueSetResources))
-	} else if len(*c.IncludedTargetValueSetResources) == 1 {
-		valueSet = &(*c.IncludedTargetValueSetResources)[0]
+	} else if len(*c.IncludedValueSetResourcesReferencedByTarget) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedValueSetResourcesReferencedByTarget))
+	} else if len(*c.IncludedValueSetResourcesReferencedByTarget) == 1 {
+		valueSet = &(*c.IncludedValueSetResourcesReferencedByTarget)[0]
 	}
 	return
 }
 
-func (c *ConceptMapPlusIncludes) GetIncludedSourceuriStructureDefinitionResource() (structureDefinition *StructureDefinition, err error) {
-	if c.IncludedSourceuriStructureDefinitionResources == nil {
+func (c *ConceptMapPlusRelatedResources) GetIncludedStructureDefinitionResourceReferencedBySourceuri() (structureDefinition *StructureDefinition, err error) {
+	if c.IncludedStructureDefinitionResourcesReferencedBySourceuri == nil {
 		err = errors.New("Included structuredefinitions not requested")
-	} else if len(*c.IncludedSourceuriStructureDefinitionResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedSourceuriStructureDefinitionResources))
-	} else if len(*c.IncludedSourceuriStructureDefinitionResources) == 1 {
-		structureDefinition = &(*c.IncludedSourceuriStructureDefinitionResources)[0]
+	} else if len(*c.IncludedStructureDefinitionResourcesReferencedBySourceuri) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 structureDefinition, but found %d", len(*c.IncludedStructureDefinitionResourcesReferencedBySourceuri))
+	} else if len(*c.IncludedStructureDefinitionResourcesReferencedBySourceuri) == 1 {
+		structureDefinition = &(*c.IncludedStructureDefinitionResourcesReferencedBySourceuri)[0]
 	}
 	return
 }
 
-func (c *ConceptMapPlusIncludes) GetIncludedSourceuriValueSetResource() (valueSet *ValueSet, err error) {
-	if c.IncludedSourceuriValueSetResources == nil {
+func (c *ConceptMapPlusRelatedResources) GetIncludedValueSetResourceReferencedBySourceuri() (valueSet *ValueSet, err error) {
+	if c.IncludedValueSetResourcesReferencedBySourceuri == nil {
 		err = errors.New("Included valuesets not requested")
-	} else if len(*c.IncludedSourceuriValueSetResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedSourceuriValueSetResources))
-	} else if len(*c.IncludedSourceuriValueSetResources) == 1 {
-		valueSet = &(*c.IncludedSourceuriValueSetResources)[0]
+	} else if len(*c.IncludedValueSetResourcesReferencedBySourceuri) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 valueSet, but found %d", len(*c.IncludedValueSetResourcesReferencedBySourceuri))
+	} else if len(*c.IncludedValueSetResourcesReferencedBySourceuri) == 1 {
+		valueSet = &(*c.IncludedValueSetResourcesReferencedBySourceuri)[0]
 	}
 	return
 }
 
-func (c *ConceptMapPlusIncludes) GetIncludedResources() map[string]interface{} {
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+	if c.RevIncludedProvenanceResourcesReferencingTarget == nil {
+		err = errors.New("RevIncluded provenances not requested")
+	} else {
+		provenances = *c.RevIncludedProvenanceResourcesReferencingTarget
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
+	if c.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
+		err = errors.New("RevIncluded documentManifests not requested")
+	} else {
+		documentManifests = *c.RevIncludedDocumentManifestResourcesReferencingContentref
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
+	if c.RevIncludedDocumentManifestResourcesReferencingRelatedref == nil {
+		err = errors.New("RevIncluded documentManifests not requested")
+	} else {
+		documentManifests = *c.RevIncludedDocumentManifestResourcesReferencingRelatedref
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
+	if c.RevIncludedListResourcesReferencingItem == nil {
+		err = errors.New("RevIncluded lists not requested")
+	} else {
+		lists = *c.RevIncludedListResourcesReferencingItem
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+	if c.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
+		err = errors.New("RevIncluded documentReferences not requested")
+	} else {
+		documentReferences = *c.RevIncludedDocumentReferenceResourcesReferencingRelatedref
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedOrderResourcesReferencingDetail() (orders []Order, err error) {
+	if c.RevIncludedOrderResourcesReferencingDetail == nil {
+		err = errors.New("RevIncluded orders not requested")
+	} else {
+		orders = *c.RevIncludedOrderResourcesReferencingDetail
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
+	if c.RevIncludedBasicResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded basics not requested")
+	} else {
+		basics = *c.RevIncludedBasicResourcesReferencingSubject
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingReference() (auditEvents []AuditEvent, err error) {
+	if c.RevIncludedAuditEventResourcesReferencingReference == nil {
+		err = errors.New("RevIncluded auditEvents not requested")
+	} else {
+		auditEvents = *c.RevIncludedAuditEventResourcesReferencingReference
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
+	if c.RevIncludedCompositionResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded compositions not requested")
+	} else {
+		compositions = *c.RevIncludedCompositionResourcesReferencingSubject
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
+	if c.RevIncludedCompositionResourcesReferencingEntry == nil {
+		err = errors.New("RevIncluded compositions not requested")
+	} else {
+		compositions = *c.RevIncludedCompositionResourcesReferencingEntry
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
+	if c.RevIncludedDetectedIssueResourcesReferencingImplicated == nil {
+		err = errors.New("RevIncluded detectedIssues not requested")
+	} else {
+		detectedIssues = *c.RevIncludedDetectedIssueResourcesReferencingImplicated
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedOrderResponseResourcesReferencingFulfillment() (orderResponses []OrderResponse, err error) {
+	if c.RevIncludedOrderResponseResourcesReferencingFulfillment == nil {
+		err = errors.New("RevIncluded orderResponses not requested")
+	} else {
+		orderResponses = *c.RevIncludedOrderResponseResourcesReferencingFulfillment
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
+	if c.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded questionnaireResponses not requested")
+	} else {
+		questionnaireResponses = *c.RevIncludedQuestionnaireResponseResourcesReferencingSubject
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+	if c.RevIncludedProcessResponseResourcesReferencingRequest == nil {
+		err = errors.New("RevIncluded processResponses not requested")
+	} else {
+		processResponses = *c.RevIncludedProcessResponseResourcesReferencingRequest
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedClinicalImpressionResourcesReferencingTrigger() (clinicalImpressions []ClinicalImpression, err error) {
+	if c.RevIncludedClinicalImpressionResourcesReferencingTrigger == nil {
+		err = errors.New("RevIncluded clinicalImpressions not requested")
+	} else {
+		clinicalImpressions = *c.RevIncludedClinicalImpressionResourcesReferencingTrigger
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
+	if c.RevIncludedMessageHeaderResourcesReferencingData == nil {
+		err = errors.New("RevIncluded messageHeaders not requested")
+	} else {
+		messageHeaders = *c.RevIncludedMessageHeaderResourcesReferencingData
+	}
+	return
+}
+
+func (c *ConceptMapPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if c.IncludedSourceStructureDefinitionResources != nil {
-		for _, r := range *c.IncludedSourceStructureDefinitionResources {
+	if c.IncludedStructureDefinitionResourcesReferencedBySource != nil {
+		for _, r := range *c.IncludedStructureDefinitionResourcesReferencedBySource {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if c.IncludedSourceValueSetResources != nil {
-		for _, r := range *c.IncludedSourceValueSetResources {
+	if c.IncludedValueSetResourcesReferencedBySource != nil {
+		for _, r := range *c.IncludedValueSetResourcesReferencedBySource {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if c.IncludedTargetStructureDefinitionResources != nil {
-		for _, r := range *c.IncludedTargetStructureDefinitionResources {
+	if c.IncludedStructureDefinitionResourcesReferencedByTarget != nil {
+		for _, r := range *c.IncludedStructureDefinitionResourcesReferencedByTarget {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if c.IncludedTargetValueSetResources != nil {
-		for _, r := range *c.IncludedTargetValueSetResources {
+	if c.IncludedValueSetResourcesReferencedByTarget != nil {
+		for _, r := range *c.IncludedValueSetResourcesReferencedByTarget {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if c.IncludedSourceuriStructureDefinitionResources != nil {
-		for _, r := range *c.IncludedSourceuriStructureDefinitionResources {
+	if c.IncludedStructureDefinitionResourcesReferencedBySourceuri != nil {
+		for _, r := range *c.IncludedStructureDefinitionResourcesReferencedBySourceuri {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if c.IncludedSourceuriValueSetResources != nil {
-		for _, r := range *c.IncludedSourceuriValueSetResources {
+	if c.IncludedValueSetResourcesReferencedBySourceuri != nil {
+		for _, r := range *c.IncludedValueSetResourcesReferencedBySourceuri {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
+}
+
+func (c *ConceptMapPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if c.RevIncludedProvenanceResourcesReferencingTarget != nil {
+		for _, r := range *c.RevIncludedProvenanceResourcesReferencingTarget {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
+		for _, r := range *c.RevIncludedDocumentManifestResourcesReferencingContentref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDocumentManifestResourcesReferencingRelatedref != nil {
+		for _, r := range *c.RevIncludedDocumentManifestResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedListResourcesReferencingItem != nil {
+		for _, r := range *c.RevIncludedListResourcesReferencingItem {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
+		for _, r := range *c.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedOrderResourcesReferencingDetail != nil {
+		for _, r := range *c.RevIncludedOrderResourcesReferencingDetail {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedBasicResourcesReferencingSubject != nil {
+		for _, r := range *c.RevIncludedBasicResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedAuditEventResourcesReferencingReference != nil {
+		for _, r := range *c.RevIncludedAuditEventResourcesReferencingReference {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedCompositionResourcesReferencingSubject != nil {
+		for _, r := range *c.RevIncludedCompositionResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedCompositionResourcesReferencingEntry != nil {
+		for _, r := range *c.RevIncludedCompositionResourcesReferencingEntry {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDetectedIssueResourcesReferencingImplicated != nil {
+		for _, r := range *c.RevIncludedDetectedIssueResourcesReferencingImplicated {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
+		for _, r := range *c.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
+		for _, r := range *c.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for _, r := range *c.RevIncludedProcessResponseResourcesReferencingRequest {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
+		for _, r := range *c.RevIncludedClinicalImpressionResourcesReferencingTrigger {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedMessageHeaderResourcesReferencingData != nil {
+		for _, r := range *c.RevIncludedMessageHeaderResourcesReferencingData {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
+}
+
+func (c *ConceptMapPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if c.IncludedStructureDefinitionResourcesReferencedBySource != nil {
+		for _, r := range *c.IncludedStructureDefinitionResourcesReferencedBySource {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedValueSetResourcesReferencedBySource != nil {
+		for _, r := range *c.IncludedValueSetResourcesReferencedBySource {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedStructureDefinitionResourcesReferencedByTarget != nil {
+		for _, r := range *c.IncludedStructureDefinitionResourcesReferencedByTarget {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedValueSetResourcesReferencedByTarget != nil {
+		for _, r := range *c.IncludedValueSetResourcesReferencedByTarget {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedStructureDefinitionResourcesReferencedBySourceuri != nil {
+		for _, r := range *c.IncludedStructureDefinitionResourcesReferencedBySourceuri {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.IncludedValueSetResourcesReferencedBySourceuri != nil {
+		for _, r := range *c.IncludedValueSetResourcesReferencedBySourceuri {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedProvenanceResourcesReferencingTarget != nil {
+		for _, r := range *c.RevIncludedProvenanceResourcesReferencingTarget {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
+		for _, r := range *c.RevIncludedDocumentManifestResourcesReferencingContentref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDocumentManifestResourcesReferencingRelatedref != nil {
+		for _, r := range *c.RevIncludedDocumentManifestResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedListResourcesReferencingItem != nil {
+		for _, r := range *c.RevIncludedListResourcesReferencingItem {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
+		for _, r := range *c.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedOrderResourcesReferencingDetail != nil {
+		for _, r := range *c.RevIncludedOrderResourcesReferencingDetail {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedBasicResourcesReferencingSubject != nil {
+		for _, r := range *c.RevIncludedBasicResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedAuditEventResourcesReferencingReference != nil {
+		for _, r := range *c.RevIncludedAuditEventResourcesReferencingReference {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedCompositionResourcesReferencingSubject != nil {
+		for _, r := range *c.RevIncludedCompositionResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedCompositionResourcesReferencingEntry != nil {
+		for _, r := range *c.RevIncludedCompositionResourcesReferencingEntry {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedDetectedIssueResourcesReferencingImplicated != nil {
+		for _, r := range *c.RevIncludedDetectedIssueResourcesReferencingImplicated {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
+		for _, r := range *c.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
+		for _, r := range *c.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for _, r := range *c.RevIncludedProcessResponseResourcesReferencingRequest {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
+		for _, r := range *c.RevIncludedClinicalImpressionResourcesReferencingTrigger {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if c.RevIncludedMessageHeaderResourcesReferencingData != nil {
+		for _, r := range *c.RevIncludedMessageHeaderResourcesReferencingData {
 			resourceMap[r.Id] = &r
 		}
 	}
