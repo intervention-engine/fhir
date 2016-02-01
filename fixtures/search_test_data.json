@@ -126,6 +126,9 @@
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
+	"asserter": {
+		"reference": "Practitioner/7045606679745586371"
+	},
 	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
@@ -203,6 +206,9 @@
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
+	"asserter": {
+		"reference": "Patient/4954037118555241963"
+	},
 	"code": {
 		"coding": [{
 			"system": "http://snomed.info/sct",
@@ -252,7 +258,10 @@
 	},
 	"encounter": {
 		"reference": "Encounter/6648204100111387580"
-	}
+	},
+	"performer": [{
+		"reference": "Practitioner/7045606679745586371"
+	}]
 }, {
 	"resourceType": "Procedure",
 	"id": "1203028907289396691",
@@ -316,7 +325,10 @@
 	"status": "final",
 	"subject": {
 		"reference": "Patient/4954037118555241963"
-	}
+	},
+	"performer": [{
+		"reference": "Organization/7045605384245533352"
+	}]
 }, {
 	"resourceType": "Observation",
 	"id": "3436673599267881943",
@@ -594,4 +606,25 @@
       "exclude": false
     }
   ]
+}, {
+  "resourceType": "Practitioner",
+  "id": "7045606679745586371",
+  "name": {
+    "use": "official",
+    "family": [
+      "Heps"
+    ],
+    "given": [
+      "Simone"
+    ],
+    "suffix": [
+      "MD"
+    ]
+  },
+  "gender": "female",
+  "birthDate": "1971-11-07"
+}, {
+  "resourceType": "Organization",
+  "id": "7045605384245533352",
+  "name": "Good Health Clinic"
 }]

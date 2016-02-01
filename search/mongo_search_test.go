@@ -10,7 +10,6 @@ import (
 	"testing"
 	"time"
 
-	//"github.com/davecgh/go-spew/spew"
 	"github.com/intervention-engine/fhir/models"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
@@ -1332,6 +1331,79 @@ func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
 	c.Assert(encounter.Type, HasLen, 1)
 	c.Assert(encounter.Type[0].Coding, HasLen, 1)
 	c.Assert(encounter.Type[0].Text, Equals, "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)")
+}
+
+func (m *MongoSearchSuite) TestObservationQueryForIncludeWithArrayFieldAndTargets(c *C) {
+	// https://jira.mongodb.org/browse/SERVER-21469
+	// http://stackoverflow.com/questions/34967482/lookup-on-objectids-in-an-array
+	c.Skip("Joining on fields that are arrays is currently not supported")
+	q := Query{"Observation", "_id=5637152931209212154,5433989216383325950&_include=Observation:performer:Practitioner"}
+	var results []models.ObservationPlus
+	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+	util.CheckErr(err)
+	c.Assert(results, HasLen, 2)
+	obs := results[0]
+	incl := obs.GetIncludedResources()
+	c.Assert(incl, HasLen, 1)
+	practitioners, err := obs.GetIncludedPractitionerResourcesReferencedByPerformer()
+	util.CheckErr(err)
+	c.Assert(practitioners, HasLen, 1)
+	c.Assert(practitioners[0].Id, Equals, "7045606679745586371")
+	obs = results[1]
+	incl = obs.GetIncludedResources()
+	c.Assert(incl, HasLen, 1)
+	organizations, err := obs.GetIncludedOrganizationResourcesReferencedByPerformer()
+	util.CheckErr(err)
+	c.Assert(organizations, HasLen, 1)
+	c.Assert(organizations[0].Id, Equals, "7045605384245533352")
+}
+
+func (m *MongoSearchSuite) TestConditionQueryForIncludeWithTargets(c *C) {
+	q := Query{"Condition", "_id=8664777288161060797,4072118967138896162&_include=Condition:asserter"}
+	var results []models.ConditionPlus
+	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+	util.CheckErr(err)
+	c.Assert(results, HasLen, 2)
+	cond := results[0]
+	incl := cond.GetIncludedResources()
+	c.Assert(incl, HasLen, 1)
+	patient, err := cond.GetIncludedPatientResourceReferencedByAsserter()
+	util.CheckErr(err)
+	c.Assert(patient.Id, Equals, "4954037118555241963")
+	cond = results[1]
+	incl = cond.GetIncludedResources()
+	c.Assert(incl, HasLen, 1)
+	practitioner, err := cond.GetIncludedPractitionerResourceReferencedByAsserter()
+	util.CheckErr(err)
+	c.Assert(practitioner.Id, Equals, "7045606679745586371")
+
+	q = Query{"Condition", "_id=8664777288161060797,4072118967138896162&_include=Condition:asserter:Patient"}
+	err = m.MongoSearcher.CreatePipeline(q).All(&results)
+	util.CheckErr(err)
+	c.Assert(results, HasLen, 2)
+	cond = results[0]
+	incl = cond.GetIncludedResources()
+	c.Assert(incl, HasLen, 1)
+	patient, err = cond.GetIncludedPatientResourceReferencedByAsserter()
+	util.CheckErr(err)
+	c.Assert(patient.Id, Equals, "4954037118555241963")
+	cond = results[1]
+	incl = cond.GetIncludedResources()
+	c.Assert(incl, HasLen, 0)
+
+	q = Query{"Condition", "_id=8664777288161060797,4072118967138896162&_include=Condition:asserter:Practitioner"}
+	err = m.MongoSearcher.CreatePipeline(q).All(&results)
+	util.CheckErr(err)
+	c.Assert(results, HasLen, 2)
+	cond = results[0]
+	incl = cond.GetIncludedResources()
+	c.Assert(incl, HasLen, 0)
+	cond = results[1]
+	incl = cond.GetIncludedResources()
+	c.Assert(incl, HasLen, 1)
+	practitioner, err = cond.GetIncludedPractitionerResourceReferencedByAsserter()
+	util.CheckErr(err)
+	c.Assert(practitioner.Id, Equals, "7045606679745586371")
 }
 
 func (m *MongoSearchSuite) TestPatientGenderQueryOptionsForRevInclude(c *C) {
