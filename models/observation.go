@@ -68,14 +68,17 @@ type Observation struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Observation) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Observation
-	}{
-		ResourceType: "Observation",
-		Observation:  *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Observation"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Observation), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Observation) GetBSON() (interface{}, error) {
+	x.ResourceType = "Observation"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "observation" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -91,8 +94,18 @@ func (x *Observation) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Observation(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Observation) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Observation"
+	} else if x.ResourceType != "Observation" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Observation, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ObservationReferenceRangeComponent struct {

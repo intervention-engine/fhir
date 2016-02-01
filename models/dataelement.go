@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type DataElement struct {
 	DomainResource `bson:",inline"`
@@ -48,14 +52,17 @@ type DataElement struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DataElement) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		DataElement
-	}{
-		ResourceType: "DataElement",
-		DataElement:  *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "DataElement"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to DataElement), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *DataElement) GetBSON() (interface{}, error) {
+	x.ResourceType = "DataElement"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "dataElement" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -71,8 +78,18 @@ func (x *DataElement) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = DataElement(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *DataElement) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "DataElement"
+	} else if x.ResourceType != "DataElement" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be DataElement, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type DataElementContactComponent struct {

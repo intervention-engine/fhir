@@ -42,14 +42,17 @@ type AuditEvent struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *AuditEvent) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		AuditEvent
-	}{
-		ResourceType: "AuditEvent",
-		AuditEvent:   *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "AuditEvent"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to AuditEvent), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *AuditEvent) GetBSON() (interface{}, error) {
+	x.ResourceType = "AuditEvent"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "auditEvent" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -65,8 +68,18 @@ func (x *AuditEvent) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = AuditEvent(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *AuditEvent) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "AuditEvent"
+	} else if x.ResourceType != "AuditEvent" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be AuditEvent, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type AuditEventEventComponent struct {

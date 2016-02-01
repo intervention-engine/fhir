@@ -48,14 +48,17 @@ type Person struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Person) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Person
-	}{
-		ResourceType: "Person",
-		Person:       *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Person"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Person), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Person) GetBSON() (interface{}, error) {
+	x.ResourceType = "Person"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "person" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -71,8 +74,18 @@ func (x *Person) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Person(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Person) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Person"
+	} else if x.ResourceType != "Person" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Person, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type PersonLinkComponent struct {

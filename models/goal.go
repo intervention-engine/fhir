@@ -54,14 +54,17 @@ type Goal struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Goal) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Goal
-	}{
-		ResourceType: "Goal",
-		Goal:         *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Goal"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Goal), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Goal) GetBSON() (interface{}, error) {
+	x.ResourceType = "Goal"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "goal" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -77,8 +80,18 @@ func (x *Goal) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Goal(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Goal) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Goal"
+	} else if x.ResourceType != "Goal" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Goal, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type GoalOutcomeComponent struct {

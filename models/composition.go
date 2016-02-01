@@ -52,14 +52,17 @@ type Composition struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Composition) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Composition
-	}{
-		ResourceType: "Composition",
-		Composition:  *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Composition"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Composition), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Composition) GetBSON() (interface{}, error) {
+	x.ResourceType = "Composition"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "composition" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -75,8 +78,18 @@ func (x *Composition) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Composition(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Composition) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Composition"
+	} else if x.ResourceType != "Composition" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Composition, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type CompositionAttesterComponent struct {

@@ -57,14 +57,17 @@ type Contract struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Contract) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Contract
-	}{
-		ResourceType: "Contract",
-		Contract:     *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Contract"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Contract), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Contract) GetBSON() (interface{}, error) {
+	x.ResourceType = "Contract"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "contract" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -80,8 +83,18 @@ func (x *Contract) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Contract(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Contract) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Contract"
+	} else if x.ResourceType != "Contract" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Contract, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ContractActorComponent struct {

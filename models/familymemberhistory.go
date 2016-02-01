@@ -58,14 +58,17 @@ type FamilyMemberHistory struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *FamilyMemberHistory) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		FamilyMemberHistory
-	}{
-		ResourceType:        "FamilyMemberHistory",
-		FamilyMemberHistory: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "FamilyMemberHistory"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to FamilyMemberHistory), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *FamilyMemberHistory) GetBSON() (interface{}, error) {
+	x.ResourceType = "FamilyMemberHistory"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "familyMemberHistory" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -81,8 +84,18 @@ func (x *FamilyMemberHistory) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = FamilyMemberHistory(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *FamilyMemberHistory) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "FamilyMemberHistory"
+	} else if x.ResourceType != "FamilyMemberHistory" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be FamilyMemberHistory, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type FamilyMemberHistoryConditionComponent struct {

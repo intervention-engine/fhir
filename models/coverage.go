@@ -52,14 +52,17 @@ type Coverage struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Coverage) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Coverage
-	}{
-		ResourceType: "Coverage",
-		Coverage:     *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Coverage"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Coverage), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Coverage) GetBSON() (interface{}, error) {
+	x.ResourceType = "Coverage"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "coverage" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -75,8 +78,18 @@ func (x *Coverage) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Coverage(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Coverage) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Coverage"
+	} else if x.ResourceType != "Coverage" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Coverage, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type CoveragePlus struct {

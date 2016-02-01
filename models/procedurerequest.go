@@ -56,14 +56,17 @@ type ProcedureRequest struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ProcedureRequest) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ProcedureRequest
-	}{
-		ResourceType:     "ProcedureRequest",
-		ProcedureRequest: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "ProcedureRequest"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to ProcedureRequest), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *ProcedureRequest) GetBSON() (interface{}, error) {
+	x.ResourceType = "ProcedureRequest"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "procedureRequest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -79,8 +82,18 @@ func (x *ProcedureRequest) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = ProcedureRequest(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *ProcedureRequest) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "ProcedureRequest"
+	} else if x.ResourceType != "ProcedureRequest" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ProcedureRequest, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ProcedureRequestPlus struct {

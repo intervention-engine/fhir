@@ -51,14 +51,17 @@ type Communication struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Communication) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Communication
-	}{
-		ResourceType:  "Communication",
-		Communication: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Communication"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Communication), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Communication) GetBSON() (interface{}, error) {
+	x.ResourceType = "Communication"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "communication" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -74,8 +77,18 @@ func (x *Communication) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Communication(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Communication) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Communication"
+	} else if x.ResourceType != "Communication" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Communication, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type CommunicationPayloadComponent struct {

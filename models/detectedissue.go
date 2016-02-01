@@ -48,14 +48,17 @@ type DetectedIssue struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DetectedIssue) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		DetectedIssue
-	}{
-		ResourceType:  "DetectedIssue",
-		DetectedIssue: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "DetectedIssue"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to DetectedIssue), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *DetectedIssue) GetBSON() (interface{}, error) {
+	x.ResourceType = "DetectedIssue"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "detectedIssue" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -71,8 +74,18 @@ func (x *DetectedIssue) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = DetectedIssue(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *DetectedIssue) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "DetectedIssue"
+	} else if x.ResourceType != "DetectedIssue" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be DetectedIssue, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type DetectedIssueMitigationComponent struct {

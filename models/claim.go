@@ -67,14 +67,17 @@ type Claim struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Claim) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Claim
-	}{
-		ResourceType: "Claim",
-		Claim:        *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Claim"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Claim), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Claim) GetBSON() (interface{}, error) {
+	x.ResourceType = "Claim"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "claim" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -90,8 +93,18 @@ func (x *Claim) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Claim(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Claim) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Claim"
+	} else if x.ResourceType != "Claim" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Claim, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ClaimPayeeComponent struct {

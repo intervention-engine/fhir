@@ -49,14 +49,17 @@ type MessageHeader struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *MessageHeader) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		MessageHeader
-	}{
-		ResourceType:  "MessageHeader",
-		MessageHeader: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "MessageHeader"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to MessageHeader), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *MessageHeader) GetBSON() (interface{}, error) {
+	x.ResourceType = "MessageHeader"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "messageHeader" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -72,8 +75,18 @@ func (x *MessageHeader) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = MessageHeader(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *MessageHeader) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "MessageHeader"
+	} else if x.ResourceType != "MessageHeader" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be MessageHeader, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type MessageHeaderResponseComponent struct {

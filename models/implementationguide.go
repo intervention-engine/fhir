@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ImplementationGuide struct {
 	DomainResource `bson:",inline"`
@@ -51,14 +55,17 @@ type ImplementationGuide struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ImplementationGuide) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ImplementationGuide
-	}{
-		ResourceType:        "ImplementationGuide",
-		ImplementationGuide: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "ImplementationGuide"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to ImplementationGuide), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *ImplementationGuide) GetBSON() (interface{}, error) {
+	x.ResourceType = "ImplementationGuide"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "implementationGuide" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -74,8 +81,18 @@ func (x *ImplementationGuide) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = ImplementationGuide(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *ImplementationGuide) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "ImplementationGuide"
+	} else if x.ResourceType != "ImplementationGuide" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ImplementationGuide, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ImplementationGuideContactComponent struct {

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Questionnaire struct {
 	DomainResource `bson:",inline"`
@@ -42,14 +46,17 @@ type Questionnaire struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Questionnaire) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Questionnaire
-	}{
-		ResourceType:  "Questionnaire",
-		Questionnaire: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Questionnaire"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Questionnaire), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Questionnaire) GetBSON() (interface{}, error) {
+	x.ResourceType = "Questionnaire"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "questionnaire" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -65,8 +72,18 @@ func (x *Questionnaire) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Questionnaire(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Questionnaire) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Questionnaire"
+	} else if x.ResourceType != "Questionnaire" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Questionnaire, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type QuestionnaireGroupComponent struct {

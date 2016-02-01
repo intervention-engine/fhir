@@ -63,14 +63,17 @@ type StructureDefinition struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *StructureDefinition) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		StructureDefinition
-	}{
-		ResourceType:        "StructureDefinition",
-		StructureDefinition: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "StructureDefinition"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to StructureDefinition), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *StructureDefinition) GetBSON() (interface{}, error) {
+	x.ResourceType = "StructureDefinition"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "structureDefinition" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -86,8 +89,18 @@ func (x *StructureDefinition) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = StructureDefinition(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *StructureDefinition) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "StructureDefinition"
+	} else if x.ResourceType != "StructureDefinition" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be StructureDefinition, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type StructureDefinitionContactComponent struct {

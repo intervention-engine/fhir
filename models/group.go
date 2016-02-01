@@ -46,14 +46,17 @@ type Group struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Group) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Group
-	}{
-		ResourceType: "Group",
-		Group:        *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Group"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Group), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Group) GetBSON() (interface{}, error) {
+	x.ResourceType = "Group"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "group" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -69,8 +72,18 @@ func (x *Group) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Group(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Group) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Group"
+	} else if x.ResourceType != "Group" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Group, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type GroupCharacteristicComponent struct {

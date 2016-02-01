@@ -51,14 +51,17 @@ type List struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *List) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		List
-	}{
-		ResourceType: "List",
-		List:         *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "List"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to List), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *List) GetBSON() (interface{}, error) {
+	x.ResourceType = "List"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "list" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -74,8 +77,18 @@ func (x *List) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = List(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *List) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "List"
+	} else if x.ResourceType != "List" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be List, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ListEntryComponent struct {

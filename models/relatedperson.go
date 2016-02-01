@@ -48,14 +48,17 @@ type RelatedPerson struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *RelatedPerson) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		RelatedPerson
-	}{
-		ResourceType:  "RelatedPerson",
-		RelatedPerson: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "RelatedPerson"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to RelatedPerson), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *RelatedPerson) GetBSON() (interface{}, error) {
+	x.ResourceType = "RelatedPerson"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "relatedPerson" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -71,8 +74,18 @@ func (x *RelatedPerson) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = RelatedPerson(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *RelatedPerson) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "RelatedPerson"
+	} else if x.ResourceType != "RelatedPerson" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be RelatedPerson, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type RelatedPersonPlus struct {

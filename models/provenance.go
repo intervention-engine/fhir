@@ -48,14 +48,17 @@ type Provenance struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Provenance) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Provenance
-	}{
-		ResourceType: "Provenance",
-		Provenance:   *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Provenance"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Provenance), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Provenance) GetBSON() (interface{}, error) {
+	x.ResourceType = "Provenance"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "provenance" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -71,8 +74,18 @@ func (x *Provenance) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Provenance(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Provenance) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Provenance"
+	} else if x.ResourceType != "Provenance" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Provenance, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ProvenanceAgentComponent struct {

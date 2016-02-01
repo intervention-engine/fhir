@@ -46,14 +46,17 @@ type VisionPrescription struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *VisionPrescription) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		VisionPrescription
-	}{
-		ResourceType:       "VisionPrescription",
-		VisionPrescription: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "VisionPrescription"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to VisionPrescription), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *VisionPrescription) GetBSON() (interface{}, error) {
+	x.ResourceType = "VisionPrescription"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "visionPrescription" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -69,8 +72,18 @@ func (x *VisionPrescription) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = VisionPrescription(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *VisionPrescription) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "VisionPrescription"
+	} else if x.ResourceType != "VisionPrescription" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be VisionPrescription, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type VisionPrescriptionDispenseComponent struct {

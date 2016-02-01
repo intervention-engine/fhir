@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ValueSet struct {
 	DomainResource `bson:",inline"`
@@ -53,14 +57,17 @@ type ValueSet struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ValueSet) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ValueSet
-	}{
-		ResourceType: "ValueSet",
-		ValueSet:     *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "ValueSet"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to ValueSet), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *ValueSet) GetBSON() (interface{}, error) {
+	x.ResourceType = "ValueSet"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "valueSet" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -76,8 +83,18 @@ func (x *ValueSet) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = ValueSet(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *ValueSet) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "ValueSet"
+	} else if x.ResourceType != "ValueSet" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ValueSet, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ValueSetContactComponent struct {

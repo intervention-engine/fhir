@@ -59,14 +59,17 @@ type Conformance struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Conformance) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Conformance
-	}{
-		ResourceType: "Conformance",
-		Conformance:  *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Conformance"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Conformance), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Conformance) GetBSON() (interface{}, error) {
+	x.ResourceType = "Conformance"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "conformance" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -82,8 +85,18 @@ func (x *Conformance) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Conformance(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Conformance) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Conformance"
+	} else if x.ResourceType != "Conformance" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Conformance, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ConformanceContactComponent struct {

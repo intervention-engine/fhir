@@ -54,14 +54,17 @@ type DeviceUseRequest struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *DeviceUseRequest) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		DeviceUseRequest
-	}{
-		ResourceType:     "DeviceUseRequest",
-		DeviceUseRequest: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "DeviceUseRequest"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to DeviceUseRequest), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *DeviceUseRequest) GetBSON() (interface{}, error) {
+	x.ResourceType = "DeviceUseRequest"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "deviceUseRequest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -77,8 +80,18 @@ func (x *DeviceUseRequest) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = DeviceUseRequest(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *DeviceUseRequest) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "DeviceUseRequest"
+	} else if x.ResourceType != "DeviceUseRequest" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be DeviceUseRequest, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type DeviceUseRequestPlus struct {

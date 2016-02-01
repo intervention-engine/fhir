@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type ExplanationOfBenefit struct {
 	DomainResource      `bson:",inline"`
@@ -44,14 +48,17 @@ type ExplanationOfBenefit struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ExplanationOfBenefit) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ExplanationOfBenefit
-	}{
-		ResourceType:         "ExplanationOfBenefit",
-		ExplanationOfBenefit: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "ExplanationOfBenefit"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to ExplanationOfBenefit), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *ExplanationOfBenefit) GetBSON() (interface{}, error) {
+	x.ResourceType = "ExplanationOfBenefit"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "explanationOfBenefit" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -67,8 +74,18 @@ func (x *ExplanationOfBenefit) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = ExplanationOfBenefit(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *ExplanationOfBenefit) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "ExplanationOfBenefit"
+	} else if x.ResourceType != "ExplanationOfBenefit" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ExplanationOfBenefit, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ExplanationOfBenefitPlus struct {
