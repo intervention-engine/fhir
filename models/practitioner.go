@@ -49,14 +49,17 @@ type Practitioner struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Practitioner) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Practitioner
-	}{
-		ResourceType: "Practitioner",
-		Practitioner: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Practitioner"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Practitioner), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Practitioner) GetBSON() (interface{}, error) {
+	x.ResourceType = "Practitioner"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "practitioner" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -72,8 +75,18 @@ func (x *Practitioner) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Practitioner(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Practitioner) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Practitioner"
+	} else if x.ResourceType != "Practitioner" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Practitioner, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type PractitionerPractitionerRoleComponent struct {

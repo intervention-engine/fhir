@@ -52,14 +52,17 @@ type AllergyIntolerance struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *AllergyIntolerance) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		AllergyIntolerance
-	}{
-		ResourceType:       "AllergyIntolerance",
-		AllergyIntolerance: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "AllergyIntolerance"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to AllergyIntolerance), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *AllergyIntolerance) GetBSON() (interface{}, error) {
+	x.ResourceType = "AllergyIntolerance"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "allergyIntolerance" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -75,8 +78,18 @@ func (x *AllergyIntolerance) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = AllergyIntolerance(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *AllergyIntolerance) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "AllergyIntolerance"
+	} else if x.ResourceType != "AllergyIntolerance" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be AllergyIntolerance, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type AllergyIntoleranceReactionComponent struct {

@@ -49,14 +49,17 @@ type Account struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Account) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Account
-	}{
-		ResourceType: "Account",
-		Account:      *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Account"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Account), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Account) GetBSON() (interface{}, error) {
+	x.ResourceType = "Account"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "account" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -72,8 +75,18 @@ func (x *Account) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Account(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Account) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Account"
+	} else if x.ResourceType != "Account" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Account, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type AccountPlus struct {

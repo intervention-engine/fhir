@@ -43,14 +43,39 @@ type Bundle struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Bundle) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Bundle
-	}{
-		ResourceType: "Bundle",
-		Bundle:       *resource,
+	resource.ResourceType = "Bundle"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Bundle), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Bundle) GetBSON() (interface{}, error) {
+	x.ResourceType = "Bundle"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
+}
+
+// The "bundle" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type bundle Bundle
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Bundle) UnmarshalJSON(data []byte) (err error) {
+	x2 := bundle{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		*x = Bundle(x2)
+		return x.checkResourceType()
 	}
-	return json.Marshal(x)
+	return
+}
+
+func (x *Bundle) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Bundle"
+	} else if x.ResourceType != "Bundle" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Bundle, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type BundleLinkComponent struct {

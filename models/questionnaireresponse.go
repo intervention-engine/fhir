@@ -47,14 +47,17 @@ type QuestionnaireResponse struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *QuestionnaireResponse) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		QuestionnaireResponse
-	}{
-		ResourceType:          "QuestionnaireResponse",
-		QuestionnaireResponse: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "QuestionnaireResponse"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to QuestionnaireResponse), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *QuestionnaireResponse) GetBSON() (interface{}, error) {
+	x.ResourceType = "QuestionnaireResponse"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "questionnaireResponse" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -70,8 +73,18 @@ func (x *QuestionnaireResponse) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = QuestionnaireResponse(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *QuestionnaireResponse) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "QuestionnaireResponse"
+	} else if x.ResourceType != "QuestionnaireResponse" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be QuestionnaireResponse, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type QuestionnaireResponseGroupComponent struct {

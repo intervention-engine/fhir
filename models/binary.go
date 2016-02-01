@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Binary struct {
 	Resource    `bson:",inline"`
@@ -36,14 +40,39 @@ type Binary struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Binary) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Binary
-	}{
-		ResourceType: "Binary",
-		Binary:       *resource,
+	resource.ResourceType = "Binary"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Binary), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Binary) GetBSON() (interface{}, error) {
+	x.ResourceType = "Binary"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
+}
+
+// The "binary" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type binary Binary
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Binary) UnmarshalJSON(data []byte) (err error) {
+	x2 := binary{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		*x = Binary(x2)
+		return x.checkResourceType()
 	}
-	return json.Marshal(x)
+	return
+}
+
+func (x *Binary) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Binary"
+	} else if x.ResourceType != "Binary" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Binary, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type BinaryPlus struct {

@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type PaymentNotice struct {
 	DomainResource  `bson:",inline"`
@@ -44,14 +48,17 @@ type PaymentNotice struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *PaymentNotice) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		PaymentNotice
-	}{
-		ResourceType:  "PaymentNotice",
-		PaymentNotice: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "PaymentNotice"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to PaymentNotice), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *PaymentNotice) GetBSON() (interface{}, error) {
+	x.ResourceType = "PaymentNotice"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "paymentNotice" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -67,8 +74,18 @@ func (x *PaymentNotice) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = PaymentNotice(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *PaymentNotice) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "PaymentNotice"
+	} else if x.ResourceType != "PaymentNotice" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be PaymentNotice, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type PaymentNoticePlus struct {

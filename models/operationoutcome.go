@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type OperationOutcome struct {
 	DomainResource `bson:",inline"`
@@ -35,14 +39,17 @@ type OperationOutcome struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *OperationOutcome) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		OperationOutcome
-	}{
-		ResourceType:     "OperationOutcome",
-		OperationOutcome: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "OperationOutcome"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to OperationOutcome), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *OperationOutcome) GetBSON() (interface{}, error) {
+	x.ResourceType = "OperationOutcome"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "operationOutcome" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -58,8 +65,18 @@ func (x *OperationOutcome) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = OperationOutcome(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *OperationOutcome) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "OperationOutcome"
+	} else if x.ResourceType != "OperationOutcome" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be OperationOutcome, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type OperationOutcomeIssueComponent struct {

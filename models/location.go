@@ -50,14 +50,17 @@ type Location struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Location) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Location
-	}{
-		ResourceType: "Location",
-		Location:     *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Location"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Location), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Location) GetBSON() (interface{}, error) {
+	x.ResourceType = "Location"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "location" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -73,8 +76,18 @@ func (x *Location) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Location(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Location) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Location"
+	} else if x.ResourceType != "Location" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Location, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type LocationPositionComponent struct {

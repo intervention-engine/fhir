@@ -59,14 +59,17 @@ type Immunization struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Immunization) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Immunization
-	}{
-		ResourceType: "Immunization",
-		Immunization: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Immunization"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Immunization), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Immunization) GetBSON() (interface{}, error) {
+	x.ResourceType = "Immunization"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "immunization" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -82,8 +85,18 @@ func (x *Immunization) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Immunization(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Immunization) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Immunization"
+	} else if x.ResourceType != "Immunization" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Immunization, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ImmunizationExplanationComponent struct {

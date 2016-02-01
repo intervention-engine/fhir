@@ -44,14 +44,17 @@ type BodySite struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *BodySite) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		BodySite
-	}{
-		ResourceType: "BodySite",
-		BodySite:     *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "BodySite"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to BodySite), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *BodySite) GetBSON() (interface{}, error) {
+	x.ResourceType = "BodySite"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "bodySite" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -67,8 +70,18 @@ func (x *BodySite) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = BodySite(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *BodySite) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "BodySite"
+	} else if x.ResourceType != "BodySite" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be BodySite, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type BodySitePlus struct {

@@ -56,14 +56,17 @@ type ConceptMap struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ConceptMap) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ConceptMap
-	}{
-		ResourceType: "ConceptMap",
-		ConceptMap:   *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "ConceptMap"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to ConceptMap), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *ConceptMap) GetBSON() (interface{}, error) {
+	x.ResourceType = "ConceptMap"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "conceptMap" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -79,8 +82,18 @@ func (x *ConceptMap) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = ConceptMap(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *ConceptMap) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "ConceptMap"
+	} else if x.ResourceType != "ConceptMap" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ConceptMap, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ConceptMapContactComponent struct {

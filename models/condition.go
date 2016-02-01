@@ -63,14 +63,17 @@ type Condition struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Condition) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Condition
-	}{
-		ResourceType: "Condition",
-		Condition:    *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Condition"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Condition), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Condition) GetBSON() (interface{}, error) {
+	x.ResourceType = "Condition"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "condition" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -86,8 +89,18 @@ func (x *Condition) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Condition(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Condition) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Condition"
+	} else if x.ResourceType != "Condition" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Condition, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ConditionStageComponent struct {

@@ -46,14 +46,17 @@ type Flag struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Flag) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Flag
-	}{
-		ResourceType: "Flag",
-		Flag:         *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Flag"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Flag), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Flag) GetBSON() (interface{}, error) {
+	x.ResourceType = "Flag"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "flag" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -69,8 +72,18 @@ func (x *Flag) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Flag(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Flag) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Flag"
+	} else if x.ResourceType != "Flag" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Flag, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type FlagPlus struct {

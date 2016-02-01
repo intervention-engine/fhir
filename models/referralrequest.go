@@ -54,14 +54,17 @@ type ReferralRequest struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *ReferralRequest) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		ReferralRequest
-	}{
-		ResourceType:    "ReferralRequest",
-		ReferralRequest: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "ReferralRequest"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to ReferralRequest), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *ReferralRequest) GetBSON() (interface{}, error) {
+	x.ResourceType = "ReferralRequest"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "referralRequest" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -77,8 +80,18 @@ func (x *ReferralRequest) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = ReferralRequest(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *ReferralRequest) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "ReferralRequest"
+	} else if x.ResourceType != "ReferralRequest" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ReferralRequest, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ReferralRequestPlus struct {

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	//"github.com/davecgh/go-spew/spew"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/intervention-engine/fhir/models"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
@@ -1301,7 +1302,9 @@ func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
 	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:patient&_include=Observation:encounter"}
 
 	var results []models.ObservationPlus
-	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+	pipeline := m.MongoSearcher.CreatePipeline(q)
+	spew.Dump(pipeline)
+	err := pipeline.All(&results)
 	util.CheckErr(err)
 	c.Assert(results, HasLen, 1)
 

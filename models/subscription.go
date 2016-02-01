@@ -26,7 +26,11 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Subscription struct {
 	DomainResource `bson:",inline"`
@@ -42,14 +46,17 @@ type Subscription struct {
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Subscription) MarshalJSON() ([]byte, error) {
-	x := struct {
-		ResourceType string `json:"resourceType"`
-		Subscription
-	}{
-		ResourceType: "Subscription",
-		Subscription: *resource,
-	}
-	return json.Marshal(x)
+	resource.ResourceType = "Subscription"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Subscription), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Subscription) GetBSON() (interface{}, error) {
+	x.ResourceType = "Subscription"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
 }
 
 // The "subscription" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -65,8 +72,18 @@ func (x *Subscription) UnmarshalJSON(data []byte) (err error) {
 			}
 		}
 		*x = Subscription(x2)
+		return x.checkResourceType()
 	}
 	return
+}
+
+func (x *Subscription) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Subscription"
+	} else if x.ResourceType != "Subscription" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Subscription, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type SubscriptionChannelComponent struct {

@@ -185,37 +185,6 @@ func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
 }
 
-func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
-	// Add 1 more patient
-	patient := insertPatientFromFixture("../fixtures/patient-example-a.json")
-
-	// Add condition
-	data, err := os.Open("../fixtures/condition.json")
-	util.CheckErr(err)
-	defer data.Close()
-	decoder := json.NewDecoder(data)
-	condition := &models.Condition{}
-	err = decoder.Decode(condition)
-	util.CheckErr(err)
-	// Set condition patient
-	condition.Patient = &models.Reference{
-		Reference:    "Patient/" + patient.Id,
-		Type:         "Patient",
-		ReferencedID: patient.Id,
-		External:     new(bool),
-	}
-	condition.Id = bson.NewObjectId().Hex()
-	err = Database.C("conditions").Insert(condition)
-	util.CheckErr(err)
-
-	assertBundleCount(c, s.Server.URL+"/Condition", 1, 1)
-	b := assertBundleCount(c, s.Server.URL+"/Condition?_include=Condition:patient", 2, 1)
-	c.Assert(b.Entry[0].Resource, FitsTypeOf, &models.Condition{})
-	c.Assert(b.Entry[0].Search.Mode, Equals, "match")
-	c.Assert(b.Entry[1].Resource, FitsTypeOf, &models.Patient{})
-	c.Assert(b.Entry[1].Search.Mode, Equals, "include")
-}
-
 func (s *ServerSuite) TestGetPatient(c *C) {
 	res, err := http.Get(s.Server.URL + "/Patient/" + s.FixtureId)
 	util.CheckErr(err)
@@ -267,6 +236,48 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 	since := time.Since(patient.Meta.LastUpdated.Time)
 	c.Assert(since.Hours() < float64(1), Equals, true)
 	c.Assert(since.Minutes() < float64(1), Equals, true)
+}
+
+func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
+	// Add 1 more patient
+	patient := insertPatientFromFixture("../fixtures/patient-example-a.json")
+
+	// Add condition
+	data, err := os.Open("../fixtures/condition.json")
+	util.CheckErr(err)
+	defer data.Close()
+	decoder := json.NewDecoder(data)
+	condition := &models.Condition{}
+	err = decoder.Decode(condition)
+	util.CheckErr(err)
+	// Set condition patient
+	condition.Patient = &models.Reference{
+		Reference:    "Patient/" + patient.Id,
+		Type:         "Patient",
+		ReferencedID: patient.Id,
+		External:     new(bool),
+	}
+	condition.Id = bson.NewObjectId().Hex()
+	err = Database.C("conditions").Insert(condition)
+	util.CheckErr(err)
+
+	assertBundleCount(c, s.Server.URL+"/Condition", 1, 1)
+	b := assertBundleCount(c, s.Server.URL+"/Condition?_include=Condition:patient", 2, 1)
+	c.Assert(b.Entry[0].Resource, FitsTypeOf, &models.Condition{})
+	c.Assert(b.Entry[0].Search.Mode, Equals, "match")
+	c.Assert(b.Entry[1].Resource, FitsTypeOf, &models.Patient{})
+	c.Assert(b.Entry[1].Search.Mode, Equals, "include")
+}
+
+func (s *ServerSuite) TestWrongResource(c *C) {
+	data, err := os.Open("../fixtures/patient-wrong-type.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
+	util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, http.StatusBadRequest)
 }
 
 func (s *ServerSuite) TestUpdatePatient(c *C) {
