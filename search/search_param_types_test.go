@@ -1508,7 +1508,7 @@ func (s *SearchPTSuite) TestNormalizedQueryValue(c *C) {
 }
 
 func (s *SearchPTSuite) TestQueryOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
 	o := q.Options()
 	c.Assert(o.Count, Equals, 10)
 	c.Assert(o.Offset, Equals, 20)
@@ -1517,23 +1517,109 @@ func (s *SearchPTSuite) TestQueryOptions(c *C) {
 	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
 	c.Assert(o.Include[1].Resource, Equals, "Patient")
 	c.Assert(o.Include[1].Parameter.Name, Equals, "organization")
+	c.Assert(o.RevInclude[0].Resource, Equals, "Condition")
+	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "patient")
+	c.Assert(o.RevInclude[1].Resource, Equals, "Encounter")
+	c.Assert(o.RevInclude[1].Parameter.Name, Equals, "patient")
 }
 
-func (s *SearchPTSuite) TestReconstructQueryWithDefaultOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M"}
-	v := q.NormalizedQueryValues(true)
-	c.Assert(v, HasLen, 4)
-	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
-	c.Assert(v.Get("gender"), Equals, "M")
-	c.Assert(v.Get(CountParam), Equals, "100")
-	c.Assert(v.Get(OffsetParam), Equals, "0")
-	c.Assert(v.Get(IncludeParam), Equals, "")
+func (s *SearchPTSuite) TestQueryOptionsIncludeTargets(c *C) {
+	q := Query{Resource: "Patient", Query: "_include=Patient:careprovider:Organization"}
+	o := q.Options()
+	c.Assert(o.Include, HasLen, 1)
+	c.Assert(o.Include[0].Resource, Equals, "Patient")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[0].Parameter.Targets, HasLen, 1)
+	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Organization")
+
+	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider:Practitioner"}
+	o = q.Options()
+	c.Assert(o.Include, HasLen, 1)
+	c.Assert(o.Include[0].Resource, Equals, "Patient")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[0].Parameter.Targets, HasLen, 1)
+	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Practitioner")
+
+	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider"}
+	o = q.Options()
+	c.Assert(o.Include, HasLen, 1)
+	c.Assert(o.Include[0].Resource, Equals, "Patient")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[0].Parameter.Targets, HasLen, 2)
+	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Organization")
+	c.Assert(o.Include[0].Parameter.Targets[1], Equals, "Practitioner")
+}
+
+func (s *SearchPTSuite) TestQueryOptionsInvalidIncludeParams(c *C) {
+	// Non-existent parameter
+	q := Query{Resource: "Patient", Query: "_include=Patient:foo"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
+
+	// Non-reference parameter
+	q = Query{Resource: "Patient", Query: "_include=Patient:name"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
+
+	// Invalid target
+	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider:Procedure"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
+
+	// Too few parts
+	q = Query{Resource: "Patient", Query: "_include=careprovider"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
+
+	// Too many parts
+	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider:Procedure:0"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
+}
+
+func (s *SearchPTSuite) TestQueryOptionsRevIncludeTargets(c *C) {
+	q := Query{Resource: "Patient", Query: "_revinclude=Observation:subject:Patient"}
+	o := q.Options()
+	c.Assert(o.RevInclude, HasLen, 1)
+	c.Assert(o.RevInclude[0].Resource, Equals, "Observation")
+	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "subject")
+	c.Assert(o.RevInclude[0].Parameter.Targets, HasLen, 1)
+	c.Assert(o.RevInclude[0].Parameter.Targets[0], Equals, "Patient")
+
+	q = Query{Resource: "Patient", Query: "_revinclude=Observation:subject"}
+	o = q.Options()
+	c.Assert(o.RevInclude, HasLen, 1)
+	c.Assert(o.RevInclude[0].Resource, Equals, "Observation")
+	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "subject")
+	c.Assert(o.RevInclude[0].Parameter.Targets, HasLen, 1)
+	c.Assert(o.RevInclude[0].Parameter.Targets[0], Equals, "Patient")
+}
+
+func (s *SearchPTSuite) TestQueryOptionsInvalidRevIncludeParams(c *C) {
+	// Non-existent parameter
+	q := Query{Resource: "Patient", Query: "_revinclude=Observation:foo"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_revinclude\" content is invalid"))
+
+	// Non-reference parameter
+	q = Query{Resource: "Patient", Query: "_revinclude=Observation:code"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_revinclude\" content is invalid"))
+
+	// Reference parameter to wrong type
+	q = Query{Resource: "Patient", Query: "_revinclude=Observation:device"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_revinclude\" content is invalid"))
+
+	// Valid reference but invalid target
+	q = Query{Resource: "Patient", Query: "_revinclude=Observation:subject:Device"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_revinclude\" content is invalid"))
+
+	// Too few parts
+	q = Query{Resource: "Patient", Query: "_revinclude=subject"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_revinclude\" content is invalid"))
+
+	// Too many parts
+	q = Query{Resource: "Patient", Query: "_revinclude=Observation:subject:Patient:0"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_revinclude\" content is invalid"))
 }
 
 func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
 	v := q.NormalizedQueryValues(true)
-	c.Assert(v, HasLen, 5)
+	c.Assert(v, HasLen, 6)
 	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
 	c.Assert(v.Get("gender"), Equals, "M")
 	c.Assert(v[CountParam], HasLen, 1)
@@ -1543,6 +1629,9 @@ func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
 	c.Assert(v[IncludeParam], HasLen, 2)
 	c.Assert(v[IncludeParam][0], Equals, "Patient:careprovider")
 	c.Assert(v[IncludeParam][1], Equals, "Patient:organization")
+	c.Assert(v[RevIncludeParam], HasLen, 2)
+	c.Assert(v[RevIncludeParam][0], Equals, "Condition:patient")
+	c.Assert(v[RevIncludeParam][1], Equals, "Encounter:patient")
 }
 
 func (s *SearchPTSuite) TestQueryOptionsQueryValues(c *C) {

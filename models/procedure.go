@@ -112,165 +112,600 @@ type ProcedureFocalDeviceComponent struct {
 }
 
 type ProcedurePlus struct {
-	Procedure             `bson:",inline"`
-	ProcedurePlusIncludes `bson:",inline"`
+	Procedure                     `bson:",inline"`
+	ProcedurePlusRelatedResources `bson:",inline"`
 }
 
-type ProcedurePlusIncludes struct {
-	IncludedPerformerPractitionerResources  *[]Practitioner  `bson:"_includedPerformerPractitionerResources,omitempty"`
-	IncludedPerformerOrganizationResources  *[]Organization  `bson:"_includedPerformerOrganizationResources,omitempty"`
-	IncludedPerformerPatientResources       *[]Patient       `bson:"_includedPerformerPatientResources,omitempty"`
-	IncludedPerformerRelatedPersonResources *[]RelatedPerson `bson:"_includedPerformerRelatedPersonResources,omitempty"`
-	IncludedSubjectGroupResources           *[]Group         `bson:"_includedSubjectGroupResources,omitempty"`
-	IncludedSubjectPatientResources         *[]Patient       `bson:"_includedSubjectPatientResources,omitempty"`
-	IncludedPatientResources                *[]Patient       `bson:"_includedPatientResources,omitempty"`
-	IncludedLocationResources               *[]Location      `bson:"_includedLocationResources,omitempty"`
-	IncludedEncounterResources              *[]Encounter     `bson:"_includedEncounterResources,omitempty"`
+type ProcedurePlusRelatedResources struct {
+	IncludedPractitionerResourcesReferencedByPerformer          *[]Practitioner          `bson:"_includedPractitionerResourcesReferencedByPerformer,omitempty"`
+	IncludedOrganizationResourcesReferencedByPerformer          *[]Organization          `bson:"_includedOrganizationResourcesReferencedByPerformer,omitempty"`
+	IncludedPatientResourcesReferencedByPerformer               *[]Patient               `bson:"_includedPatientResourcesReferencedByPerformer,omitempty"`
+	IncludedRelatedPersonResourcesReferencedByPerformer         *[]RelatedPerson         `bson:"_includedRelatedPersonResourcesReferencedByPerformer,omitempty"`
+	IncludedGroupResourcesReferencedBySubject                   *[]Group                 `bson:"_includedGroupResourcesReferencedBySubject,omitempty"`
+	IncludedPatientResourcesReferencedBySubject                 *[]Patient               `bson:"_includedPatientResourcesReferencedBySubject,omitempty"`
+	IncludedPatientResourcesReferencedByPatient                 *[]Patient               `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
+	IncludedLocationResourcesReferencedByLocation               *[]Location              `bson:"_includedLocationResourcesReferencedByLocation,omitempty"`
+	IncludedEncounterResourcesReferencedByEncounter             *[]Encounter             `bson:"_includedEncounterResourcesReferencedByEncounter,omitempty"`
+	RevIncludedProvenanceResourcesReferencingTarget             *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingContentref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingRelatedref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
+	RevIncludedListResourcesReferencingItem                     *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
+	RevIncludedDocumentReferenceResourcesReferencingRelatedref  *[]DocumentReference     `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
+	RevIncludedOrderResourcesReferencingDetail                  *[]Order                 `bson:"_revIncludedOrderResourcesReferencingDetail,omitempty"`
+	RevIncludedBasicResourcesReferencingSubject                 *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
+	RevIncludedEncounterResourcesReferencingProcedure           *[]Encounter             `bson:"_revIncludedEncounterResourcesReferencingProcedure,omitempty"`
+	RevIncludedEncounterResourcesReferencingIndication          *[]Encounter             `bson:"_revIncludedEncounterResourcesReferencingIndication,omitempty"`
+	RevIncludedAuditEventResourcesReferencingReference          *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingReference,omitempty"`
+	RevIncludedCompositionResourcesReferencingSubject           *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
+	RevIncludedCompositionResourcesReferencingEntry             *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
+	RevIncludedDetectedIssueResourcesReferencingImplicated      *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
+	RevIncludedOrderResponseResourcesReferencingFulfillment     *[]OrderResponse         `bson:"_revIncludedOrderResponseResourcesReferencingFulfillment,omitempty"`
+	RevIncludedQuestionnaireResponseResourcesReferencingSubject *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
+	RevIncludedProcessResponseResourcesReferencingRequest       *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
+	RevIncludedClinicalImpressionResourcesReferencingTrigger    *[]ClinicalImpression    `bson:"_revIncludedClinicalImpressionResourcesReferencingTrigger,omitempty"`
+	RevIncludedClinicalImpressionResourcesReferencingAction     *[]ClinicalImpression    `bson:"_revIncludedClinicalImpressionResourcesReferencingAction,omitempty"`
+	RevIncludedMessageHeaderResourcesReferencingData            *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedPerformerPractitionerResource() (practitioner *Practitioner, err error) {
-	if p.IncludedPerformerPractitionerResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedPractitionerResourceReferencedByPerformer() (practitioner *Practitioner, err error) {
+	if p.IncludedPractitionerResourcesReferencedByPerformer == nil {
 		err = errors.New("Included practitioners not requested")
-	} else if len(*p.IncludedPerformerPractitionerResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedPerformerPractitionerResources))
-	} else if len(*p.IncludedPerformerPractitionerResources) == 1 {
-		practitioner = &(*p.IncludedPerformerPractitionerResources)[0]
+	} else if len(*p.IncludedPractitionerResourcesReferencedByPerformer) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*p.IncludedPractitionerResourcesReferencedByPerformer))
+	} else if len(*p.IncludedPractitionerResourcesReferencedByPerformer) == 1 {
+		practitioner = &(*p.IncludedPractitionerResourcesReferencedByPerformer)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedPerformerOrganizationResource() (organization *Organization, err error) {
-	if p.IncludedPerformerOrganizationResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedOrganizationResourceReferencedByPerformer() (organization *Organization, err error) {
+	if p.IncludedOrganizationResourcesReferencedByPerformer == nil {
 		err = errors.New("Included organizations not requested")
-	} else if len(*p.IncludedPerformerOrganizationResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedPerformerOrganizationResources))
-	} else if len(*p.IncludedPerformerOrganizationResources) == 1 {
-		organization = &(*p.IncludedPerformerOrganizationResources)[0]
+	} else if len(*p.IncludedOrganizationResourcesReferencedByPerformer) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*p.IncludedOrganizationResourcesReferencedByPerformer))
+	} else if len(*p.IncludedOrganizationResourcesReferencedByPerformer) == 1 {
+		organization = &(*p.IncludedOrganizationResourcesReferencedByPerformer)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedPerformerPatientResource() (patient *Patient, err error) {
-	if p.IncludedPerformerPatientResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedPatientResourceReferencedByPerformer() (patient *Patient, err error) {
+	if p.IncludedPatientResourcesReferencedByPerformer == nil {
 		err = errors.New("Included patients not requested")
-	} else if len(*p.IncludedPerformerPatientResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPerformerPatientResources))
-	} else if len(*p.IncludedPerformerPatientResources) == 1 {
-		patient = &(*p.IncludedPerformerPatientResources)[0]
+	} else if len(*p.IncludedPatientResourcesReferencedByPerformer) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPatientResourcesReferencedByPerformer))
+	} else if len(*p.IncludedPatientResourcesReferencedByPerformer) == 1 {
+		patient = &(*p.IncludedPatientResourcesReferencedByPerformer)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedPerformerRelatedPersonResource() (relatedPerson *RelatedPerson, err error) {
-	if p.IncludedPerformerRelatedPersonResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedRelatedPersonResourceReferencedByPerformer() (relatedPerson *RelatedPerson, err error) {
+	if p.IncludedRelatedPersonResourcesReferencedByPerformer == nil {
 		err = errors.New("Included relatedpeople not requested")
-	} else if len(*p.IncludedPerformerRelatedPersonResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*p.IncludedPerformerRelatedPersonResources))
-	} else if len(*p.IncludedPerformerRelatedPersonResources) == 1 {
-		relatedPerson = &(*p.IncludedPerformerRelatedPersonResources)[0]
+	} else if len(*p.IncludedRelatedPersonResourcesReferencedByPerformer) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*p.IncludedRelatedPersonResourcesReferencedByPerformer))
+	} else if len(*p.IncludedRelatedPersonResourcesReferencedByPerformer) == 1 {
+		relatedPerson = &(*p.IncludedRelatedPersonResourcesReferencedByPerformer)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedSubjectGroupResource() (group *Group, err error) {
-	if p.IncludedSubjectGroupResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedGroupResourceReferencedBySubject() (group *Group, err error) {
+	if p.IncludedGroupResourcesReferencedBySubject == nil {
 		err = errors.New("Included groups not requested")
-	} else if len(*p.IncludedSubjectGroupResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*p.IncludedSubjectGroupResources))
-	} else if len(*p.IncludedSubjectGroupResources) == 1 {
-		group = &(*p.IncludedSubjectGroupResources)[0]
+	} else if len(*p.IncludedGroupResourcesReferencedBySubject) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*p.IncludedGroupResourcesReferencedBySubject))
+	} else if len(*p.IncludedGroupResourcesReferencedBySubject) == 1 {
+		group = &(*p.IncludedGroupResourcesReferencedBySubject)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedSubjectPatientResource() (patient *Patient, err error) {
-	if p.IncludedSubjectPatientResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedPatientResourceReferencedBySubject() (patient *Patient, err error) {
+	if p.IncludedPatientResourcesReferencedBySubject == nil {
 		err = errors.New("Included patients not requested")
-	} else if len(*p.IncludedSubjectPatientResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedSubjectPatientResources))
-	} else if len(*p.IncludedSubjectPatientResources) == 1 {
-		patient = &(*p.IncludedSubjectPatientResources)[0]
+	} else if len(*p.IncludedPatientResourcesReferencedBySubject) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPatientResourcesReferencedBySubject))
+	} else if len(*p.IncludedPatientResourcesReferencedBySubject) == 1 {
+		patient = &(*p.IncludedPatientResourcesReferencedBySubject)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedPatientResource() (patient *Patient, err error) {
-	if p.IncludedPatientResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedPatientResourceReferencedByPatient() (patient *Patient, err error) {
+	if p.IncludedPatientResourcesReferencedByPatient == nil {
 		err = errors.New("Included patients not requested")
-	} else if len(*p.IncludedPatientResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPatientResources))
-	} else if len(*p.IncludedPatientResources) == 1 {
-		patient = &(*p.IncludedPatientResources)[0]
+	} else if len(*p.IncludedPatientResourcesReferencedByPatient) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*p.IncludedPatientResourcesReferencedByPatient))
+	} else if len(*p.IncludedPatientResourcesReferencedByPatient) == 1 {
+		patient = &(*p.IncludedPatientResourcesReferencedByPatient)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedLocationResource() (location *Location, err error) {
-	if p.IncludedLocationResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedLocationResourceReferencedByLocation() (location *Location, err error) {
+	if p.IncludedLocationResourcesReferencedByLocation == nil {
 		err = errors.New("Included locations not requested")
-	} else if len(*p.IncludedLocationResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*p.IncludedLocationResources))
-	} else if len(*p.IncludedLocationResources) == 1 {
-		location = &(*p.IncludedLocationResources)[0]
+	} else if len(*p.IncludedLocationResourcesReferencedByLocation) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*p.IncludedLocationResourcesReferencedByLocation))
+	} else if len(*p.IncludedLocationResourcesReferencedByLocation) == 1 {
+		location = &(*p.IncludedLocationResourcesReferencedByLocation)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedEncounterResource() (encounter *Encounter, err error) {
-	if p.IncludedEncounterResources == nil {
+func (p *ProcedurePlusRelatedResources) GetIncludedEncounterResourceReferencedByEncounter() (encounter *Encounter, err error) {
+	if p.IncludedEncounterResourcesReferencedByEncounter == nil {
 		err = errors.New("Included encounters not requested")
-	} else if len(*p.IncludedEncounterResources) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*p.IncludedEncounterResources))
-	} else if len(*p.IncludedEncounterResources) == 1 {
-		encounter = &(*p.IncludedEncounterResources)[0]
+	} else if len(*p.IncludedEncounterResourcesReferencedByEncounter) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*p.IncludedEncounterResourcesReferencedByEncounter))
+	} else if len(*p.IncludedEncounterResourcesReferencedByEncounter) == 1 {
+		encounter = &(*p.IncludedEncounterResourcesReferencedByEncounter)[0]
 	}
 	return
 }
 
-func (p *ProcedurePlusIncludes) GetIncludedResources() map[string]interface{} {
+func (p *ProcedurePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+	if p.RevIncludedProvenanceResourcesReferencingTarget == nil {
+		err = errors.New("RevIncluded provenances not requested")
+	} else {
+		provenances = *p.RevIncludedProvenanceResourcesReferencingTarget
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
+	if p.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
+		err = errors.New("RevIncluded documentManifests not requested")
+	} else {
+		documentManifests = *p.RevIncludedDocumentManifestResourcesReferencingContentref
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
+	if p.RevIncludedDocumentManifestResourcesReferencingRelatedref == nil {
+		err = errors.New("RevIncluded documentManifests not requested")
+	} else {
+		documentManifests = *p.RevIncludedDocumentManifestResourcesReferencingRelatedref
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
+	if p.RevIncludedListResourcesReferencingItem == nil {
+		err = errors.New("RevIncluded lists not requested")
+	} else {
+		lists = *p.RevIncludedListResourcesReferencingItem
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+	if p.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
+		err = errors.New("RevIncluded documentReferences not requested")
+	} else {
+		documentReferences = *p.RevIncludedDocumentReferenceResourcesReferencingRelatedref
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedOrderResourcesReferencingDetail() (orders []Order, err error) {
+	if p.RevIncludedOrderResourcesReferencingDetail == nil {
+		err = errors.New("RevIncluded orders not requested")
+	} else {
+		orders = *p.RevIncludedOrderResourcesReferencingDetail
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
+	if p.RevIncludedBasicResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded basics not requested")
+	} else {
+		basics = *p.RevIncludedBasicResourcesReferencingSubject
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedEncounterResourcesReferencingProcedure() (encounters []Encounter, err error) {
+	if p.RevIncludedEncounterResourcesReferencingProcedure == nil {
+		err = errors.New("RevIncluded encounters not requested")
+	} else {
+		encounters = *p.RevIncludedEncounterResourcesReferencingProcedure
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedEncounterResourcesReferencingIndication() (encounters []Encounter, err error) {
+	if p.RevIncludedEncounterResourcesReferencingIndication == nil {
+		err = errors.New("RevIncluded encounters not requested")
+	} else {
+		encounters = *p.RevIncludedEncounterResourcesReferencingIndication
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingReference() (auditEvents []AuditEvent, err error) {
+	if p.RevIncludedAuditEventResourcesReferencingReference == nil {
+		err = errors.New("RevIncluded auditEvents not requested")
+	} else {
+		auditEvents = *p.RevIncludedAuditEventResourcesReferencingReference
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
+	if p.RevIncludedCompositionResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded compositions not requested")
+	} else {
+		compositions = *p.RevIncludedCompositionResourcesReferencingSubject
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
+	if p.RevIncludedCompositionResourcesReferencingEntry == nil {
+		err = errors.New("RevIncluded compositions not requested")
+	} else {
+		compositions = *p.RevIncludedCompositionResourcesReferencingEntry
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
+	if p.RevIncludedDetectedIssueResourcesReferencingImplicated == nil {
+		err = errors.New("RevIncluded detectedIssues not requested")
+	} else {
+		detectedIssues = *p.RevIncludedDetectedIssueResourcesReferencingImplicated
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedOrderResponseResourcesReferencingFulfillment() (orderResponses []OrderResponse, err error) {
+	if p.RevIncludedOrderResponseResourcesReferencingFulfillment == nil {
+		err = errors.New("RevIncluded orderResponses not requested")
+	} else {
+		orderResponses = *p.RevIncludedOrderResponseResourcesReferencingFulfillment
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
+	if p.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded questionnaireResponses not requested")
+	} else {
+		questionnaireResponses = *p.RevIncludedQuestionnaireResponseResourcesReferencingSubject
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+	if p.RevIncludedProcessResponseResourcesReferencingRequest == nil {
+		err = errors.New("RevIncluded processResponses not requested")
+	} else {
+		processResponses = *p.RevIncludedProcessResponseResourcesReferencingRequest
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedClinicalImpressionResourcesReferencingTrigger() (clinicalImpressions []ClinicalImpression, err error) {
+	if p.RevIncludedClinicalImpressionResourcesReferencingTrigger == nil {
+		err = errors.New("RevIncluded clinicalImpressions not requested")
+	} else {
+		clinicalImpressions = *p.RevIncludedClinicalImpressionResourcesReferencingTrigger
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedClinicalImpressionResourcesReferencingAction() (clinicalImpressions []ClinicalImpression, err error) {
+	if p.RevIncludedClinicalImpressionResourcesReferencingAction == nil {
+		err = errors.New("RevIncluded clinicalImpressions not requested")
+	} else {
+		clinicalImpressions = *p.RevIncludedClinicalImpressionResourcesReferencingAction
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
+	if p.RevIncludedMessageHeaderResourcesReferencingData == nil {
+		err = errors.New("RevIncluded messageHeaders not requested")
+	} else {
+		messageHeaders = *p.RevIncludedMessageHeaderResourcesReferencingData
+	}
+	return
+}
+
+func (p *ProcedurePlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if p.IncludedPerformerPractitionerResources != nil {
-		for _, r := range *p.IncludedPerformerPractitionerResources {
+	if p.IncludedPractitionerResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedPractitionerResourcesReferencedByPerformer {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedPerformerOrganizationResources != nil {
-		for _, r := range *p.IncludedPerformerOrganizationResources {
+	if p.IncludedOrganizationResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedOrganizationResourcesReferencedByPerformer {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedPerformerPatientResources != nil {
-		for _, r := range *p.IncludedPerformerPatientResources {
+	if p.IncludedPatientResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedPatientResourcesReferencedByPerformer {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedPerformerRelatedPersonResources != nil {
-		for _, r := range *p.IncludedPerformerRelatedPersonResources {
+	if p.IncludedRelatedPersonResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedRelatedPersonResourcesReferencedByPerformer {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedSubjectGroupResources != nil {
-		for _, r := range *p.IncludedSubjectGroupResources {
+	if p.IncludedGroupResourcesReferencedBySubject != nil {
+		for _, r := range *p.IncludedGroupResourcesReferencedBySubject {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedSubjectPatientResources != nil {
-		for _, r := range *p.IncludedSubjectPatientResources {
+	if p.IncludedPatientResourcesReferencedBySubject != nil {
+		for _, r := range *p.IncludedPatientResourcesReferencedBySubject {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedPatientResources != nil {
-		for _, r := range *p.IncludedPatientResources {
+	if p.IncludedPatientResourcesReferencedByPatient != nil {
+		for _, r := range *p.IncludedPatientResourcesReferencedByPatient {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedLocationResources != nil {
-		for _, r := range *p.IncludedLocationResources {
+	if p.IncludedLocationResourcesReferencedByLocation != nil {
+		for _, r := range *p.IncludedLocationResourcesReferencedByLocation {
 			resourceMap[r.Id] = &r
 		}
 	}
-	if p.IncludedEncounterResources != nil {
-		for _, r := range *p.IncludedEncounterResources {
+	if p.IncludedEncounterResourcesReferencedByEncounter != nil {
+		for _, r := range *p.IncludedEncounterResourcesReferencedByEncounter {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
+}
+
+func (p *ProcedurePlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.RevIncludedProvenanceResourcesReferencingTarget != nil {
+		for _, r := range *p.RevIncludedProvenanceResourcesReferencingTarget {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
+		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingContentref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDocumentManifestResourcesReferencingRelatedref != nil {
+		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedListResourcesReferencingItem != nil {
+		for _, r := range *p.RevIncludedListResourcesReferencingItem {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
+		for _, r := range *p.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedOrderResourcesReferencingDetail != nil {
+		for _, r := range *p.RevIncludedOrderResourcesReferencingDetail {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedBasicResourcesReferencingSubject != nil {
+		for _, r := range *p.RevIncludedBasicResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedEncounterResourcesReferencingProcedure != nil {
+		for _, r := range *p.RevIncludedEncounterResourcesReferencingProcedure {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedEncounterResourcesReferencingIndication != nil {
+		for _, r := range *p.RevIncludedEncounterResourcesReferencingIndication {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedAuditEventResourcesReferencingReference != nil {
+		for _, r := range *p.RevIncludedAuditEventResourcesReferencingReference {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedCompositionResourcesReferencingSubject != nil {
+		for _, r := range *p.RevIncludedCompositionResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedCompositionResourcesReferencingEntry != nil {
+		for _, r := range *p.RevIncludedCompositionResourcesReferencingEntry {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDetectedIssueResourcesReferencingImplicated != nil {
+		for _, r := range *p.RevIncludedDetectedIssueResourcesReferencingImplicated {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
+		for _, r := range *p.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
+		for _, r := range *p.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for _, r := range *p.RevIncludedProcessResponseResourcesReferencingRequest {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
+		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingTrigger {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedClinicalImpressionResourcesReferencingAction != nil {
+		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingAction {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedMessageHeaderResourcesReferencingData != nil {
+		for _, r := range *p.RevIncludedMessageHeaderResourcesReferencingData {
+			resourceMap[r.Id] = &r
+		}
+	}
+	return resourceMap
+}
+
+func (p *ProcedurePlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
+	resourceMap := make(map[string]interface{})
+	if p.IncludedPractitionerResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedPractitionerResourcesReferencedByPerformer {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedOrganizationResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedOrganizationResourcesReferencedByPerformer {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPatientResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedPatientResourcesReferencedByPerformer {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedRelatedPersonResourcesReferencedByPerformer != nil {
+		for _, r := range *p.IncludedRelatedPersonResourcesReferencedByPerformer {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedGroupResourcesReferencedBySubject != nil {
+		for _, r := range *p.IncludedGroupResourcesReferencedBySubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPatientResourcesReferencedBySubject != nil {
+		for _, r := range *p.IncludedPatientResourcesReferencedBySubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedPatientResourcesReferencedByPatient != nil {
+		for _, r := range *p.IncludedPatientResourcesReferencedByPatient {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedLocationResourcesReferencedByLocation != nil {
+		for _, r := range *p.IncludedLocationResourcesReferencedByLocation {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.IncludedEncounterResourcesReferencedByEncounter != nil {
+		for _, r := range *p.IncludedEncounterResourcesReferencedByEncounter {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedProvenanceResourcesReferencingTarget != nil {
+		for _, r := range *p.RevIncludedProvenanceResourcesReferencingTarget {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
+		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingContentref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDocumentManifestResourcesReferencingRelatedref != nil {
+		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedListResourcesReferencingItem != nil {
+		for _, r := range *p.RevIncludedListResourcesReferencingItem {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
+		for _, r := range *p.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedOrderResourcesReferencingDetail != nil {
+		for _, r := range *p.RevIncludedOrderResourcesReferencingDetail {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedBasicResourcesReferencingSubject != nil {
+		for _, r := range *p.RevIncludedBasicResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedEncounterResourcesReferencingProcedure != nil {
+		for _, r := range *p.RevIncludedEncounterResourcesReferencingProcedure {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedEncounterResourcesReferencingIndication != nil {
+		for _, r := range *p.RevIncludedEncounterResourcesReferencingIndication {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedAuditEventResourcesReferencingReference != nil {
+		for _, r := range *p.RevIncludedAuditEventResourcesReferencingReference {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedCompositionResourcesReferencingSubject != nil {
+		for _, r := range *p.RevIncludedCompositionResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedCompositionResourcesReferencingEntry != nil {
+		for _, r := range *p.RevIncludedCompositionResourcesReferencingEntry {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedDetectedIssueResourcesReferencingImplicated != nil {
+		for _, r := range *p.RevIncludedDetectedIssueResourcesReferencingImplicated {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
+		for _, r := range *p.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
+		for _, r := range *p.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for _, r := range *p.RevIncludedProcessResponseResourcesReferencingRequest {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
+		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingTrigger {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedClinicalImpressionResourcesReferencingAction != nil {
+		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingAction {
+			resourceMap[r.Id] = &r
+		}
+	}
+	if p.RevIncludedMessageHeaderResourcesReferencingData != nil {
+		for _, r := range *p.RevIncludedMessageHeaderResourcesReferencingData {
 			resourceMap[r.Id] = &r
 		}
 	}
