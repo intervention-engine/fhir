@@ -250,18 +250,31 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientURL(c *C) {
 	c.Assert(o, DeepEquals, bson.M{"patient.reference": bson.RegEx{Pattern: "^http://acme\\.com/Patient/123456789$", Options: "i"}})
 }
 
-// This test ensures that the indexer is properly converted to a mongo query,
-// since the Bundle message param indicates only the first resource should
-// be considered.  NOTE: This is still technically wrong because
-// bundle.entry.resource is inlined -- not referenced.
+// These next tests ensure that the indexer is properly converted to a mongo
+// query, since the Bundle message param indicates only the first resource
+// should be considered.  It also ensures inline resource search works with id.
 func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageId(c *C) {
 	q := Query{"Bundle", "message=4954037118555241963"}
 
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
-		"entry.0.resource.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
-		"entry.0.resource.type":        "MessageHeader",
+		"entry.0.resource.resourceType": "MessageHeader",
+		"entry.0.resource._id":          bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
 	})
+}
+
+func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageId(c *C) {
+	q := Query{"Bundle", "message=5542705384245559634"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+
+	q = Query{"Bundle", "message=5542705384245559635"}
+	mq = m.MongoSearcher.CreateQuery(q)
+	num, err = mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 0)
 }
 
 // TODO: Test execution of reference search on PatientURL (as above)
@@ -290,6 +303,32 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
 	num, err = mq.Count()
 	util.CheckErr(err)
 	c.Assert(num, Equals, 1)
+}
+
+// These next tests ensure that the indexer is properly converted to a mongo
+// query, since the Bundle message param indicates only the first resource should
+// be considered.  It also ensures chained search works for inlined resources.
+func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageDestination(c *C) {
+	q := Query{"Bundle", "message.destination-uri=http://acme.com/ehr/fhir"}
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"entry.0.resource.resourceType":         "MessageHeader",
+		"entry.0.resource.destination.endpoint": "http://acme.com/ehr/fhir",
+	})
+}
+
+func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageDestination(c *C) {
+	q := Query{"Bundle", "message.destination-uri=http://acme.com/ehr/fhir"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+
+	q = Query{"Bundle", "message.destination-uri=http://acme.com/ehr/foo"}
+	mq = m.MongoSearcher.CreateQuery(q)
+	num, err = mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 0)
 }
 
 // Test date searches on DateTime / Period
