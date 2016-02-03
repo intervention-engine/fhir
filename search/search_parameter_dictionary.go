@@ -1007,6 +1007,9 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Resource: "Bundle",
 			Name:     "composition",
 			Type:     "reference",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "[0]entry.resource", Type: "Resource"},
+			},
 			Targets: []string{
 				"Composition",
 			},
@@ -1015,6 +1018,9 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Resource: "Bundle",
 			Name:     "message",
 			Type:     "reference",
+			Paths: []SearchParamPath{
+				SearchParamPath{Path: "[0]entry.resource", Type: "Resource"},
+			},
 			Targets: []string{
 				"MessageHeader",
 			},

@@ -627,4 +627,76 @@
   "resourceType": "Organization",
   "id": "7045605384245533352",
   "name": "Good Health Clinic"
+}, {
+  "resourceType": "Bundle",
+  "id": "5542705384245559633",
+  "type": "message",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "MessageHeader",
+        "id": "5542705384245559634",
+        "timestamp": "2015-07-14T11:15:33+10:00",
+        "event": {
+          "system": "http://hl7.org/fhir/message-events",
+          "code": "patient-link"
+        },
+        "source": {
+          "endpoint": "http://example.org/clients/ehr-lite"
+        },
+        "destination": [
+          {
+            "endpoint": "http://acme.com/ehr/fhir"
+          }
+        ],
+        "data": [
+          {
+            "reference": "Patient/5542705384245559635"
+          },
+          {
+            "reference": "Patient/5542705384245559636"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "5542705384245559635",
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": [
+              "Donald"
+            ],
+            "given": [
+              "Duck"
+            ]
+          }
+        ],
+        "gender": "male"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "5542705384245559636",
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": [
+              "Donald"
+            ],
+            "given": [
+              "Duck",
+              "D"
+            ]
+          }
+        ],
+        "gender": "other"
+      }
+    }
+  ]
 }]
