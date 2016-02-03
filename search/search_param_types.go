@@ -310,7 +310,8 @@ func (s SearchParamInfo) CreateSearchParam(paramStr string) SearchParam {
 // SearchParamPath indicates a dot-separated path to the property that should
 // be searched, as well as the FHIR type of that property (e.g., "dateTime").
 // The path indicates elements that are arrays by prefixing the element name
-// with "[]" (e.g., "order.[]item.name").
+// with "[]" (e.g., "order.[]item.name").  In the rare case that the search
+// path has an indexer, it will be in the brackets (e.g.,"[0]item.entry")
 type SearchParamPath struct {
 	Path string
 	Type string

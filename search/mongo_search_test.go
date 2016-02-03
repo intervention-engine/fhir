@@ -250,6 +250,20 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientURL(c *C) {
 	c.Assert(o, DeepEquals, bson.M{"patient.reference": bson.RegEx{Pattern: "^http://acme\\.com/Patient/123456789$", Options: "i"}})
 }
 
+// This test ensures that the indexer is properly converted to a mongo query,
+// since the Bundle message param indicates only the first resource should
+// be considered.  NOTE: This is still technically wrong because
+// bundle.entry.resource is inlined -- not referenced.
+func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageId(c *C) {
+	q := Query{"Bundle", "message=4954037118555241963"}
+
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"entry.0.resource.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
+		"entry.0.resource.type":        "MessageHeader",
+	})
+}
+
 // TODO: Test execution of reference search on PatientURL (as above)
 
 // Test reference searches on chained queries

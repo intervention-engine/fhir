@@ -593,11 +593,14 @@ func createInternalServerError(code, display string) *Error {
 func buildBSON(path string, criteria interface{}) bson.M {
 	result := bson.M{}
 
-	normalizedPath := strings.Replace(path, "[]", "", -1)
+	// First fix the indexers so "[0]entry.resource" becomes "entry.0.resource"
+	re := regexp.MustCompile("\\[(\\d+)\\]([^\\.]+)")
+	indexedPath := re.ReplaceAllString(path, "$2.$1")
+	normalizedPath := strings.Replace(indexedPath, "[]", "", -1)
 	bCriteria, ok := criteria.(bson.M)
 	if ok {
 		pathRegex := regexp.MustCompile("(.*\\[\\][^\\.]*)\\.?([^\\[\\]]*)")
-		if m := pathRegex.FindStringSubmatch(path); m != nil && len(bCriteria) > 1 {
+		if m := pathRegex.FindStringSubmatch(indexedPath); m != nil && len(bCriteria) > 1 {
 			// Need to use an $elemMatch because there is an array in the path
 			// and the search criteria is a composite
 			left := strings.Replace(m[1], "[]", "", -1)
@@ -622,7 +625,7 @@ func buildBSON(path string, criteria interface{}) bson.M {
 			for k, v := range bCriteria {
 				// Pull out the $or and process it separately as top level condition
 				if isQueryOperator(k) {
-					processQueryOperatorCriteria(path, k, v, result)
+					processQueryOperatorCriteria(indexedPath, k, v, result)
 				} else {
 					result[fmt.Sprintf("%s.%s", normalizedPath, k)] = v
 				}
