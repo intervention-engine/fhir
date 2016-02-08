@@ -225,9 +225,31 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 	splitLocation := strings.Split(res.Header["Location"][0], "/")
 	createdPatientId := splitLocation[len(splitLocation)-1]
 
+	checkCreatedPatient(createdPatientId, c)
+}
+
+func (s *ServerSuite) TestCreatePatientByPut(c *C) {
+	data, err := os.Open("../fixtures/patient-example-b.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	createdPatientId := bson.NewObjectId().Hex()
+
+	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+createdPatientId, data)
+	util.CheckErr(err)
+
+	req.Header.Add("Content-Type", "application/json")
+	client := &http.Client{}
+	_, err = client.Do(req)
+	util.CheckErr(err)
+
+	checkCreatedPatient(createdPatientId, c)
+}
+
+func checkCreatedPatient(createdPatientId string, c *C) {
 	patientCollection := Database.C("patients")
 	patient := models.Patient{}
-	err = patientCollection.Find(bson.M{"_id": createdPatientId}).One(&patient)
+	err := patientCollection.Find(bson.M{"_id": createdPatientId}).One(&patient)
 	util.CheckErr(err)
 	c.Assert(patient.Name[0].Family[0], Equals, "Daffy")
 	c.Assert(patient.Meta, NotNil)
