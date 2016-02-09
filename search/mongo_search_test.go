@@ -1551,8 +1551,8 @@ func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
 }
 
 func (m *MongoSearchSuite) TestUnsupportedSearchResultParameterPanics(c *C) {
-	q := Query{"Condition", "_sort:asc=onset"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_sort\" not understood"))
+	q := Query{"Condition", "_contained=true"}
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_contained\" not understood"))
 }
 
 func (m *MongoSearchSuite) TestUsupportedGlobalSearchParameterPanics(c *C) {

@@ -96,7 +96,7 @@ func (q *Query) Options() *QueryOptions {
 	options := NewQueryOptions()
 	queryMap, _ := url.ParseQuery(q.Query)
 	for param, values := range queryMap {
-		param, _, _ := ParseParamNameModifierAndPostFix(param)
+		param, modifier, _ := ParseParamNameModifierAndPostFix(param)
 		if !strings.HasPrefix(param, "_") || isGlobalSearchParam(param) {
 			continue
 		}
@@ -119,6 +119,18 @@ func (q *Query) Options() *QueryOptions {
 			}
 			if offset >= 0 {
 				options.Offset = offset
+			}
+		case SortParam:
+			for _, value := range values {
+				sortParam, ok := SearchParameterDictionary[q.Resource][value]
+				if !ok {
+					panic(createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_sort\" content is invalid"))
+				}
+				descending := false
+				if modifier == "desc" {
+					descending = true
+				}
+				options.Sort = append(options.Sort, SortOption{Descending: descending, Parameter: sortParam})
 			}
 		case IncludeParam:
 			for _, value := range values {
@@ -223,13 +235,14 @@ func (q *Query) NormalizedQueryValues(withOptions bool) url.Values {
 type QueryOptions struct {
 	Count      int
 	Offset     int
+	Sort       []SortOption
 	Include    []IncludeOption
 	RevInclude []RevIncludeOption
 }
 
 // NewQueryOptions constructs a new QueryOptions with default values (offset = 0, Count = 100)
 func NewQueryOptions() *QueryOptions {
-	return &QueryOptions{Offset: 0, Count: 100, Include: make([]IncludeOption, 0)}
+	return &QueryOptions{Offset: 0, Count: 100}
 }
 
 // QueryValues returns values representing the query options.
@@ -237,6 +250,13 @@ func (o *QueryOptions) QueryValues() url.Values {
 	values := url.Values{}
 	values.Set(CountParam, strconv.Itoa(o.Count))
 	values.Set(OffsetParam, strconv.Itoa(o.Offset))
+	for _, sort := range o.Sort {
+		sortParamKey := SortParam
+		if sort.Descending {
+			sortParamKey += ":desc"
+		}
+		values.Add(sortParamKey, sort.Parameter.Name)
+	}
 	for _, incl := range o.Include {
 		values.Add(IncludeParam, fmt.Sprintf("%s:%s", incl.Resource, incl.Parameter.Name))
 	}
@@ -256,6 +276,12 @@ type IncludeOption struct {
 type RevIncludeOption struct {
 	Resource  string
 	Parameter SearchParamInfo
+}
+
+// SortOption indicates what parameter to sort on and the sort order
+type SortOption struct {
+	Descending bool
+	Parameter  SearchParamInfo
 }
 
 // SearchParam is an interface for all search parameter classes that exposes

@@ -1508,10 +1508,17 @@ func (s *SearchPTSuite) TestNormalizedQueryValue(c *C) {
 }
 
 func (s *SearchPTSuite) TestQueryOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient&_sort=family&_sort:asc=given&_sort:desc=birthdate"}
 	o := q.Options()
 	c.Assert(o.Count, Equals, 10)
 	c.Assert(o.Offset, Equals, 20)
+	c.Assert(o.Sort, HasLen, 3)
+	c.Assert(o.Sort[0].Descending, Equals, false)
+	c.Assert(o.Sort[0].Parameter.Name, Equals, "family")
+	c.Assert(o.Sort[1].Descending, Equals, false)
+	c.Assert(o.Sort[1].Parameter.Name, Equals, "given")
+	c.Assert(o.Sort[2].Descending, Equals, true)
+	c.Assert(o.Sort[2].Parameter.Name, Equals, "birthdate")
 	c.Assert(o.Include, HasLen, 2)
 	c.Assert(o.Include[0].Resource, Equals, "Patient")
 	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
@@ -1521,6 +1528,11 @@ func (s *SearchPTSuite) TestQueryOptions(c *C) {
 	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "patient")
 	c.Assert(o.RevInclude[1].Resource, Equals, "Encounter")
 	c.Assert(o.RevInclude[1].Parameter.Name, Equals, "patient")
+}
+
+func (s *SearchPTSuite) TestQueryOptionsInvalidSortParam(c *C) {
+	q := Query{Resource: "Patient", Query: "_sort=foo"}
+	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_sort\" content is invalid"))
 }
 
 func (s *SearchPTSuite) TestQueryOptionsIncludeTargets(c *C) {
@@ -1617,15 +1629,20 @@ func (s *SearchPTSuite) TestQueryOptionsInvalidRevIncludeParams(c *C) {
 }
 
 func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient&_sort=family&_sort:asc=given&_sort:desc=birthdate"}
 	v := q.NormalizedQueryValues(true)
-	c.Assert(v, HasLen, 6)
+	c.Assert(v, HasLen, 8)
 	c.Assert(v.Get("name:exact"), Equals, "Robert Smith")
 	c.Assert(v.Get("gender"), Equals, "M")
 	c.Assert(v[CountParam], HasLen, 1)
 	c.Assert(v.Get(CountParam), Equals, "10")
 	c.Assert(v[OffsetParam], HasLen, 1)
 	c.Assert(v.Get(OffsetParam), Equals, "20")
+	c.Assert(v[SortParam], HasLen, 2)
+	c.Assert(v[SortParam][0], Equals, "family")
+	c.Assert(v[SortParam][1], Equals, "given")
+	c.Assert(v[SortParam+":desc"], HasLen, 1)
+	c.Assert(v[SortParam+":desc"][0], Equals, "birthdate")
 	c.Assert(v[IncludeParam], HasLen, 2)
 	c.Assert(v[IncludeParam][0], Equals, "Patient:careprovider")
 	c.Assert(v[IncludeParam][1], Equals, "Patient:organization")
