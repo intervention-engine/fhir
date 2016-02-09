@@ -539,6 +539,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "Parameters":
+		x := Parameters{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "Patient":
 		x := Patient{}
 		json.Unmarshal(b, &x)

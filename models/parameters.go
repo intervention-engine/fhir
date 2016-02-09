@@ -26,11 +26,52 @@
 
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+)
 
 type Parameters struct {
 	Resource  `bson:",inline"`
 	Parameter []ParametersParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
+}
+
+// Custom marshaller to add the resourceType property, as required by the specification
+func (resource *Parameters) MarshalJSON() ([]byte, error) {
+	resource.ResourceType = "Parameters"
+	// Dereferencing the pointer to avoid infinite recursion.
+	// Passing in plain old x (a pointer to Parameters), would cause this same
+	// MarshallJSON function to be called again
+	return json.Marshal(*resource)
+}
+
+func (x *Parameters) GetBSON() (interface{}, error) {
+	x.ResourceType = "Parameters"
+	// See comment in MarshallJSON to see why we dereference
+	return *x, nil
+}
+
+// The "parameters" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type parameters Parameters
+
+// Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
+func (x *Parameters) UnmarshalJSON(data []byte) (err error) {
+	x2 := parameters{}
+	if err = json.Unmarshal(data, &x2); err == nil {
+		*x = Parameters(x2)
+		return x.checkResourceType()
+	}
+	return
+}
+
+func (x *Parameters) checkResourceType() error {
+	if x.ResourceType == "" {
+		x.ResourceType = "Parameters"
+	} else if x.ResourceType != "Parameters" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be Parameters, instead received %s", x.ResourceType))
+	}
+	return nil
 }
 
 type ParametersParameterComponent struct {
