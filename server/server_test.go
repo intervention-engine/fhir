@@ -185,6 +185,40 @@ func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
 }
 
+func (s *ServerSuite) TestGetPatientSearchPagingPreservesSearchParams(c *C) {
+	// Add 39 more patients
+	for i := 0; i < 39; i++ {
+		insertPatientFromFixture("../fixtures/patient-example-a.json")
+	}
+
+	// Default counts and less results than count
+	bundle := performSearch(c, s.Server.URL+"/Patient?gender=male&name=Donald&name=Duck")
+	v := url.Values{}
+	v.Set("gender", "male")
+	v.Add("name", "Donald")
+	v.Add("name", "Duck")
+	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLinkWithParams(c, bundle.Link[1], "first", v, 100, 0)
+	assertPagingLinkWithParams(c, bundle.Link[2], "last", v, 100, 0)
+
+	// More results than count, first page
+	bundle = performSearch(c, s.Server.URL+"/Patient?gender=male&name=Donald&name=Duck&_count=10")
+	c.Assert(bundle.Link, HasLen, 4)
+	assertPagingLinkWithParams(c, bundle.Link[0], "self", v, 10, 0)
+	assertPagingLinkWithParams(c, bundle.Link[1], "first", v, 10, 0)
+	assertPagingLinkWithParams(c, bundle.Link[2], "next", v, 10, 10)
+	assertPagingLinkWithParams(c, bundle.Link[3], "last", v, 10, 30)
+
+	// More results than count, middle page
+	bundle = performSearch(c, s.Server.URL+"/Patient?gender=male&name=Donald&name=Duck&_count=10&_offset=20")
+	c.Assert(bundle.Link, HasLen, 5)
+	assertPagingLinkWithParams(c, bundle.Link[0], "self", v, 10, 20)
+	assertPagingLinkWithParams(c, bundle.Link[1], "first", v, 10, 0)
+	assertPagingLinkWithParams(c, bundle.Link[2], "previous", v, 10, 10)
+	assertPagingLinkWithParams(c, bundle.Link[3], "next", v, 10, 30)
+	assertPagingLinkWithParams(c, bundle.Link[4], "last", v, 10, 30)
+}
+
 func (s *ServerSuite) TestGetPatient(c *C) {
 	res, err := http.Get(s.Server.URL + "/Patient/" + s.FixtureId)
 	util.CheckErr(err)
@@ -374,6 +408,21 @@ func assertPagingLink(c *C, link models.BundleLinkComponent, relation string, co
 	util.CheckErr(err)
 	v := urlUrl.Query()
 
+	c.Assert(v.Get(search.CountParam), Equals, fmt.Sprint(count))
+	c.Assert(v.Get(search.OffsetParam), Equals, fmt.Sprint(offset))
+}
+
+func assertPagingLinkWithParams(c *C, link models.BundleLinkComponent, relation string, values url.Values, count int, offset int) {
+	c.Assert(link.Relation, Equals, relation)
+
+	urlStr := link.Url
+	urlUrl, err := url.Parse(urlStr)
+	util.CheckErr(err)
+	v := urlUrl.Query()
+
+	for key, val := range values {
+		c.Assert(v[key], DeepEquals, val)
+	}
 	c.Assert(v.Get(search.CountParam), Equals, fmt.Sprint(count))
 	c.Assert(v.Get(search.OffsetParam), Equals, fmt.Sprint(offset))
 }
