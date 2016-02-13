@@ -85,16 +85,24 @@ func (m *MongoSearcher) CreatePipeline(query Query) *mgo.Pipe {
 	c := m.db.C(models.PluralizeLowerResourceName(query.Resource))
 	p := []bson.M{{"$match": m.createQueryObject(query)}}
 
-	// Horrible, horrible hack (for now) to ensure patients are sorted by name.  This is needed by
-	// the frontend, else paging won't work correctly.  This should be removed when the general
-	// sorting feature is implemented.
-	if query.Resource == "Patient" {
-		// To add insult to injury, mongo will not let us sort by family *and* given name:
-		// Executor error: BadValue cannot sort with keys that are parallel arrays
-		p = append(p, bson.M{"$sort": bson.M{"name.0.family.0": 1, "_id": 1}})
+	o := query.Options()
+
+	// support for _sort
+	removeParallelArraySorts(o)
+	if len(o.Sort) > 0 {
+		var sortBSOND bson.D
+		for _, sort := range o.Sort {
+			// Note: If there are multiple paths, we only look at the first one -- not ideal, but otherwise it gets tricky
+			field := convertSearchPathToMongoField(sort.Parameter.Paths[0].Path)
+			order := 1
+			if sort.Descending {
+				order = -1
+			}
+			sortBSOND = append(sortBSOND, bson.DocElem{Name: field, Value: order})
+		}
+		p = append(p, bson.M{"$sort": sortBSOND})
 	}
 
-	o := query.Options()
 	// support for _offset
 	if o.Offset > 0 {
 		p = append(p, bson.M{"$skip": o.Offset})
