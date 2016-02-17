@@ -15,14 +15,15 @@
 				"birthDate": "1991-02-01"
 			},
       "request": {
-        "method": "POST",
-        "url": "Patient"
+				"method": "POST",
+				"url": "Patient"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0b",
       "resource": {
 				"resourceType": "Encounter",
+				"status": "finished",
 				"type": [{
 					"coding": [{
 						"system": "http://www.ama-assn.org/go/cpt",
@@ -39,14 +40,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Encounter"
+				"method": "POST",
+				"url": "Encounter"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0c",
       "resource": {
 				"resourceType": "Encounter",
+				"status": "finished",
 				"type": [{
 					"coding": [{
 						"system": "http://www.ama-assn.org/go/cpt",
@@ -63,14 +65,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Encounter"
+				"method": "POST",
+				"url": "Encounter"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0d",
       "resource": {
 				"resourceType": "Encounter",
+				"status": "finished",
 				"type": [{
 					"coding": [{
 						"system": "http://www.ama-assn.org/go/cpt",
@@ -87,14 +90,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Encounter"
+				"method": "POST",
+				"url": "Encounter"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0e",
       "resource": {
 				"resourceType": "Encounter",
+				"status": "finished",
 				"type": [{
 					"coding": [{
 						"system": "http://snomed.info/sct",
@@ -111,14 +115,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Encounter"
+				"method": "POST",
+				"url": "Encounter"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0f",
       "resource": {
 				"resourceType": "Condition",
+				"verificationStatus": "confirmed",
 				"patient": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -138,14 +143,15 @@
 				"onsetDateTime": "2012-03-01T07:00:00-05:00"
 			},
       "request": {
-        "method": "POST",
-        "url": "Condition"
+				"method": "POST",
+				"url": "Condition"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f10",
       "resource": {
 				"resourceType": "Condition",
+				"verificationStatus": "confirmed",
 				"patient": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -159,14 +165,15 @@
 				"onsetDateTime": "2012-03-01T07:05:00-05:00"
 			},
       "request": {
-        "method": "POST",
-        "url": "Condition"
+				"method": "POST",
+				"url": "Condition"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f11",
       "resource": {
 				"resourceType": "Condition",
+				"verificationStatus": "confirmed",
 				"patient": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -186,14 +193,15 @@
 				"onsetDateTime": "2012-03-01T07:05:00-05:00"
 			},
       "request": {
-        "method": "POST",
-        "url": "Condition"
+				"method": "POST",
+				"url": "Condition"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f12",
       "resource": {
 				"resourceType": "Condition",
+				"verificationStatus": "confirmed",
 				"patient": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -213,14 +221,15 @@
 				"onsetDateTime": "2012-03-01T07:05:00-05:00"
 			},
       "request": {
-        "method": "POST",
-        "url": "Condition"
+				"method": "POST",
+				"url": "Condition"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f13",
       "resource": {
 				"resourceType": "Condition",
+				"verificationStatus": "confirmed",
 				"patient": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -237,14 +246,15 @@
 				"onsetDateTime": "2012-03-01T07:30:00-05:00"
 			},
       "request": {
-        "method": "POST",
-        "url": "Condition"
+				"method": "POST",
+				"url": "Condition"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f14",
       "resource": {
 				"resourceType": "Observation",
+				"status": "final",
 				"code": {
 					"coding": [{
 						"system": "http://loinc.org",
@@ -269,14 +279,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Observation"
+				"method": "POST",
+				"url": "Observation"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f15",
       "resource": {
 				"resourceType": "Procedure",
+				"status": "completed",
 				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -302,16 +313,30 @@
 			  }]
 			},
       "request": {
-        "method": "POST",
-        "url": "Procedure"
+				"method": "POST",
+				"url": "Procedure"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f16",
       "resource": {
 				"resourceType": "DiagnosticReport",
+				"status": "final",
+				"code": {
+					"coding": [{
+						"system": "http://snomed.info/sct",
+						"code": "116783008"
+					}],
+					"text": "Procedure, Result: Clinical Staging Procedure"
+				},
 				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
+				},
+				"effectiveDateTime": "2011-11-01T11:03:20-04:00",
+				"issued": "2011-11-02T13:30:00-04:00",
+				"performer": {
+				  "reference": "Organization/4072118964683285544",
+				  "display": "Acme Laboratory, Inc"
 				},
 				"result": [{
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f17"
@@ -322,14 +347,15 @@
 				}]
 			},
       "request": {
-        "method": "POST",
-        "url": "DiagnosticReport"
+				"method": "POST",
+				"url": "DiagnosticReport"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f17",
       "resource": {
 				"resourceType": "Observation",
+				"status": "final",
 				"code": {
 					"coding": [{
 						"system": "http://snomed.info/sct",
@@ -354,14 +380,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Observation"
+				"method": "POST",
+				"url": "Observation"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f18",
       "resource": {
 				"resourceType": "Observation",
+				"status": "final",
 				"code": {
 					"coding": [{
 						"system": "http://snomed.info/sct",
@@ -386,14 +413,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Observation"
+				"method": "POST",
+				"url": "Observation"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f19",
       "resource": {
 				"resourceType": "Observation",
+				"status": "final",
 				"code": {
 					"coding": [{
 						"system": "http://snomed.info/sct",
@@ -418,15 +446,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "Observation"
+				"method": "POST",
+				"url": "Observation"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f1a",
       "resource": {
 				"resourceType": "Procedure",
-				"id": "6400692968849601141",
+				"status": "completed",
 				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -452,15 +480,15 @@
 			  }]
 			},
       "request": {
-        "method": "POST",
-        "url": "Procedure"
+				"method": "POST",
+				"url": "Procedure"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f1b",
       "resource": {
 				"resourceType": "MedicationStatement",
-				"id": "3284098338643216325",
+				"status": "completed",
 				"patient": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
@@ -477,15 +505,15 @@
 				}
 			},
       "request": {
-        "method": "POST",
-        "url": "MedicationStatement"
+				"method": "POST",
+				"url": "MedicationStatement"
       }
     },
 		{
       "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f1c",
       "resource": {
 				"resourceType": "Immunization",
-				"id": "7045606679745526993",
+				"status": "completed",
 				"date": "2011-08-15T08:00:00-04:00",
 				"vaccineCode": {
 					"coding": [{
@@ -496,11 +524,13 @@
 				},
 				"patient": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
-				}
+				},
+				"wasNotGiven": false,
+				"reported": false
 			},
       "request": {
-        "method": "POST",
-        "url": "Immunization"
+				"method": "POST",
+				"url": "Immunization"
       }
     }
 	]

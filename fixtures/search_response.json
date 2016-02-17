@@ -14,6 +14,7 @@
     "resource": {
       "resourceType": "Condition",
       "id": "8664777288161060797",
+      "verificationStatus": "confirmed",
       "patient": {
         "reference": "https://example.com/base/Patient/4954037118555241963"
       },
@@ -40,6 +41,7 @@
     "resource": {
       "resourceType": "Condition",
       "id": "4248502720904412195",
+      "verificationStatus": "confirmed",
       "patient": {
         "reference": "https://example.com/base/Patient/4954037118555241963"
       },

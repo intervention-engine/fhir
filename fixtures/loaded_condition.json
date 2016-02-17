@@ -1,6 +1,7 @@
 {
   "resourceType": "Condition",
   "id": "8664777288161060797",
+  "verificationStatus": "confirmed",
   "meta": {
     "versionId": "8664777288161060797-1",
     "lastUpdated": "2014-02-12T07:30:00-05:00",
