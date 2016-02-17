@@ -2,6 +2,8 @@ package models
 
 import (
 	"errors"
+	"fmt"
+	"reflect"
 	"strings"
 
 	"gopkg.in/mgo.v2/bson"
@@ -25,43 +27,55 @@ import (
 //   },
 //   "foo": "bar",
 // }
-func (e *Extension) GetBSON() (interface{}, error) {
-	result := bson.M{"@context": bson.M{}}
+func (e Extension) GetBSON() (interface{}, error) {
+	value := reflect.ValueOf(e)
+	for i := 0; i < value.NumField(); i++ {
+		field := value.Field(i)
+		fieldName := value.Type().Field(i).Name
+		if !strings.HasPrefix(fieldName, "Value") {
+			continue
+		}
 
+		var val interface{}
+		switch field.Kind() {
+		case reflect.Ptr, reflect.Slice, reflect.Map, reflect.Interface:
+			if !field.IsNil() {
+				val = field.Elem().Interface()
+				break
+			}
+		default:
+			if field.CanInterface() && !reflect.DeepEqual(field.Interface(), reflect.Zero(field.Type()).Interface()) {
+				val = field.Interface()
+				break
+			}
+		}
+
+		if val != nil {
+			return bsonExtension(e.Url, getTypeFromValueXFieldName(fieldName), val)
+		}
+	}
+
+	// If we got this far, then all values were nil or zero.  This is likely an empty string.
+	return bsonExtension(e.Url, "string", "")
+}
+
+func bsonExtension(url string, fhirType string, value interface{}) (extension bson.M, err error) {
 	var i int
-	if i = strings.LastIndex(e.Url, "/"); i < 0 || i == (len(e.Url)-1) {
-		return nil, errors.New("Couldn't determine extension name for " + e.Url)
+	if i = strings.LastIndex(url, "/"); i < 0 || i == (len(url)-1) {
+		err = fmt.Errorf("Couldn't determine extension name for %s", url)
+		return
 	}
-	name := e.Url[i+1:]
-
-	var fhirType string
-	switch {
-	case e.ValueBoolean != nil:
-		fhirType = "boolean"
-		result[name] = *e.ValueBoolean
-	case e.ValueCodeableConcept != nil:
-		fhirType = "CodeableConcept"
-		result[name] = *e.ValueCodeableConcept
-	case e.ValueDateTime != nil:
-		fhirType = "dateTime"
-		result[name] = *e.ValueDateTime
-	case e.ValueInteger != nil:
-		fhirType = "integer"
-		result[name] = *e.ValueInteger
-	case e.ValueRange != nil:
-		fhirType = "Range"
-		result[name] = *e.ValueRange
-	default:
-		fhirType = "string"
-		result[name] = e.ValueString
+	name := url[i+1:]
+	extension = bson.M{
+		"@context": bson.M{
+			name: contextDefinition{
+				ID:   url,
+				Type: fhirType,
+			},
+		},
+		name: value,
 	}
-
-	result["@context"].(bson.M)[name] = contextDefinition{
-		ID:   e.Url,
-		Type: fhirType,
-	}
-
-	return result, nil
+	return
 }
 
 // SetBSON translates the stored extension syntax to the FHIR extension syntax.
@@ -105,44 +119,28 @@ func (e *Extension) SetBSON(raw bson.Raw) error {
 		}
 	}
 	if _, ok := context[dataElement.Name]; !ok {
-		return errors.New("Couldn't properly unmarshal extension; key " + dataElement.Name + " not found in @context")
+		return fmt.Errorf("Couldn't properly unmarshal extension; key %s not found in @context", dataElement.Name)
 	}
 
-	// Now set the URL and the right Value[x]
-	e.Url = context[dataElement.Name].ID
-	switch context[dataElement.Name].Type {
-	case "boolean":
-		e.ValueBoolean = new(bool)
-		if err := dataElement.Value.Unmarshal(e.ValueBoolean); err != nil {
-			return err
-		}
-	case "CodeableConcept":
-		e.ValueCodeableConcept = new(CodeableConcept)
-		if err := dataElement.Value.Unmarshal(e.ValueCodeableConcept); err != nil {
-			return err
-		}
-	case "dateTime":
-		e.ValueDateTime = new(FHIRDateTime)
-		if err := dataElement.Value.Unmarshal(e.ValueDateTime); err != nil {
-			return err
-		}
-	case "integer":
-		e.ValueInteger = new(int32)
-		if err := dataElement.Value.Unmarshal(e.ValueInteger); err != nil {
-			return err
-		}
-	case "Range":
-		e.ValueRange = new(Range)
-		if err := dataElement.Value.Unmarshal(e.ValueRange); err != nil {
-			return err
-		}
-	case "string":
-		if err := dataElement.Value.Unmarshal(&e.ValueString); err != nil {
-			return err
-		}
-	default:
-		return errors.New("Couldn't determine extension value type from stored data")
+	// Use reflection to find the value field we must set
+	fhirType := context[dataElement.Name].Type
+	fieldName := fmt.Sprintf("Value%s%s", strings.ToUpper(fhirType[:1]), fhirType[1:])
+	field := reflect.ValueOf(e).Elem().FieldByName(fieldName)
+	if !field.IsValid() {
+		return fmt.Errorf("Couldn't find extension field %s", fieldName)
+	} else if !field.CanSet() {
+		return fmt.Errorf("Couldn't set a value for field %s", fieldName)
 	}
+
+	// Use reflection to set the field
+	val := reflect.New(field.Type())
+	if err := dataElement.Value.Unmarshal(val.Interface()); err != nil {
+		return err
+	}
+	field.Set(val.Elem())
+
+	// Now set the URL
+	e.Url = context[dataElement.Name].ID
 
 	return nil
 }
@@ -150,4 +148,17 @@ func (e *Extension) SetBSON(raw bson.Raw) error {
 type contextDefinition struct {
 	ID   string `bson:"@id,omitempty"`
 	Type string `bson:"@type,omitempty"`
+}
+
+// getTypeFromValueXFieldName takes in a FHIR type with an uppercase letter and fixes it so it is lowercase if
+// it is a FHIR "primitive". This function has little to no value outside of the intended use case -- which is
+// to create the right type based on the field names for extension Value[x] properties.
+func getTypeFromValueXFieldName(valueField string) string {
+	fhirType := strings.TrimPrefix(valueField, "Value")
+	switch fhirType {
+	case "Instant", "Time", "Date", "DateTime", "Decimal", "Boolean", "Integer", "String", "Uri", "Base64Binary",
+		"UnsignedInt", "PositiveInt", "Code", "Id", "Markdown", "Oid":
+		fhirType = fmt.Sprintf("%s%s", strings.ToLower(fhirType[:1]), fhirType[1:])
+	}
+	return fhirType
 }

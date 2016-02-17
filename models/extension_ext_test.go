@@ -257,6 +257,82 @@ func (e *ExtensionSuite) TestUnmarshalCodeableConceptExtension(c *check.C) {
 	c.Assert(ext, check.DeepEquals, expected)
 }
 
+func (e *ExtensionSuite) TestMarshalReferenceExtension(c *check.C) {
+	t := true
+	ext := &Extension{
+		Url: "http://example.org/fhir/extensions/foo",
+		ValueReference: &Reference{
+			Reference:    "Practitioner/123",
+			ReferencedID: "123",
+			Type:         "Practitioner",
+			External:     &t,
+		},
+	}
+
+	expected := bson.M{
+		"@context": bson.M{
+			"foo": bson.M{
+				"@id":   "http://example.org/fhir/extensions/foo",
+				"@type": "Reference",
+			},
+		},
+		"foo": bson.M{
+			"reference":   "Practitioner/123",
+			"referenceid": "123",
+			"type":        "Practitioner",
+			"external":    true,
+		},
+	}
+
+	// This is where SetBSON is called to marshal it into BSON bytes
+	data, err := bson.Marshal(ext)
+	util.CheckErr(err)
+
+	// Now unmarshal it back to a map so we can check it against the expected values
+	var m bson.M
+	err = bson.Unmarshal(data, &m)
+	util.CheckErr(err)
+
+	c.Assert(m, check.DeepEquals, expected)
+}
+
+func (e *ExtensionSuite) TestUnmarshalReferenceExtension(c *check.C) {
+	t := true
+	expected := Extension{
+		Url: "http://example.org/fhir/extensions/foo",
+		ValueReference: &Reference{
+			Reference:    "Practitioner/123",
+			ReferencedID: "123",
+			Type:         "Practitioner",
+			External:     &t,
+		},
+	}
+
+	// First marshal the BSON representation into a BSON bytestream
+	data, err := bson.Marshal(bson.M{
+		"@context": bson.M{
+			"foo": bson.M{
+				"@id":   "http://example.org/fhir/extensions/foo",
+				"@type": "Reference",
+			},
+		},
+		"foo": bson.M{
+			"reference":   "Practitioner/123",
+			"referenceid": "123",
+			"type":        "Practitioner",
+			"external":    true,
+		},
+	})
+	util.CheckErr(err)
+
+	// Now unmarshal it into the extension and check it
+	var ext Extension
+	err = bson.Unmarshal(data, &ext)
+	util.CheckErr(err)
+
+	c.Assert(ext, check.DeepEquals, expected)
+}
+
 func (e *ExtensionSuite) TestMarshalDateTimeExtension(c *check.C) {
 	ext := &Extension{
 		Url: "http://example.org/fhir/extensions/foo",
