@@ -198,6 +198,7 @@ func (s *ServerSuite) TestGetPatientSearchPagingPreservesSearchParams(c *C) {
 	v.Add("name", "Donald")
 	v.Add("name", "Duck")
 	c.Assert(bundle.Link, HasLen, 3)
+	assertPagingLinkWithParams(c, bundle.Link[0], "self", v, 100, 0)
 	assertPagingLinkWithParams(c, bundle.Link[1], "first", v, 100, 0)
 	assertPagingLinkWithParams(c, bundle.Link[2], "last", v, 100, 0)
 

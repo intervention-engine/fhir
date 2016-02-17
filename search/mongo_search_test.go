@@ -2,10 +2,12 @@ package search
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -140,6 +142,51 @@ func (m *MongoSearchSuite) TestConditionCodeQueryByCode(c *C) {
 	c.Assert(foundIvd && foundCad, Equals, true)
 }
 
+func (m *MongoSearchSuite) TestConditionSortByCodeAscending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort=code"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	var lastVal string
+	for _, cond := range conditions {
+		thisVal := getCodeableConceptComparisonValue(cond.Code)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), 1)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestConditionSortByCodeDescending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort:desc=code"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	lastVal := "~"
+	for _, cond := range conditions {
+		thisVal := getCodeableConceptComparisonValue(cond.Code)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), -1)
+		lastVal = thisVal
+	}
+}
+
+// Approximating MongoDB sort strategy
+func getCodeableConceptComparisonValue(c *models.CodeableConcept) string {
+	//return getCodingsComparisonValue(c.Coding) + c.Text
+	if len(c.Coding) > 0 {
+		c0 := c.Coding[0]
+		var userSel string
+		if c0.UserSelected != nil {
+			userSel = fmt.Sprintf("%t", *c0.UserSelected)
+		}
+		return fmt.Sprintf("%s%s%s%s%s", c0.Code, c0.Display, c0.System, userSel, c0.Version) + c.Text
+	}
+
+	return c.Text
+}
+
 // Tests token searches on Coding
 
 func (m *MongoSearchSuite) TestImagingStudyBodySiteQueryObjectBySystemAndCode(c *C) {
@@ -202,6 +249,53 @@ func (m *MongoSearchSuite) TestEncounterIdentifierQueryByWrongSystem(c *C) {
 	c.Assert(num, Equals, 0)
 }
 
+func (m *MongoSearchSuite) TestEncounterSortByIdentifierAscending(c *C) {
+	var encounters []*models.Encounter
+	q := Query{"Encounter", "_sort=identifier"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&encounters)
+	util.CheckErr(err)
+	c.Assert(encounters, HasLen, 4)
+	var lastVal string
+	for _, enc := range encounters {
+		thisVal := getIdentifiersComparisonValue(enc.Identifier, false)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), 1)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestEncounterSortByIdentifierDescending(c *C) {
+	var encounters []*models.Encounter
+	q := Query{"Encounter", "_sort:desc=identifier"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&encounters)
+	util.CheckErr(err)
+	c.Assert(encounters, HasLen, 4)
+	lastVal := "~"
+	for _, enc := range encounters {
+		thisVal := getIdentifiersComparisonValue(enc.Identifier, true)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), -1)
+		lastVal = thisVal
+	}
+}
+
+// Approximating MongoDB sort strategy
+func getIdentifiersComparisonValue(iSlice []models.Identifier, descending bool) string {
+	if len(iSlice) == 0 {
+		return ""
+	}
+
+	strs := make([]string, len(iSlice))
+	for i := range iSlice {
+		strs[i] = iSlice[i].System + iSlice[i].Use + iSlice[i].Value
+	}
+	sort.Strings(strs)
+	if descending {
+		return strs[len(strs)-1]
+	}
+	return strs[0]
+}
+
 // TODO: Test token searches on boolean, code, string, and ContactPoint
 
 // Tests reference searches by reference id
@@ -248,6 +342,45 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientURL(c *C) {
 
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{"patient.reference": bson.RegEx{Pattern: "^http://acme\\.com/Patient/123456789$", Options: "i"}})
+}
+
+func (m *MongoSearchSuite) TestConditionSortByPatientAscending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort=patient"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	var lastVal string
+	for _, cond := range conditions {
+		thisVal := getReferenceComparisonValue(cond.Patient)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), 1)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestConditionSortByPatientDescending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort:desc=patient"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	lastVal := "~"
+	for _, cond := range conditions {
+		thisVal := getReferenceComparisonValue(cond.Patient)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), -1)
+		lastVal = thisVal
+	}
+}
+
+// Approximating MongoDB sort strategy
+func getReferenceComparisonValue(r *models.Reference) string {
+	var ext string
+	if r.External != nil {
+		ext = fmt.Sprintf("%t", *r.External)
+	}
+	return fmt.Sprintf("%s%s%s%s%s", r.Display, ext, r.Reference, r.ReferencedID, r.Type)
 }
 
 // These next tests ensure that the indexer is properly converted to a mongo
@@ -521,6 +654,36 @@ func (m *MongoSearchSuite) TestConditionOnsetLEQuery(c *C) {
 	c.Assert(num, Equals, 5)
 }
 
+func (m *MongoSearchSuite) TestConditionSortByOnsetAscending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort=onset"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	var lastVal time.Time
+	for _, cond := range conditions {
+		thisVal := cond.OnsetDateTime.Time
+		c.Assert(thisVal.Before(lastVal), Equals, false)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestConditionSortByOnsetDescending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort:desc=onset"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	lastVal := time.Date(3000, time.January, 1, 0, 0, 0, 0, time.UTC)
+	for _, cond := range conditions {
+		thisVal := cond.OnsetDateTime.Time
+		c.Assert(thisVal.After(lastVal), Equals, false)
+		lastVal = thisVal
+	}
+}
+
 // Test date searches on Period
 
 func (m *MongoSearchSuite) TestEncounterPeriodQueryObject(c *C) {
@@ -678,6 +841,36 @@ func (m *MongoSearchSuite) TestEncounterPeriodLEQuery(c *C) {
 	c.Assert(num, Equals, 4)
 }
 
+func (m *MongoSearchSuite) TestEncounterSortByPeriodAscending(c *C) {
+	var encounters []*models.Encounter
+	q := Query{"Encounter", "_sort=date"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&encounters)
+	util.CheckErr(err)
+	c.Assert(encounters, HasLen, 4)
+	var lastVal time.Time
+	for _, enc := range encounters {
+		thisVal := enc.Period.Start.Time
+		c.Assert(thisVal.Before(lastVal), Equals, false)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestEncounterSortByPeriodDescending(c *C) {
+	var encounters []*models.Encounter
+	q := Query{"Encounter", "_sort:desc=date"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&encounters)
+	util.CheckErr(err)
+	c.Assert(encounters, HasLen, 4)
+	lastVal := time.Date(3000, time.January, 1, 0, 0, 0, 0, time.UTC)
+	for _, enc := range encounters {
+		thisVal := enc.Period.Start.Time
+		c.Assert(thisVal.After(lastVal), Equals, false)
+		lastVal = thisVal
+	}
+}
+
 // TODO: Test date searches on date, instant, and Timing
 
 // Test number searches on positiveInt
@@ -756,6 +949,36 @@ func (m *MongoSearchSuite) TestNonMatchingDeviceStringQuery(c *C) {
 	c.Assert(num, Equals, 0)
 }
 
+func (m *MongoSearchSuite) TestPatientSortByGivenAscending(c *C) {
+	var patients []*models.Patient
+	q := Query{"Patient", "_sort=given"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&patients)
+	util.CheckErr(err)
+	c.Assert(patients, HasLen, 2)
+	var lastVal string
+	for _, p := range patients {
+		thisVal := p.Name[0].Given[0]
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), 1)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestPatientSortByGivenDescending(c *C) {
+	var patients []*models.Patient
+	q := Query{"Patient", "_sort:desc=given"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&patients)
+	util.CheckErr(err)
+	c.Assert(patients, HasLen, 2)
+	lastVal := "~"
+	for _, p := range patients {
+		thisVal := p.Name[0].Given[0]
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), -1)
+		lastVal = thisVal
+	}
+}
+
 // Test string searches on HumanName
 
 func (m *MongoSearchSuite) TestPatientNameStringQueryObject(c *C) {
@@ -791,6 +1014,66 @@ func (m *MongoSearchSuite) TestNonMatchingPatientNameStringQuery(c *C) {
 	num, err := mq.Count()
 	util.CheckErr(err)
 	c.Assert(num, Equals, 0)
+}
+
+func (m *MongoSearchSuite) TestPatientSortByNameAscending(c *C) {
+	var patients []*models.Patient
+	q := Query{"Patient", "_sort=name"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&patients)
+	util.CheckErr(err)
+	c.Assert(patients, HasLen, 2)
+	var lastVal string
+	for _, p := range patients {
+		thisVal := getHumanNamesComparisonValue(p.Name, false)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), 1)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestPatientSortByNameDescending(c *C) {
+	var patients []*models.Patient
+	q := Query{"Patient", "_sort:desc=name"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&patients)
+	util.CheckErr(err)
+	c.Assert(patients, HasLen, 2)
+	lastVal := "~"
+	for _, p := range patients {
+		thisVal := getHumanNamesComparisonValue(p.Name, true)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), -1)
+		lastVal = thisVal
+	}
+}
+
+// Approximating MongoDB sort strategy
+func getHumanNamesComparisonValue(nSlice []models.HumanName, descending bool) string {
+	if len(nSlice) == 0 {
+		return ""
+	}
+
+	strs := make([]string, len(nSlice))
+	for i := range nSlice {
+		strs[i] = getHumanNameComparisonValue(nSlice[i])
+	}
+	sort.Strings(strs)
+	if descending {
+		return strs[len(strs)-1]
+	}
+	return strs[0]
+}
+
+// Approximating MongoDB sort strategy
+func getHumanNameComparisonValue(n models.HumanName) string {
+	var last string
+	if len(n.Family) > 0 {
+		last = n.Family[0]
+	}
+	var first string
+	if len(n.Given) > 0 {
+		first = n.Given[0]
+	}
+	return last + first
 }
 
 // Test string searches on Address
@@ -921,6 +1204,49 @@ func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndSystemAndWrongCode(c 
 	c.Assert(num, Equals, 0)
 }
 
+func (m *MongoSearchSuite) TestObservationSortByValueQuantityAscending(c *C) {
+	var observations []*models.Observation
+	q := Query{"Observation", "_sort=value-quantity"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&observations)
+	util.CheckErr(err)
+	c.Assert(observations, HasLen, 5)
+	var lastVal string
+	for _, o := range observations {
+		thisVal := getQuantityComparisonValue(o.ValueQuantity)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), 1)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestObservationSortByValueQuantityDescending(c *C) {
+	var observations []*models.Observation
+	q := Query{"Observation", "_sort:desc=value-quantity"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&observations)
+	util.CheckErr(err)
+	c.Assert(observations, HasLen, 5)
+	lastVal := "~"
+	for _, o := range observations {
+		thisVal := getQuantityComparisonValue(o.ValueQuantity)
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), -1)
+		lastVal = thisVal
+	}
+}
+
+// Approximating MongoDB sort strategy
+func getQuantityComparisonValue(q *models.Quantity) string {
+	if q == nil {
+		return ""
+	}
+
+	var value string
+	if q.Value != nil {
+		value = fmt.Sprintf("%f", *q.Value)
+	}
+	return fmt.Sprintf("%s%s%s%s%s", q.Code, q.Comparator, q.System, q.Unit, value)
+}
+
 // TODO: Test quantity searches on Money, SimpleQuantity, Duration, Count, Distance, and Age
 
 // Test URI searches on URI
@@ -968,6 +1294,38 @@ func (m *MongoSearchSuite) TestConditionIdQuery(c *C) {
 
 	c.Assert(cond, DeepEquals, cond2)
 }
+
+func (m *MongoSearchSuite) TestConditionSortByIdAscending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort=_id"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	var lastVal string
+	for _, cond := range conditions {
+		thisVal := cond.Id
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), 1)
+		lastVal = thisVal
+	}
+}
+
+func (m *MongoSearchSuite) TestConditionSortByIdDescending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort:desc=_id"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	lastVal := "~"
+	for _, cond := range conditions {
+		thisVal := cond.Id
+		c.Assert(strings.Compare(lastVal, thisVal), Not(Equals), -1)
+		lastVal = thisVal
+	}
+}
+
+// Tests special searches on _tag
 
 func (m *MongoSearchSuite) TestConditionTagQueryObject(c *C) {
 	q := Query{"Condition", "_tag=foo|bar"}
@@ -1326,6 +1684,71 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryWithCountAndOffset(c *C) {
 	c.Assert(offset1.Id, Not(Equals), offset2.Id)
 }
 
+func (m *MongoSearchSuite) TestConditionSortWithMultipleSortParams(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort=patient&_sort=onset&_sort=code"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	var lastPatient string
+	var lastOnset time.Time
+	var lastCode string
+	for _, cond := range conditions {
+		thisPatient := getReferenceComparisonValue(cond.Patient)
+		thisOnset := cond.OnsetDateTime.Time
+		thisCode := getCodeableConceptComparisonValue(cond.Code)
+		c.Assert(strings.Compare(lastPatient, thisPatient), Not(Equals), 1)
+		if thisPatient == lastPatient {
+			c.Assert(thisOnset.Before(lastOnset), Equals, false)
+			if thisOnset.Equal(lastOnset) {
+				c.Assert(strings.Compare(lastCode, thisCode), Not(Equals), 1)
+			}
+		}
+		lastPatient = thisPatient
+		lastOnset = thisOnset
+		lastCode = thisCode
+	}
+}
+
+func (m *MongoSearchSuite) TestConditionSortWithMultipleSortParamsDescending(c *C) {
+	var conditions []*models.Condition
+	q := Query{"Condition", "_sort:desc=patient&_sort:desc=onset&_sort:desc=code"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&conditions)
+	util.CheckErr(err)
+	c.Assert(conditions, HasLen, 6)
+	lastPatient := "~"
+	lastOnset := time.Date(3000, time.January, 1, 0, 0, 0, 0, time.UTC)
+	lastCode := "~"
+	for _, cond := range conditions {
+		thisPatient := getReferenceComparisonValue(cond.Patient)
+		thisOnset := cond.OnsetDateTime.Time
+		thisCode := getCodeableConceptComparisonValue(cond.Code)
+		c.Assert(strings.Compare(lastPatient, thisPatient), Not(Equals), -1)
+		if thisPatient == lastPatient {
+			c.Assert(thisOnset.After(lastOnset), Equals, false)
+			if thisOnset.Equal(lastOnset) {
+				c.Assert(strings.Compare(lastCode, thisCode), Not(Equals), -1)
+			}
+		}
+		lastPatient = thisPatient
+		lastOnset = thisOnset
+		lastCode = thisCode
+	}
+}
+
+func (m *MongoSearchSuite) TestSortingOnParallelArrayPathsDoesntPanic(c *C) {
+	var patients []*models.Patient
+	// NOTE: Sorting on family and patient normally causes MongoDB to balk because they have "parallel arrays", but we
+	// should just drop the second sort param instead of panicing
+	q := Query{"Patient", "_sort=family&_sort=given"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&patients)
+	util.CheckErr(err)
+	c.Assert(patients, HasLen, 2)
+}
+
 func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
 	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:patient&_include=Observation:encounter"}
 
@@ -1551,8 +1974,8 @@ func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
 }
 
 func (m *MongoSearchSuite) TestUnsupportedSearchResultParameterPanics(c *C) {
-	q := Query{"Condition", "_sort:asc=onset"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_sort\" not understood"))
+	q := Query{"Condition", "_contained=true"}
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_contained\" not understood"))
 }
 
 func (m *MongoSearchSuite) TestUsupportedGlobalSearchParameterPanics(c *C) {
