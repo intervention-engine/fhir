@@ -101,11 +101,13 @@ func (x *HealthcareService) checkResourceType() error {
 }
 
 type HealthcareServiceServiceTypeComponent struct {
-	Type      *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
-	Specialty []CodeableConcept `bson:"specialty,omitempty" json:"specialty,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
+	Specialty       []CodeableConcept `bson:"specialty,omitempty" json:"specialty,omitempty"`
 }
 
 type HealthcareServiceAvailableTimeComponent struct {
+	BackboneElement    `bson:",inline"`
 	DaysOfWeek         []string      `bson:"daysOfWeek,omitempty" json:"daysOfWeek,omitempty"`
 	AllDay             *bool         `bson:"allDay,omitempty" json:"allDay,omitempty"`
 	AvailableStartTime *FHIRDateTime `bson:"availableStartTime,omitempty" json:"availableStartTime,omitempty"`
@@ -113,8 +115,9 @@ type HealthcareServiceAvailableTimeComponent struct {
 }
 
 type HealthcareServiceNotAvailableComponent struct {
-	Description string  `bson:"description,omitempty" json:"description,omitempty"`
-	During      *Period `bson:"during,omitempty" json:"during,omitempty"`
+	BackboneElement `bson:",inline"`
+	Description     string  `bson:"description,omitempty" json:"description,omitempty"`
+	During          *Period `bson:"during,omitempty" json:"during,omitempty"`
 }
 
 type HealthcareServicePlus struct {

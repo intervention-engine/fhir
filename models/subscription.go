@@ -87,10 +87,11 @@ func (x *Subscription) checkResourceType() error {
 }
 
 type SubscriptionChannelComponent struct {
-	Type     string `bson:"type,omitempty" json:"type,omitempty"`
-	Endpoint string `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
-	Payload  string `bson:"payload,omitempty" json:"payload,omitempty"`
-	Header   string `bson:"header,omitempty" json:"header,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            string `bson:"type,omitempty" json:"type,omitempty"`
+	Endpoint        string `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	Payload         string `bson:"payload,omitempty" json:"payload,omitempty"`
+	Header          string `bson:"header,omitempty" json:"header,omitempty"`
 }
 
 type SubscriptionPlus struct {

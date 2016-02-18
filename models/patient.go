@@ -98,29 +98,33 @@ func (x *Patient) checkResourceType() error {
 }
 
 type PatientContactComponent struct {
-	Relationship []CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
-	Name         *HumanName        `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom      []ContactPoint    `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Address      *Address          `bson:"address,omitempty" json:"address,omitempty"`
-	Gender       string            `bson:"gender,omitempty" json:"gender,omitempty"`
-	Organization *Reference        `bson:"organization,omitempty" json:"organization,omitempty"`
-	Period       *Period           `bson:"period,omitempty" json:"period,omitempty"`
+	BackboneElement `bson:",inline"`
+	Relationship    []CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
+	Name            *HumanName        `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint    `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address         *Address          `bson:"address,omitempty" json:"address,omitempty"`
+	Gender          string            `bson:"gender,omitempty" json:"gender,omitempty"`
+	Organization    *Reference        `bson:"organization,omitempty" json:"organization,omitempty"`
+	Period          *Period           `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 type PatientAnimalComponent struct {
-	Species      *CodeableConcept `bson:"species,omitempty" json:"species,omitempty"`
-	Breed        *CodeableConcept `bson:"breed,omitempty" json:"breed,omitempty"`
-	GenderStatus *CodeableConcept `bson:"genderStatus,omitempty" json:"genderStatus,omitempty"`
+	BackboneElement `bson:",inline"`
+	Species         *CodeableConcept `bson:"species,omitempty" json:"species,omitempty"`
+	Breed           *CodeableConcept `bson:"breed,omitempty" json:"breed,omitempty"`
+	GenderStatus    *CodeableConcept `bson:"genderStatus,omitempty" json:"genderStatus,omitempty"`
 }
 
 type PatientCommunicationComponent struct {
-	Language  *CodeableConcept `bson:"language,omitempty" json:"language,omitempty"`
-	Preferred *bool            `bson:"preferred,omitempty" json:"preferred,omitempty"`
+	BackboneElement `bson:",inline"`
+	Language        *CodeableConcept `bson:"language,omitempty" json:"language,omitempty"`
+	Preferred       *bool            `bson:"preferred,omitempty" json:"preferred,omitempty"`
 }
 
 type PatientLinkComponent struct {
-	Other *Reference `bson:"other,omitempty" json:"other,omitempty"`
-	Type  string     `bson:"type,omitempty" json:"type,omitempty"`
+	BackboneElement `bson:",inline"`
+	Other           *Reference `bson:"other,omitempty" json:"other,omitempty"`
+	Type            string     `bson:"type,omitempty" json:"type,omitempty"`
 }
 
 type PatientPlus struct {

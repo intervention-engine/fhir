@@ -95,6 +95,7 @@ func (x *MedicationStatement) checkResourceType() error {
 }
 
 type MedicationStatementDosageComponent struct {
+	BackboneElement         `bson:",inline"`
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	Timing                  *Timing          `bson:"timing,omitempty" json:"timing,omitempty"`
 	AsNeededBoolean         *bool            `bson:"asNeededBoolean,omitempty" json:"asNeededBoolean,omitempty"`

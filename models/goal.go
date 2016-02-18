@@ -95,6 +95,7 @@ func (x *Goal) checkResourceType() error {
 }
 
 type GoalOutcomeComponent struct {
+	BackboneElement       `bson:",inline"`
 	ResultCodeableConcept *CodeableConcept `bson:"resultCodeableConcept,omitempty" json:"resultCodeableConcept,omitempty"`
 	ResultReference       *Reference       `bson:"resultReference,omitempty" json:"resultReference,omitempty"`
 }

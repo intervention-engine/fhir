@@ -91,9 +91,10 @@ func (x *Location) checkResourceType() error {
 }
 
 type LocationPositionComponent struct {
-	Longitude *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
-	Latitude  *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
-	Altitude  *float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
+	BackboneElement `bson:",inline"`
+	Longitude       *float64 `bson:"longitude,omitempty" json:"longitude,omitempty"`
+	Latitude        *float64 `bson:"latitude,omitempty" json:"latitude,omitempty"`
+	Altitude        *float64 `bson:"altitude,omitempty" json:"altitude,omitempty"`
 }
 
 type LocationPlus struct {

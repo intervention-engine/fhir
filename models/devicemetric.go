@@ -89,9 +89,10 @@ func (x *DeviceMetric) checkResourceType() error {
 }
 
 type DeviceMetricCalibrationComponent struct {
-	Type  string        `bson:"type,omitempty" json:"type,omitempty"`
-	State string        `bson:"state,omitempty" json:"state,omitempty"`
-	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            string        `bson:"type,omitempty" json:"type,omitempty"`
+	State           string        `bson:"state,omitempty" json:"state,omitempty"`
+	Time            *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
 }
 
 type DeviceMetricPlus struct {

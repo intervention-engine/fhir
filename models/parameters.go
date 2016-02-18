@@ -75,6 +75,7 @@ func (x *Parameters) checkResourceType() error {
 }
 
 type ParametersParameterComponent struct {
+	BackboneElement      `bson:",inline"`
 	Name                 string                         `bson:"name,omitempty" json:"name,omitempty"`
 	ValueAddress         *Address                       `bson:"valueAddress,omitempty" json:"valueAddress,omitempty"`
 	ValueAnnotation      *Annotation                    `bson:"valueAnnotation,omitempty" json:"valueAnnotation,omitempty"`

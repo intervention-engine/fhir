@@ -90,6 +90,7 @@ func (x *Practitioner) checkResourceType() error {
 }
 
 type PractitionerPractitionerRoleComponent struct {
+	BackboneElement      `bson:",inline"`
 	ManagingOrganization *Reference        `bson:"managingOrganization,omitempty" json:"managingOrganization,omitempty"`
 	Role                 *CodeableConcept  `bson:"role,omitempty" json:"role,omitempty"`
 	Specialty            []CodeableConcept `bson:"specialty,omitempty" json:"specialty,omitempty"`
@@ -99,10 +100,11 @@ type PractitionerPractitionerRoleComponent struct {
 }
 
 type PractitionerQualificationComponent struct {
-	Identifier []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Code       *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Period     *Period          `bson:"period,omitempty" json:"period,omitempty"`
-	Issuer     *Reference       `bson:"issuer,omitempty" json:"issuer,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identifier      []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Period          *Period          `bson:"period,omitempty" json:"period,omitempty"`
+	Issuer          *Reference       `bson:"issuer,omitempty" json:"issuer,omitempty"`
 }
 
 type PractitionerPlus struct {

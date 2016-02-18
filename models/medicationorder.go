@@ -96,6 +96,7 @@ func (x *MedicationOrder) checkResourceType() error {
 }
 
 type MedicationOrderDosageInstructionComponent struct {
+	BackboneElement         `bson:",inline"`
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
 	Timing                  *Timing          `bson:"timing,omitempty" json:"timing,omitempty"`
@@ -113,6 +114,7 @@ type MedicationOrderDosageInstructionComponent struct {
 }
 
 type MedicationOrderDispenseRequestComponent struct {
+	BackboneElement           `bson:",inline"`
 	MedicationCodeableConcept *CodeableConcept `bson:"medicationCodeableConcept,omitempty" json:"medicationCodeableConcept,omitempty"`
 	MedicationReference       *Reference       `bson:"medicationReference,omitempty" json:"medicationReference,omitempty"`
 	ValidityPeriod            *Period          `bson:"validityPeriod,omitempty" json:"validityPeriod,omitempty"`
@@ -122,8 +124,9 @@ type MedicationOrderDispenseRequestComponent struct {
 }
 
 type MedicationOrderSubstitutionComponent struct {
-	Type   *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Reason *CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Reason          *CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 }
 
 type MedicationOrderPlus struct {

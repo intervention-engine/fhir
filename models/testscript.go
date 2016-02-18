@@ -100,53 +100,62 @@ func (x *TestScript) checkResourceType() error {
 }
 
 type TestScriptContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type TestScriptMetadataComponent struct {
-	Link       []TestScriptMetadataLinkComponent       `bson:"link,omitempty" json:"link,omitempty"`
-	Capability []TestScriptMetadataCapabilityComponent `bson:"capability,omitempty" json:"capability,omitempty"`
+	BackboneElement `bson:",inline"`
+	Link            []TestScriptMetadataLinkComponent       `bson:"link,omitempty" json:"link,omitempty"`
+	Capability      []TestScriptMetadataCapabilityComponent `bson:"capability,omitempty" json:"capability,omitempty"`
 }
 
 type TestScriptMetadataLinkComponent struct {
-	Url         string `bson:"url,omitempty" json:"url,omitempty"`
-	Description string `bson:"description,omitempty" json:"description,omitempty"`
+	BackboneElement `bson:",inline"`
+	Url             string `bson:"url,omitempty" json:"url,omitempty"`
+	Description     string `bson:"description,omitempty" json:"description,omitempty"`
 }
 
 type TestScriptMetadataCapabilityComponent struct {
-	Required    *bool      `bson:"required,omitempty" json:"required,omitempty"`
-	Validated   *bool      `bson:"validated,omitempty" json:"validated,omitempty"`
-	Description string     `bson:"description,omitempty" json:"description,omitempty"`
-	Destination *int32     `bson:"destination,omitempty" json:"destination,omitempty"`
-	Link        []string   `bson:"link,omitempty" json:"link,omitempty"`
-	Conformance *Reference `bson:"conformance,omitempty" json:"conformance,omitempty"`
+	BackboneElement `bson:",inline"`
+	Required        *bool      `bson:"required,omitempty" json:"required,omitempty"`
+	Validated       *bool      `bson:"validated,omitempty" json:"validated,omitempty"`
+	Description     string     `bson:"description,omitempty" json:"description,omitempty"`
+	Destination     *int32     `bson:"destination,omitempty" json:"destination,omitempty"`
+	Link            []string   `bson:"link,omitempty" json:"link,omitempty"`
+	Conformance     *Reference `bson:"conformance,omitempty" json:"conformance,omitempty"`
 }
 
 type TestScriptFixtureComponent struct {
-	Autocreate *bool      `bson:"autocreate,omitempty" json:"autocreate,omitempty"`
-	Autodelete *bool      `bson:"autodelete,omitempty" json:"autodelete,omitempty"`
-	Resource   *Reference `bson:"resource,omitempty" json:"resource,omitempty"`
+	BackboneElement `bson:",inline"`
+	Autocreate      *bool      `bson:"autocreate,omitempty" json:"autocreate,omitempty"`
+	Autodelete      *bool      `bson:"autodelete,omitempty" json:"autodelete,omitempty"`
+	Resource        *Reference `bson:"resource,omitempty" json:"resource,omitempty"`
 }
 
 type TestScriptVariableComponent struct {
-	Name        string `bson:"name,omitempty" json:"name,omitempty"`
-	HeaderField string `bson:"headerField,omitempty" json:"headerField,omitempty"`
-	Path        string `bson:"path,omitempty" json:"path,omitempty"`
-	SourceId    string `bson:"sourceId,omitempty" json:"sourceId,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string `bson:"name,omitempty" json:"name,omitempty"`
+	HeaderField     string `bson:"headerField,omitempty" json:"headerField,omitempty"`
+	Path            string `bson:"path,omitempty" json:"path,omitempty"`
+	SourceId        string `bson:"sourceId,omitempty" json:"sourceId,omitempty"`
 }
 
 type TestScriptSetupComponent struct {
-	Metadata *TestScriptMetadataComponent     `bson:"metadata,omitempty" json:"metadata,omitempty"`
-	Action   []TestScriptSetupActionComponent `bson:"action,omitempty" json:"action,omitempty"`
+	BackboneElement `bson:",inline"`
+	Metadata        *TestScriptMetadataComponent     `bson:"metadata,omitempty" json:"metadata,omitempty"`
+	Action          []TestScriptSetupActionComponent `bson:"action,omitempty" json:"action,omitempty"`
 }
 
 type TestScriptSetupActionComponent struct {
-	Operation *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
-	Assert    *TestScriptSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
+	BackboneElement `bson:",inline"`
+	Operation       *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+	Assert          *TestScriptSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
 }
 
 type TestScriptSetupActionOperationComponent struct {
+	BackboneElement  `bson:",inline"`
 	Type             *Coding                                                `bson:"type,omitempty" json:"type,omitempty"`
 	Resource         string                                                 `bson:"resource,omitempty" json:"resource,omitempty"`
 	Label            string                                                 `bson:"label,omitempty" json:"label,omitempty"`
@@ -164,11 +173,13 @@ type TestScriptSetupActionOperationComponent struct {
 }
 
 type TestScriptSetupActionOperationRequestHeaderComponent struct {
-	Field string `bson:"field,omitempty" json:"field,omitempty"`
-	Value string `bson:"value,omitempty" json:"value,omitempty"`
+	BackboneElement `bson:",inline"`
+	Field           string `bson:"field,omitempty" json:"field,omitempty"`
+	Value           string `bson:"value,omitempty" json:"value,omitempty"`
 }
 
 type TestScriptSetupActionAssertComponent struct {
+	BackboneElement     `bson:",inline"`
 	Label               string `bson:"label,omitempty" json:"label,omitempty"`
 	Description         string `bson:"description,omitempty" json:"description,omitempty"`
 	Direction           string `bson:"direction,omitempty" json:"direction,omitempty"`
@@ -190,23 +201,27 @@ type TestScriptSetupActionAssertComponent struct {
 }
 
 type TestScriptTestComponent struct {
-	Name        string                          `bson:"name,omitempty" json:"name,omitempty"`
-	Description string                          `bson:"description,omitempty" json:"description,omitempty"`
-	Metadata    *TestScriptMetadataComponent    `bson:"metadata,omitempty" json:"metadata,omitempty"`
-	Action      []TestScriptTestActionComponent `bson:"action,omitempty" json:"action,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string                          `bson:"name,omitempty" json:"name,omitempty"`
+	Description     string                          `bson:"description,omitempty" json:"description,omitempty"`
+	Metadata        *TestScriptMetadataComponent    `bson:"metadata,omitempty" json:"metadata,omitempty"`
+	Action          []TestScriptTestActionComponent `bson:"action,omitempty" json:"action,omitempty"`
 }
 
 type TestScriptTestActionComponent struct {
-	Operation *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
-	Assert    *TestScriptSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
+	BackboneElement `bson:",inline"`
+	Operation       *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+	Assert          *TestScriptSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
 }
 
 type TestScriptTeardownComponent struct {
-	Action []TestScriptTeardownActionComponent `bson:"action,omitempty" json:"action,omitempty"`
+	BackboneElement `bson:",inline"`
+	Action          []TestScriptTeardownActionComponent `bson:"action,omitempty" json:"action,omitempty"`
 }
 
 type TestScriptTeardownActionComponent struct {
-	Operation *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+	BackboneElement `bson:",inline"`
+	Operation       *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
 
 type TestScriptPlus struct {

@@ -89,23 +89,26 @@ func (x *Provenance) checkResourceType() error {
 }
 
 type ProvenanceAgentComponent struct {
-	Role         *Coding                                `bson:"role,omitempty" json:"role,omitempty"`
-	Actor        *Reference                             `bson:"actor,omitempty" json:"actor,omitempty"`
-	UserId       *Identifier                            `bson:"userId,omitempty" json:"userId,omitempty"`
-	RelatedAgent []ProvenanceAgentRelatedAgentComponent `bson:"relatedAgent,omitempty" json:"relatedAgent,omitempty"`
+	BackboneElement `bson:",inline"`
+	Role            *Coding                                `bson:"role,omitempty" json:"role,omitempty"`
+	Actor           *Reference                             `bson:"actor,omitempty" json:"actor,omitempty"`
+	UserId          *Identifier                            `bson:"userId,omitempty" json:"userId,omitempty"`
+	RelatedAgent    []ProvenanceAgentRelatedAgentComponent `bson:"relatedAgent,omitempty" json:"relatedAgent,omitempty"`
 }
 
 type ProvenanceAgentRelatedAgentComponent struct {
-	Type   *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Target string           `bson:"target,omitempty" json:"target,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Target          string           `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 type ProvenanceEntityComponent struct {
-	Role      string                    `bson:"role,omitempty" json:"role,omitempty"`
-	Type      *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
-	Reference string                    `bson:"reference,omitempty" json:"reference,omitempty"`
-	Display   string                    `bson:"display,omitempty" json:"display,omitempty"`
-	Agent     *ProvenanceAgentComponent `bson:"agent,omitempty" json:"agent,omitempty"`
+	BackboneElement `bson:",inline"`
+	Role            string                    `bson:"role,omitempty" json:"role,omitempty"`
+	Type            *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
+	Reference       string                    `bson:"reference,omitempty" json:"reference,omitempty"`
+	Display         string                    `bson:"display,omitempty" json:"display,omitempty"`
+	Agent           *ProvenanceAgentComponent `bson:"agent,omitempty" json:"agent,omitempty"`
 }
 
 type ProvenancePlus struct {

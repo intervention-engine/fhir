@@ -108,18 +108,21 @@ func (x *Claim) checkResourceType() error {
 }
 
 type ClaimPayeeComponent struct {
-	Type         *Coding    `bson:"type,omitempty" json:"type,omitempty"`
-	Provider     *Reference `bson:"provider,omitempty" json:"provider,omitempty"`
-	Organization *Reference `bson:"organization,omitempty" json:"organization,omitempty"`
-	Person       *Reference `bson:"person,omitempty" json:"person,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *Coding    `bson:"type,omitempty" json:"type,omitempty"`
+	Provider        *Reference `bson:"provider,omitempty" json:"provider,omitempty"`
+	Organization    *Reference `bson:"organization,omitempty" json:"organization,omitempty"`
+	Person          *Reference `bson:"person,omitempty" json:"person,omitempty"`
 }
 
 type ClaimDiagnosisComponent struct {
-	Sequence  *uint32 `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Diagnosis *Coding `bson:"diagnosis,omitempty" json:"diagnosis,omitempty"`
+	BackboneElement `bson:",inline"`
+	Sequence        *uint32 `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Diagnosis       *Coding `bson:"diagnosis,omitempty" json:"diagnosis,omitempty"`
 }
 
 type ClaimCoverageComponent struct {
+	BackboneElement     `bson:",inline"`
 	Sequence            *uint32    `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Focal               *bool      `bson:"focal,omitempty" json:"focal,omitempty"`
 	Coverage            *Reference `bson:"coverage,omitempty" json:"coverage,omitempty"`
@@ -131,6 +134,7 @@ type ClaimCoverageComponent struct {
 }
 
 type ClaimItemsComponent struct {
+	BackboneElement `bson:",inline"`
 	Sequence        *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
 	Type            *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
 	Provider        *Reference                `bson:"provider,omitempty" json:"provider,omitempty"`
@@ -151,40 +155,44 @@ type ClaimItemsComponent struct {
 }
 
 type ClaimDetailComponent struct {
-	Sequence  *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Type      *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
-	Service   *Coding                   `bson:"service,omitempty" json:"service,omitempty"`
-	Quantity  *Quantity                 `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	UnitPrice *Quantity                 `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
-	Factor    *float64                  `bson:"factor,omitempty" json:"factor,omitempty"`
-	Points    *float64                  `bson:"points,omitempty" json:"points,omitempty"`
-	Net       *Quantity                 `bson:"net,omitempty" json:"net,omitempty"`
-	Udi       *Coding                   `bson:"udi,omitempty" json:"udi,omitempty"`
-	SubDetail []ClaimSubDetailComponent `bson:"subDetail,omitempty" json:"subDetail,omitempty"`
+	BackboneElement `bson:",inline"`
+	Sequence        *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Type            *Coding                   `bson:"type,omitempty" json:"type,omitempty"`
+	Service         *Coding                   `bson:"service,omitempty" json:"service,omitempty"`
+	Quantity        *Quantity                 `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	UnitPrice       *Quantity                 `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
+	Factor          *float64                  `bson:"factor,omitempty" json:"factor,omitempty"`
+	Points          *float64                  `bson:"points,omitempty" json:"points,omitempty"`
+	Net             *Quantity                 `bson:"net,omitempty" json:"net,omitempty"`
+	Udi             *Coding                   `bson:"udi,omitempty" json:"udi,omitempty"`
+	SubDetail       []ClaimSubDetailComponent `bson:"subDetail,omitempty" json:"subDetail,omitempty"`
 }
 
 type ClaimSubDetailComponent struct {
-	Sequence  *uint32   `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Type      *Coding   `bson:"type,omitempty" json:"type,omitempty"`
-	Service   *Coding   `bson:"service,omitempty" json:"service,omitempty"`
-	Quantity  *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	UnitPrice *Quantity `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
-	Factor    *float64  `bson:"factor,omitempty" json:"factor,omitempty"`
-	Points    *float64  `bson:"points,omitempty" json:"points,omitempty"`
-	Net       *Quantity `bson:"net,omitempty" json:"net,omitempty"`
-	Udi       *Coding   `bson:"udi,omitempty" json:"udi,omitempty"`
+	BackboneElement `bson:",inline"`
+	Sequence        *uint32   `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Type            *Coding   `bson:"type,omitempty" json:"type,omitempty"`
+	Service         *Coding   `bson:"service,omitempty" json:"service,omitempty"`
+	Quantity        *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	UnitPrice       *Quantity `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
+	Factor          *float64  `bson:"factor,omitempty" json:"factor,omitempty"`
+	Points          *float64  `bson:"points,omitempty" json:"points,omitempty"`
+	Net             *Quantity `bson:"net,omitempty" json:"net,omitempty"`
+	Udi             *Coding   `bson:"udi,omitempty" json:"udi,omitempty"`
 }
 
 type ClaimProsthesisComponent struct {
-	Initial       *bool         `bson:"initial,omitempty" json:"initial,omitempty"`
-	PriorDate     *FHIRDateTime `bson:"priorDate,omitempty" json:"priorDate,omitempty"`
-	PriorMaterial *Coding       `bson:"priorMaterial,omitempty" json:"priorMaterial,omitempty"`
+	BackboneElement `bson:",inline"`
+	Initial         *bool         `bson:"initial,omitempty" json:"initial,omitempty"`
+	PriorDate       *FHIRDateTime `bson:"priorDate,omitempty" json:"priorDate,omitempty"`
+	PriorMaterial   *Coding       `bson:"priorMaterial,omitempty" json:"priorMaterial,omitempty"`
 }
 
 type ClaimMissingTeethComponent struct {
-	Tooth          *Coding       `bson:"tooth,omitempty" json:"tooth,omitempty"`
-	Reason         *Coding       `bson:"reason,omitempty" json:"reason,omitempty"`
-	ExtractionDate *FHIRDateTime `bson:"extractionDate,omitempty" json:"extractionDate,omitempty"`
+	BackboneElement `bson:",inline"`
+	Tooth           *Coding       `bson:"tooth,omitempty" json:"tooth,omitempty"`
+	Reason          *Coding       `bson:"reason,omitempty" json:"reason,omitempty"`
+	ExtractionDate  *FHIRDateTime `bson:"extractionDate,omitempty" json:"extractionDate,omitempty"`
 }
 
 type ClaimPlus struct {

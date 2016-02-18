@@ -89,6 +89,7 @@ func (x *RiskAssessment) checkResourceType() error {
 }
 
 type RiskAssessmentPredictionComponent struct {
+	BackboneElement            `bson:",inline"`
 	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
 	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
 	ProbabilityRange           *Range           `bson:"probabilityRange,omitempty" json:"probabilityRange,omitempty"`

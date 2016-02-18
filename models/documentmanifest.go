@@ -91,13 +91,15 @@ func (x *DocumentManifest) checkResourceType() error {
 }
 
 type DocumentManifestContentComponent struct {
-	PAttachment *Attachment `bson:"pAttachment,omitempty" json:"pAttachment,omitempty"`
-	PReference  *Reference  `bson:"pReference,omitempty" json:"pReference,omitempty"`
+	BackboneElement `bson:",inline"`
+	PAttachment     *Attachment `bson:"pAttachment,omitempty" json:"pAttachment,omitempty"`
+	PReference      *Reference  `bson:"pReference,omitempty" json:"pReference,omitempty"`
 }
 
 type DocumentManifestRelatedComponent struct {
-	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identifier      *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Ref             *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
 }
 
 type DocumentManifestPlus struct {

@@ -98,11 +98,13 @@ func (x *Contract) checkResourceType() error {
 }
 
 type ContractActorComponent struct {
-	Entity *Reference        `bson:"entity,omitempty" json:"entity,omitempty"`
-	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
+	BackboneElement `bson:",inline"`
+	Entity          *Reference        `bson:"entity,omitempty" json:"entity,omitempty"`
+	Role            []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
 
 type ContractValuedItemComponent struct {
+	BackboneElement       `bson:",inline"`
 	EntityCodeableConcept *CodeableConcept `bson:"entityCodeableConcept,omitempty" json:"entityCodeableConcept,omitempty"`
 	EntityReference       *Reference       `bson:"entityReference,omitempty" json:"entityReference,omitempty"`
 	Identifier            *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
@@ -115,32 +117,36 @@ type ContractValuedItemComponent struct {
 }
 
 type ContractSignatoryComponent struct {
-	Type      *Coding    `bson:"type,omitempty" json:"type,omitempty"`
-	Party     *Reference `bson:"party,omitempty" json:"party,omitempty"`
-	Signature string     `bson:"signature,omitempty" json:"signature,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *Coding    `bson:"type,omitempty" json:"type,omitempty"`
+	Party           *Reference `bson:"party,omitempty" json:"party,omitempty"`
+	Signature       string     `bson:"signature,omitempty" json:"signature,omitempty"`
 }
 
 type ContractTermComponent struct {
-	Identifier   *Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Issued       *FHIRDateTime                     `bson:"issued,omitempty" json:"issued,omitempty"`
-	Applies      *Period                           `bson:"applies,omitempty" json:"applies,omitempty"`
-	Type         *CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
-	SubType      *CodeableConcept                  `bson:"subType,omitempty" json:"subType,omitempty"`
-	Subject      *Reference                        `bson:"subject,omitempty" json:"subject,omitempty"`
-	Action       []CodeableConcept                 `bson:"action,omitempty" json:"action,omitempty"`
-	ActionReason []CodeableConcept                 `bson:"actionReason,omitempty" json:"actionReason,omitempty"`
-	Actor        []ContractTermActorComponent      `bson:"actor,omitempty" json:"actor,omitempty"`
-	Text         string                            `bson:"text,omitempty" json:"text,omitempty"`
-	ValuedItem   []ContractTermValuedItemComponent `bson:"valuedItem,omitempty" json:"valuedItem,omitempty"`
-	Group        []ContractTermComponent           `bson:"group,omitempty" json:"group,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identifier      *Identifier                       `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Issued          *FHIRDateTime                     `bson:"issued,omitempty" json:"issued,omitempty"`
+	Applies         *Period                           `bson:"applies,omitempty" json:"applies,omitempty"`
+	Type            *CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
+	SubType         *CodeableConcept                  `bson:"subType,omitempty" json:"subType,omitempty"`
+	Subject         *Reference                        `bson:"subject,omitempty" json:"subject,omitempty"`
+	Action          []CodeableConcept                 `bson:"action,omitempty" json:"action,omitempty"`
+	ActionReason    []CodeableConcept                 `bson:"actionReason,omitempty" json:"actionReason,omitempty"`
+	Actor           []ContractTermActorComponent      `bson:"actor,omitempty" json:"actor,omitempty"`
+	Text            string                            `bson:"text,omitempty" json:"text,omitempty"`
+	ValuedItem      []ContractTermValuedItemComponent `bson:"valuedItem,omitempty" json:"valuedItem,omitempty"`
+	Group           []ContractTermComponent           `bson:"group,omitempty" json:"group,omitempty"`
 }
 
 type ContractTermActorComponent struct {
-	Entity *Reference        `bson:"entity,omitempty" json:"entity,omitempty"`
-	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
+	BackboneElement `bson:",inline"`
+	Entity          *Reference        `bson:"entity,omitempty" json:"entity,omitempty"`
+	Role            []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
 
 type ContractTermValuedItemComponent struct {
+	BackboneElement       `bson:",inline"`
 	EntityCodeableConcept *CodeableConcept `bson:"entityCodeableConcept,omitempty" json:"entityCodeableConcept,omitempty"`
 	EntityReference       *Reference       `bson:"entityReference,omitempty" json:"entityReference,omitempty"`
 	Identifier            *Identifier      `bson:"identifier,omitempty" json:"identifier,omitempty"`
@@ -153,16 +159,19 @@ type ContractTermValuedItemComponent struct {
 }
 
 type ContractFriendlyLanguageComponent struct {
+	BackboneElement   `bson:",inline"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
 }
 
 type ContractLegalLanguageComponent struct {
+	BackboneElement   `bson:",inline"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
 }
 
 type ContractComputableLanguageComponent struct {
+	BackboneElement   `bson:",inline"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
 }

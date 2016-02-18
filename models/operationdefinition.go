@@ -98,23 +98,26 @@ func (x *OperationDefinition) checkResourceType() error {
 }
 
 type OperationDefinitionContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type OperationDefinitionParameterComponent struct {
-	Name          string                                        `bson:"name,omitempty" json:"name,omitempty"`
-	Use           string                                        `bson:"use,omitempty" json:"use,omitempty"`
-	Min           *int32                                        `bson:"min,omitempty" json:"min,omitempty"`
-	Max           string                                        `bson:"max,omitempty" json:"max,omitempty"`
-	Documentation string                                        `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Type          string                                        `bson:"type,omitempty" json:"type,omitempty"`
-	Profile       *Reference                                    `bson:"profile,omitempty" json:"profile,omitempty"`
-	Binding       *OperationDefinitionParameterBindingComponent `bson:"binding,omitempty" json:"binding,omitempty"`
-	Part          []OperationDefinitionParameterComponent       `bson:"part,omitempty" json:"part,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string                                        `bson:"name,omitempty" json:"name,omitempty"`
+	Use             string                                        `bson:"use,omitempty" json:"use,omitempty"`
+	Min             *int32                                        `bson:"min,omitempty" json:"min,omitempty"`
+	Max             string                                        `bson:"max,omitempty" json:"max,omitempty"`
+	Documentation   string                                        `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Type            string                                        `bson:"type,omitempty" json:"type,omitempty"`
+	Profile         *Reference                                    `bson:"profile,omitempty" json:"profile,omitempty"`
+	Binding         *OperationDefinitionParameterBindingComponent `bson:"binding,omitempty" json:"binding,omitempty"`
+	Part            []OperationDefinitionParameterComponent       `bson:"part,omitempty" json:"part,omitempty"`
 }
 
 type OperationDefinitionParameterBindingComponent struct {
+	BackboneElement   `bson:",inline"`
 	Strength          string     `bson:"strength,omitempty" json:"strength,omitempty"`
 	ValueSetUri       string     `bson:"valueSetUri,omitempty" json:"valueSetUri,omitempty"`
 	ValueSetReference *Reference `bson:"valueSetReference,omitempty" json:"valueSetReference,omitempty"`

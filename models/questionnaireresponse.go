@@ -88,21 +88,24 @@ func (x *QuestionnaireResponse) checkResourceType() error {
 }
 
 type QuestionnaireResponseGroupComponent struct {
-	LinkId   string                                   `bson:"linkId,omitempty" json:"linkId,omitempty"`
-	Title    string                                   `bson:"title,omitempty" json:"title,omitempty"`
-	Text     string                                   `bson:"text,omitempty" json:"text,omitempty"`
-	Subject  *Reference                               `bson:"subject,omitempty" json:"subject,omitempty"`
-	Group    []QuestionnaireResponseGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
-	Question []QuestionnaireResponseQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
+	BackboneElement `bson:",inline"`
+	LinkId          string                                   `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Title           string                                   `bson:"title,omitempty" json:"title,omitempty"`
+	Text            string                                   `bson:"text,omitempty" json:"text,omitempty"`
+	Subject         *Reference                               `bson:"subject,omitempty" json:"subject,omitempty"`
+	Group           []QuestionnaireResponseGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
+	Question        []QuestionnaireResponseQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
 }
 
 type QuestionnaireResponseQuestionComponent struct {
-	LinkId string                                         `bson:"linkId,omitempty" json:"linkId,omitempty"`
-	Text   string                                         `bson:"text,omitempty" json:"text,omitempty"`
-	Answer []QuestionnaireResponseQuestionAnswerComponent `bson:"answer,omitempty" json:"answer,omitempty"`
+	BackboneElement `bson:",inline"`
+	LinkId          string                                         `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Text            string                                         `bson:"text,omitempty" json:"text,omitempty"`
+	Answer          []QuestionnaireResponseQuestionAnswerComponent `bson:"answer,omitempty" json:"answer,omitempty"`
 }
 
 type QuestionnaireResponseQuestionAnswerComponent struct {
+	BackboneElement `bson:",inline"`
 	ValueBoolean    *bool                                 `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
 	ValueDecimal    *float64                              `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
 	ValueInteger    *int32                                `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`

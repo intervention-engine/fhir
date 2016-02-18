@@ -86,28 +86,32 @@ func (x *ImagingObjectSelection) checkResourceType() error {
 }
 
 type ImagingObjectSelectionStudyComponent struct {
-	Uid          string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
-	Url          string                                  `bson:"url,omitempty" json:"url,omitempty"`
-	ImagingStudy *Reference                              `bson:"imagingStudy,omitempty" json:"imagingStudy,omitempty"`
-	Series       []ImagingObjectSelectionSeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
+	BackboneElement `bson:",inline"`
+	Uid             string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
+	Url             string                                  `bson:"url,omitempty" json:"url,omitempty"`
+	ImagingStudy    *Reference                              `bson:"imagingStudy,omitempty" json:"imagingStudy,omitempty"`
+	Series          []ImagingObjectSelectionSeriesComponent `bson:"series,omitempty" json:"series,omitempty"`
 }
 
 type ImagingObjectSelectionSeriesComponent struct {
-	Uid      string                                    `bson:"uid,omitempty" json:"uid,omitempty"`
-	Url      string                                    `bson:"url,omitempty" json:"url,omitempty"`
-	Instance []ImagingObjectSelectionInstanceComponent `bson:"instance,omitempty" json:"instance,omitempty"`
+	BackboneElement `bson:",inline"`
+	Uid             string                                    `bson:"uid,omitempty" json:"uid,omitempty"`
+	Url             string                                    `bson:"url,omitempty" json:"url,omitempty"`
+	Instance        []ImagingObjectSelectionInstanceComponent `bson:"instance,omitempty" json:"instance,omitempty"`
 }
 
 type ImagingObjectSelectionInstanceComponent struct {
-	SopClass string                                  `bson:"sopClass,omitempty" json:"sopClass,omitempty"`
-	Uid      string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
-	Url      string                                  `bson:"url,omitempty" json:"url,omitempty"`
-	Frames   []ImagingObjectSelectionFramesComponent `bson:"frames,omitempty" json:"frames,omitempty"`
+	BackboneElement `bson:",inline"`
+	SopClass        string                                  `bson:"sopClass,omitempty" json:"sopClass,omitempty"`
+	Uid             string                                  `bson:"uid,omitempty" json:"uid,omitempty"`
+	Url             string                                  `bson:"url,omitempty" json:"url,omitempty"`
+	Frames          []ImagingObjectSelectionFramesComponent `bson:"frames,omitempty" json:"frames,omitempty"`
 }
 
 type ImagingObjectSelectionFramesComponent struct {
-	FrameNumbers []uint32 `bson:"frameNumbers,omitempty" json:"frameNumbers,omitempty"`
-	Url          string   `bson:"url,omitempty" json:"url,omitempty"`
+	BackboneElement `bson:",inline"`
+	FrameNumbers    []uint32 `bson:"frameNumbers,omitempty" json:"frameNumbers,omitempty"`
+	Url             string   `bson:"url,omitempty" json:"url,omitempty"`
 }
 
 type ImagingObjectSelectionPlus struct {

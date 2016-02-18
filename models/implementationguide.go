@@ -96,22 +96,26 @@ func (x *ImplementationGuide) checkResourceType() error {
 }
 
 type ImplementationGuideContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type ImplementationGuideDependencyComponent struct {
-	Type string `bson:"type,omitempty" json:"type,omitempty"`
-	Uri  string `bson:"uri,omitempty" json:"uri,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            string `bson:"type,omitempty" json:"type,omitempty"`
+	Uri             string `bson:"uri,omitempty" json:"uri,omitempty"`
 }
 
 type ImplementationGuidePackageComponent struct {
-	Name        string                                        `bson:"name,omitempty" json:"name,omitempty"`
-	Description string                                        `bson:"description,omitempty" json:"description,omitempty"`
-	Resource    []ImplementationGuidePackageResourceComponent `bson:"resource,omitempty" json:"resource,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string                                        `bson:"name,omitempty" json:"name,omitempty"`
+	Description     string                                        `bson:"description,omitempty" json:"description,omitempty"`
+	Resource        []ImplementationGuidePackageResourceComponent `bson:"resource,omitempty" json:"resource,omitempty"`
 }
 
 type ImplementationGuidePackageResourceComponent struct {
+	BackboneElement `bson:",inline"`
 	Purpose         string     `bson:"purpose,omitempty" json:"purpose,omitempty"`
 	Name            string     `bson:"name,omitempty" json:"name,omitempty"`
 	Description     string     `bson:"description,omitempty" json:"description,omitempty"`
@@ -122,18 +126,20 @@ type ImplementationGuidePackageResourceComponent struct {
 }
 
 type ImplementationGuideGlobalComponent struct {
-	Type    string     `bson:"type,omitempty" json:"type,omitempty"`
-	Profile *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            string     `bson:"type,omitempty" json:"type,omitempty"`
+	Profile         *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
 }
 
 type ImplementationGuidePageComponent struct {
-	Source  string                             `bson:"source,omitempty" json:"source,omitempty"`
-	Name    string                             `bson:"name,omitempty" json:"name,omitempty"`
-	Kind    string                             `bson:"kind,omitempty" json:"kind,omitempty"`
-	Type    []string                           `bson:"type,omitempty" json:"type,omitempty"`
-	Package []string                           `bson:"package,omitempty" json:"package,omitempty"`
-	Format  string                             `bson:"format,omitempty" json:"format,omitempty"`
-	Page    []ImplementationGuidePageComponent `bson:"page,omitempty" json:"page,omitempty"`
+	BackboneElement `bson:",inline"`
+	Source          string                             `bson:"source,omitempty" json:"source,omitempty"`
+	Name            string                             `bson:"name,omitempty" json:"name,omitempty"`
+	Kind            string                             `bson:"kind,omitempty" json:"kind,omitempty"`
+	Type            []string                           `bson:"type,omitempty" json:"type,omitempty"`
+	Package         []string                           `bson:"package,omitempty" json:"package,omitempty"`
+	Format          string                             `bson:"format,omitempty" json:"format,omitempty"`
+	Page            []ImplementationGuidePageComponent `bson:"page,omitempty" json:"page,omitempty"`
 }
 
 type ImplementationGuidePlus struct {

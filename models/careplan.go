@@ -95,16 +95,19 @@ func (x *CarePlan) checkResourceType() error {
 }
 
 type CarePlanRelatedPlanComponent struct {
-	Code string     `bson:"code,omitempty" json:"code,omitempty"`
-	Plan *Reference `bson:"plan,omitempty" json:"plan,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            string     `bson:"code,omitempty" json:"code,omitempty"`
+	Plan            *Reference `bson:"plan,omitempty" json:"plan,omitempty"`
 }
 
 type CarePlanParticipantComponent struct {
-	Role   *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
-	Member *Reference       `bson:"member,omitempty" json:"member,omitempty"`
+	BackboneElement `bson:",inline"`
+	Role            *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
+	Member          *Reference       `bson:"member,omitempty" json:"member,omitempty"`
 }
 
 type CarePlanActivityComponent struct {
+	BackboneElement `bson:",inline"`
 	ActionResulting []Reference                      `bson:"actionResulting,omitempty" json:"actionResulting,omitempty"`
 	Progress        []Annotation                     `bson:"progress,omitempty" json:"progress,omitempty"`
 	Reference       *Reference                       `bson:"reference,omitempty" json:"reference,omitempty"`
@@ -112,6 +115,7 @@ type CarePlanActivityComponent struct {
 }
 
 type CarePlanActivityDetailComponent struct {
+	BackboneElement        `bson:",inline"`
 	Category               *CodeableConcept  `bson:"category,omitempty" json:"category,omitempty"`
 	Code                   *CodeableConcept  `bson:"code,omitempty" json:"code,omitempty"`
 	ReasonCode             []CodeableConcept `bson:"reasonCode,omitempty" json:"reasonCode,omitempty"`

@@ -91,10 +91,11 @@ func (x *Appointment) checkResourceType() error {
 }
 
 type AppointmentParticipantComponent struct {
-	Type     []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Actor    *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
-	Required string            `bson:"required,omitempty" json:"required,omitempty"`
-	Status   string            `bson:"status,omitempty" json:"status,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Actor           *Reference        `bson:"actor,omitempty" json:"actor,omitempty"`
+	Required        string            `bson:"required,omitempty" json:"required,omitempty"`
+	Status          string            `bson:"status,omitempty" json:"status,omitempty"`
 }
 
 type AppointmentPlus struct {

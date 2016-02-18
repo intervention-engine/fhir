@@ -90,23 +90,26 @@ func (x *MessageHeader) checkResourceType() error {
 }
 
 type MessageHeaderResponseComponent struct {
-	Identifier string     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Code       string     `bson:"code,omitempty" json:"code,omitempty"`
-	Details    *Reference `bson:"details,omitempty" json:"details,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identifier      string     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Code            string     `bson:"code,omitempty" json:"code,omitempty"`
+	Details         *Reference `bson:"details,omitempty" json:"details,omitempty"`
 }
 
 type MessageHeaderMessageSourceComponent struct {
-	Name     string        `bson:"name,omitempty" json:"name,omitempty"`
-	Software string        `bson:"software,omitempty" json:"software,omitempty"`
-	Version  string        `bson:"version,omitempty" json:"version,omitempty"`
-	Contact  *ContactPoint `bson:"contact,omitempty" json:"contact,omitempty"`
-	Endpoint string        `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string        `bson:"name,omitempty" json:"name,omitempty"`
+	Software        string        `bson:"software,omitempty" json:"software,omitempty"`
+	Version         string        `bson:"version,omitempty" json:"version,omitempty"`
+	Contact         *ContactPoint `bson:"contact,omitempty" json:"contact,omitempty"`
+	Endpoint        string        `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
 }
 
 type MessageHeaderMessageDestinationComponent struct {
-	Name     string     `bson:"name,omitempty" json:"name,omitempty"`
-	Target   *Reference `bson:"target,omitempty" json:"target,omitempty"`
-	Endpoint string     `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string     `bson:"name,omitempty" json:"name,omitempty"`
+	Target          *Reference `bson:"target,omitempty" json:"target,omitempty"`
+	Endpoint        string     `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
 }
 
 type MessageHeaderPlus struct {
