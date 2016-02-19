@@ -253,33 +253,38 @@ type ElementDefinition struct {
 }
 
 type ElementDefinitionSlicingComponent struct {
-	Discriminator []string `bson:"discriminator,omitempty" json:"discriminator,omitempty"`
-	Description   string   `bson:"description,omitempty" json:"description,omitempty"`
-	Ordered       *bool    `bson:"ordered,omitempty" json:"ordered,omitempty"`
-	Rules         string   `bson:"rules,omitempty" json:"rules,omitempty"`
+	BackboneElement `bson:",inline"`
+	Discriminator   []string `bson:"discriminator,omitempty" json:"discriminator,omitempty"`
+	Description     string   `bson:"description,omitempty" json:"description,omitempty"`
+	Ordered         *bool    `bson:"ordered,omitempty" json:"ordered,omitempty"`
+	Rules           string   `bson:"rules,omitempty" json:"rules,omitempty"`
 }
 
 type ElementDefinitionBaseComponent struct {
-	Path string `bson:"path,omitempty" json:"path,omitempty"`
-	Min  *int32 `bson:"min,omitempty" json:"min,omitempty"`
-	Max  string `bson:"max,omitempty" json:"max,omitempty"`
+	BackboneElement `bson:",inline"`
+	Path            string `bson:"path,omitempty" json:"path,omitempty"`
+	Min             *int32 `bson:"min,omitempty" json:"min,omitempty"`
+	Max             string `bson:"max,omitempty" json:"max,omitempty"`
 }
 
 type ElementDefinitionTypeRefComponent struct {
-	Code        string   `bson:"code,omitempty" json:"code,omitempty"`
-	Profile     []string `bson:"profile,omitempty" json:"profile,omitempty"`
-	Aggregation []string `bson:"aggregation,omitempty" json:"aggregation,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            string   `bson:"code,omitempty" json:"code,omitempty"`
+	Profile         []string `bson:"profile,omitempty" json:"profile,omitempty"`
+	Aggregation     []string `bson:"aggregation,omitempty" json:"aggregation,omitempty"`
 }
 
 type ElementDefinitionConstraintComponent struct {
-	Key          string `bson:"key,omitempty" json:"key,omitempty"`
-	Requirements string `bson:"requirements,omitempty" json:"requirements,omitempty"`
-	Severity     string `bson:"severity,omitempty" json:"severity,omitempty"`
-	Human        string `bson:"human,omitempty" json:"human,omitempty"`
-	Xpath        string `bson:"xpath,omitempty" json:"xpath,omitempty"`
+	BackboneElement `bson:",inline"`
+	Key             string `bson:"key,omitempty" json:"key,omitempty"`
+	Requirements    string `bson:"requirements,omitempty" json:"requirements,omitempty"`
+	Severity        string `bson:"severity,omitempty" json:"severity,omitempty"`
+	Human           string `bson:"human,omitempty" json:"human,omitempty"`
+	Xpath           string `bson:"xpath,omitempty" json:"xpath,omitempty"`
 }
 
 type ElementDefinitionBindingComponent struct {
+	BackboneElement   `bson:",inline"`
 	Strength          string     `bson:"strength,omitempty" json:"strength,omitempty"`
 	Description       string     `bson:"description,omitempty" json:"description,omitempty"`
 	ValueSetUri       string     `bson:"valueSetUri,omitempty" json:"valueSetUri,omitempty"`
@@ -287,7 +292,8 @@ type ElementDefinitionBindingComponent struct {
 }
 
 type ElementDefinitionMappingComponent struct {
-	Identity string `bson:"identity,omitempty" json:"identity,omitempty"`
-	Language string `bson:"language,omitempty" json:"language,omitempty"`
-	Map      string `bson:"map,omitempty" json:"map,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identity        string `bson:"identity,omitempty" json:"identity,omitempty"`
+	Language        string `bson:"language,omitempty" json:"language,omitempty"`
+	Map             string `bson:"map,omitempty" json:"map,omitempty"`
 }

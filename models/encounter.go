@@ -98,17 +98,20 @@ func (x *Encounter) checkResourceType() error {
 }
 
 type EncounterStatusHistoryComponent struct {
-	Status string  `bson:"status,omitempty" json:"status,omitempty"`
-	Period *Period `bson:"period,omitempty" json:"period,omitempty"`
+	BackboneElement `bson:",inline"`
+	Status          string  `bson:"status,omitempty" json:"status,omitempty"`
+	Period          *Period `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 type EncounterParticipantComponent struct {
-	Type       []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Period     *Period           `bson:"period,omitempty" json:"period,omitempty"`
-	Individual *Reference        `bson:"individual,omitempty" json:"individual,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	Period          *Period           `bson:"period,omitempty" json:"period,omitempty"`
+	Individual      *Reference        `bson:"individual,omitempty" json:"individual,omitempty"`
 }
 
 type EncounterHospitalizationComponent struct {
+	BackboneElement        `bson:",inline"`
 	PreAdmissionIdentifier *Identifier       `bson:"preAdmissionIdentifier,omitempty" json:"preAdmissionIdentifier,omitempty"`
 	Origin                 *Reference        `bson:"origin,omitempty" json:"origin,omitempty"`
 	AdmitSource            *CodeableConcept  `bson:"admitSource,omitempty" json:"admitSource,omitempty"`
@@ -123,9 +126,10 @@ type EncounterHospitalizationComponent struct {
 }
 
 type EncounterLocationComponent struct {
-	Location *Reference `bson:"location,omitempty" json:"location,omitempty"`
-	Status   string     `bson:"status,omitempty" json:"status,omitempty"`
-	Period   *Period    `bson:"period,omitempty" json:"period,omitempty"`
+	BackboneElement `bson:",inline"`
+	Location        *Reference `bson:"location,omitempty" json:"location,omitempty"`
+	Status          string     `bson:"status,omitempty" json:"status,omitempty"`
+	Period          *Period    `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 type EncounterPlus struct {

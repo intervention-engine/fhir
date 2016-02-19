@@ -93,14 +93,15 @@ func (x *AllergyIntolerance) checkResourceType() error {
 }
 
 type AllergyIntoleranceReactionComponent struct {
-	Substance     *CodeableConcept  `bson:"substance,omitempty" json:"substance,omitempty"`
-	Certainty     string            `bson:"certainty,omitempty" json:"certainty,omitempty"`
-	Manifestation []CodeableConcept `bson:"manifestation,omitempty" json:"manifestation,omitempty"`
-	Description   string            `bson:"description,omitempty" json:"description,omitempty"`
-	Onset         *FHIRDateTime     `bson:"onset,omitempty" json:"onset,omitempty"`
-	Severity      string            `bson:"severity,omitempty" json:"severity,omitempty"`
-	ExposureRoute *CodeableConcept  `bson:"exposureRoute,omitempty" json:"exposureRoute,omitempty"`
-	Note          *Annotation       `bson:"note,omitempty" json:"note,omitempty"`
+	BackboneElement `bson:",inline"`
+	Substance       *CodeableConcept  `bson:"substance,omitempty" json:"substance,omitempty"`
+	Certainty       string            `bson:"certainty,omitempty" json:"certainty,omitempty"`
+	Manifestation   []CodeableConcept `bson:"manifestation,omitempty" json:"manifestation,omitempty"`
+	Description     string            `bson:"description,omitempty" json:"description,omitempty"`
+	Onset           *FHIRDateTime     `bson:"onset,omitempty" json:"onset,omitempty"`
+	Severity        string            `bson:"severity,omitempty" json:"severity,omitempty"`
+	ExposureRoute   *CodeableConcept  `bson:"exposureRoute,omitempty" json:"exposureRoute,omitempty"`
+	Note            *Annotation       `bson:"note,omitempty" json:"note,omitempty"`
 }
 
 type AllergyIntolerancePlus struct {

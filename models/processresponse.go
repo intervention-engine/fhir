@@ -92,8 +92,9 @@ func (x *ProcessResponse) checkResourceType() error {
 }
 
 type ProcessResponseNotesComponent struct {
-	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
-	Text string  `bson:"text,omitempty" json:"text,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *Coding `bson:"type,omitempty" json:"type,omitempty"`
+	Text            string  `bson:"text,omitempty" json:"text,omitempty"`
 }
 
 type ProcessResponsePlus struct {

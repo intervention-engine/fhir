@@ -104,13 +104,15 @@ func (x *Condition) checkResourceType() error {
 }
 
 type ConditionStageComponent struct {
-	Summary    *CodeableConcept `bson:"summary,omitempty" json:"summary,omitempty"`
-	Assessment []Reference      `bson:"assessment,omitempty" json:"assessment,omitempty"`
+	BackboneElement `bson:",inline"`
+	Summary         *CodeableConcept `bson:"summary,omitempty" json:"summary,omitempty"`
+	Assessment      []Reference      `bson:"assessment,omitempty" json:"assessment,omitempty"`
 }
 
 type ConditionEvidenceComponent struct {
-	Code   *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Detail []Reference      `bson:"detail,omitempty" json:"detail,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Detail          []Reference      `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
 type ConditionPlus struct {

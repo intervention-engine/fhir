@@ -85,14 +85,16 @@ func (x *Substance) checkResourceType() error {
 }
 
 type SubstanceInstanceComponent struct {
-	Identifier *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Expiry     *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
-	Quantity   *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identifier      *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Expiry          *FHIRDateTime `bson:"expiry,omitempty" json:"expiry,omitempty"`
+	Quantity        *Quantity     `bson:"quantity,omitempty" json:"quantity,omitempty"`
 }
 
 type SubstanceIngredientComponent struct {
-	Quantity  *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Substance *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
+	BackboneElement `bson:",inline"`
+	Quantity        *Ratio     `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Substance       *Reference `bson:"substance,omitempty" json:"substance,omitempty"`
 }
 
 type SubstancePlus struct {

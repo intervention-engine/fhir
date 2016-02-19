@@ -90,14 +90,16 @@ func (x *EpisodeOfCare) checkResourceType() error {
 }
 
 type EpisodeOfCareStatusHistoryComponent struct {
-	Status string  `bson:"status,omitempty" json:"status,omitempty"`
-	Period *Period `bson:"period,omitempty" json:"period,omitempty"`
+	BackboneElement `bson:",inline"`
+	Status          string  `bson:"status,omitempty" json:"status,omitempty"`
+	Period          *Period `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 type EpisodeOfCareCareTeamComponent struct {
-	Role   []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
-	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`
-	Member *Reference        `bson:"member,omitempty" json:"member,omitempty"`
+	BackboneElement `bson:",inline"`
+	Role            []CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
+	Period          *Period           `bson:"period,omitempty" json:"period,omitempty"`
+	Member          *Reference        `bson:"member,omitempty" json:"member,omitempty"`
 }
 
 type EpisodeOfCarePlus struct {

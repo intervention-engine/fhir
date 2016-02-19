@@ -95,6 +95,7 @@ func (x *ImagingStudy) checkResourceType() error {
 }
 
 type ImagingStudySeriesComponent struct {
+	BackboneElement   `bson:",inline"`
 	Number            *uint32                               `bson:"number,omitempty" json:"number,omitempty"`
 	Modality          *Coding                               `bson:"modality,omitempty" json:"modality,omitempty"`
 	Uid               string                                `bson:"uid,omitempty" json:"uid,omitempty"`
@@ -109,12 +110,13 @@ type ImagingStudySeriesComponent struct {
 }
 
 type ImagingStudySeriesInstanceComponent struct {
-	Number   *uint32      `bson:"number,omitempty" json:"number,omitempty"`
-	Uid      string       `bson:"uid,omitempty" json:"uid,omitempty"`
-	SopClass string       `bson:"sopClass,omitempty" json:"sopClass,omitempty"`
-	Type     string       `bson:"type,omitempty" json:"type,omitempty"`
-	Title    string       `bson:"title,omitempty" json:"title,omitempty"`
-	Content  []Attachment `bson:"content,omitempty" json:"content,omitempty"`
+	BackboneElement `bson:",inline"`
+	Number          *uint32      `bson:"number,omitempty" json:"number,omitempty"`
+	Uid             string       `bson:"uid,omitempty" json:"uid,omitempty"`
+	SopClass        string       `bson:"sopClass,omitempty" json:"sopClass,omitempty"`
+	Type            string       `bson:"type,omitempty" json:"type,omitempty"`
+	Title           string       `bson:"title,omitempty" json:"title,omitempty"`
+	Content         []Attachment `bson:"content,omitempty" json:"content,omitempty"`
 }
 
 type ImagingStudyPlus struct {

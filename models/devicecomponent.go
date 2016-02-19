@@ -89,9 +89,10 @@ func (x *DeviceComponent) checkResourceType() error {
 }
 
 type DeviceComponentProductionSpecificationComponent struct {
-	SpecType       *CodeableConcept `bson:"specType,omitempty" json:"specType,omitempty"`
-	ComponentId    *Identifier      `bson:"componentId,omitempty" json:"componentId,omitempty"`
-	ProductionSpec string           `bson:"productionSpec,omitempty" json:"productionSpec,omitempty"`
+	BackboneElement `bson:",inline"`
+	SpecType        *CodeableConcept `bson:"specType,omitempty" json:"specType,omitempty"`
+	ComponentId     *Identifier      `bson:"componentId,omitempty" json:"componentId,omitempty"`
+	ProductionSpec  string           `bson:"productionSpec,omitempty" json:"productionSpec,omitempty"`
 }
 
 type DeviceComponentPlus struct {

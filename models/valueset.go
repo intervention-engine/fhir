@@ -98,83 +98,94 @@ func (x *ValueSet) checkResourceType() error {
 }
 
 type ValueSetContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type ValueSetCodeSystemComponent struct {
-	System        string                               `bson:"system,omitempty" json:"system,omitempty"`
-	Version       string                               `bson:"version,omitempty" json:"version,omitempty"`
-	CaseSensitive *bool                                `bson:"caseSensitive,omitempty" json:"caseSensitive,omitempty"`
-	Concept       []ValueSetConceptDefinitionComponent `bson:"concept,omitempty" json:"concept,omitempty"`
+	BackboneElement `bson:",inline"`
+	System          string                               `bson:"system,omitempty" json:"system,omitempty"`
+	Version         string                               `bson:"version,omitempty" json:"version,omitempty"`
+	CaseSensitive   *bool                                `bson:"caseSensitive,omitempty" json:"caseSensitive,omitempty"`
+	Concept         []ValueSetConceptDefinitionComponent `bson:"concept,omitempty" json:"concept,omitempty"`
 }
 
 type ValueSetConceptDefinitionComponent struct {
-	Code        string                                          `bson:"code,omitempty" json:"code,omitempty"`
-	Abstract    *bool                                           `bson:"abstract,omitempty" json:"abstract,omitempty"`
-	Display     string                                          `bson:"display,omitempty" json:"display,omitempty"`
-	Definition  string                                          `bson:"definition,omitempty" json:"definition,omitempty"`
-	Designation []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
-	Concept     []ValueSetConceptDefinitionComponent            `bson:"concept,omitempty" json:"concept,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            string                                          `bson:"code,omitempty" json:"code,omitempty"`
+	Abstract        *bool                                           `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	Display         string                                          `bson:"display,omitempty" json:"display,omitempty"`
+	Definition      string                                          `bson:"definition,omitempty" json:"definition,omitempty"`
+	Designation     []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
+	Concept         []ValueSetConceptDefinitionComponent            `bson:"concept,omitempty" json:"concept,omitempty"`
 }
 
 type ValueSetConceptDefinitionDesignationComponent struct {
-	Language string  `bson:"language,omitempty" json:"language,omitempty"`
-	Use      *Coding `bson:"use,omitempty" json:"use,omitempty"`
-	Value    string  `bson:"value,omitempty" json:"value,omitempty"`
+	BackboneElement `bson:",inline"`
+	Language        string  `bson:"language,omitempty" json:"language,omitempty"`
+	Use             *Coding `bson:"use,omitempty" json:"use,omitempty"`
+	Value           string  `bson:"value,omitempty" json:"value,omitempty"`
 }
 
 type ValueSetComposeComponent struct {
-	Import  []string                      `bson:"import,omitempty" json:"import,omitempty"`
-	Include []ValueSetConceptSetComponent `bson:"include,omitempty" json:"include,omitempty"`
-	Exclude []ValueSetConceptSetComponent `bson:"exclude,omitempty" json:"exclude,omitempty"`
+	BackboneElement `bson:",inline"`
+	Import          []string                      `bson:"import,omitempty" json:"import,omitempty"`
+	Include         []ValueSetConceptSetComponent `bson:"include,omitempty" json:"include,omitempty"`
+	Exclude         []ValueSetConceptSetComponent `bson:"exclude,omitempty" json:"exclude,omitempty"`
 }
 
 type ValueSetConceptSetComponent struct {
-	System  string                              `bson:"system,omitempty" json:"system,omitempty"`
-	Version string                              `bson:"version,omitempty" json:"version,omitempty"`
-	Concept []ValueSetConceptReferenceComponent `bson:"concept,omitempty" json:"concept,omitempty"`
-	Filter  []ValueSetConceptSetFilterComponent `bson:"filter,omitempty" json:"filter,omitempty"`
+	BackboneElement `bson:",inline"`
+	System          string                              `bson:"system,omitempty" json:"system,omitempty"`
+	Version         string                              `bson:"version,omitempty" json:"version,omitempty"`
+	Concept         []ValueSetConceptReferenceComponent `bson:"concept,omitempty" json:"concept,omitempty"`
+	Filter          []ValueSetConceptSetFilterComponent `bson:"filter,omitempty" json:"filter,omitempty"`
 }
 
 type ValueSetConceptReferenceComponent struct {
-	Code        string                                          `bson:"code,omitempty" json:"code,omitempty"`
-	Display     string                                          `bson:"display,omitempty" json:"display,omitempty"`
-	Designation []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            string                                          `bson:"code,omitempty" json:"code,omitempty"`
+	Display         string                                          `bson:"display,omitempty" json:"display,omitempty"`
+	Designation     []ValueSetConceptDefinitionDesignationComponent `bson:"designation,omitempty" json:"designation,omitempty"`
 }
 
 type ValueSetConceptSetFilterComponent struct {
-	Property string `bson:"property,omitempty" json:"property,omitempty"`
-	Op       string `bson:"op,omitempty" json:"op,omitempty"`
-	Value    string `bson:"value,omitempty" json:"value,omitempty"`
+	BackboneElement `bson:",inline"`
+	Property        string `bson:"property,omitempty" json:"property,omitempty"`
+	Op              string `bson:"op,omitempty" json:"op,omitempty"`
+	Value           string `bson:"value,omitempty" json:"value,omitempty"`
 }
 
 type ValueSetExpansionComponent struct {
-	Identifier string                                `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Timestamp  *FHIRDateTime                         `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
-	Total      *int32                                `bson:"total,omitempty" json:"total,omitempty"`
-	Offset     *int32                                `bson:"offset,omitempty" json:"offset,omitempty"`
-	Parameter  []ValueSetExpansionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
-	Contains   []ValueSetExpansionContainsComponent  `bson:"contains,omitempty" json:"contains,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identifier      string                                `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Timestamp       *FHIRDateTime                         `bson:"timestamp,omitempty" json:"timestamp,omitempty"`
+	Total           *int32                                `bson:"total,omitempty" json:"total,omitempty"`
+	Offset          *int32                                `bson:"offset,omitempty" json:"offset,omitempty"`
+	Parameter       []ValueSetExpansionParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
+	Contains        []ValueSetExpansionContainsComponent  `bson:"contains,omitempty" json:"contains,omitempty"`
 }
 
 type ValueSetExpansionParameterComponent struct {
-	Name         string   `bson:"name,omitempty" json:"name,omitempty"`
-	ValueString  string   `bson:"valueString,omitempty" json:"valueString,omitempty"`
-	ValueBoolean *bool    `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
-	ValueInteger *int32   `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
-	ValueDecimal *float64 `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
-	ValueUri     string   `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
-	ValueCode    string   `bson:"valueCode,omitempty" json:"valueCode,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string   `bson:"name,omitempty" json:"name,omitempty"`
+	ValueString     string   `bson:"valueString,omitempty" json:"valueString,omitempty"`
+	ValueBoolean    *bool    `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
+	ValueInteger    *int32   `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
+	ValueDecimal    *float64 `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
+	ValueUri        string   `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
+	ValueCode       string   `bson:"valueCode,omitempty" json:"valueCode,omitempty"`
 }
 
 type ValueSetExpansionContainsComponent struct {
-	System   string                               `bson:"system,omitempty" json:"system,omitempty"`
-	Abstract *bool                                `bson:"abstract,omitempty" json:"abstract,omitempty"`
-	Version  string                               `bson:"version,omitempty" json:"version,omitempty"`
-	Code     string                               `bson:"code,omitempty" json:"code,omitempty"`
-	Display  string                               `bson:"display,omitempty" json:"display,omitempty"`
-	Contains []ValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
+	BackboneElement `bson:",inline"`
+	System          string                               `bson:"system,omitempty" json:"system,omitempty"`
+	Abstract        *bool                                `bson:"abstract,omitempty" json:"abstract,omitempty"`
+	Version         string                               `bson:"version,omitempty" json:"version,omitempty"`
+	Code            string                               `bson:"code,omitempty" json:"code,omitempty"`
+	Display         string                               `bson:"display,omitempty" json:"display,omitempty"`
+	Contains        []ValueSetExpansionContainsComponent `bson:"contains,omitempty" json:"contains,omitempty"`
 }
 
 type ValueSetPlus struct {

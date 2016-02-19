@@ -82,6 +82,7 @@ func (x *ImmunizationRecommendation) checkResourceType() error {
 }
 
 type ImmunizationRecommendationRecommendationComponent struct {
+	BackboneElement              `bson:",inline"`
 	Date                         *FHIRDateTime                                                    `bson:"date,omitempty" json:"date,omitempty"`
 	VaccineCode                  *CodeableConcept                                                 `bson:"vaccineCode,omitempty" json:"vaccineCode,omitempty"`
 	DoseNumber                   *uint32                                                          `bson:"doseNumber,omitempty" json:"doseNumber,omitempty"`
@@ -93,15 +94,17 @@ type ImmunizationRecommendationRecommendationComponent struct {
 }
 
 type ImmunizationRecommendationRecommendationDateCriterionComponent struct {
-	Code  *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Value *FHIRDateTime    `bson:"value,omitempty" json:"value,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Value           *FHIRDateTime    `bson:"value,omitempty" json:"value,omitempty"`
 }
 
 type ImmunizationRecommendationRecommendationProtocolComponent struct {
-	DoseSequence *int32     `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
-	Description  string     `bson:"description,omitempty" json:"description,omitempty"`
-	Authority    *Reference `bson:"authority,omitempty" json:"authority,omitempty"`
-	Series       string     `bson:"series,omitempty" json:"series,omitempty"`
+	BackboneElement `bson:",inline"`
+	DoseSequence    *int32     `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
+	Description     string     `bson:"description,omitempty" json:"description,omitempty"`
+	Authority       *Reference `bson:"authority,omitempty" json:"authority,omitempty"`
+	Series          string     `bson:"series,omitempty" json:"series,omitempty"`
 }
 
 type ImmunizationRecommendationPlus struct {

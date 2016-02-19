@@ -92,15 +92,17 @@ func (x *NamingSystem) checkResourceType() error {
 }
 
 type NamingSystemContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type NamingSystemUniqueIdComponent struct {
-	Type      string  `bson:"type,omitempty" json:"type,omitempty"`
-	Value     string  `bson:"value,omitempty" json:"value,omitempty"`
-	Preferred *bool   `bson:"preferred,omitempty" json:"preferred,omitempty"`
-	Period    *Period `bson:"period,omitempty" json:"period,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            string  `bson:"type,omitempty" json:"type,omitempty"`
+	Value           string  `bson:"value,omitempty" json:"value,omitempty"`
+	Preferred       *bool   `bson:"preferred,omitempty" json:"preferred,omitempty"`
+	Period          *Period `bson:"period,omitempty" json:"period,omitempty"`
 }
 
 type NamingSystemPlus struct {

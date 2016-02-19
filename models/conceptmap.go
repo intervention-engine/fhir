@@ -97,29 +97,33 @@ func (x *ConceptMap) checkResourceType() error {
 }
 
 type ConceptMapContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type ConceptMapSourceElementComponent struct {
-	CodeSystem string                             `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
-	Code       string                             `bson:"code,omitempty" json:"code,omitempty"`
-	Target     []ConceptMapTargetElementComponent `bson:"target,omitempty" json:"target,omitempty"`
+	BackboneElement `bson:",inline"`
+	CodeSystem      string                             `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Code            string                             `bson:"code,omitempty" json:"code,omitempty"`
+	Target          []ConceptMapTargetElementComponent `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 type ConceptMapTargetElementComponent struct {
-	CodeSystem  string                            `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
-	Code        string                            `bson:"code,omitempty" json:"code,omitempty"`
-	Equivalence string                            `bson:"equivalence,omitempty" json:"equivalence,omitempty"`
-	Comments    string                            `bson:"comments,omitempty" json:"comments,omitempty"`
-	DependsOn   []ConceptMapOtherElementComponent `bson:"dependsOn,omitempty" json:"dependsOn,omitempty"`
-	Product     []ConceptMapOtherElementComponent `bson:"product,omitempty" json:"product,omitempty"`
+	BackboneElement `bson:",inline"`
+	CodeSystem      string                            `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Code            string                            `bson:"code,omitempty" json:"code,omitempty"`
+	Equivalence     string                            `bson:"equivalence,omitempty" json:"equivalence,omitempty"`
+	Comments        string                            `bson:"comments,omitempty" json:"comments,omitempty"`
+	DependsOn       []ConceptMapOtherElementComponent `bson:"dependsOn,omitempty" json:"dependsOn,omitempty"`
+	Product         []ConceptMapOtherElementComponent `bson:"product,omitempty" json:"product,omitempty"`
 }
 
 type ConceptMapOtherElementComponent struct {
-	Element    string `bson:"element,omitempty" json:"element,omitempty"`
-	CodeSystem string `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
-	Code       string `bson:"code,omitempty" json:"code,omitempty"`
+	BackboneElement `bson:",inline"`
+	Element         string `bson:"element,omitempty" json:"element,omitempty"`
+	CodeSystem      string `bson:"codeSystem,omitempty" json:"codeSystem,omitempty"`
+	Code            string `bson:"code,omitempty" json:"code,omitempty"`
 }
 
 type ConceptMapPlus struct {

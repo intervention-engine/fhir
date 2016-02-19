@@ -97,18 +97,21 @@ func (x *ClinicalImpression) checkResourceType() error {
 }
 
 type ClinicalImpressionInvestigationsComponent struct {
-	Code *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Item []Reference      `bson:"item,omitempty" json:"item,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Item            []Reference      `bson:"item,omitempty" json:"item,omitempty"`
 }
 
 type ClinicalImpressionFindingComponent struct {
-	Item  *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
-	Cause string           `bson:"cause,omitempty" json:"cause,omitempty"`
+	BackboneElement `bson:",inline"`
+	Item            *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
+	Cause           string           `bson:"cause,omitempty" json:"cause,omitempty"`
 }
 
 type ClinicalImpressionRuledOutComponent struct {
-	Item   *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
-	Reason string           `bson:"reason,omitempty" json:"reason,omitempty"`
+	BackboneElement `bson:",inline"`
+	Item            *CodeableConcept `bson:"item,omitempty" json:"item,omitempty"`
+	Reason          string           `bson:"reason,omitempty" json:"reason,omitempty"`
 }
 
 type ClinicalImpressionPlus struct {

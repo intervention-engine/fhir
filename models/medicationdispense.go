@@ -96,6 +96,7 @@ func (x *MedicationDispense) checkResourceType() error {
 }
 
 type MedicationDispenseDosageInstructionComponent struct {
+	BackboneElement         `bson:",inline"`
 	Text                    string           `bson:"text,omitempty" json:"text,omitempty"`
 	AdditionalInstructions  *CodeableConcept `bson:"additionalInstructions,omitempty" json:"additionalInstructions,omitempty"`
 	Timing                  *Timing          `bson:"timing,omitempty" json:"timing,omitempty"`
@@ -113,6 +114,7 @@ type MedicationDispenseDosageInstructionComponent struct {
 }
 
 type MedicationDispenseSubstitutionComponent struct {
+	BackboneElement  `bson:",inline"`
 	Type             *CodeableConcept  `bson:"type,omitempty" json:"type,omitempty"`
 	Reason           []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 	ResponsibleParty []Reference       `bson:"responsibleParty,omitempty" json:"responsibleParty,omitempty"`

@@ -92,6 +92,7 @@ func (x *Communication) checkResourceType() error {
 }
 
 type CommunicationPayloadComponent struct {
+	BackboneElement   `bson:",inline"`
 	ContentString     string      `bson:"contentString,omitempty" json:"contentString,omitempty"`
 	ContentAttachment *Attachment `bson:"contentAttachment,omitempty" json:"contentAttachment,omitempty"`
 	ContentReference  *Reference  `bson:"contentReference,omitempty" json:"contentReference,omitempty"`

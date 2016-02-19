@@ -95,7 +95,8 @@ func (x *ProcessRequest) checkResourceType() error {
 }
 
 type ProcessRequestItemsComponent struct {
-	SequenceLinkId *int32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
+	BackboneElement `bson:",inline"`
+	SequenceLinkId  *int32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 }
 
 type ProcessRequestPlus struct {

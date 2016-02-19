@@ -84,29 +84,34 @@ func (x *Medication) checkResourceType() error {
 }
 
 type MedicationProductComponent struct {
-	Form       *CodeableConcept                       `bson:"form,omitempty" json:"form,omitempty"`
-	Ingredient []MedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
-	Batch      []MedicationProductBatchComponent      `bson:"batch,omitempty" json:"batch,omitempty"`
+	BackboneElement `bson:",inline"`
+	Form            *CodeableConcept                       `bson:"form,omitempty" json:"form,omitempty"`
+	Ingredient      []MedicationProductIngredientComponent `bson:"ingredient,omitempty" json:"ingredient,omitempty"`
+	Batch           []MedicationProductBatchComponent      `bson:"batch,omitempty" json:"batch,omitempty"`
 }
 
 type MedicationProductIngredientComponent struct {
-	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
-	Amount *Ratio     `bson:"amount,omitempty" json:"amount,omitempty"`
+	BackboneElement `bson:",inline"`
+	Item            *Reference `bson:"item,omitempty" json:"item,omitempty"`
+	Amount          *Ratio     `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
 type MedicationProductBatchComponent struct {
-	LotNumber      string        `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
-	ExpirationDate *FHIRDateTime `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
+	BackboneElement `bson:",inline"`
+	LotNumber       string        `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
+	ExpirationDate  *FHIRDateTime `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
 }
 
 type MedicationPackageComponent struct {
-	Container *CodeableConcept                    `bson:"container,omitempty" json:"container,omitempty"`
-	Content   []MedicationPackageContentComponent `bson:"content,omitempty" json:"content,omitempty"`
+	BackboneElement `bson:",inline"`
+	Container       *CodeableConcept                    `bson:"container,omitempty" json:"container,omitempty"`
+	Content         []MedicationPackageContentComponent `bson:"content,omitempty" json:"content,omitempty"`
 }
 
 type MedicationPackageContentComponent struct {
-	Item   *Reference `bson:"item,omitempty" json:"item,omitempty"`
-	Amount *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
+	BackboneElement `bson:",inline"`
+	Item            *Reference `bson:"item,omitempty" json:"item,omitempty"`
+	Amount          *Quantity  `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
 type MedicationPlus struct {

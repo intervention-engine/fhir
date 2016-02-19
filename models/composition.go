@@ -93,26 +93,29 @@ func (x *Composition) checkResourceType() error {
 }
 
 type CompositionAttesterComponent struct {
-	Mode  []string      `bson:"mode,omitempty" json:"mode,omitempty"`
-	Time  *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
-	Party *Reference    `bson:"party,omitempty" json:"party,omitempty"`
+	BackboneElement `bson:",inline"`
+	Mode            []string      `bson:"mode,omitempty" json:"mode,omitempty"`
+	Time            *FHIRDateTime `bson:"time,omitempty" json:"time,omitempty"`
+	Party           *Reference    `bson:"party,omitempty" json:"party,omitempty"`
 }
 
 type CompositionEventComponent struct {
-	Code   []CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Period *Period           `bson:"period,omitempty" json:"period,omitempty"`
-	Detail []Reference       `bson:"detail,omitempty" json:"detail,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            []CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Period          *Period           `bson:"period,omitempty" json:"period,omitempty"`
+	Detail          []Reference       `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
 type CompositionSectionComponent struct {
-	Title       string                        `bson:"title,omitempty" json:"title,omitempty"`
-	Code        *CodeableConcept              `bson:"code,omitempty" json:"code,omitempty"`
-	Text        *Narrative                    `bson:"text,omitempty" json:"text,omitempty"`
-	Mode        string                        `bson:"mode,omitempty" json:"mode,omitempty"`
-	OrderedBy   *CodeableConcept              `bson:"orderedBy,omitempty" json:"orderedBy,omitempty"`
-	Entry       []Reference                   `bson:"entry,omitempty" json:"entry,omitempty"`
-	EmptyReason *CodeableConcept              `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
-	Section     []CompositionSectionComponent `bson:"section,omitempty" json:"section,omitempty"`
+	BackboneElement `bson:",inline"`
+	Title           string                        `bson:"title,omitempty" json:"title,omitempty"`
+	Code            *CodeableConcept              `bson:"code,omitempty" json:"code,omitempty"`
+	Text            *Narrative                    `bson:"text,omitempty" json:"text,omitempty"`
+	Mode            string                        `bson:"mode,omitempty" json:"mode,omitempty"`
+	OrderedBy       *CodeableConcept              `bson:"orderedBy,omitempty" json:"orderedBy,omitempty"`
+	Entry           []Reference                   `bson:"entry,omitempty" json:"entry,omitempty"`
+	EmptyReason     *CodeableConcept              `bson:"emptyReason,omitempty" json:"emptyReason,omitempty"`
+	Section         []CompositionSectionComponent `bson:"section,omitempty" json:"section,omitempty"`
 }
 
 type CompositionPlus struct {

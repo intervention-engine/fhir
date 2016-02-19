@@ -87,21 +87,22 @@ func (x *VisionPrescription) checkResourceType() error {
 }
 
 type VisionPrescriptionDispenseComponent struct {
-	Product   *Coding   `bson:"product,omitempty" json:"product,omitempty"`
-	Eye       string    `bson:"eye,omitempty" json:"eye,omitempty"`
-	Sphere    *float64  `bson:"sphere,omitempty" json:"sphere,omitempty"`
-	Cylinder  *float64  `bson:"cylinder,omitempty" json:"cylinder,omitempty"`
-	Axis      *int32    `bson:"axis,omitempty" json:"axis,omitempty"`
-	Prism     *float64  `bson:"prism,omitempty" json:"prism,omitempty"`
-	Base      string    `bson:"base,omitempty" json:"base,omitempty"`
-	Add       *float64  `bson:"add,omitempty" json:"add,omitempty"`
-	Power     *float64  `bson:"power,omitempty" json:"power,omitempty"`
-	BackCurve *float64  `bson:"backCurve,omitempty" json:"backCurve,omitempty"`
-	Diameter  *float64  `bson:"diameter,omitempty" json:"diameter,omitempty"`
-	Duration  *Quantity `bson:"duration,omitempty" json:"duration,omitempty"`
-	Color     string    `bson:"color,omitempty" json:"color,omitempty"`
-	Brand     string    `bson:"brand,omitempty" json:"brand,omitempty"`
-	Notes     string    `bson:"notes,omitempty" json:"notes,omitempty"`
+	BackboneElement `bson:",inline"`
+	Product         *Coding   `bson:"product,omitempty" json:"product,omitempty"`
+	Eye             string    `bson:"eye,omitempty" json:"eye,omitempty"`
+	Sphere          *float64  `bson:"sphere,omitempty" json:"sphere,omitempty"`
+	Cylinder        *float64  `bson:"cylinder,omitempty" json:"cylinder,omitempty"`
+	Axis            *int32    `bson:"axis,omitempty" json:"axis,omitempty"`
+	Prism           *float64  `bson:"prism,omitempty" json:"prism,omitempty"`
+	Base            string    `bson:"base,omitempty" json:"base,omitempty"`
+	Add             *float64  `bson:"add,omitempty" json:"add,omitempty"`
+	Power           *float64  `bson:"power,omitempty" json:"power,omitempty"`
+	BackCurve       *float64  `bson:"backCurve,omitempty" json:"backCurve,omitempty"`
+	Diameter        *float64  `bson:"diameter,omitempty" json:"diameter,omitempty"`
+	Duration        *Quantity `bson:"duration,omitempty" json:"duration,omitempty"`
+	Color           string    `bson:"color,omitempty" json:"color,omitempty"`
+	Brand           string    `bson:"brand,omitempty" json:"brand,omitempty"`
+	Notes           string    `bson:"notes,omitempty" json:"notes,omitempty"`
 }
 
 type VisionPrescriptionPlus struct {

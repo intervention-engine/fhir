@@ -102,13 +102,15 @@ func (x *Procedure) checkResourceType() error {
 }
 
 type ProcedurePerformerComponent struct {
-	Actor *Reference       `bson:"actor,omitempty" json:"actor,omitempty"`
-	Role  *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
+	BackboneElement `bson:",inline"`
+	Actor           *Reference       `bson:"actor,omitempty" json:"actor,omitempty"`
+	Role            *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
 }
 
 type ProcedureFocalDeviceComponent struct {
-	Action      *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
-	Manipulated *Reference       `bson:"manipulated,omitempty" json:"manipulated,omitempty"`
+	BackboneElement `bson:",inline"`
+	Action          *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
+	Manipulated     *Reference       `bson:"manipulated,omitempty" json:"manipulated,omitempty"`
 }
 
 type ProcedurePlus struct {

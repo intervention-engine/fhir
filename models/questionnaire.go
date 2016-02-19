@@ -87,26 +87,28 @@ func (x *Questionnaire) checkResourceType() error {
 }
 
 type QuestionnaireGroupComponent struct {
-	LinkId   string                           `bson:"linkId,omitempty" json:"linkId,omitempty"`
-	Title    string                           `bson:"title,omitempty" json:"title,omitempty"`
-	Concept  []Coding                         `bson:"concept,omitempty" json:"concept,omitempty"`
-	Text     string                           `bson:"text,omitempty" json:"text,omitempty"`
-	Required *bool                            `bson:"required,omitempty" json:"required,omitempty"`
-	Repeats  *bool                            `bson:"repeats,omitempty" json:"repeats,omitempty"`
-	Group    []QuestionnaireGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
-	Question []QuestionnaireQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
+	BackboneElement `bson:",inline"`
+	LinkId          string                           `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Title           string                           `bson:"title,omitempty" json:"title,omitempty"`
+	Concept         []Coding                         `bson:"concept,omitempty" json:"concept,omitempty"`
+	Text            string                           `bson:"text,omitempty" json:"text,omitempty"`
+	Required        *bool                            `bson:"required,omitempty" json:"required,omitempty"`
+	Repeats         *bool                            `bson:"repeats,omitempty" json:"repeats,omitempty"`
+	Group           []QuestionnaireGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
+	Question        []QuestionnaireQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
 }
 
 type QuestionnaireQuestionComponent struct {
-	LinkId   string                        `bson:"linkId,omitempty" json:"linkId,omitempty"`
-	Concept  []Coding                      `bson:"concept,omitempty" json:"concept,omitempty"`
-	Text     string                        `bson:"text,omitempty" json:"text,omitempty"`
-	Type     string                        `bson:"type,omitempty" json:"type,omitempty"`
-	Required *bool                         `bson:"required,omitempty" json:"required,omitempty"`
-	Repeats  *bool                         `bson:"repeats,omitempty" json:"repeats,omitempty"`
-	Options  *Reference                    `bson:"options,omitempty" json:"options,omitempty"`
-	Option   []Coding                      `bson:"option,omitempty" json:"option,omitempty"`
-	Group    []QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
+	BackboneElement `bson:",inline"`
+	LinkId          string                        `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Concept         []Coding                      `bson:"concept,omitempty" json:"concept,omitempty"`
+	Text            string                        `bson:"text,omitempty" json:"text,omitempty"`
+	Type            string                        `bson:"type,omitempty" json:"type,omitempty"`
+	Required        *bool                         `bson:"required,omitempty" json:"required,omitempty"`
+	Repeats         *bool                         `bson:"repeats,omitempty" json:"repeats,omitempty"`
+	Options         *Reference                    `bson:"options,omitempty" json:"options,omitempty"`
+	Option          []Coding                      `bson:"option,omitempty" json:"option,omitempty"`
+	Group           []QuestionnaireGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
 type QuestionnairePlus struct {

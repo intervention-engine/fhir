@@ -94,18 +94,20 @@ func (x *PaymentReconciliation) checkResourceType() error {
 }
 
 type PaymentReconciliationDetailsComponent struct {
-	Type      *Coding       `bson:"type,omitempty" json:"type,omitempty"`
-	Request   *Reference    `bson:"request,omitempty" json:"request,omitempty"`
-	Responce  *Reference    `bson:"responce,omitempty" json:"responce,omitempty"`
-	Submitter *Reference    `bson:"submitter,omitempty" json:"submitter,omitempty"`
-	Payee     *Reference    `bson:"payee,omitempty" json:"payee,omitempty"`
-	Date      *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
-	Amount    *Quantity     `bson:"amount,omitempty" json:"amount,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *Coding       `bson:"type,omitempty" json:"type,omitempty"`
+	Request         *Reference    `bson:"request,omitempty" json:"request,omitempty"`
+	Responce        *Reference    `bson:"responce,omitempty" json:"responce,omitempty"`
+	Submitter       *Reference    `bson:"submitter,omitempty" json:"submitter,omitempty"`
+	Payee           *Reference    `bson:"payee,omitempty" json:"payee,omitempty"`
+	Date            *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
+	Amount          *Quantity     `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
 type PaymentReconciliationNotesComponent struct {
-	Type *Coding `bson:"type,omitempty" json:"type,omitempty"`
-	Text string  `bson:"text,omitempty" json:"text,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *Coding `bson:"type,omitempty" json:"type,omitempty"`
+	Text            string  `bson:"text,omitempty" json:"text,omitempty"`
 }
 
 type PaymentReconciliationPlus struct {

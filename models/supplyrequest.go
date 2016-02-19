@@ -90,8 +90,9 @@ func (x *SupplyRequest) checkResourceType() error {
 }
 
 type SupplyRequestWhenComponent struct {
-	Code     *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Schedule *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Schedule        *Timing          `bson:"schedule,omitempty" json:"schedule,omitempty"`
 }
 
 type SupplyRequestPlus struct {

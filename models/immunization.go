@@ -100,17 +100,20 @@ func (x *Immunization) checkResourceType() error {
 }
 
 type ImmunizationExplanationComponent struct {
-	Reason         []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
-	ReasonNotGiven []CodeableConcept `bson:"reasonNotGiven,omitempty" json:"reasonNotGiven,omitempty"`
+	BackboneElement `bson:",inline"`
+	Reason          []CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
+	ReasonNotGiven  []CodeableConcept `bson:"reasonNotGiven,omitempty" json:"reasonNotGiven,omitempty"`
 }
 
 type ImmunizationReactionComponent struct {
-	Date     *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
-	Detail   *Reference    `bson:"detail,omitempty" json:"detail,omitempty"`
-	Reported *bool         `bson:"reported,omitempty" json:"reported,omitempty"`
+	BackboneElement `bson:",inline"`
+	Date            *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
+	Detail          *Reference    `bson:"detail,omitempty" json:"detail,omitempty"`
+	Reported        *bool         `bson:"reported,omitempty" json:"reported,omitempty"`
 }
 
 type ImmunizationVaccinationProtocolComponent struct {
+	BackboneElement  `bson:",inline"`
 	DoseSequence     *uint32           `bson:"doseSequence,omitempty" json:"doseSequence,omitempty"`
 	Description      string            `bson:"description,omitempty" json:"description,omitempty"`
 	Authority        *Reference        `bson:"authority,omitempty" json:"authority,omitempty"`

@@ -92,10 +92,11 @@ func (x *List) checkResourceType() error {
 }
 
 type ListEntryComponent struct {
-	Flag    *CodeableConcept `bson:"flag,omitempty" json:"flag,omitempty"`
-	Deleted *bool            `bson:"deleted,omitempty" json:"deleted,omitempty"`
-	Date    *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
-	Item    *Reference       `bson:"item,omitempty" json:"item,omitempty"`
+	BackboneElement `bson:",inline"`
+	Flag            *CodeableConcept `bson:"flag,omitempty" json:"flag,omitempty"`
+	Deleted         *bool            `bson:"deleted,omitempty" json:"deleted,omitempty"`
+	Date            *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
+	Item            *Reference       `bson:"item,omitempty" json:"item,omitempty"`
 }
 
 type ListPlus struct {

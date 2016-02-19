@@ -91,18 +91,20 @@ func (x *DiagnosticOrder) checkResourceType() error {
 }
 
 type DiagnosticOrderEventComponent struct {
-	Status      string           `bson:"status,omitempty" json:"status,omitempty"`
-	Description *CodeableConcept `bson:"description,omitempty" json:"description,omitempty"`
-	DateTime    *FHIRDateTime    `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
-	Actor       *Reference       `bson:"actor,omitempty" json:"actor,omitempty"`
+	BackboneElement `bson:",inline"`
+	Status          string           `bson:"status,omitempty" json:"status,omitempty"`
+	Description     *CodeableConcept `bson:"description,omitempty" json:"description,omitempty"`
+	DateTime        *FHIRDateTime    `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
+	Actor           *Reference       `bson:"actor,omitempty" json:"actor,omitempty"`
 }
 
 type DiagnosticOrderItemComponent struct {
-	Code     *CodeableConcept                `bson:"code,omitempty" json:"code,omitempty"`
-	Specimen []Reference                     `bson:"specimen,omitempty" json:"specimen,omitempty"`
-	BodySite *CodeableConcept                `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
-	Status   string                          `bson:"status,omitempty" json:"status,omitempty"`
-	Event    []DiagnosticOrderEventComponent `bson:"event,omitempty" json:"event,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            *CodeableConcept                `bson:"code,omitempty" json:"code,omitempty"`
+	Specimen        []Reference                     `bson:"specimen,omitempty" json:"specimen,omitempty"`
+	BodySite        *CodeableConcept                `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	Status          string                          `bson:"status,omitempty" json:"status,omitempty"`
+	Event           []DiagnosticOrderEventComponent `bson:"event,omitempty" json:"event,omitempty"`
 }
 
 type DiagnosticOrderPlus struct {

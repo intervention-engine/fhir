@@ -80,11 +80,12 @@ func (x *OperationOutcome) checkResourceType() error {
 }
 
 type OperationOutcomeIssueComponent struct {
-	Severity    string           `bson:"severity,omitempty" json:"severity,omitempty"`
-	Code        string           `bson:"code,omitempty" json:"code,omitempty"`
-	Details     *CodeableConcept `bson:"details,omitempty" json:"details,omitempty"`
-	Diagnostics string           `bson:"diagnostics,omitempty" json:"diagnostics,omitempty"`
-	Location    []string         `bson:"location,omitempty" json:"location,omitempty"`
+	BackboneElement `bson:",inline"`
+	Severity        string           `bson:"severity,omitempty" json:"severity,omitempty"`
+	Code            string           `bson:"code,omitempty" json:"code,omitempty"`
+	Details         *CodeableConcept `bson:"details,omitempty" json:"details,omitempty"`
+	Diagnostics     string           `bson:"diagnostics,omitempty" json:"diagnostics,omitempty"`
+	Location        []string         `bson:"location,omitempty" json:"location,omitempty"`
 }
 
 type OperationOutcomePlus struct {

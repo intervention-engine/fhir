@@ -104,23 +104,27 @@ func (x *StructureDefinition) checkResourceType() error {
 }
 
 type StructureDefinitionContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type StructureDefinitionMappingComponent struct {
-	Identity string `bson:"identity,omitempty" json:"identity,omitempty"`
-	Uri      string `bson:"uri,omitempty" json:"uri,omitempty"`
-	Name     string `bson:"name,omitempty" json:"name,omitempty"`
-	Comments string `bson:"comments,omitempty" json:"comments,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identity        string `bson:"identity,omitempty" json:"identity,omitempty"`
+	Uri             string `bson:"uri,omitempty" json:"uri,omitempty"`
+	Name            string `bson:"name,omitempty" json:"name,omitempty"`
+	Comments        string `bson:"comments,omitempty" json:"comments,omitempty"`
 }
 
 type StructureDefinitionSnapshotComponent struct {
-	Element []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
+	BackboneElement `bson:",inline"`
+	Element         []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
 }
 
 type StructureDefinitionDifferentialComponent struct {
-	Element []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
+	BackboneElement `bson:",inline"`
+	Element         []ElementDefinition `bson:"element,omitempty" json:"element,omitempty"`
 }
 
 type StructureDefinitionPlus struct {

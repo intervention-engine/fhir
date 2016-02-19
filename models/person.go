@@ -89,8 +89,9 @@ func (x *Person) checkResourceType() error {
 }
 
 type PersonLinkComponent struct {
-	Target    *Reference `bson:"target,omitempty" json:"target,omitempty"`
-	Assurance string     `bson:"assurance,omitempty" json:"assurance,omitempty"`
+	BackboneElement `bson:",inline"`
+	Target          *Reference `bson:"target,omitempty" json:"target,omitempty"`
+	Assurance       string     `bson:"assurance,omitempty" json:"assurance,omitempty"`
 }
 
 type PersonPlus struct {

@@ -99,13 +99,14 @@ func (x *FamilyMemberHistory) checkResourceType() error {
 }
 
 type FamilyMemberHistoryConditionComponent struct {
-	Code        *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
-	Outcome     *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	OnsetAge    *Quantity        `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
-	OnsetRange  *Range           `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
-	OnsetPeriod *Period          `bson:"onsetPeriod,omitempty" json:"onsetPeriod,omitempty"`
-	OnsetString string           `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
-	Note        *Annotation      `bson:"note,omitempty" json:"note,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Outcome         *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	OnsetAge        *Quantity        `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
+	OnsetRange      *Range           `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
+	OnsetPeriod     *Period          `bson:"onsetPeriod,omitempty" json:"onsetPeriod,omitempty"`
+	OnsetString     string           `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
+	Note            *Annotation      `bson:"note,omitempty" json:"note,omitempty"`
 }
 
 type FamilyMemberHistoryPlus struct {

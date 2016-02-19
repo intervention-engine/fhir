@@ -91,6 +91,7 @@ func (x *NutritionOrder) checkResourceType() error {
 }
 
 type NutritionOrderOralDietComponent struct {
+	BackboneElement      `bson:",inline"`
 	Type                 []CodeableConcept                         `bson:"type,omitempty" json:"type,omitempty"`
 	Schedule             []Timing                                  `bson:"schedule,omitempty" json:"schedule,omitempty"`
 	Nutrient             []NutritionOrderOralDietNutrientComponent `bson:"nutrient,omitempty" json:"nutrient,omitempty"`
@@ -100,24 +101,28 @@ type NutritionOrderOralDietComponent struct {
 }
 
 type NutritionOrderOralDietNutrientComponent struct {
-	Modifier *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
-	Amount   *Quantity        `bson:"amount,omitempty" json:"amount,omitempty"`
+	BackboneElement `bson:",inline"`
+	Modifier        *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	Amount          *Quantity        `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
 type NutritionOrderOralDietTextureComponent struct {
-	Modifier *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
-	FoodType *CodeableConcept `bson:"foodType,omitempty" json:"foodType,omitempty"`
+	BackboneElement `bson:",inline"`
+	Modifier        *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	FoodType        *CodeableConcept `bson:"foodType,omitempty" json:"foodType,omitempty"`
 }
 
 type NutritionOrderSupplementComponent struct {
-	Type        *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	ProductName string           `bson:"productName,omitempty" json:"productName,omitempty"`
-	Schedule    []Timing         `bson:"schedule,omitempty" json:"schedule,omitempty"`
-	Quantity    *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	Instruction string           `bson:"instruction,omitempty" json:"instruction,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	ProductName     string           `bson:"productName,omitempty" json:"productName,omitempty"`
+	Schedule        []Timing         `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	Quantity        *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Instruction     string           `bson:"instruction,omitempty" json:"instruction,omitempty"`
 }
 
 type NutritionOrderEnteralFormulaComponent struct {
+	BackboneElement           `bson:",inline"`
 	BaseFormulaType           *CodeableConcept                                      `bson:"baseFormulaType,omitempty" json:"baseFormulaType,omitempty"`
 	BaseFormulaProductName    string                                                `bson:"baseFormulaProductName,omitempty" json:"baseFormulaProductName,omitempty"`
 	AdditiveType              *CodeableConcept                                      `bson:"additiveType,omitempty" json:"additiveType,omitempty"`
@@ -130,6 +135,7 @@ type NutritionOrderEnteralFormulaComponent struct {
 }
 
 type NutritionOrderEnteralFormulaAdministrationComponent struct {
+	BackboneElement    `bson:",inline"`
 	Schedule           *Timing   `bson:"schedule,omitempty" json:"schedule,omitempty"`
 	Quantity           *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	RateSimpleQuantity *Quantity `bson:"rateSimpleQuantity,omitempty" json:"rateSimpleQuantity,omitempty"`

@@ -109,19 +109,22 @@ func (x *Observation) checkResourceType() error {
 }
 
 type ObservationReferenceRangeComponent struct {
-	Low     *Quantity        `bson:"low,omitempty" json:"low,omitempty"`
-	High    *Quantity        `bson:"high,omitempty" json:"high,omitempty"`
-	Meaning *CodeableConcept `bson:"meaning,omitempty" json:"meaning,omitempty"`
-	Age     *Range           `bson:"age,omitempty" json:"age,omitempty"`
-	Text    string           `bson:"text,omitempty" json:"text,omitempty"`
+	BackboneElement `bson:",inline"`
+	Low             *Quantity        `bson:"low,omitempty" json:"low,omitempty"`
+	High            *Quantity        `bson:"high,omitempty" json:"high,omitempty"`
+	Meaning         *CodeableConcept `bson:"meaning,omitempty" json:"meaning,omitempty"`
+	Age             *Range           `bson:"age,omitempty" json:"age,omitempty"`
+	Text            string           `bson:"text,omitempty" json:"text,omitempty"`
 }
 
 type ObservationRelatedComponent struct {
-	Type   string     `bson:"type,omitempty" json:"type,omitempty"`
-	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            string     `bson:"type,omitempty" json:"type,omitempty"`
+	Target          *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 type ObservationComponentComponent struct {
+	BackboneElement      `bson:",inline"`
 	Code                 *CodeableConcept                     `bson:"code,omitempty" json:"code,omitempty"`
 	ValueQuantity        *Quantity                            `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
 	ValueCodeableConcept *CodeableConcept                     `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`

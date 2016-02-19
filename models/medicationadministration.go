@@ -95,6 +95,7 @@ func (x *MedicationAdministration) checkResourceType() error {
 }
 
 type MedicationAdministrationDosageComponent struct {
+	BackboneElement     `bson:",inline"`
 	Text                string           `bson:"text,omitempty" json:"text,omitempty"`
 	SiteCodeableConcept *CodeableConcept `bson:"siteCodeableConcept,omitempty" json:"siteCodeableConcept,omitempty"`
 	SiteReference       *Reference       `bson:"siteReference,omitempty" json:"siteReference,omitempty"`

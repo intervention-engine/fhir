@@ -89,6 +89,7 @@ func (x *Specimen) checkResourceType() error {
 }
 
 type SpecimenCollectionComponent struct {
+	BackboneElement   `bson:",inline"`
 	Collector         *Reference       `bson:"collector,omitempty" json:"collector,omitempty"`
 	Comment           []string         `bson:"comment,omitempty" json:"comment,omitempty"`
 	CollectedDateTime *FHIRDateTime    `bson:"collectedDateTime,omitempty" json:"collectedDateTime,omitempty"`
@@ -99,12 +100,14 @@ type SpecimenCollectionComponent struct {
 }
 
 type SpecimenTreatmentComponent struct {
-	Description string           `bson:"description,omitempty" json:"description,omitempty"`
-	Procedure   *CodeableConcept `bson:"procedure,omitempty" json:"procedure,omitempty"`
-	Additive    []Reference      `bson:"additive,omitempty" json:"additive,omitempty"`
+	BackboneElement `bson:",inline"`
+	Description     string           `bson:"description,omitempty" json:"description,omitempty"`
+	Procedure       *CodeableConcept `bson:"procedure,omitempty" json:"procedure,omitempty"`
+	Additive        []Reference      `bson:"additive,omitempty" json:"additive,omitempty"`
 }
 
 type SpecimenContainerComponent struct {
+	BackboneElement         `bson:",inline"`
 	Identifier              []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
 	Description             string           `bson:"description,omitempty" json:"description,omitempty"`
 	Type                    *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`

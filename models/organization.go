@@ -87,10 +87,11 @@ func (x *Organization) checkResourceType() error {
 }
 
 type OrganizationContactComponent struct {
-	Purpose *CodeableConcept `bson:"purpose,omitempty" json:"purpose,omitempty"`
-	Name    *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
-	Address *Address         `bson:"address,omitempty" json:"address,omitempty"`
+	BackboneElement `bson:",inline"`
+	Purpose         *CodeableConcept `bson:"purpose,omitempty" json:"purpose,omitempty"`
+	Name            *HumanName       `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint   `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	Address         *Address         `bson:"address,omitempty" json:"address,omitempty"`
 }
 
 type OrganizationPlus struct {

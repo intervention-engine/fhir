@@ -27,6 +27,7 @@
 package models
 
 type Meta struct {
+	Element     `bson:",inline"`
 	VersionId   string        `bson:"versionId,omitempty" json:"versionId,omitempty"`
 	LastUpdated *FHIRDateTime `bson:"lastUpdated,omitempty" json:"lastUpdated,omitempty"`
 	Profile     []string      `bson:"profile,omitempty" json:"profile,omitempty"`

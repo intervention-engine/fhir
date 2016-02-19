@@ -79,17 +79,19 @@ func (x *Bundle) checkResourceType() error {
 }
 
 type BundleLinkComponent struct {
-	Relation string `bson:"relation,omitempty" json:"relation,omitempty"`
-	Url      string `bson:"url,omitempty" json:"url,omitempty"`
+	BackboneElement `bson:",inline"`
+	Relation        string `bson:"relation,omitempty" json:"relation,omitempty"`
+	Url             string `bson:"url,omitempty" json:"url,omitempty"`
 }
 
 type BundleEntryComponent struct {
-	Link     []BundleLinkComponent         `bson:"link,omitempty" json:"link,omitempty"`
-	FullUrl  string                        `bson:"fullUrl,omitempty" json:"fullUrl,omitempty"`
-	Resource interface{}                   `bson:"resource,omitempty" json:"resource,omitempty"`
-	Search   *BundleEntrySearchComponent   `bson:"search,omitempty" json:"search,omitempty"`
-	Request  *BundleEntryRequestComponent  `bson:"request,omitempty" json:"request,omitempty"`
-	Response *BundleEntryResponseComponent `bson:"response,omitempty" json:"response,omitempty"`
+	BackboneElement `bson:",inline"`
+	Link            []BundleLinkComponent         `bson:"link,omitempty" json:"link,omitempty"`
+	FullUrl         string                        `bson:"fullUrl,omitempty" json:"fullUrl,omitempty"`
+	Resource        interface{}                   `bson:"resource,omitempty" json:"resource,omitempty"`
+	Search          *BundleEntrySearchComponent   `bson:"search,omitempty" json:"search,omitempty"`
+	Request         *BundleEntryRequestComponent  `bson:"request,omitempty" json:"request,omitempty"`
+	Response        *BundleEntryResponseComponent `bson:"response,omitempty" json:"response,omitempty"`
 }
 
 // The "bundleEntryComponent" sub-type is needed to avoid infinite recursion in UnmarshalJSON
@@ -108,11 +110,13 @@ func (x *BundleEntryComponent) UnmarshalJSON(data []byte) (err error) {
 }
 
 type BundleEntrySearchComponent struct {
-	Mode  string   `bson:"mode,omitempty" json:"mode,omitempty"`
-	Score *float64 `bson:"score,omitempty" json:"score,omitempty"`
+	BackboneElement `bson:",inline"`
+	Mode            string   `bson:"mode,omitempty" json:"mode,omitempty"`
+	Score           *float64 `bson:"score,omitempty" json:"score,omitempty"`
 }
 
 type BundleEntryRequestComponent struct {
+	BackboneElement `bson:",inline"`
 	Method          string        `bson:"method,omitempty" json:"method,omitempty"`
 	Url             string        `bson:"url,omitempty" json:"url,omitempty"`
 	IfNoneMatch     string        `bson:"ifNoneMatch,omitempty" json:"ifNoneMatch,omitempty"`
@@ -122,10 +126,11 @@ type BundleEntryRequestComponent struct {
 }
 
 type BundleEntryResponseComponent struct {
-	Status       string        `bson:"status,omitempty" json:"status,omitempty"`
-	Location     string        `bson:"location,omitempty" json:"location,omitempty"`
-	Etag         string        `bson:"etag,omitempty" json:"etag,omitempty"`
-	LastModified *FHIRDateTime `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
+	BackboneElement `bson:",inline"`
+	Status          string        `bson:"status,omitempty" json:"status,omitempty"`
+	Location        string        `bson:"location,omitempty" json:"location,omitempty"`
+	Etag            string        `bson:"etag,omitempty" json:"etag,omitempty"`
+	LastModified    *FHIRDateTime `bson:"lastModified,omitempty" json:"lastModified,omitempty"`
 }
 
 type BundlePlus struct {

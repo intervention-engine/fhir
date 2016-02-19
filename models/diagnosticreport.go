@@ -97,8 +97,9 @@ func (x *DiagnosticReport) checkResourceType() error {
 }
 
 type DiagnosticReportImageComponent struct {
-	Comment string     `bson:"comment,omitempty" json:"comment,omitempty"`
-	Link    *Reference `bson:"link,omitempty" json:"link,omitempty"`
+	BackboneElement `bson:",inline"`
+	Comment         string     `bson:"comment,omitempty" json:"comment,omitempty"`
+	Link            *Reference `bson:"link,omitempty" json:"link,omitempty"`
 }
 
 type DiagnosticReportPlus struct {

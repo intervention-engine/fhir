@@ -87,6 +87,7 @@ func (x *Group) checkResourceType() error {
 }
 
 type GroupCharacteristicComponent struct {
+	BackboneElement      `bson:",inline"`
 	Code                 *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
 	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
 	ValueBoolean         *bool            `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
@@ -97,9 +98,10 @@ type GroupCharacteristicComponent struct {
 }
 
 type GroupMemberComponent struct {
-	Entity   *Reference `bson:"entity,omitempty" json:"entity,omitempty"`
-	Period   *Period    `bson:"period,omitempty" json:"period,omitempty"`
-	Inactive *bool      `bson:"inactive,omitempty" json:"inactive,omitempty"`
+	BackboneElement `bson:",inline"`
+	Entity          *Reference `bson:"entity,omitempty" json:"entity,omitempty"`
+	Period          *Period    `bson:"period,omitempty" json:"period,omitempty"`
+	Inactive        *bool      `bson:"inactive,omitempty" json:"inactive,omitempty"`
 }
 
 type GroupPlus struct {

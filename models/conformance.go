@@ -100,22 +100,26 @@ func (x *Conformance) checkResourceType() error {
 }
 
 type ConformanceContactComponent struct {
-	Name    string         `bson:"name,omitempty" json:"name,omitempty"`
-	Telecom []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string         `bson:"name,omitempty" json:"name,omitempty"`
+	Telecom         []ContactPoint `bson:"telecom,omitempty" json:"telecom,omitempty"`
 }
 
 type ConformanceSoftwareComponent struct {
-	Name        string        `bson:"name,omitempty" json:"name,omitempty"`
-	Version     string        `bson:"version,omitempty" json:"version,omitempty"`
-	ReleaseDate *FHIRDateTime `bson:"releaseDate,omitempty" json:"releaseDate,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string        `bson:"name,omitempty" json:"name,omitempty"`
+	Version         string        `bson:"version,omitempty" json:"version,omitempty"`
+	ReleaseDate     *FHIRDateTime `bson:"releaseDate,omitempty" json:"releaseDate,omitempty"`
 }
 
 type ConformanceImplementationComponent struct {
-	Description string `bson:"description,omitempty" json:"description,omitempty"`
-	Url         string `bson:"url,omitempty" json:"url,omitempty"`
+	BackboneElement `bson:",inline"`
+	Description     string `bson:"description,omitempty" json:"description,omitempty"`
+	Url             string `bson:"url,omitempty" json:"url,omitempty"`
 }
 
 type ConformanceRestComponent struct {
+	BackboneElement `bson:",inline"`
 	Mode            string                                        `bson:"mode,omitempty" json:"mode,omitempty"`
 	Documentation   string                                        `bson:"documentation,omitempty" json:"documentation,omitempty"`
 	Security        *ConformanceRestSecurityComponent             `bson:"security,omitempty" json:"security,omitempty"`
@@ -128,18 +132,21 @@ type ConformanceRestComponent struct {
 }
 
 type ConformanceRestSecurityComponent struct {
-	Cors        *bool                                         `bson:"cors,omitempty" json:"cors,omitempty"`
-	Service     []CodeableConcept                             `bson:"service,omitempty" json:"service,omitempty"`
-	Description string                                        `bson:"description,omitempty" json:"description,omitempty"`
-	Certificate []ConformanceRestSecurityCertificateComponent `bson:"certificate,omitempty" json:"certificate,omitempty"`
+	BackboneElement `bson:",inline"`
+	Cors            *bool                                         `bson:"cors,omitempty" json:"cors,omitempty"`
+	Service         []CodeableConcept                             `bson:"service,omitempty" json:"service,omitempty"`
+	Description     string                                        `bson:"description,omitempty" json:"description,omitempty"`
+	Certificate     []ConformanceRestSecurityCertificateComponent `bson:"certificate,omitempty" json:"certificate,omitempty"`
 }
 
 type ConformanceRestSecurityCertificateComponent struct {
-	Type string `bson:"type,omitempty" json:"type,omitempty"`
-	Blob string `bson:"blob,omitempty" json:"blob,omitempty"`
+	BackboneElement `bson:",inline"`
+	Type            string `bson:"type,omitempty" json:"type,omitempty"`
+	Blob            string `bson:"blob,omitempty" json:"blob,omitempty"`
 }
 
 type ConformanceRestResourceComponent struct {
+	BackboneElement   `bson:",inline"`
 	Type              string                                        `bson:"type,omitempty" json:"type,omitempty"`
 	Profile           *Reference                                    `bson:"profile,omitempty" json:"profile,omitempty"`
 	Interaction       []ConformanceResourceInteractionComponent     `bson:"interaction,omitempty" json:"interaction,omitempty"`
@@ -155,56 +162,64 @@ type ConformanceRestResourceComponent struct {
 }
 
 type ConformanceResourceInteractionComponent struct {
-	Code          string `bson:"code,omitempty" json:"code,omitempty"`
-	Documentation string `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            string `bson:"code,omitempty" json:"code,omitempty"`
+	Documentation   string `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
 
 type ConformanceRestResourceSearchParamComponent struct {
-	Name          string   `bson:"name,omitempty" json:"name,omitempty"`
-	Definition    string   `bson:"definition,omitempty" json:"definition,omitempty"`
-	Type          string   `bson:"type,omitempty" json:"type,omitempty"`
-	Documentation string   `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Target        []string `bson:"target,omitempty" json:"target,omitempty"`
-	Modifier      []string `bson:"modifier,omitempty" json:"modifier,omitempty"`
-	Chain         []string `bson:"chain,omitempty" json:"chain,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string   `bson:"name,omitempty" json:"name,omitempty"`
+	Definition      string   `bson:"definition,omitempty" json:"definition,omitempty"`
+	Type            string   `bson:"type,omitempty" json:"type,omitempty"`
+	Documentation   string   `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Target          []string `bson:"target,omitempty" json:"target,omitempty"`
+	Modifier        []string `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	Chain           []string `bson:"chain,omitempty" json:"chain,omitempty"`
 }
 
 type ConformanceSystemInteractionComponent struct {
-	Code          string `bson:"code,omitempty" json:"code,omitempty"`
-	Documentation string `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            string `bson:"code,omitempty" json:"code,omitempty"`
+	Documentation   string `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
 
 type ConformanceRestOperationComponent struct {
-	Name       string     `bson:"name,omitempty" json:"name,omitempty"`
-	Definition *Reference `bson:"definition,omitempty" json:"definition,omitempty"`
+	BackboneElement `bson:",inline"`
+	Name            string     `bson:"name,omitempty" json:"name,omitempty"`
+	Definition      *Reference `bson:"definition,omitempty" json:"definition,omitempty"`
 }
 
 type ConformanceMessagingComponent struct {
-	Endpoint      []ConformanceMessagingEndpointComponent `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
-	ReliableCache *uint32                                 `bson:"reliableCache,omitempty" json:"reliableCache,omitempty"`
-	Documentation string                                  `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Event         []ConformanceMessagingEventComponent    `bson:"event,omitempty" json:"event,omitempty"`
+	BackboneElement `bson:",inline"`
+	Endpoint        []ConformanceMessagingEndpointComponent `bson:"endpoint,omitempty" json:"endpoint,omitempty"`
+	ReliableCache   *uint32                                 `bson:"reliableCache,omitempty" json:"reliableCache,omitempty"`
+	Documentation   string                                  `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Event           []ConformanceMessagingEventComponent    `bson:"event,omitempty" json:"event,omitempty"`
 }
 
 type ConformanceMessagingEndpointComponent struct {
-	Protocol *Coding `bson:"protocol,omitempty" json:"protocol,omitempty"`
-	Address  string  `bson:"address,omitempty" json:"address,omitempty"`
+	BackboneElement `bson:",inline"`
+	Protocol        *Coding `bson:"protocol,omitempty" json:"protocol,omitempty"`
+	Address         string  `bson:"address,omitempty" json:"address,omitempty"`
 }
 
 type ConformanceMessagingEventComponent struct {
-	Code          *Coding    `bson:"code,omitempty" json:"code,omitempty"`
-	Category      string     `bson:"category,omitempty" json:"category,omitempty"`
-	Mode          string     `bson:"mode,omitempty" json:"mode,omitempty"`
-	Focus         string     `bson:"focus,omitempty" json:"focus,omitempty"`
-	Request       *Reference `bson:"request,omitempty" json:"request,omitempty"`
-	Response      *Reference `bson:"response,omitempty" json:"response,omitempty"`
-	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            *Coding    `bson:"code,omitempty" json:"code,omitempty"`
+	Category        string     `bson:"category,omitempty" json:"category,omitempty"`
+	Mode            string     `bson:"mode,omitempty" json:"mode,omitempty"`
+	Focus           string     `bson:"focus,omitempty" json:"focus,omitempty"`
+	Request         *Reference `bson:"request,omitempty" json:"request,omitempty"`
+	Response        *Reference `bson:"response,omitempty" json:"response,omitempty"`
+	Documentation   string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
 }
 
 type ConformanceDocumentComponent struct {
-	Mode          string     `bson:"mode,omitempty" json:"mode,omitempty"`
-	Documentation string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Profile       *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
+	BackboneElement `bson:",inline"`
+	Mode            string     `bson:"mode,omitempty" json:"mode,omitempty"`
+	Documentation   string     `bson:"documentation,omitempty" json:"documentation,omitempty"`
+	Profile         *Reference `bson:"profile,omitempty" json:"profile,omitempty"`
 }
 
 type ConformancePlus struct {

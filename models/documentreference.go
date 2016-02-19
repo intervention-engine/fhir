@@ -96,16 +96,19 @@ func (x *DocumentReference) checkResourceType() error {
 }
 
 type DocumentReferenceRelatesToComponent struct {
-	Code   string     `bson:"code,omitempty" json:"code,omitempty"`
-	Target *Reference `bson:"target,omitempty" json:"target,omitempty"`
+	BackboneElement `bson:",inline"`
+	Code            string     `bson:"code,omitempty" json:"code,omitempty"`
+	Target          *Reference `bson:"target,omitempty" json:"target,omitempty"`
 }
 
 type DocumentReferenceContentComponent struct {
-	Attachment *Attachment `bson:"attachment,omitempty" json:"attachment,omitempty"`
-	Format     []Coding    `bson:"format,omitempty" json:"format,omitempty"`
+	BackboneElement `bson:",inline"`
+	Attachment      *Attachment `bson:"attachment,omitempty" json:"attachment,omitempty"`
+	Format          []Coding    `bson:"format,omitempty" json:"format,omitempty"`
 }
 
 type DocumentReferenceContextComponent struct {
+	BackboneElement   `bson:",inline"`
 	Encounter         *Reference                                 `bson:"encounter,omitempty" json:"encounter,omitempty"`
 	Event             []CodeableConcept                          `bson:"event,omitempty" json:"event,omitempty"`
 	Period            *Period                                    `bson:"period,omitempty" json:"period,omitempty"`
@@ -116,8 +119,9 @@ type DocumentReferenceContextComponent struct {
 }
 
 type DocumentReferenceContextRelatedComponent struct {
-	Identifier *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Ref        *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
+	BackboneElement `bson:",inline"`
+	Identifier      *Identifier `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Ref             *Reference  `bson:"ref,omitempty" json:"ref,omitempty"`
 }
 
 type DocumentReferencePlus struct {

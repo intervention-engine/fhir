@@ -89,9 +89,10 @@ func (x *DetectedIssue) checkResourceType() error {
 }
 
 type DetectedIssueMitigationComponent struct {
-	Action *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
-	Date   *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
-	Author *Reference       `bson:"author,omitempty" json:"author,omitempty"`
+	BackboneElement `bson:",inline"`
+	Action          *CodeableConcept `bson:"action,omitempty" json:"action,omitempty"`
+	Date            *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
+	Author          *Reference       `bson:"author,omitempty" json:"author,omitempty"`
 }
 
 type DetectedIssuePlus struct {
