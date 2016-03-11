@@ -18,9 +18,10 @@ import (
 )
 
 type BatchControllerSuite struct {
-	Session *mgo.Session
-	Echo    *echo.Echo
-	Server  *httptest.Server
+	Database *mgo.Database
+	Session  *mgo.Session
+	Echo     *echo.Echo
+	Server   *httptest.Server
 }
 
 var _ = Suite(&BatchControllerSuite{})
@@ -31,18 +32,18 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 	var err error
 	s.Session, err = mgo.Dial("localhost")
 	util.CheckErr(err)
-	Database = s.Session.DB("fhir-test")
+	s.Database = s.Session.DB("fhir-test")
 
 	// Build routes for testing
 	s.Echo = echo.New()
-	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware), Config{})
+	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware), NewMongoDataAccessLayer(s.Database), Config{})
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Echo.Router())
 }
 
 func (s *BatchControllerSuite) TearDownSuite(c *C) {
-	Database.DropDatabase()
+	s.Database.DropDatabase()
 	s.Session.Close()
 	s.Server.Close()
 }
@@ -103,7 +104,7 @@ func (s *BatchControllerSuite) TestUploadPatientBundle(c *C) {
 
 		// make sure it was stored to the DB
 		rName := reflect.TypeOf(resEntry.Resource).Elem().Name()
-		coll := Database.C(models.PluralizeLowerResourceName(rName))
+		coll := s.Database.C(models.PluralizeLowerResourceName(rName))
 		num, err := coll.Find(bson.M{"_id": s.getResourceID(resEntry)}).Count()
 		util.CheckErr(err)
 		c.Assert(num, Equals, 1)
