@@ -10,7 +10,8 @@ import (
 func main() {
 	s := server.NewServer("localhost")
 
-	s.Run()
+	config := server.Config{UseSmartAuth: true, UseLoggingMiddleware: true}
+	s.Run(config)
 }
 
 func HomeHandler(rw http.ResponseWriter, r *http.Request) {
