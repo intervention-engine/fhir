@@ -95,6 +95,7 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 
 	// Upload the resources and check the counts
 	refMap, err := UploadResources(fhirmodels, ts.URL)
+	util.CheckErr(err)
 
 	c.Assert(patientCount, Equals, 1)
 	c.Assert(encounterCount, Equals, 4)

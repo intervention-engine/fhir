@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
-	"sort"
 	"strings"
 
 	"github.com/intervention-engine/fhir/models"
@@ -20,7 +19,7 @@ import (
  */
 func UploadResources(resources []interface{}, baseURL string) (map[string]string, error) {
 	refMap := make(map[string]string)
-	sortResourcesByDependency(resources)
+	resources = sortResourcesByDependency(resources)
 	for _, t := range resources {
 		err := updateReferences(t, refMap)
 		if err != nil {
@@ -122,23 +121,27 @@ func setId(model interface{}, id string) {
 	}
 }
 
-type ByDependency []interface{}
+// In order for upload to work correctly, resources must go after the resources they depend on.
+func sortResourcesByDependency(resources []interface{}) []interface{} {
+	var result []interface{}
+	for _, resource := range resources {
+		var i int
+		for i = 0; i < len(result); i++ {
+			if references(result[i], resource) {
+				break
+			}
+		}
+		result = append(result[:i], append([]interface{}{resource}, result[i:]...)...)
+	}
+	return result
+}
 
-func (d ByDependency) Len() int {
-	return len(d)
-}
-func (d ByDependency) Swap(i, j int) {
-	d[i], d[j] = d[j], d[i]
-}
-func (d ByDependency) Less(i, j int) bool {
-	for _, ref := range getAllReferences(d[i]) {
-		if strings.TrimPrefix(ref.Reference, "cid:") == getId(d[j]) {
-			return false
+func references(from interface{}, to interface{}) bool {
+	toID := getId(to)
+	for _, ref := range getAllReferences(from) {
+		if strings.TrimPrefix(ref.Reference, "cid:") == toID {
+			return true
 		}
 	}
-	return true
-}
-
-func sortResourcesByDependency(resources []interface{}) {
-	sort.Sort(ByDependency(resources))
+	return false
 }
