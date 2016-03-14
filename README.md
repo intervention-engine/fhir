@@ -40,7 +40,6 @@ Before you can run the FHIR server, you must install its dependencies via `go ge
 
 ```
 $ cd $GOPATH/src/github.com/intervention-engine/fhir
-$ go get
 $ go build
 ```
 
@@ -61,6 +60,20 @@ $ go run server.go
 The *fhir* server accepts connections on port 3001 by default.
 
 If you wish to test the server with synthetic patient data, please reference [Generate and Upload Synthetic Patient Data](https://github.com/intervention-engine/ie/blob/master/docs/dev_install.md#generate-and-upload-synthetic-patient-data).
+
+Development
+-----------
+
+This project uses [godep](https://github.com/tools/godep) to manage dependencies. It
+also takes advantage of the /vendor directory support introduced in Go 1.6. To
+properly run the test suite, execute the following command:
+
+```
+$ go test ./models ./search ./server ./upload
+```
+
+This will ensure that the vendor directory is not included when running the test
+suite.
 
 License
 -------

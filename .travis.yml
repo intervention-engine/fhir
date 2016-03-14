@@ -1,7 +1,9 @@
 sudo: false
 language: go
 go:
-- 1.5.3
+- 1.6
+script: go test ./models ./search ./server ./upload
+install: true
 services:
 - mongodb
 addons:
