@@ -35,12 +35,12 @@ func (f *FHIRServer) Run(config Config) {
 	log.Println("Connected to mongodb")
 	defer session.Close()
 
-	database := session.DB("fhir")
+	Database = session.DB("fhir")
 
 	if config.UseLoggingMiddleware {
 		f.Echo.Use(middleware.Logger())
 	}
-	RegisterRoutes(f.Echo, f.MiddlewareConfig, NewMongoDataAccessLayer(database), config)
+	RegisterRoutes(f.Echo, f.MiddlewareConfig, NewMongoDataAccessLayer(Database), config)
 
 	f.Echo.Run(":3001")
 }
