@@ -3,6 +3,7 @@ language: go
 go:
 - 1.6
 script: go test ./models ./search ./server ./upload
+install: true
 services:
 - mongodb
 addons:
