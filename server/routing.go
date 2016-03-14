@@ -13,12 +13,12 @@ func RegisterController(name string, e *echo.Echo, m []echo.Middleware, config C
 	rcItem.Put("", rc.UpdateHandler)
 	rcItem.Delete("", rc.DeleteHandler)
 
-	if config.UseSmartAuth {
-		m = append(m, SmartAuthHandler(name))
-	}
-
 	if len(m) > 0 {
 		rcBase.Use(m...)
+	}
+
+	if config.UseSmartAuth {
+		rcBase.Use(SmartAuthHandler(name))
 	}
 }
 
