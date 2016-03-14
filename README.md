@@ -40,7 +40,6 @@ Before you can run the FHIR server, you must install its dependencies via `go ge
 
 ```
 $ cd $GOPATH/src/github.com/intervention-engine/fhir
-$ go get
 $ go build
 ```
 
