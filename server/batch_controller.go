@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"reflect"
 	"sort"
+	"strings"
 
 	"gopkg.in/mgo.v2/bson"
 
@@ -30,6 +31,8 @@ func (b *BatchController) Post(c *echo.Context) error {
 
 	// TODO: If type is batch, ensure there are no interdendent resources
 
+	// Loop through the entries, ensuring they have a request and that we support the method,
+	// while also creating a new entries array that can be sorted by method.
 	entries := make([]*models.BundleEntryComponent, len(bundle.Entry))
 	for i := range bundle.Entry {
 		if bundle.Entry[i].Request == nil {
@@ -41,6 +44,11 @@ func (b *BatchController) Post(c *echo.Context) error {
 		default:
 			// TODO: Use correct response code
 			return errors.New("Operation currently unsupported in batch requests: " + bundle.Entry[i].Request.Method)
+		case "DELETE":
+			if bundle.Entry[i].Request.Url == "" {
+				// TODO: Use correct response code
+				return errors.New("Batch DELETE must have a URL")
+			}
 		case "POST":
 			if bundle.Entry[i].Resource == nil {
 				// TODO: Use correct response code
@@ -52,8 +60,8 @@ func (b *BatchController) Post(c *echo.Context) error {
 
 	sort.Sort(byRequestMethod(entries))
 
-	// Create a map containing references that can be looked up by passed in FullURL.  This allows the
-	// existing references to be updated to new references (using newly assigned IDs).
+	// Now loop through the entries, assigning new IDs to those that are POST and fixing any references
+	// to reference the new ID.
 	refMap := make(map[string]models.Reference)
 	newIDs := make([]string, len(entries))
 	for i, entry := range entries {
@@ -75,6 +83,18 @@ func (b *BatchController) Post(c *echo.Context) error {
 	// Then make the changes in the database and update the entry response
 	for i, entry := range entries {
 		switch entry.Request.Method {
+		case "DELETE":
+			parts := strings.Split(entry.Request.Url, "/")
+			if len(parts) != 2 {
+				return fmt.Errorf("Could identify resource and id to delete from %s", entry.Request.Url)
+			}
+			if err := b.DAL.Delete(parts[1], parts[0]); err != nil {
+				return err
+			}
+			entry.Request = nil
+			entry.Response = &models.BundleEntryResponseComponent{
+				Status: "204",
+			}
 		case "POST":
 			if err := b.DAL.PostWithId(newIDs[i], entry.Resource); err != nil {
 				return err

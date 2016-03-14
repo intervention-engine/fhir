@@ -1,0 +1,31 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "type": "transaction",
+  "entry": [
+    {
+      "request": {
+				"method": "DELETE",
+				"url": "Condition/56afe6b85cdc7ec329dfe6a1"
+      }
+    },
+		{
+      "request": {
+				"method": "DELETE",
+				"url": "Encounter/56afe6b85cdc7ec329dfe6a3"
+      }
+    },
+		{
+      "request": {
+				"method": "DELETE",
+				"url": "Encounter/56afe6b85cdc7ec329dfe6a4"
+      }
+    },
+    {
+      "request": {
+				"method": "DELETE",
+				"url": "Encounter/56afe6b85cdc7ec329dabcde"
+      }
+    }
+	]
+}
