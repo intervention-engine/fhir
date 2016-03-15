@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 
@@ -8,9 +9,12 @@ import (
 )
 
 func main() {
+	smartAuth := flag.Bool("smart", false, "Enables SMART Authorization")
+	log := flag.Bool("log", false, "Enable request logging")
+	flag.Parse()
 	s := server.NewServer("localhost")
 
-	config := server.Config{UseSmartAuth: true, UseLoggingMiddleware: true}
+	config := server.Config{UseSmartAuth: *smartAuth, UseLoggingMiddleware: *log}
 	s.Run(config)
 }
 
