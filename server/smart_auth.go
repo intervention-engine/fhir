@@ -30,6 +30,15 @@ func SmartAuthHandler(resourceName string) echo.MiddlewareFunc {
 	allScope := fmt.Sprintf("user/%s.*", resourceName)
 	return func(hf echo.HandlerFunc) echo.HandlerFunc {
 		return func(c *echo.Context) error {
+			if c.Request().Header.Get("X-DELEGATED") != "true" && c.Request().Header.Get("X-USER") == "" {
+				return c.String(http.StatusForbidden, `
+					This server has been configured to use SMART Authorization but can't
+					find the X-DELEGATED or X-USER headers that are expected if this app
+					is running behind the nginx gateway.
+
+					See https://github.com/mitre/argonaut-gateway for more info.
+					`)
+			}
 			if c.Request().Header.Get("X-DELEGATED") == "true" {
 				if c.Request().Method == "GET" {
 					if !includesAnyScope(c, allResourcesAllScope, allResourcesReadScope, readScope, allScope) {
