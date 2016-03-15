@@ -7,6 +7,7 @@ func RegisterController(name string, e *echo.Echo, m []echo.Middleware, dal Data
 	rcBase := e.Group("/" + name)
 	rcBase.Get("", rc.IndexHandler)
 	rcBase.Post("", rc.CreateHandler)
+	rcBase.Delete("", rc.ConditionalDeleteHandler)
 
 	rcItem := rcBase.Group("/:id")
 	rcItem.Get("", rc.ShowHandler)

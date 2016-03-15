@@ -66,11 +66,14 @@ func (rc *ResourceController) LoadResource(c *echo.Context) (interface{}, error)
 func (rc *ResourceController) ShowHandler(c *echo.Context) error {
 	c.Set("Action", "read")
 	_, err := rc.LoadResource(c)
-	if err != nil {
+	if err != nil && err != ErrNotFound {
 		return err
 	}
 
 	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
+	if err == ErrNotFound {
+		return c.NoContent(http.StatusNotFound)
+	}
 	return c.JSON(http.StatusOK, c.Get(rc.Name))
 }
 
@@ -93,7 +96,6 @@ func (rc *ResourceController) CreateHandler(c *echo.Context) error {
 
 	c.Response().Header().Add("Location", responseURL(c.Request(), rc.Name, id).String())
 	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
-
 	return c.JSON(http.StatusCreated, resource)
 }
 
@@ -105,7 +107,7 @@ func (rc *ResourceController) UpdateHandler(c *echo.Context) error {
 		return c.JSON(http.StatusBadRequest, oo)
 	}
 
-	err = rc.DAL.Put(c.Param("id"), resource)
+	createdNew, err := rc.DAL.Put(c.Param("id"), resource)
 	if err != nil {
 		return err
 	}
@@ -115,21 +117,39 @@ func (rc *ResourceController) UpdateHandler(c *echo.Context) error {
 	c.Set("Action", "update")
 
 	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
+	if createdNew {
+		return c.JSON(http.StatusCreated, resource)
+	}
 	return c.JSON(http.StatusOK, resource)
 }
 
 func (rc *ResourceController) DeleteHandler(c *echo.Context) error {
 	id := c.Param("id")
 
-	err := rc.DAL.Delete(id, rc.Name)
-	if err != nil {
+	if err := rc.DAL.Delete(id, rc.Name); err != nil && err != ErrNotFound {
 		return err
 	}
 
 	c.Set(rc.Name, id)
 	c.Set("Resource", rc.Name)
 	c.Set("Action", "delete")
-	return nil
+
+	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
+	return c.NoContent(http.StatusNoContent)
+}
+
+func (rc *ResourceController) ConditionalDeleteHandler(c *echo.Context) error {
+	query := search.Query{Resource: rc.Name, Query: c.Request().URL.RawQuery}
+	_, err := rc.DAL.ConditionalDelete(query)
+	if err != nil {
+		return err
+	}
+
+	c.Set("Resource", rc.Name)
+	c.Set("Action", "delete")
+
+	c.Response().Header().Set("Access-Control-Allow-Origin", "*")
+	return c.NoContent(http.StatusNoContent)
 }
 
 func responseURL(r *http.Request, paths ...string) *url.URL {

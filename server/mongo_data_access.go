@@ -12,6 +12,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
 func NewMongoDataAccessLayer(db *mgo.Database) DataAccessLayer {
 	return &mongoDataAccessLayer{Database: db}
 }
@@ -20,67 +21,77 @@ type mongoDataAccessLayer struct {
 	Database *mgo.Database
 }
 
-func (dal *mongoDataAccessLayer) Get(id, resourceType string) (interface{}, error) {
-	bsonId, err := convertIdToBsonId(id)
+func (dal *mongoDataAccessLayer) Get(id, resourceType string) (result interface{}, err error) {
+	bsonID, err := convertIDToBsonID(id)
 	if err != nil {
-		return nil, err
+		return nil, convertMongoErr(err)
 	}
 
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
-	result := models.NewStructForResourceName(resourceType)
-	err = collection.Find(bson.M{"_id": bsonId.Hex()}).One(result)
-	if err != nil {
-		return nil, err
+	result = models.NewStructForResourceName(resourceType)
+	if err = collection.FindId(bsonID.Hex()).One(result); err != nil {
+		return nil, convertMongoErr(err)
 	}
 
-	return result, nil
+	return
 }
 
 func (dal *mongoDataAccessLayer) Post(resource interface{}) (id string, err error) {
 	id = bson.NewObjectId().Hex()
-	err = dal.PostWithId(id, resource)
+	err = convertMongoErr(dal.PostWithID(id, resource))
 	return
 }
 
-func (dal *mongoDataAccessLayer) PostWithId(id string, resource interface{}) error {
-	bsonId, err := convertIdToBsonId(id)
+func (dal *mongoDataAccessLayer) PostWithID(id string, resource interface{}) error {
+	bsonID, err := convertIDToBsonID(id)
 	if err != nil {
-		return err
+		return convertMongoErr(err)
 	}
 
-	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonId.Hex())
+	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	resourceType := reflect.TypeOf(resource).Elem().Name()
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
 	updateLastUpdatedDate(resource)
-	return collection.Insert(resource)
+	return convertMongoErr(collection.Insert(resource))
 }
 
-func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) error {
-	bsonId, err := convertIdToBsonId(id)
+func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNew bool, err error) {
+	bsonID, err := convertIDToBsonID(id)
 	if err != nil {
-		return err
+		return false, convertMongoErr(err)
 	}
 
 	resourceType := reflect.TypeOf(resource).Elem().Name()
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
-	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonId.Hex())
+	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	updateLastUpdatedDate(resource)
-	_, err = collection.Upsert(bson.M{"_id": bsonId.Hex()}, resource)
-
-	return err
+	info, err := collection.UpsertId(bsonID.Hex(), resource)
+	if err == nil {
+		createdNew = (info.Updated == 0)
+	}
+	return createdNew, convertMongoErr(err)
 }
 
 func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
-	bsonId, err := convertIdToBsonId(id)
+	bsonID, err := convertIDToBsonID(id)
 	if err != nil {
-		return err
+		return convertMongoErr(err)
 	}
 
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
-	if err = collection.RemoveId(bsonId.Hex()); err != nil && err != mgo.ErrNotFound {
-		return err
+	return convertMongoErr(collection.RemoveId(bsonID.Hex()))
+}
+
+func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count int, err error) {
+	searcher := search.NewMongoSearcher(dal.Database)
+	queryObject := searcher.CreateQueryObject(query)
+
+	collection := dal.Database.C(models.PluralizeLowerResourceName(query.Resource))
+	info, err := collection.RemoveAll(queryObject)
+	if info != nil {
+		count = info.Removed
 	}
-	return nil
+	return count, convertMongoErr(err)
 }
 
 func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Query) (*models.Bundle, error) {
@@ -99,7 +110,7 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 		err = searcher.CreateQuery(searchQuery).All(result)
 	}
 	if err != nil {
-		return nil, err
+		return nil, convertMongoErr(err)
 	}
 
 	includesMap := make(map[string]interface{})
@@ -141,7 +152,7 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 		// Need to get total count from the server, since there may be more or the offset was too high
 		intTotal, err := searcher.CreateQueryWithoutOptions(searchQuery).Count()
 		if err != nil {
-			return nil, err
+			return nil, convertMongoErr(err)
 		}
 		total = uint32(intTotal)
 	} else {
@@ -156,6 +167,8 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	return &bundle, nil
 }
 
+// ResourcePlusRelatedResources is an interface to capture those structs that implement the functions for
+// getting included and rev-included resources
 type ResourcePlusRelatedResources interface {
 	GetIncludedAndRevIncludedResources() map[string]interface{}
 	GetIncludedResources() map[string]interface{}
@@ -224,12 +237,11 @@ func newLink(relation string, baseURL url.URL, params search.URLQueryParameters,
 	return models.BundleLinkComponent{Relation: relation, Url: baseURL.String()}
 }
 
-func convertIdToBsonId(id string) (bson.ObjectId, error) {
+func convertIDToBsonID(id string) (bson.ObjectId, error) {
 	if bson.IsObjectIdHex(id) {
 		return bson.ObjectIdHex(id), nil
-	} else {
-		return bson.ObjectId(""), models.NewOperationOutcome("fatal", "exception", "Id must be a valid BSON ObjectId")
 	}
+	return bson.ObjectId(""), models.NewOperationOutcome("fatal", "exception", "Id must be a valid BSON ObjectId")
 }
 
 func updateLastUpdatedDate(resource interface{}) {
@@ -240,4 +252,13 @@ func updateLastUpdatedDate(resource interface{}) {
 	}
 	now := &models.FHIRDateTime{Time: time.Now(), Precision: models.Timestamp}
 	m.Elem().FieldByName("LastUpdated").Set(reflect.ValueOf(now))
+}
+
+func convertMongoErr(err error) error {
+	switch err {
+	default:
+		return err
+	case mgo.ErrNotFound:
+		return ErrNotFound
+	}
 }

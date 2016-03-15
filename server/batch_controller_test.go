@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -142,7 +143,6 @@ func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
 	}
 
 	// Now check that the first condition and both encounters were deleted (leaving the 2nd condition)
-	// Before we test delete, confirm they're really there
 	count, err = condCollection.FindId("56afe6b85cdc7ec329dfe6a1").Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 0)
@@ -153,6 +153,107 @@ func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
 	util.CheckErr(err)
 	c.Assert(count, Equals, 0)
 	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6a4").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 0)
+}
+
+func (s *BatchControllerSuite) TestConditionalDeleteEntriesBundle(c *C) {
+	// Put some records in the database to delete
+	encounter := &models.Encounter{
+		Status: "finished",
+	}
+	encounter.Id = "56afe6b85cdc7ec329dfe6b1"
+	encounter2 := &models.Encounter{
+		Status: "planned",
+	}
+	encounter2.Id = "56afe6b85cdc7ec329dfe6b2"
+	encounter3 := &models.Encounter{
+		Status: "finished",
+	}
+	encounter3.Id = "56afe6b85cdc7ec329dfe6b3"
+	encounter4 := &models.Encounter{
+		Status: "planned",
+	}
+	encounter4.Id = "56afe6b85cdc7ec329dfe6b4"
+
+	// Insert the encounters into the db
+	encCollection := s.Database.C("encounters")
+	err := encCollection.Insert(encounter, encounter2, encounter3, encounter4)
+	util.CheckErr(err)
+
+	// Before we test delete, confirm they're really there
+	count, err := encCollection.FindId("56afe6b85cdc7ec329dfe6b1").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6b2").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6b3").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6b4").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
+
+	// Now create a simple bundle with conditional delete of planned encounters
+	batch := &models.Bundle{
+		Type: "transaction",
+		Entry: []models.BundleEntryComponent{
+			{
+				Request: &models.BundleEntryRequestComponent{
+					Method: "DELETE",
+					Url:    "Encounter?status=planned",
+				},
+			},
+		},
+	}
+
+	data, err := json.Marshal(batch)
+	util.CheckErr(err)
+
+	res, err := http.Post(s.Server.URL+"/", "application/json", bytes.NewBuffer(data))
+	util.CheckErr(err)
+
+	// Successful bundle processing should return a 200
+	c.Assert(res.StatusCode, Equals, 200)
+
+	decoder := json.NewDecoder(res.Body)
+	responseBundle := &models.Bundle{}
+	err = decoder.Decode(responseBundle)
+	util.CheckErr(err)
+
+	c.Assert(responseBundle.Type, Equals, "transaction-response")
+	c.Assert(*responseBundle.Total, Equals, uint32(1))
+	c.Assert(responseBundle.Entry, HasLen, 1)
+
+	entry := responseBundle.Entry[0]
+	// Everything but the Response should be nil
+	c.Assert(entry.Resource, IsNil)
+	c.Assert(entry.FullUrl, Equals, "")
+	c.Assert(entry.Request, IsNil)
+	c.Assert(entry.Search, IsNil)
+	c.Assert(entry.Link, HasLen, 0)
+
+	// response should have 204 status
+	c.Assert(entry.Response, NotNil)
+	c.Assert(entry.Response.Status, Equals, "204")
+
+	// Everything else in the response should be nil / zero value
+	c.Assert(entry.Response.LastModified, IsNil)
+	c.Assert(entry.Response.Location, Equals, "")
+	c.Assert(entry.Response.Etag, Equals, "") // Since we don't support versioning
+
+	// Now check that the right encounters were deleted
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6b1").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6b2").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 0)
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6b3").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6b4").Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 0)
 }
@@ -220,37 +321,37 @@ func (s *BatchControllerSuite) TestUploadPatientBundle(c *C) {
 	}
 
 	// Check patient references
-	patientId := responseBundle.Entry[0].Resource.(*models.Patient).Id
-	c.Assert(bson.IsObjectIdHex(patientId), Equals, true)
-	s.checkReference(c, responseBundle.Entry[1].Resource.(*models.Encounter).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[2].Resource.(*models.Encounter).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Encounter).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[5].Resource.(*models.Condition).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[6].Resource.(*models.Condition).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[7].Resource.(*models.Condition).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[8].Resource.(*models.Condition).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[9].Resource.(*models.Condition).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[10].Resource.(*models.Observation).Subject, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[11].Resource.(*models.Procedure).Subject, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[12].Resource.(*models.DiagnosticReport).Subject, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[13].Resource.(*models.Observation).Subject, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[14].Resource.(*models.Observation).Subject, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[15].Resource.(*models.Observation).Subject, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[16].Resource.(*models.Procedure).Subject, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[17].Resource.(*models.MedicationStatement).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[18].Resource.(*models.Immunization).Patient, patientId, "Patient")
+	patientID := responseBundle.Entry[0].Resource.(*models.Patient).Id
+	c.Assert(bson.IsObjectIdHex(patientID), Equals, true)
+	s.checkReference(c, responseBundle.Entry[1].Resource.(*models.Encounter).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[2].Resource.(*models.Encounter).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Encounter).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[5].Resource.(*models.Condition).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[6].Resource.(*models.Condition).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[7].Resource.(*models.Condition).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[8].Resource.(*models.Condition).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[9].Resource.(*models.Condition).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[10].Resource.(*models.Observation).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[11].Resource.(*models.Procedure).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[12].Resource.(*models.DiagnosticReport).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[13].Resource.(*models.Observation).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[14].Resource.(*models.Observation).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[15].Resource.(*models.Observation).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[16].Resource.(*models.Procedure).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[17].Resource.(*models.MedicationStatement).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[18].Resource.(*models.Immunization).Patient, patientID, "Patient")
 
 	// Check encounter references
-	encounterId := responseBundle.Entry[1].Resource.(*models.Encounter).Id
-	c.Assert(bson.IsObjectIdHex(encounterId), Equals, true)
-	s.checkReference(c, responseBundle.Entry[10].Resource.(*models.Observation).Encounter, encounterId, "Encounter")
-	s.checkReference(c, responseBundle.Entry[11].Resource.(*models.Procedure).Encounter, encounterId, "Encounter")
+	encounterID := responseBundle.Entry[1].Resource.(*models.Encounter).Id
+	c.Assert(bson.IsObjectIdHex(encounterID), Equals, true)
+	s.checkReference(c, responseBundle.Entry[10].Resource.(*models.Observation).Encounter, encounterID, "Encounter")
+	s.checkReference(c, responseBundle.Entry[11].Resource.(*models.Procedure).Encounter, encounterID, "Encounter")
 
 	// Check dx report references
-	dxReportId := responseBundle.Entry[12].Resource.(*models.DiagnosticReport).Id
-	c.Assert(bson.IsObjectIdHex(dxReportId), Equals, true)
-	s.checkReference(c, &responseBundle.Entry[11].Resource.(*models.Procedure).Report[0], dxReportId, "DiagnosticReport")
+	dxReportID := responseBundle.Entry[12].Resource.(*models.DiagnosticReport).Id
+	c.Assert(bson.IsObjectIdHex(dxReportID), Equals, true)
+	s.checkReference(c, &responseBundle.Entry[11].Resource.(*models.Procedure).Report[0], dxReportID, "DiagnosticReport")
 
 	// Check observation references
 	obs0Id := responseBundle.Entry[13].Resource.(*models.Observation).Id
@@ -388,10 +489,10 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	}
 
 	// Check patient references
-	patientId := responseBundle.Entry[2].Resource.(*models.Patient).Id
-	c.Assert(bson.IsObjectIdHex(patientId), Equals, true)
-	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientId, "Patient")
-	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Condition).Patient, patientId, "Patient")
+	patientID := responseBundle.Entry[2].Resource.(*models.Patient).Id
+	c.Assert(bson.IsObjectIdHex(patientID), Equals, true)
+	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Condition).Patient, patientID, "Patient")
 }
 
 func (s *BatchControllerSuite) checkReference(c *C, ref *models.Reference, id string, typ string) {

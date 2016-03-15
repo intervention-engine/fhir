@@ -11,17 +11,21 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/intervention-engine/fhir/models"
+	"github.com/intervention-engine/fhir/search"
 	"github.com/labstack/echo"
 )
 
+// BatchController handles FHIR batch operations via input bundles
 type BatchController struct {
 	DAL DataAccessLayer
 }
 
+// NewBatchController creates a new BatchController based on the passed in DAL
 func NewBatchController(dal DataAccessLayer) *BatchController {
 	return &BatchController{DAL: dal}
 }
 
+// Post processes and incoming batch request
 func (b *BatchController) Post(c *echo.Context) error {
 	bundle := &models.Bundle{}
 	err := c.Bind(bundle)
@@ -84,19 +88,31 @@ func (b *BatchController) Post(c *echo.Context) error {
 	for i, entry := range entries {
 		switch entry.Request.Method {
 		case "DELETE":
-			parts := strings.Split(entry.Request.Url, "/")
-			if len(parts) != 2 {
-				return fmt.Errorf("Could identify resource and id to delete from %s", entry.Request.Url)
+			rURL := entry.Request.Url
+			if strings.Contains(rURL, "/") && !strings.Contains(rURL, "?") {
+				// It's a normal DELETE
+				parts := strings.SplitN(entry.Request.Url, "/", 2)
+				if len(parts) != 2 {
+					return fmt.Errorf("Couldn't identify resource and id to delete from %s", entry.Request.Url)
+				}
+				if err := b.DAL.Delete(parts[1], parts[0]); err != nil && err != ErrNotFound {
+					return err
+				}
+			} else {
+				// It's a conditional (query-based) delete
+				parts := strings.SplitN(entry.Request.Url, "?", 2)
+				query := search.Query{Resource: parts[0], Query: parts[1]}
+				if _, err := b.DAL.ConditionalDelete(query); err != nil {
+					return err
+				}
 			}
-			if err := b.DAL.Delete(parts[1], parts[0]); err != nil {
-				return err
-			}
+
 			entry.Request = nil
 			entry.Response = &models.BundleEntryResponseComponent{
 				Status: "204",
 			}
 		case "POST":
-			if err := b.DAL.PostWithId(newIDs[i], entry.Resource); err != nil {
+			if err := b.DAL.PostWithID(newIDs[i], entry.Resource); err != nil {
 				return err
 			}
 			entry.Request = nil
