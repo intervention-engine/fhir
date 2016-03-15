@@ -20,7 +20,7 @@ import (
 // X-DELEGATED - This will be set to "true" when the request is being made by
 // a client on behalf of a user. If this header is not present or any value
 // other than "true", this middleware will pass the request through.
-// X-SCOPE - The scopes that have been grated for this particular request.
+// X-SCOPE - The scopes that have been granted for this particular request.
 func SmartAuthHandler(resourceName string) echo.MiddlewareFunc {
 	allResourcesAllScope := "user/*.*"
 	allResourcesReadScope := "user/*.read"
