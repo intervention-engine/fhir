@@ -36,6 +36,12 @@ func (s *SmartAuthSuite) TestGetPatientWithScopes(c *C) {
 	c.Assert(rr.Body.String(), Equals, "Hello")
 }
 
+func (s *SmartAuthSuite) TestGetPatientWithMultipleScopes(c *C) {
+	rr := s.SetUpRequest("GET", "user/Patient.read user/Observation.* user/Condition.write")
+	c.Assert(rr.Code, Equals, http.StatusOK)
+	c.Assert(rr.Body.String(), Equals, "Hello")
+}
+
 func (s *SmartAuthSuite) TestGetPatientWithWildcard(c *C) {
 	rr := s.SetUpRequest("GET", "user/Patient.*")
 	c.Assert(rr.Code, Equals, http.StatusOK)
