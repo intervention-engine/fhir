@@ -16,6 +16,11 @@
 			"Rev": "4255f4bd4411f541ebcc76d6575af6ed35b3db1a"
 		},
 		{
+			"ImportPath": "github.com/labstack/echo/middleware",
+			"Comment": "v1.3-5-g4255f4b",
+			"Rev": "4255f4bd4411f541ebcc76d6575af6ed35b3db1a"
+		},
+		{
 			"ImportPath": "github.com/labstack/gommon/color",
 			"Comment": "v0.0.3-27-g0764305",
 			"Rev": "0764305a9af697a66da7bda2ea52672b7eca5a06"

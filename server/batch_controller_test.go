@@ -35,7 +35,7 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 
 	// Build routes for testing
 	s.Echo = echo.New()
-	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware))
+	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware), Config{})
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Echo.Router())
