@@ -314,13 +314,15 @@ func (p *ProcessRequestPlusRelatedResources) GetRevIncludedMessageHeaderResource
 func (p *ProcessRequestPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if p.IncludedPractitionerResourcesReferencedByProvider != nil {
-		for _, r := range *p.IncludedPractitionerResourcesReferencedByProvider {
-			resourceMap[r.Id] = &r
+		for idx := range *p.IncludedPractitionerResourcesReferencedByProvider {
+			rsc := (*p.IncludedPractitionerResourcesReferencedByProvider)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.IncludedOrganizationResourcesReferencedByOrganization != nil {
-		for _, r := range *p.IncludedOrganizationResourcesReferencedByOrganization {
-			resourceMap[r.Id] = &r
+		for idx := range *p.IncludedOrganizationResourcesReferencedByOrganization {
+			rsc := (*p.IncludedOrganizationResourcesReferencedByOrganization)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	return resourceMap
@@ -329,93 +331,111 @@ func (p *ProcessRequestPlusRelatedResources) GetIncludedResources() map[string]i
 func (p *ProcessRequestPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if p.RevIncludedProvenanceResourcesReferencingTarget != nil {
-		for _, r := range *p.RevIncludedProvenanceResourcesReferencingTarget {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedProvenanceResourcesReferencingTarget {
+			rsc := (*p.RevIncludedProvenanceResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
-		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingContentref {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDocumentManifestResourcesReferencingContentref {
+			rsc := (*p.RevIncludedDocumentManifestResourcesReferencingContentref)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDocumentManifestResourcesReferencingRelatedref != nil {
-		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingRelatedref {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDocumentManifestResourcesReferencingRelatedref {
+			rsc := (*p.RevIncludedDocumentManifestResourcesReferencingRelatedref)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedCarePlanResourcesReferencingActivityreference != nil {
-		for _, r := range *p.RevIncludedCarePlanResourcesReferencingActivityreference {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedCarePlanResourcesReferencingActivityreference {
+			rsc := (*p.RevIncludedCarePlanResourcesReferencingActivityreference)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedListResourcesReferencingItem != nil {
-		for _, r := range *p.RevIncludedListResourcesReferencingItem {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedListResourcesReferencingItem {
+			rsc := (*p.RevIncludedListResourcesReferencingItem)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
-		for _, r := range *p.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			rsc := (*p.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedOrderResourcesReferencingDetail != nil {
-		for _, r := range *p.RevIncludedOrderResourcesReferencingDetail {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedOrderResourcesReferencingDetail {
+			rsc := (*p.RevIncludedOrderResourcesReferencingDetail)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedBasicResourcesReferencingSubject != nil {
-		for _, r := range *p.RevIncludedBasicResourcesReferencingSubject {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedBasicResourcesReferencingSubject {
+			rsc := (*p.RevIncludedBasicResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedAuditEventResourcesReferencingReference != nil {
-		for _, r := range *p.RevIncludedAuditEventResourcesReferencingReference {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedAuditEventResourcesReferencingReference {
+			rsc := (*p.RevIncludedAuditEventResourcesReferencingReference)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedCompositionResourcesReferencingSubject != nil {
-		for _, r := range *p.RevIncludedCompositionResourcesReferencingSubject {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedCompositionResourcesReferencingSubject {
+			rsc := (*p.RevIncludedCompositionResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedCompositionResourcesReferencingEntry != nil {
-		for _, r := range *p.RevIncludedCompositionResourcesReferencingEntry {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedCompositionResourcesReferencingEntry {
+			rsc := (*p.RevIncludedCompositionResourcesReferencingEntry)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDetectedIssueResourcesReferencingImplicated != nil {
-		for _, r := range *p.RevIncludedDetectedIssueResourcesReferencingImplicated {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDetectedIssueResourcesReferencingImplicated {
+			rsc := (*p.RevIncludedDetectedIssueResourcesReferencingImplicated)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
-		for _, r := range *p.RevIncludedOrderResponseResourcesReferencingFulfillment {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			rsc := (*p.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
-		for _, r := range *p.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
+			rsc := (*p.RevIncludedQuestionnaireResponseResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedProcessResponseResourcesReferencingRequest != nil {
-		for _, r := range *p.RevIncludedProcessResponseResourcesReferencingRequest {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*p.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
-		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingTrigger {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedClinicalImpressionResourcesReferencingTrigger {
+			rsc := (*p.RevIncludedClinicalImpressionResourcesReferencingTrigger)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedClinicalImpressionResourcesReferencingPlan != nil {
-		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingPlan {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedClinicalImpressionResourcesReferencingPlan {
+			rsc := (*p.RevIncludedClinicalImpressionResourcesReferencingPlan)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedMessageHeaderResourcesReferencingData != nil {
-		for _, r := range *p.RevIncludedMessageHeaderResourcesReferencingData {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedMessageHeaderResourcesReferencingData {
+			rsc := (*p.RevIncludedMessageHeaderResourcesReferencingData)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	return resourceMap
@@ -424,103 +444,123 @@ func (p *ProcessRequestPlusRelatedResources) GetRevIncludedResources() map[strin
 func (p *ProcessRequestPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if p.IncludedPractitionerResourcesReferencedByProvider != nil {
-		for _, r := range *p.IncludedPractitionerResourcesReferencedByProvider {
-			resourceMap[r.Id] = &r
+		for idx := range *p.IncludedPractitionerResourcesReferencedByProvider {
+			rsc := (*p.IncludedPractitionerResourcesReferencedByProvider)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.IncludedOrganizationResourcesReferencedByOrganization != nil {
-		for _, r := range *p.IncludedOrganizationResourcesReferencedByOrganization {
-			resourceMap[r.Id] = &r
+		for idx := range *p.IncludedOrganizationResourcesReferencedByOrganization {
+			rsc := (*p.IncludedOrganizationResourcesReferencedByOrganization)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedProvenanceResourcesReferencingTarget != nil {
-		for _, r := range *p.RevIncludedProvenanceResourcesReferencingTarget {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedProvenanceResourcesReferencingTarget {
+			rsc := (*p.RevIncludedProvenanceResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
-		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingContentref {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDocumentManifestResourcesReferencingContentref {
+			rsc := (*p.RevIncludedDocumentManifestResourcesReferencingContentref)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDocumentManifestResourcesReferencingRelatedref != nil {
-		for _, r := range *p.RevIncludedDocumentManifestResourcesReferencingRelatedref {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDocumentManifestResourcesReferencingRelatedref {
+			rsc := (*p.RevIncludedDocumentManifestResourcesReferencingRelatedref)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedCarePlanResourcesReferencingActivityreference != nil {
-		for _, r := range *p.RevIncludedCarePlanResourcesReferencingActivityreference {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedCarePlanResourcesReferencingActivityreference {
+			rsc := (*p.RevIncludedCarePlanResourcesReferencingActivityreference)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedListResourcesReferencingItem != nil {
-		for _, r := range *p.RevIncludedListResourcesReferencingItem {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedListResourcesReferencingItem {
+			rsc := (*p.RevIncludedListResourcesReferencingItem)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
-		for _, r := range *p.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			rsc := (*p.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedOrderResourcesReferencingDetail != nil {
-		for _, r := range *p.RevIncludedOrderResourcesReferencingDetail {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedOrderResourcesReferencingDetail {
+			rsc := (*p.RevIncludedOrderResourcesReferencingDetail)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedBasicResourcesReferencingSubject != nil {
-		for _, r := range *p.RevIncludedBasicResourcesReferencingSubject {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedBasicResourcesReferencingSubject {
+			rsc := (*p.RevIncludedBasicResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedAuditEventResourcesReferencingReference != nil {
-		for _, r := range *p.RevIncludedAuditEventResourcesReferencingReference {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedAuditEventResourcesReferencingReference {
+			rsc := (*p.RevIncludedAuditEventResourcesReferencingReference)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedCompositionResourcesReferencingSubject != nil {
-		for _, r := range *p.RevIncludedCompositionResourcesReferencingSubject {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedCompositionResourcesReferencingSubject {
+			rsc := (*p.RevIncludedCompositionResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedCompositionResourcesReferencingEntry != nil {
-		for _, r := range *p.RevIncludedCompositionResourcesReferencingEntry {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedCompositionResourcesReferencingEntry {
+			rsc := (*p.RevIncludedCompositionResourcesReferencingEntry)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedDetectedIssueResourcesReferencingImplicated != nil {
-		for _, r := range *p.RevIncludedDetectedIssueResourcesReferencingImplicated {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedDetectedIssueResourcesReferencingImplicated {
+			rsc := (*p.RevIncludedDetectedIssueResourcesReferencingImplicated)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
-		for _, r := range *p.RevIncludedOrderResponseResourcesReferencingFulfillment {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			rsc := (*p.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
-		for _, r := range *p.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
+			rsc := (*p.RevIncludedQuestionnaireResponseResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedProcessResponseResourcesReferencingRequest != nil {
-		for _, r := range *p.RevIncludedProcessResponseResourcesReferencingRequest {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*p.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
-		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingTrigger {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedClinicalImpressionResourcesReferencingTrigger {
+			rsc := (*p.RevIncludedClinicalImpressionResourcesReferencingTrigger)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedClinicalImpressionResourcesReferencingPlan != nil {
-		for _, r := range *p.RevIncludedClinicalImpressionResourcesReferencingPlan {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedClinicalImpressionResourcesReferencingPlan {
+			rsc := (*p.RevIncludedClinicalImpressionResourcesReferencingPlan)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if p.RevIncludedMessageHeaderResourcesReferencingData != nil {
-		for _, r := range *p.RevIncludedMessageHeaderResourcesReferencingData {
-			resourceMap[r.Id] = &r
+		for idx := range *p.RevIncludedMessageHeaderResourcesReferencingData {
+			rsc := (*p.RevIncludedMessageHeaderResourcesReferencingData)[idx]
+			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	return resourceMap

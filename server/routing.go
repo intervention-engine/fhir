@@ -28,7 +28,7 @@ func RegisterRoutes(e *echo.Echo, config map[string][]echo.Middleware, serverCon
 
 	e.Post("/", BatchHandler)
 
-	// Resource, useSmartAuths
+	// Resources
 
 	RegisterController("Appointment", e, config["Appointment"], serverConfig)
 	RegisterController("ReferralRequest", e, config["ReferralRequest"], serverConfig)
