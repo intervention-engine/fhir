@@ -24,11 +24,13 @@ func RegisterController(name string, e *echo.Echo, m []echo.Middleware, dal Data
 }
 
 func RegisterRoutes(e *echo.Echo, config map[string][]echo.Middleware, dal DataAccessLayer, serverConfig Config) {
+
 	// Batch Support
 	batch := NewBatchController(dal)
 	e.Post("/", batch.Post)
 
-	// Resource, useSmartAuths
+	// Resources
+
 	RegisterController("Appointment", e, config["Appointment"], dal, serverConfig)
 	RegisterController("ReferralRequest", e, config["ReferralRequest"], dal, serverConfig)
 	RegisterController("Account", e, config["Account"], dal, serverConfig)
