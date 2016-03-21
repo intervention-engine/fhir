@@ -21,10 +21,11 @@ import (
 )
 
 type ServerSuite struct {
+	Database  *mgo.Database
 	Session   *mgo.Session
 	Echo      *echo.Echo
 	Server    *httptest.Server
-	FixtureId string
+	FixtureID string
 }
 
 func Test(t *testing.T) { TestingT(t) }
@@ -32,16 +33,15 @@ func Test(t *testing.T) { TestingT(t) }
 var _ = Suite(&ServerSuite{})
 
 func (s *ServerSuite) SetUpSuite(c *C) {
-
 	// Set up the database
 	var err error
 	s.Session, err = mgo.Dial("localhost")
 	util.CheckErr(err)
-	Database = s.Session.DB("fhir-test")
+	s.Database = s.Session.DB("fhir-test")
 
 	// Build routes for testing
 	s.Echo = echo.New()
-	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware), Config{})
+	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware), NewMongoDataAccessLayer(s.Database), Config{})
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Echo.Router())
@@ -49,16 +49,16 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 
 func (s *ServerSuite) SetUpTest(c *C) {
 	// Add patient fixture
-	p := insertPatientFromFixture("../fixtures/patient-example-a.json")
-	s.FixtureId = p.Id
+	p := s.insertPatientFromFixture("../fixtures/patient-example-a.json")
+	s.FixtureID = p.Id
 }
 
 func (s *ServerSuite) TearDownTest(c *C) {
-	Database.C("patients").DropCollection()
+	s.Database.C("patients").DropCollection()
 }
 
 func (s *ServerSuite) TearDownSuite(c *C) {
-	Database.DropDatabase()
+	s.Database.DropDatabase()
 	s.Session.Close()
 	s.Server.Close()
 }
@@ -66,7 +66,7 @@ func (s *ServerSuite) TearDownSuite(c *C) {
 func (s *ServerSuite) TestGetPatients(c *C) {
 	// Add 4 more patients
 	for i := 0; i < 4; i++ {
-		insertPatientFromFixture("../fixtures/patient-example-a.json")
+		s.insertPatientFromFixture("../fixtures/patient-example-a.json")
 	}
 	assertBundleCount(c, s.Server.URL+"/Patient", 5, 5)
 }
@@ -74,7 +74,7 @@ func (s *ServerSuite) TestGetPatients(c *C) {
 func (s *ServerSuite) TestGetPatientsWithOptions(c *C) {
 	// Add 4 more patients
 	for i := 0; i < 4; i++ {
-		insertPatientFromFixture("../fixtures/patient-example-a.json")
+		s.insertPatientFromFixture("../fixtures/patient-example-a.json")
 	}
 	assertBundleCount(c, s.Server.URL+"/Patient?_count=2", 2, 5)
 	assertBundleCount(c, s.Server.URL+"/Patient?_offset=2", 3, 5)
@@ -86,7 +86,7 @@ func (s *ServerSuite) TestGetPatientsWithOptions(c *C) {
 func (s *ServerSuite) TestGetPatientsDefaultLimitIs100(c *C) {
 	// Add 100 more patients
 	for i := 0; i < 100; i++ {
-		insertPatientFromFixture("../fixtures/patient-example-a.json")
+		s.insertPatientFromFixture("../fixtures/patient-example-a.json")
 	}
 	assertBundleCount(c, s.Server.URL+"/Patient", 100, 101)
 }
@@ -94,7 +94,7 @@ func (s *ServerSuite) TestGetPatientsDefaultLimitIs100(c *C) {
 func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 	// Add 39 more patients
 	for i := 0; i < 39; i++ {
-		insertPatientFromFixture("../fixtures/patient-example-a.json")
+		s.insertPatientFromFixture("../fixtures/patient-example-a.json")
 	}
 
 	// Default counts and less results than count
@@ -188,7 +188,7 @@ func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 func (s *ServerSuite) TestGetPatientSearchPagingPreservesSearchParams(c *C) {
 	// Add 39 more patients
 	for i := 0; i < 39; i++ {
-		insertPatientFromFixture("../fixtures/patient-example-a.json")
+		s.insertPatientFromFixture("../fixtures/patient-example-a.json")
 	}
 
 	// Default counts and less results than count
@@ -221,7 +221,7 @@ func (s *ServerSuite) TestGetPatientSearchPagingPreservesSearchParams(c *C) {
 }
 
 func (s *ServerSuite) TestGetPatient(c *C) {
-	res, err := http.Get(s.Server.URL + "/Patient/" + s.FixtureId)
+	res, err := http.Get(s.Server.URL + "/Patient/" + s.FixtureID)
 	util.CheckErr(err)
 
 	decoder := json.NewDecoder(res.Body)
@@ -229,6 +229,12 @@ func (s *ServerSuite) TestGetPatient(c *C) {
 	err = decoder.Decode(patient)
 	util.CheckErr(err)
 	c.Assert(patient.Name[0].Family[0], Equals, "Donald")
+}
+
+func (s *ServerSuite) TestGetNonExistingPatient(c *C) {
+	res, err := http.Get(s.Server.URL + "/Patient/" + bson.NewObjectId().Hex())
+	util.CheckErr(err)
+	c.Assert(res.StatusCode, Equals, 404)
 }
 
 func (s *ServerSuite) TestShowPatient(c *C) {
@@ -241,7 +247,7 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 	util.CheckErr(err)
 
 	var result []models.Patient
-	collection := Database.C("patients")
+	collection := s.Database.C("patients")
 	iter := collection.Find(nil).Iter()
 	err = iter.All(&result)
 	util.CheckErr(err)
@@ -257,10 +263,10 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
 	util.CheckErr(err)
 
+	c.Assert(res.StatusCode, Equals, 201)
 	splitLocation := strings.Split(res.Header["Location"][0], "/")
-	createdPatientId := splitLocation[len(splitLocation)-1]
-
-	checkCreatedPatient(createdPatientId, c)
+	createdPatientID := splitLocation[len(splitLocation)-1]
+	s.checkCreatedPatient(createdPatientID, c)
 }
 
 func (s *ServerSuite) TestCreatePatientByPut(c *C) {
@@ -268,23 +274,22 @@ func (s *ServerSuite) TestCreatePatientByPut(c *C) {
 	util.CheckErr(err)
 	defer data.Close()
 
-	createdPatientId := bson.NewObjectId().Hex()
-
-	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+createdPatientId, data)
+	createdPatientID := bson.NewObjectId().Hex()
+	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+createdPatientID, data)
 	util.CheckErr(err)
 
 	req.Header.Add("Content-Type", "application/json")
-	client := &http.Client{}
-	_, err = client.Do(req)
+	res, err := http.DefaultClient.Do(req)
 	util.CheckErr(err)
 
-	checkCreatedPatient(createdPatientId, c)
+	c.Assert(res.StatusCode, Equals, 201)
+	s.checkCreatedPatient(createdPatientID, c)
 }
 
-func checkCreatedPatient(createdPatientId string, c *C) {
-	patientCollection := Database.C("patients")
+func (s *ServerSuite) checkCreatedPatient(createdPatientID string, c *C) {
+	patientCollection := s.Database.C("patients")
 	patient := models.Patient{}
-	err := patientCollection.Find(bson.M{"_id": createdPatientId}).One(&patient)
+	err := patientCollection.Find(bson.M{"_id": createdPatientID}).One(&patient)
 	util.CheckErr(err)
 	c.Assert(patient.Name[0].Family[0], Equals, "Daffy")
 	c.Assert(patient.Meta, NotNil)
@@ -297,7 +302,7 @@ func checkCreatedPatient(createdPatientId string, c *C) {
 
 func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
 	// Add 1 more patient
-	patient := insertPatientFromFixture("../fixtures/patient-example-a.json")
+	patient := s.insertPatientFromFixture("../fixtures/patient-example-a.json")
 
 	// Add condition
 	data, err := os.Open("../fixtures/condition.json")
@@ -315,7 +320,7 @@ func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
 		External:     new(bool),
 	}
 	condition.Id = bson.NewObjectId().Hex()
-	err = Database.C("conditions").Insert(condition)
+	err = s.Database.C("conditions").Insert(condition)
 	util.CheckErr(err)
 
 	assertBundleCount(c, s.Server.URL+"/Condition", 1, 1)
@@ -342,15 +347,15 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 	util.CheckErr(err)
 	defer data.Close()
 
-	client := &http.Client{}
-	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+s.FixtureId, data)
+	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient/"+s.FixtureID, data)
 	req.Header.Add("Content-Type", "application/json")
 	util.CheckErr(err)
-	_, err = client.Do(req)
+	res, err := http.DefaultClient.Do(req)
 
-	patientCollection := Database.C("patients")
+	c.Assert(res.StatusCode, Equals, 200)
+	patientCollection := s.Database.C("patients")
 	patient := models.Patient{}
-	err = patientCollection.Find(bson.M{"_id": s.FixtureId}).One(&patient)
+	err = patientCollection.FindId(s.FixtureID).One(&patient)
 	util.CheckErr(err)
 	c.Assert(patient.Name[0].Family[0], Equals, "Darkwing")
 	c.Assert(patient.Meta, NotNil)
@@ -362,7 +367,6 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 }
 
 func (s *ServerSuite) TestDeletePatient(c *C) {
-
 	data, err := os.Open("../fixtures/patient-example-d.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -371,17 +375,45 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	util.CheckErr(err)
 
 	splitLocation := strings.Split(res.Header["Location"][0], "/")
-	createdPatientId := splitLocation[len(splitLocation)-1]
+	createdPatientID := splitLocation[len(splitLocation)-1]
 
-	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", s.Server.URL+"/Patient/"+createdPatientId, nil)
+	req, err := http.NewRequest("DELETE", s.Server.URL+"/Patient/"+createdPatientID, nil)
 	util.CheckErr(err)
-	_, err = client.Do(req)
+	res, err = http.DefaultClient.Do(req)
 
-	patientCollection := Database.C("patients")
-
-	count, err := patientCollection.Find(bson.M{"_id": createdPatientId}).Count()
+	c.Assert(res.StatusCode, Equals, 204)
+	patientCollection := s.Database.C("patients")
+	count, err := patientCollection.FindId(createdPatientID).Count()
 	c.Assert(count, Equals, 0)
+}
+
+func (s *ServerSuite) TestConditionalDelete(c *C) {
+	// Add 39 more patients (with total 32 male and 8 female)
+	patientCollection := s.Database.C("patients")
+	for i := 0; i < 39; i++ {
+		patient := loadPatientFromFixture("../fixtures/patient-example-a.json")
+		patient.Id = bson.NewObjectId().Hex()
+		if i%5 == 0 {
+			patient.Gender = "female"
+		}
+		err := patientCollection.Insert(patient)
+		util.CheckErr(err)
+	}
+
+	// First make sure there are really 40 patients
+	count, err := patientCollection.Count()
+	c.Assert(count, Equals, 40)
+
+	req, err := http.NewRequest("DELETE", s.Server.URL+"/Patient?gender=male", nil)
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 204)
+
+	// Only the 8 females should be left
+	count, err = patientCollection.Count()
+	c.Assert(count, Equals, 8)
 }
 
 func performSearch(c *C, url string) *models.Bundle {
@@ -405,9 +437,9 @@ func assertPagingLink(c *C, link models.BundleLinkComponent, relation string, co
 	c.Assert(link.Relation, Equals, relation)
 
 	urlStr := link.Url
-	urlUrl, err := url.Parse(urlStr)
+	urlURL, err := url.Parse(urlStr)
 	util.CheckErr(err)
-	v := urlUrl.Query()
+	v := urlURL.Query()
 
 	c.Assert(v.Get(search.CountParam), Equals, fmt.Sprint(count))
 	c.Assert(v.Get(search.OffsetParam), Equals, fmt.Sprint(offset))
@@ -417,9 +449,9 @@ func assertPagingLinkWithParams(c *C, link models.BundleLinkComponent, relation 
 	c.Assert(link.Relation, Equals, relation)
 
 	urlStr := link.Url
-	urlUrl, err := url.Parse(urlStr)
+	urlURL, err := url.Parse(urlStr)
 	util.CheckErr(err)
-	v := urlUrl.Query()
+	v := urlURL.Query()
 
 	for key, val := range values {
 		c.Assert(v[key], DeepEquals, val)
@@ -428,8 +460,8 @@ func assertPagingLinkWithParams(c *C, link models.BundleLinkComponent, relation 
 	c.Assert(v.Get(search.OffsetParam), Equals, fmt.Sprint(offset))
 }
 
-func insertPatientFromFixture(filePath string) *models.Patient {
-	patientCollection := Database.C("patients")
+func (s *ServerSuite) insertPatientFromFixture(filePath string) *models.Patient {
+	patientCollection := s.Database.C("patients")
 	patient := loadPatientFromFixture(filePath)
 	patient.Id = bson.NewObjectId().Hex()
 	err := patientCollection.Insert(patient)
