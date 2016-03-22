@@ -1,18 +1,10 @@
 package server
 
-import "github.com/labstack/echo"
+import "github.com/gin-gonic/gin"
 
-func RegisterController(name string, e *echo.Echo, m []echo.Middleware, dal DataAccessLayer, config Config) {
+func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal DataAccessLayer, config Config) {
 	rc := NewResourceController(name, dal)
 	rcBase := e.Group("/" + name)
-	rcBase.Get("", rc.IndexHandler)
-	rcBase.Post("", rc.CreateHandler)
-	rcBase.Delete("", rc.ConditionalDeleteHandler)
-
-	rcItem := rcBase.Group("/:id")
-	rcItem.Get("", rc.ShowHandler)
-	rcItem.Put("", rc.UpdateHandler)
-	rcItem.Delete("", rc.DeleteHandler)
 
 	if len(m) > 0 {
 		rcBase.Use(m...)
@@ -21,13 +13,22 @@ func RegisterController(name string, e *echo.Echo, m []echo.Middleware, dal Data
 	if config.UseSmartAuth {
 		rcBase.Use(SmartAuthHandler(name))
 	}
+
+	rcBase.GET("", rc.IndexHandler)
+	rcBase.POST("", rc.CreateHandler)
+	rcBase.DELETE("", rc.ConditionalDeleteHandler)
+
+	rcItem := rcBase.Group("/:id")
+	rcItem.GET("", rc.ShowHandler)
+	rcItem.PUT("", rc.UpdateHandler)
+	rcItem.DELETE("", rc.DeleteHandler)
 }
 
-func RegisterRoutes(e *echo.Echo, config map[string][]echo.Middleware, dal DataAccessLayer, serverConfig Config) {
+func RegisterRoutes(e *gin.Engine, config map[string][]gin.HandlerFunc, dal DataAccessLayer, serverConfig Config) {
 
 	// Batch Support
 	batch := NewBatchController(dal)
-	e.Post("/", batch.Post)
+	e.POST("/", batch.Post)
 
 	// Resources
 

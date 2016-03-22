@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/intervention-engine/fhir/models"
 	"github.com/intervention-engine/fhir/search"
-	"github.com/labstack/echo"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
 	"gopkg.in/mgo.v2"
@@ -23,7 +23,7 @@ import (
 type ServerSuite struct {
 	Database  *mgo.Database
 	Session   *mgo.Session
-	Echo      *echo.Echo
+	Engine    *gin.Engine
 	Server    *httptest.Server
 	FixtureID string
 }
@@ -40,11 +40,11 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 	s.Database = s.Session.DB("fhir-test")
 
 	// Build routes for testing
-	s.Echo = echo.New()
-	RegisterRoutes(s.Echo, make(map[string][]echo.Middleware), NewMongoDataAccessLayer(s.Database), Config{})
+	s.Engine = gin.New()
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Database), Config{})
 
 	// Create httptest server
-	s.Server = httptest.NewServer(s.Echo.Router())
+	s.Server = httptest.NewServer(s.Engine)
 }
 
 func (s *ServerSuite) SetUpTest(c *C) {

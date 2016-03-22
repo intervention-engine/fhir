@@ -1,23 +1,20 @@
 package server
 
 import (
-	"bytes"
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/labstack/echo"
+	"github.com/gin-gonic/gin"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
 )
 
 type SmartAuthSuite struct {
-	Echo *echo.Echo
 }
 
 var _ = Suite(&SmartAuthSuite{})
 
 func (s *SmartAuthSuite) SetUpTest(c *C) {
-	s.Echo = echo.New()
 }
 
 func (s *SmartAuthSuite) TestGetPatientWithoutScopes(c *C) {
@@ -61,21 +58,19 @@ func (s *SmartAuthSuite) TestPostPatientWithScopes(c *C) {
 }
 
 func (s *SmartAuthSuite) SetUpRequest(method, scopes string) *httptest.ResponseRecorder {
-	var buf bytes.Buffer
-	r, err := http.NewRequest(method, "http://fhir-server/", &buf)
+	r, err := http.NewRequest(method, "/", nil)
 	util.CheckErr(err)
 	r.Header.Add("Content-Type", "application/json")
 	r.Header.Add("X-DELEGATED", "true")
 	if scopes != "" {
 		r.Header.Add("X-SCOPE", scopes)
 	}
+	e := gin.New()
 	rw := httptest.NewRecorder()
-	ctx := echo.NewContext(r, echo.NewResponse(rw, s.Echo), s.Echo)
-
-	noop := func(c *echo.Context) error { return c.String(http.StatusOK, "Hello") }
-	handlerGenerator := SmartAuthHandler("Patient")
-	handler := handlerGenerator(noop)
-	err = handler(ctx)
-	util.CheckErr(err)
+	noop := func(c *gin.Context) { c.String(http.StatusOK, "Hello") }
+	authHandler := SmartAuthHandler("Patient")
+	e.GET("/", authHandler, noop)
+	e.POST("/", authHandler, noop)
+	e.ServeHTTP(rw, r)
 	return rw
 }
