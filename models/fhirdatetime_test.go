@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/pebbe/util"
 	check "gopkg.in/check.v1"
@@ -31,10 +32,11 @@ func (s *FDSuite) TestFHIRDateTime(c *check.C) {
 	util.CheckErr(err)
 
 	c.Assert(simple.Foo, check.HasLen, 3)
-	c.Assert(simple.Foo[0].Time.Unix(), check.Equals, int64(665420400))
+	loc, err := time.LoadLocation("America/New_York")
+	c.Assert(simple.Foo[0].Time.Equal(time.Date(1991, time.February, 1, 10, 0, 0, 0, loc)), check.Equals, true)
 	c.Assert(simple.Foo[0].Precision, check.Equals, Precision(Timestamp))
-	c.Assert(simple.Foo[1].Time.Unix(), check.Equals, int64(696902400))
+	c.Assert(simple.Foo[1].Time.Equal(time.Date(1992, time.February, 1, 0, 0, 0, 0, time.Local)), check.Equals, true)
 	c.Assert(simple.Foo[1].Precision, check.Equals, Precision(Date))
-	c.Assert(simple.Foo[2].Time.Unix(), check.Equals, int64(728578800))
+	c.Assert(simple.Foo[2].Time.Equal(time.Date(1993, time.February, 1, 10, 0, 0, 0, loc)), check.Equals, true)
 	c.Assert(simple.Foo[2].Precision, check.Equals, Precision(Timestamp))
 }
