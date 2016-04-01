@@ -1530,6 +1530,18 @@ func (s *SearchPTSuite) TestQueryOptions(c *C) {
 	c.Assert(o.RevInclude[1].Parameter.Name, Equals, "patient")
 }
 
+func (s *SearchPTSuite) TestQueryOptionsWithSTU3Sort(c *C) {
+	q := Query{Resource: "Patient", Query: "_sort=family,given,-birthdate"}
+	o := q.Options()
+	c.Assert(o.Sort, HasLen, 3)
+	c.Assert(o.Sort[0].Descending, Equals, false)
+	c.Assert(o.Sort[0].Parameter.Name, Equals, "family")
+	c.Assert(o.Sort[1].Descending, Equals, false)
+	c.Assert(o.Sort[1].Parameter.Name, Equals, "given")
+	c.Assert(o.Sort[2].Descending, Equals, true)
+	c.Assert(o.Sort[2].Parameter.Name, Equals, "birthdate")
+}
+
 func (s *SearchPTSuite) TestQueryOptionsInvalidSortParam(c *C) {
 	q := Query{Resource: "Patient", Query: "_sort=foo"}
 	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_sort\" content is invalid"))
@@ -1651,6 +1663,13 @@ func (s *SearchPTSuite) TestReconstructQueryStringWithSorts(c *C) {
 	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort%3Aasc=birthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient"}
 	params := q.URLQueryParameters(true)
 	c.Assert(params.Encode(), Equals, "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort=birthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient")
+}
+
+func (s *SearchPTSuite) TestReconstructQueryStringWithSTU3Sorts(c *C) {
+	// The main purpose of this is to ensure that STU3-style sort gets reconstructed in STU3-style
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family%2C-given%2Cbirthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient"}
+	params := q.URLQueryParameters(true)
+	c.Assert(params.Encode(), Equals, "name%3Aexact=Robert+Smith&gender=male&_sort=family%2C-given%2Cbirthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient")
 }
 
 func (s *SearchPTSuite) TestQueryOptionsURLQueryParameters(c *C) {
