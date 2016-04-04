@@ -7,6 +7,7 @@
 *.so
 
 # Folders
+.vscode
 _obj
 _test
 

@@ -2,6 +2,7 @@ package server
 
 import "github.com/gin-gonic/gin"
 
+// RegisterController registers the CRUD routes (and middleware) for a FHIR resource
 func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal DataAccessLayer, config Config) {
 	rc := NewResourceController(name, dal)
 	rcBase := e.Group("/" + name)
@@ -16,6 +17,7 @@ func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal Dat
 
 	rcBase.GET("", rc.IndexHandler)
 	rcBase.POST("", rc.CreateHandler)
+	rcBase.PUT("", rc.ConditionalUpdateHandler)
 	rcBase.DELETE("", rc.ConditionalDeleteHandler)
 
 	rcItem := rcBase.Group("/:id")
@@ -24,6 +26,7 @@ func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal Dat
 	rcItem.DELETE("", rc.DeleteHandler)
 }
 
+// RegisterRoutes registers the routes for each of the FHIR resources
 func RegisterRoutes(e *gin.Engine, config map[string][]gin.HandlerFunc, dal DataAccessLayer, serverConfig Config) {
 
 	// Batch Support
