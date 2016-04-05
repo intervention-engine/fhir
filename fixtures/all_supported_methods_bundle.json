@@ -83,6 +83,32 @@
 				"method": "POST",
 				"url": "Condition"
       }
+    }, 
+    {
+      "fullUrl": "https://example.com/base/Encounter/56afe6b85cdc7ec329dfe6a7",
+      "resource": {
+				"resourceType": "Encounter",
+				"status": "finished",
+				"period": {
+					"start": "2011-12-01T08:00:00-05:00",
+					"end": "2011-12-01T09:00:00-05:00"
+				}
+			},
+      "request": {
+				"method": "PUT",
+				"url": "Encounter/56afe6b85cdc7ec329dfe6a7"
+      }
+    },
+    {
+      "fullUrl": "https://example.com/base/Encounter/56afe6b85cdc7ec329dfe6a8",
+      "resource": {
+				"resourceType": "Encounter",
+				"status": "planned"
+			},
+      "request": {
+				"method": "PUT",
+				"url": "Encounter/56afe6b85cdc7ec329dfe6a8"
+      }
     }
 	]
 }

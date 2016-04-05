@@ -73,6 +73,15 @@ func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNe
 }
 
 func (dal *mongoDataAccessLayer) ConditionalPut(query search.Query, resource interface{}) (id string, createdNew bool, err error) {
+	id, createdNew, err = dal.ConditionalPutPreflight(query, resource)
+	if err != nil {
+		return id, createdNew, err
+	}
+	createdNew, err = dal.Put(id, resource)
+	return id, createdNew, err
+}
+
+func (dal *mongoDataAccessLayer) ConditionalPutPreflight(query search.Query, resource interface{}) (id string, createdNew bool, err error) {
 	searcher := search.NewMongoSearcher(dal.Database)
 	// We limit the query to two results in order to pull back the least amount of data while still checking if there is
 	// more than one match.
@@ -84,13 +93,11 @@ func (dal *mongoDataAccessLayer) ConditionalPut(query search.Query, resource int
 		return "", false, err
 	}
 	if len(results) == 0 {
-		// Resource doesn't exist, so create it
-		id, err := dal.Post(resource)
-		return id, err == nil, err
+		// Resource doesn't exist, so it should be created
+		return bson.NewObjectId().Hex(), true, nil
 	} else if len(results) == 1 {
-		// Resource exists, so update it
-		_, err := dal.Put(results[0].ID, resource)
-		return results[0].ID, false, err
+		// Resource exists, so it should be updated
+		return results[0].ID, false, nil
 	}
 
 	// If we got here, there was more than one result, so return an error

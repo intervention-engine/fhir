@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -28,6 +29,8 @@ type BatchControllerSuite struct {
 var _ = Suite(&BatchControllerSuite{})
 
 func (s *BatchControllerSuite) SetUpSuite(c *C) {
+	// Set gin to release mode because the first printout of all routes makes it hard to see what is failing
+	gin.SetMode(gin.ReleaseMode)
 
 	// Set up the database
 	var err error
@@ -43,8 +46,11 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 	s.Server = httptest.NewServer(s.Engine)
 }
 
-func (s *BatchControllerSuite) TearDownSuite(c *C) {
+func (s *BatchControllerSuite) TearDownTest(c *C) {
 	s.Database.DropDatabase()
+}
+
+func (s *BatchControllerSuite) TearDownSuite(c *C) {
 	s.Session.Close()
 	s.Server.Close()
 }
@@ -258,7 +264,7 @@ func (s *BatchControllerSuite) TestConditionalDeleteEntriesBundle(c *C) {
 	c.Assert(count, Equals, 0)
 }
 
-func (s *BatchControllerSuite) TestUploadPatientBundle(c *C) {
+func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 	data, err := os.Open("../fixtures/john_peters_bundle.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -365,8 +371,169 @@ func (s *BatchControllerSuite) TestUploadPatientBundle(c *C) {
 	s.checkReference(c, &responseBundle.Entry[12].Resource.(*models.DiagnosticReport).Result[2], obs2Id, "Observation")
 }
 
+func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
+	// Put some records in the database to update
+	patient := &models.Patient{
+		Identifier: []models.Identifier{
+			{System: "http://test.org/simple", Value: "doejohn"},
+		},
+		Name: []models.HumanName{
+			{Given: []string{"John"}, Family: []string{"Doe"}},
+		},
+	}
+	patient.Id = "56afe6b85cdc7ec329dfe6a0"
+	condition := &models.Condition{
+		Patient: &models.Reference{
+			Type:         "Patient",
+			Reference:    s.Server.URL + "/Patient/56afe6b85cdc7ec329dfe6a0",
+			ReferencedID: "56afe6b85cdc7ec329dfe6a0",
+			External:     new(bool),
+		},
+		Code: &models.CodeableConcept{
+			Coding: []models.Coding{
+				{System: "Foo", Code: "Bar"},
+			},
+		},
+		VerificationStatus: "confirmed",
+	}
+	condition.Id = "56afe6b85cdc7ec329dfe6a1"
+	condition2 := &models.Condition{
+		Patient: &models.Reference{
+			Type:         "Patient",
+			Reference:    s.Server.URL + "/Patient/56afe6b85cdc7ec329dfe6a0",
+			ReferencedID: "56afe6b85cdc7ec329dfe6a0",
+			External:     new(bool),
+		},
+		Code: &models.CodeableConcept{
+			Coding: []models.Coding{
+				{System: "Foo", Code: "Baz"},
+			},
+		},
+		VerificationStatus: "confirmed",
+	}
+	condition2.Id = "56afe6b85cdc7ec329dfe6a2"
+
+	// Insert the conditions into the db
+	patCollection := s.Database.C("patients")
+	err := patCollection.Insert(patient)
+	util.CheckErr(err)
+	condCollection := s.Database.C("conditions")
+	err = condCollection.Insert(condition, condition2)
+	util.CheckErr(err)
+
+	// Now load the bundle with the put entries and post it.
+	data, err := os.Open("../fixtures/put_entries_bundle.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	res, err := http.Post(s.Server.URL+"/", "application/json", data)
+	util.CheckErr(err)
+
+	// Successful bundle processing should return a 200
+	c.Assert(res.StatusCode, Equals, 200)
+
+	decoder := json.NewDecoder(res.Body)
+	responseBundle := &models.Bundle{}
+	err = decoder.Decode(responseBundle)
+	util.CheckErr(err)
+
+	c.Assert(responseBundle.Type, Equals, "transaction-response")
+	c.Assert(*responseBundle.Total, Equals, uint32(4))
+	c.Assert(responseBundle.Entry, HasLen, 4)
+
+	patEntry := responseBundle.Entry[0]
+
+	// response resource type should match request resource type
+	c.Assert(patEntry.Resource, FitsTypeOf, &models.Patient{})
+
+	// full URLs and IDs should contain correct ID in response
+	c.Assert(patEntry.FullUrl, Equals, s.Server.URL+"/Patient/56afe6b85cdc7ec329dfe6a0")
+	c.Assert(s.getResourceID(patEntry), Equals, "56afe6b85cdc7ec329dfe6a0")
+
+	// resource should have lastUpdatedTime
+	m := reflect.ValueOf(patEntry.Resource).Elem().FieldByName("Meta").Interface().(*models.Meta)
+	c.Assert(m, NotNil)
+	c.Assert(m.LastUpdated, NotNil)
+	c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	since := time.Since(m.LastUpdated.Time)
+	c.Assert(since.Hours() < float64(1), Equals, true)
+	c.Assert(since.Minutes() < float64(1), Equals, true)
+
+	// response should not contain the request
+	c.Assert(patEntry.Request, IsNil)
+
+	// response should have 200 status and location
+	c.Assert(patEntry.Response.Status, Equals, "200")
+	c.Assert(patEntry.Response.Location, Equals, patEntry.FullUrl)
+
+	// Now check other entries
+	expectedIDs := []string{"56afe6b85cdc7ec329dfe6a2", "56afe6b85cdc7ec329dfe6a3", "56afe6b85cdc7ec329dfe6a1"}
+	for i := 1; i < len(responseBundle.Entry); i++ {
+		resEntry := responseBundle.Entry[i]
+
+		// response resource type should be a condition
+		c.Assert(resEntry.Resource, FitsTypeOf, &models.Condition{})
+
+		// Reference to patient should be to upserted patient
+		s.checkReference(c, resEntry.Resource.(*models.Condition).Patient, "56afe6b85cdc7ec329dfe6a0", "Patient")
+
+		// check full URL and ID match expected values
+		c.Assert(resEntry.FullUrl, Equals, s.Server.URL+"/Condition/"+expectedIDs[i-1])
+		c.Assert(s.getResourceID(resEntry), Equals, expectedIDs[i-1])
+
+		// resource should have lastUpdatedTime
+		m := reflect.ValueOf(resEntry.Resource).Elem().FieldByName("Meta").Interface().(*models.Meta)
+		c.Assert(m, NotNil)
+		c.Assert(m.LastUpdated, NotNil)
+		c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+		since := time.Since(m.LastUpdated.Time)
+		c.Assert(since.Hours() < float64(1), Equals, true)
+		c.Assert(since.Minutes() < float64(1), Equals, true)
+
+		// response should not contain the request
+		c.Assert(resEntry.Request, IsNil)
+
+		// response should have 200 or 201 status and location
+		switch i {
+		case 1, 3:
+			c.Assert(resEntry.Response.Status, Equals, "200")
+		case 2:
+			c.Assert(resEntry.Response.Status, Equals, "201")
+		}
+		c.Assert(resEntry.Response.Location, Equals, resEntry.FullUrl)
+	}
+
+	// Now do a quick content check
+	count, err := condCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 3)
+
+	pat1 := models.Patient{}
+	err = patCollection.FindId("56afe6b85cdc7ec329dfe6a0").One(&pat1)
+	util.CheckErr(err)
+	c.Assert(pat1.Gender, Equals, "male")
+
+	cond1 := models.Condition{}
+	err = condCollection.FindId("56afe6b85cdc7ec329dfe6a1").One(&cond1)
+	util.CheckErr(err)
+	c.Assert(cond1.Code.Coding, HasLen, 1)
+	c.Assert(cond1.Code.Coding[0].Code, Equals, "Bar2")
+
+	cond2 := models.Condition{}
+	err = condCollection.FindId("56afe6b85cdc7ec329dfe6a2").One(&cond2)
+	util.CheckErr(err)
+	c.Assert(cond2.Code.Coding, HasLen, 1)
+	c.Assert(cond2.Code.Coding[0].Code, Equals, "Baz2")
+
+	cond3 := models.Condition{}
+	err = condCollection.FindId("56afe6b85cdc7ec329dfe6a3").One(&cond3)
+	util.CheckErr(err)
+	c.Assert(cond3.Code.Coding, HasLen, 1)
+	c.Assert(cond3.Code.Coding[0].Code, Equals, "Bat")
+}
+
 func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
-	// Put some records in the database to delete
+	// Create some records to delete or update
 	condition := &models.Condition{
 		Patient: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
 		Code: &models.CodeableConcept{
@@ -381,10 +548,14 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 		Status: "finished",
 	}
 	encounter.Id = "56afe6b85cdc7ec329dfe6a6"
+	encounter2 := &models.Encounter{
+		Status: "planned",
+	}
+	encounter2.Id = "56afe6b85cdc7ec329dfe6a7"
 
-	// Put those records in the db to delete
+	// Put those records in the db to delete or update
 	encCollection := s.Database.C("encounters")
-	err := encCollection.Insert(encounter)
+	err := encCollection.Insert(encounter, encounter2)
 	util.CheckErr(err)
 	condCollection := s.Database.C("conditions")
 	err = condCollection.Insert(condition)
@@ -397,8 +568,11 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6a6").Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 1)
+	count, err = encCollection.FindId("56afe6b85cdc7ec329dfe6a7").Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
 
-	// Load the bundle with delete / post entries and post it
+	// Load the bundle with delete / post /put entries and post it
 	data, err := os.Open("../fixtures/all_supported_methods_bundle.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -420,10 +594,10 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	util.CheckErr(err)
 
 	c.Assert(responseBundle.Type, Equals, "transaction-response")
-	c.Assert(*responseBundle.Total, Equals, uint32(5))
-	c.Assert(responseBundle.Entry, HasLen, 5)
+	c.Assert(*responseBundle.Total, Equals, uint32(7))
+	c.Assert(responseBundle.Entry, HasLen, 7)
 
-	// First check the deleted resources (first two entries)
+	// First check the DELETEd resources (first two entries)
 	for i := 0; i < 2; i++ {
 		entry := responseBundle.Entry[i]
 
@@ -451,6 +625,7 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	util.CheckErr(err)
 	c.Assert(count, Equals, 0)
 
+	// Then check the POSTed resources
 	for i := 2; i < 5; i++ {
 		resEntry, reqEntry := responseBundle.Entry[i], requestBundle.Entry[i]
 
@@ -487,6 +662,49 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 		util.CheckErr(err)
 		c.Assert(num, Equals, 1)
 	}
+
+	// Then check the PUTted resources
+	expectedIDs := []string{"56afe6b85cdc7ec329dfe6a7", "56afe6b85cdc7ec329dfe6a8"}
+	for i := 5; i < 7; i++ {
+		resEntry := responseBundle.Entry[i]
+
+		// response resource type should be an encounter
+		c.Assert(resEntry.Resource, FitsTypeOf, &models.Encounter{})
+
+		// check full URL and ID match expected values
+		c.Assert(resEntry.FullUrl, Equals, s.Server.URL+"/Encounter/"+expectedIDs[i-5])
+		c.Assert(s.getResourceID(resEntry), Equals, expectedIDs[i-5])
+
+		// resource should have lastUpdatedTime
+		m := reflect.ValueOf(resEntry.Resource).Elem().FieldByName("Meta").Interface().(*models.Meta)
+		c.Assert(m, NotNil)
+		c.Assert(m.LastUpdated, NotNil)
+		c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+		since := time.Since(m.LastUpdated.Time)
+		c.Assert(since.Hours() < float64(1), Equals, true)
+		c.Assert(since.Minutes() < float64(1), Equals, true)
+
+		// response should not contain the request
+		c.Assert(resEntry.Request, IsNil)
+
+		// response should have 200 or 201 status and location
+		c.Assert(resEntry.Response.Status, Equals, fmt.Sprint(195+i)) // this just happens to work out (200, 201)
+		c.Assert(resEntry.Response.Location, Equals, resEntry.FullUrl)
+	}
+
+	// Quick content check on the PUTs
+	enc1 := models.Encounter{}
+	err = encCollection.FindId("56afe6b85cdc7ec329dfe6a7").One(&enc1)
+	util.CheckErr(err)
+	c.Assert(enc1.Status, Equals, "finished")
+	c.Assert(enc1.Period.Start.Time.Equal(time.Date(2011, 12, 1, 13, 0, 0, 0, time.UTC)), Equals, true)
+	c.Assert(enc1.Period.End.Time.Equal(time.Date(2011, 12, 1, 14, 0, 0, 0, time.UTC)), Equals, true)
+
+	enc2 := models.Encounter{}
+	err = encCollection.FindId("56afe6b85cdc7ec329dfe6a8").One(&enc2)
+	util.CheckErr(err)
+	c.Assert(enc2.Status, Equals, "planned")
+	c.Assert(enc2.Period, IsNil)
 
 	// Check patient references
 	patientID := responseBundle.Entry[2].Resource.(*models.Patient).Id
