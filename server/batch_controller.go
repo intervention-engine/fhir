@@ -219,8 +219,18 @@ func (b *BatchController) resolveConditionalPut(request *http.Request, entryInde
 	// Do a preflight to either get the existing ID, get a new ID, or detect multiple matches (not allowed)
 	parts := strings.SplitN(entry.Request.Url, "?", 2)
 	query := search.Query{Resource: parts[0], Query: parts[1]}
-	id, _, err := b.DAL.ConditionalPutPreflight(query, entry.Resource)
-	if err != nil {
+
+	var id string
+	if IDs, err := b.DAL.FindIDs(query); err == nil {
+		switch len(IDs) {
+		case 0:
+			id = bson.NewObjectId().Hex()
+		case 1:
+			id = IDs[0]
+		default:
+			return ErrMultipleMatches
+		}
+	} else {
 		return err
 	}
 

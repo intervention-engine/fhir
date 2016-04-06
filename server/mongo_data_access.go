@@ -73,35 +73,21 @@ func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNe
 }
 
 func (dal *mongoDataAccessLayer) ConditionalPut(query search.Query, resource interface{}) (id string, createdNew bool, err error) {
-	id, createdNew, err = dal.ConditionalPutPreflight(query, resource)
-	if err != nil {
-		return id, createdNew, err
-	}
-	createdNew, err = dal.Put(id, resource)
-	return id, createdNew, err
-}
-
-func (dal *mongoDataAccessLayer) ConditionalPutPreflight(query search.Query, resource interface{}) (id string, createdNew bool, err error) {
-	searcher := search.NewMongoSearcher(dal.Database)
-	// We limit the query to two results in order to pull back the least amount of data while still checking if there is
-	// more than one match.
-	mgoQuery := searcher.CreateQuery(query).Limit(2).Select(bson.M{"_id": 1})
-	results := []struct {
-		ID string `bson:"_id"`
-	}{}
-	if err := mgoQuery.All(&results); err != nil {
+	if IDs, err := dal.FindIDs(query); err == nil {
+		switch len(IDs) {
+		case 0:
+			id = bson.NewObjectId().Hex()
+		case 1:
+			id = IDs[0]
+		default:
+			return "", false, ErrMultipleMatches
+		}
+	} else {
 		return "", false, err
 	}
-	if len(results) == 0 {
-		// Resource doesn't exist, so it should be created
-		return bson.NewObjectId().Hex(), true, nil
-	} else if len(results) == 1 {
-		// Resource exists, so it should be updated
-		return results[0].ID, false, nil
-	}
 
-	// If we got here, there was more than one result, so return an error
-	return "", false, ErrMultipleMatches
+	createdNew, err = dal.Put(id, resource)
+	return id, createdNew, err
 }
 
 func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
@@ -197,6 +183,38 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	bundle.Link = generatePagingLinks(baseURL, searchQuery, total)
 
 	return &bundle, nil
+}
+
+func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string, err error) {
+	// First create a new query with the unsupported query options filtered out
+	oldParams := searchQuery.URLQueryParameters(false)
+	newParams := search.URLQueryParameters{}
+	for _, param := range oldParams.All() {
+		switch param.Key {
+		case search.ContainedParam, search.ContainedTypeParam, search.ElementsParam, search.IncludeParam,
+			search.RevIncludeParam, search.SummaryParam:
+			continue
+		default:
+			newParams.Add(param.Key, param.Value)
+		}
+	}
+	newQuery := search.Query{Resource: searchQuery.Resource, Query: newParams.Encode()}
+
+	// Now search on that query, unmarshaling to a temporary struct and converting results to []string
+	searcher := search.NewMongoSearcher(dal.Database)
+	mgoQuery := searcher.CreateQuery(newQuery).Select(bson.M{"_id": 1})
+	results := []struct {
+		ID string `bson:"_id"`
+	}{}
+	if err := mgoQuery.All(&results); err != nil {
+		return nil, err
+	}
+	IDs = make([]string, len(results))
+	for i := range results {
+		IDs[i] = results[i].ID
+	}
+
+	return IDs, nil
 }
 
 // ResourcePlusRelatedResources is an interface to capture those structs that implement the functions for
