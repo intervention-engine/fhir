@@ -295,9 +295,7 @@ func (s *ServerSuite) checkCreatedPatient(createdPatientID string, c *C) {
 	c.Assert(patient.Meta, NotNil)
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-	since := time.Since(patient.Meta.LastUpdated.Time)
-	c.Assert(since.Hours() < float64(1), Equals, true)
-	c.Assert(since.Minutes() < float64(1), Equals, true)
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 }
 
 func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
@@ -361,9 +359,7 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 	c.Assert(patient.Meta, NotNil)
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-	since := time.Since(patient.Meta.LastUpdated.Time)
-	c.Assert(since.Hours() < float64(1), Equals, true)
-	c.Assert(since.Minutes() < float64(1), Equals, true)
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 }
 
 func (s *ServerSuite) TestConditionalUpdatePatientNoMatch(c *C) {
@@ -393,9 +389,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientNoMatch(c *C) {
 	c.Assert(patient.Meta, NotNil)
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-	since := time.Since(patient.Meta.LastUpdated.Time)
-	c.Assert(since.Hours() < float64(1), Equals, true)
-	c.Assert(since.Minutes() < float64(1), Equals, true)
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 
 	// Check existing (unmatched) patient
 	patient2 := models.Patient{}
@@ -426,9 +420,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 	c.Assert(patient.Meta, NotNil)
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-	since := time.Since(patient.Meta.LastUpdated.Time)
-	c.Assert(since.Hours() < float64(1), Equals, true)
-	c.Assert(since.Minutes() < float64(1), Equals, true)
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 }
 
 func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {

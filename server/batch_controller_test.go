@@ -307,9 +307,7 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 		c.Assert(m, NotNil)
 		c.Assert(m.LastUpdated, NotNil)
 		c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-		since := time.Since(m.LastUpdated.Time)
-		c.Assert(since.Hours() < float64(1), Equals, true)
-		c.Assert(since.Minutes() < float64(1), Equals, true)
+		c.Assert(time.Since(m.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 
 		// response should not contain the request
 		c.Assert(resEntry.Request, IsNil)
@@ -455,9 +453,7 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 	c.Assert(m, NotNil)
 	c.Assert(m.LastUpdated, NotNil)
 	c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-	since := time.Since(m.LastUpdated.Time)
-	c.Assert(since.Hours() < float64(1), Equals, true)
-	c.Assert(since.Minutes() < float64(1), Equals, true)
+	c.Assert(time.Since(m.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 
 	// response should not contain the request
 	c.Assert(patEntry.Request, IsNil)
@@ -486,9 +482,7 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 		c.Assert(m, NotNil)
 		c.Assert(m.LastUpdated, NotNil)
 		c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-		since := time.Since(m.LastUpdated.Time)
-		c.Assert(since.Hours() < float64(1), Equals, true)
-		c.Assert(since.Minutes() < float64(1), Equals, true)
+		c.Assert(time.Since(m.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 
 		// response should not contain the request
 		c.Assert(resEntry.Request, IsNil)
@@ -644,9 +638,7 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 		c.Assert(m, NotNil)
 		c.Assert(m.LastUpdated, NotNil)
 		c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-		since := time.Since(m.LastUpdated.Time)
-		c.Assert(since.Hours() < float64(1), Equals, true)
-		c.Assert(since.Minutes() < float64(1), Equals, true)
+		c.Assert(time.Since(m.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 
 		// response should not contain the request
 		c.Assert(resEntry.Request, IsNil)
@@ -680,9 +672,7 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 		c.Assert(m, NotNil)
 		c.Assert(m.LastUpdated, NotNil)
 		c.Assert(m.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-		since := time.Since(m.LastUpdated.Time)
-		c.Assert(since.Hours() < float64(1), Equals, true)
-		c.Assert(since.Minutes() < float64(1), Equals, true)
+		c.Assert(time.Since(m.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 
 		// response should not contain the request
 		c.Assert(resEntry.Request, IsNil)
