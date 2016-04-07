@@ -228,7 +228,7 @@ func (s *ServerSuite) TestGetPatient(c *C) {
 	patient := &models.Patient{}
 	err = decoder.Decode(patient)
 	util.CheckErr(err)
-	c.Assert(patient.Name[0].Family[0], Equals, "Donald")
+	c.Assert(patient.Name[0].Given[0], Equals, "Donald")
 }
 
 func (s *ServerSuite) TestGetNonExistingPatient(c *C) {
@@ -291,13 +291,11 @@ func (s *ServerSuite) checkCreatedPatient(createdPatientID string, c *C) {
 	patient := models.Patient{}
 	err := patientCollection.Find(bson.M{"_id": createdPatientID}).One(&patient)
 	util.CheckErr(err)
-	c.Assert(patient.Name[0].Family[0], Equals, "Daffy")
+	c.Assert(patient.Name[0].Given[0], Equals, "Don")
 	c.Assert(patient.Meta, NotNil)
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-	since := time.Since(patient.Meta.LastUpdated.Time)
-	c.Assert(since.Hours() < float64(1), Equals, true)
-	c.Assert(since.Minutes() < float64(1), Equals, true)
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 }
 
 func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
@@ -357,13 +355,105 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 	patient := models.Patient{}
 	err = patientCollection.FindId(s.FixtureID).One(&patient)
 	util.CheckErr(err)
-	c.Assert(patient.Name[0].Family[0], Equals, "Darkwing")
+	c.Assert(patient.Name[0].Given[0], Equals, "Donny")
 	c.Assert(patient.Meta, NotNil)
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
-	since := time.Since(patient.Meta.LastUpdated.Time)
-	c.Assert(since.Hours() < float64(1), Equals, true)
-	c.Assert(since.Minutes() < float64(1), Equals, true)
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+
+func (s *ServerSuite) TestConditionalUpdatePatientNoMatch(c *C) {
+	data, err := os.Open("../fixtures/patient-example-c.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient?name=Donny", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+
+	c.Assert(res.StatusCode, Equals, 201)
+	splitLocation := strings.Split(res.Header["Location"][0], "/")
+	createdPatientID := splitLocation[len(splitLocation)-1]
+
+	patientCollection := s.Database.C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 2)
+
+	// Check new patient
+	patient := models.Patient{}
+	err = patientCollection.FindId(createdPatientID).One(&patient)
+	util.CheckErr(err)
+	c.Assert(patient.Name[0].Given[0], Equals, "Donny")
+	c.Assert(patient.Meta, NotNil)
+	c.Assert(patient.Meta.LastUpdated, NotNil)
+	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+
+	// Check existing (unmatched) patient
+	patient2 := models.Patient{}
+	err = patientCollection.FindId(s.FixtureID).One(&patient2)
+	util.CheckErr(err)
+	c.Assert(patient2.Name[0].Given[0], Equals, "Donald")
+}
+
+func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
+	data, err := os.Open("../fixtures/patient-example-c.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient?name=Donald", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+
+	c.Assert(res.StatusCode, Equals, 200)
+	patientCollection := s.Database.C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 1)
+	patient := models.Patient{}
+	err = patientCollection.FindId(s.FixtureID).One(&patient)
+	util.CheckErr(err)
+	c.Assert(patient.Name[0].Given[0], Equals, "Donny")
+	c.Assert(patient.Meta, NotNil)
+	c.Assert(patient.Meta.LastUpdated, NotNil)
+	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+
+func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
+	// Add another duck to the database so we can have multiple results
+	p2 := s.insertPatientFromFixture("../fixtures/patient-example-b.json")
+
+	data, err := os.Open("../fixtures/patient-example-c.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	req, err := http.NewRequest("PUT", s.Server.URL+"/Patient?name=Duck", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+
+	// Should return an HTTP 412 Precondition Failed
+	c.Assert(res.StatusCode, Equals, 412)
+
+	// Ensure there are still only two
+	patientCollection := s.Database.C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 2)
+
+	// Ensure the two remaining have the right names
+	patient := models.Patient{}
+	err = patientCollection.FindId(s.FixtureID).One(&patient)
+	util.CheckErr(err)
+	c.Assert(patient.Name[0].Given[0], Equals, "Donald")
+	patient2 := models.Patient{}
+	err = patientCollection.FindId(p2.Id).One(&patient2)
+	util.CheckErr(err)
+	c.Assert(patient2.Name[0].Given[0], Equals, "Don")
 }
 
 func (s *ServerSuite) TestDeletePatient(c *C) {

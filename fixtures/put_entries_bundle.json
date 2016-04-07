@@ -1,0 +1,98 @@
+{
+    "resourceType": "Bundle",
+    "id": "bundle-transaction",
+    "type": "transaction",
+    "entry": [
+        {
+            "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12",
+            "resource": {
+                "resourceType": "Patient",
+                "name": [
+                    {
+                        "family": [
+                            "Doe"
+                        ],
+                        "given": [
+                            "John"
+                        ]
+                    }
+                ],
+                "gender": "male",
+                "birthDate": "1972-02-04"
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Patient?identifier=http://test.org/simple|doejohn"
+            }
+        },
+        {
+            "fullUrl": "https://example.com/base/Condition/56afe6b85cdc7ec329dfe6a2",
+            "resource": {
+                "resourceType": "Condition",
+                "verificationStatus": "confirmed",
+                "patient": {
+                    "reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12"
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "Foo",
+                            "code": "Baz2"
+                        }
+                    ],
+                    "text": "Foo Baz2"
+                }
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Condition/56afe6b85cdc7ec329dfe6a2"
+            }
+        },
+        {
+            "fullUrl": "https://example.com/base/Condition/56afe6b85cdc7ec329dfe6a3",
+            "resource": {
+                "resourceType": "Condition",
+                "verificationStatus": "confirmed",
+                "patient": {
+                    "reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12"
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "Foo",
+                            "code": "Bat"
+                        }
+                    ],
+                    "text": "Foo Bat"
+                }
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Condition/56afe6b85cdc7ec329dfe6a3"
+            }
+        },
+        {
+            "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009fd98e",
+            "resource": {
+                "resourceType": "Condition",
+                "verificationStatus": "confirmed",
+                "patient": {
+                    "reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12"
+                },
+                "code": {
+                    "coding": [
+                        {
+                            "system": "Foo",
+                            "code": "Bar2"
+                        }
+                    ],
+                    "text": "Foo Bar2"
+                }
+            },
+            "request": {
+                "method": "PUT",
+                "url": "Condition?code=Foo|Bar&patient=urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12"
+            }
+        }
+    ]
+}
