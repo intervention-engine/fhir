@@ -31,7 +31,10 @@ func RegisterRoutes(e *gin.Engine, config map[string][]gin.HandlerFunc, dal Data
 
 	// Batch Support
 	batch := NewBatchController(dal)
-	e.POST("/", batch.Post)
+	batchHandlers := make([]gin.HandlerFunc, len(config["Batch"]))
+	copy(batchHandlers, config["Batch"])
+	batchHandlers = append(batchHandlers, batch.Post)
+	e.POST("/", batchHandlers...)
 
 	// Resources
 
