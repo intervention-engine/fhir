@@ -2,6 +2,7 @@ package search
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -45,7 +46,7 @@ func (m *MongoSearchSuite) SetUpSuite(c *C) {
 
 	m.Session = m.DBServer.Session()
 	db := m.Session.DB("fhir-test")
-	m.MongoSearcher = &MongoSearcher{db}
+	m.MongoSearcher = NewMongoSearcher(db)
 
 	// Read in the data in FHIR format
 	data, err := ioutil.ReadFile("../fixtures/search_test_data.json")
@@ -1268,6 +1269,83 @@ func (m *MongoSearchSuite) TestSubscriptionURLQuery(c *C) {
 }
 
 // TODO: Test composite searches
+
+// Test custom search
+
+type BroParam struct {
+	info  SearchParamInfo
+	IsBro bool
+}
+
+func (b *BroParam) getInfo() SearchParamInfo {
+	return b.info
+}
+
+func (b *BroParam) getQueryParamAndValue() (string, string) {
+	return b.info.Name, fmt.Sprint(b.IsBro)
+}
+
+func BroParser(info SearchParamInfo, data SearchParamData) (SearchParam, error) {
+	broParam := new(BroParam)
+	broParam.info = info
+	broParam.IsBro = (data.Value == "true")
+	return broParam, nil
+}
+
+func BroBSONBuilder(p SearchParam, m *MongoSearcher) (bson.M, error) {
+	bp, ok := p.(*BroParam)
+	if !ok {
+		return nil, errors.New("Expected BroParam")
+	}
+	if bp.IsBro {
+		return bson.M{
+			"gender": "male",
+		}, nil
+	}
+	return bson.M{
+		"gender": bson.M{
+			"$not": "male",
+		},
+	}, nil
+}
+
+var broSearchParamInfo = SearchParamInfo{
+	Resource: "Patient",
+	Name:     "bro",
+	Type:     "test.bro",
+}
+
+func (m *MongoSearchSuite) TestBroCustomQueryObject(c *C) {
+	GlobalRegistry().RegisterParameterInfo(broSearchParamInfo)
+	GlobalRegistry().RegisterParameterParser("test.bro", BroParser)
+	GlobalMongoRegistry().RegisterBSONBuilder("test.bro", BroBSONBuilder)
+
+	q := Query{"Patient", "bro=true"}
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"gender": "male",
+	})
+
+	q = Query{"Patient", "bro=false"}
+	o = m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"gender": bson.M{
+			"$not": "male",
+		},
+	})
+}
+
+func (m *MongoSearchSuite) TestBroCustomQuery(c *C) {
+	GlobalRegistry().RegisterParameterInfo(broSearchParamInfo)
+	GlobalRegistry().RegisterParameterParser("test.bro", BroParser)
+	GlobalMongoRegistry().RegisterBSONBuilder("test.bro", BroBSONBuilder)
+
+	q := Query{"Patient", "bro=true"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+}
 
 // Tests special searches on _id
 
