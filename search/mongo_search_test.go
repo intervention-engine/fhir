@@ -549,6 +549,34 @@ func (m *MongoSearchSuite) TestConditionOnsetGTQuery(c *C) {
 	c.Assert(num, Equals, 1)
 }
 
+func (m *MongoSearchSuite) TestConditionOnsetSAQueryObject(c *C) {
+	q := Query{"Condition", "onset=sa2012-03-01T07:00"}
+
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"$or": []bson.M{
+			bson.M{
+				"onsetDateTime.time": bson.M{
+					"$gt": time.Date(2012, time.March, 1, 7, 0, 0, 0, m.Local),
+				},
+			},
+			bson.M{
+				"onsetPeriod.start.time": bson.M{
+					"$gte": time.Date(2012, time.March, 1, 7, 1, 0, 0, m.Local),
+				},
+			},
+		},
+	})
+}
+
+func (m *MongoSearchSuite) TestConditionOnsetSAQuery(c *C) {
+	q := Query{"Condition", "onset=sa2012-03-01T07:05-05:00"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+}
+
 func (m *MongoSearchSuite) TestConditionOnsetLTQueryObject(c *C) {
 	q := Query{"Condition", "onset=lt2012-03-01T07:00"}
 
@@ -575,6 +603,34 @@ func (m *MongoSearchSuite) TestConditionOnsetLTQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetLTQuery(c *C) {
 	q := Query{"Condition", "onset=lt2012-03-01T07:05-05:00"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 2)
+}
+
+func (m *MongoSearchSuite) TestConditionOnsetEBQueryObject(c *C) {
+	q := Query{"Condition", "onset=eb2012-03-01T07:00"}
+
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"$or": []bson.M{
+			bson.M{
+				"onsetDateTime.time": bson.M{
+					"$lt": time.Date(2012, time.March, 1, 7, 0, 0, 0, m.Local),
+				},
+			},
+			bson.M{
+				"onsetPeriod.end.time": bson.M{
+					"$lt": time.Date(2012, time.March, 1, 7, 0, 0, 0, m.Local),
+				},
+			},
+		},
+	})
+}
+
+func (m *MongoSearchSuite) TestConditionOnsetEBQuery(c *C) {
+	q := Query{"Condition", "onset=eb2012-03-01T07:05-05:00"}
 	mq := m.MongoSearcher.CreateQuery(q)
 	num, err := mq.Count()
 	util.CheckErr(err)
@@ -748,6 +804,26 @@ func (m *MongoSearchSuite) TestEncounterPeriodGTQuery(c *C) {
 	c.Assert(num, Equals, 2)
 }
 
+func (m *MongoSearchSuite) TestEncounterPeriodSAQueryObject(c *C) {
+	q := Query{"Encounter", "date=sa2012-11-01T08:45"}
+
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, HasLen, 1)
+	c.Assert(o, DeepEquals, bson.M{
+		"period.start.time": bson.M{
+			"$gte": time.Date(2012, time.November, 1, 8, 46, 0, 0, m.Local),
+		},
+	})
+}
+
+func (m *MongoSearchSuite) TestEncounterPeriodSAQuery(c *C) {
+	q := Query{"Encounter", "date=sa2012-11-01T08:45-05:00"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+}
+
 func (m *MongoSearchSuite) TestEncounterPeriodLTQueryObject(c *C) {
 	q := Query{"Encounter", "date=lt2012-11-01T08:30"}
 
@@ -770,6 +846,26 @@ func (m *MongoSearchSuite) TestEncounterPeriodLTQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodLTQuery(c *C) {
 	q := Query{"Encounter", "date=lt2012-11-01T08:50-05:00"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 3)
+}
+
+func (m *MongoSearchSuite) TestEncounterPeriodEBQueryObject(c *C) {
+	q := Query{"Encounter", "date=eb2012-11-01T09:00"}
+
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, HasLen, 1)
+	c.Assert(o, DeepEquals, bson.M{
+		"period.end.time": bson.M{
+			"$lt": time.Date(2012, time.November, 1, 9, 0, 0, 0, m.Local),
+		},
+	})
+}
+
+func (m *MongoSearchSuite) TestEncounterPeriodEBQuery(c *C) {
+	q := Query{"Encounter", "date=eb2012-11-01T09:00-05:00"}
 	mq := m.MongoSearcher.CreateQuery(q)
 	num, err := mq.Count()
 	util.CheckErr(err)
