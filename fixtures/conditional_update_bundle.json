@@ -3,10 +3,10 @@
   "type":"transaction",
   "entry":[
     {
-      "fullUrl":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9",
+      "fullUrl":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0",
       "resource":{
         "resourceType":"Patient",
-        "id":"1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9",
+        "id":"e3c242ee-0f2a-4921-90bf-895c2c4da1f0",
         "identifier":[
           {
             "type":{
@@ -41,10 +41,10 @@
       }
     },
     {
-      "fullUrl":"urn:uuid:336e9277-e7d5-4c04-a2c6-910a7dfb704d",
+      "fullUrl":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6",
       "resource":{
         "resourceType":"Encounter",
-        "id":"336e9277-e7d5-4c04-a2c6-910a7dfb704d",
+        "id":"3c1f4d74-0eda-47ea-a2fa-69ec474ddae6",
         "status":"finished",
         "type":[
           {
@@ -58,7 +58,7 @@
           }
         ],
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
           "start":"2011-11-01T08:00:00-04:00",
@@ -67,14 +67,14 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Encounter?date=sa2011-11-01T07%3A59%3A59\u0026date=lt2011-11-01T08%3A00%3A01\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026type=http%3A%2F%2Fwww.ama-assn.org%2Fgo%2Fcpt%7C99201"
+        "url":"Encounter?date=sa2011-11-01T07%3A59%3A59-04%3A00\u0026date=lt2011-11-01T08%3A00%3A01-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026type=http%3A%2F%2Fwww.ama-assn.org%2Fgo%2Fcpt%7C99201"
       }
     },
     {
-      "fullUrl":"urn:uuid:2c69d00a-c8b7-43b1-a960-a2551fdf9920",
+      "fullUrl":"urn:uuid:7a6785f2-14b2-4b03-80c9-020dae2afb70",
       "resource":{
         "resourceType":"Encounter",
-        "id":"2c69d00a-c8b7-43b1-a960-a2551fdf9920",
+        "id":"7a6785f2-14b2-4b03-80c9-020dae2afb70",
         "status":"finished",
         "type":[
           {
@@ -88,7 +88,7 @@
           }
         ],
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
           "start":"2012-10-01T08:00:00-04:00",
@@ -97,14 +97,14 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Encounter?date=sa2012-10-01T07%3A59%3A59\u0026date=lt2012-10-01T08%3A00%3A01\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026type=http%3A%2F%2Fwww.ama-assn.org%2Fgo%2Fcpt%7C99201"
+        "url":"Encounter?date=sa2012-10-01T07%3A59%3A59-04%3A00\u0026date=lt2012-10-01T08%3A00%3A01-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026type=http%3A%2F%2Fwww.ama-assn.org%2Fgo%2Fcpt%7C99201"
       }
     },
     {
-      "fullUrl":"urn:uuid:944c0a13-9daa-4070-9b5b-838cbe1b0fd3",
+      "fullUrl":"urn:uuid:bd720155-b844-40ea-abcd-f930dd8fca44",
       "resource":{
         "resourceType":"Encounter",
-        "id":"944c0a13-9daa-4070-9b5b-838cbe1b0fd3",
+        "id":"bd720155-b844-40ea-abcd-f930dd8fca44",
         "status":"finished",
         "type":[
           {
@@ -118,7 +118,7 @@
           }
         ],
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
           "start":"2012-11-01T08:00:00-04:00",
@@ -127,14 +127,14 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Encounter?date=sa2012-11-01T07%3A59%3A59\u0026date=lt2012-11-01T08%3A00%3A01\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026type=http%3A%2F%2Fwww.ama-assn.org%2Fgo%2Fcpt%7C99201"
+        "url":"Encounter?date=sa2012-11-01T07%3A59%3A59-04%3A00\u0026date=lt2012-11-01T08%3A00%3A01-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026type=http%3A%2F%2Fwww.ama-assn.org%2Fgo%2Fcpt%7C99201"
       }
     },
     {
-      "fullUrl":"urn:uuid:8ffbfdbd-f153-4095-84dd-c60461f94a3e",
+      "fullUrl":"urn:uuid:80dce19a-4706-47a4-beeb-369d5150898a",
       "resource":{
         "resourceType":"Encounter",
-        "id":"8ffbfdbd-f153-4095-84dd-c60461f94a3e",
+        "id":"80dce19a-4706-47a4-beeb-369d5150898a",
         "status":"finished",
         "type":[
           {
@@ -148,7 +148,7 @@
           }
         ],
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
           "start":"2012-11-01T08:45:00-04:00",
@@ -157,16 +157,16 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Encounter?date=sa2012-11-01T08%3A44%3A59\u0026date=lt2012-11-01T08%3A45%3A01\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026type=http%3A%2F%2Fsnomed.info%2Fsct%7C171047005"
+        "url":"Encounter?date=sa2012-11-01T08%3A44%3A59-04%3A00\u0026date=lt2012-11-01T08%3A45%3A01-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026type=http%3A%2F%2Fsnomed.info%2Fsct%7C171047005"
       }
     },
     {
-      "fullUrl":"urn:uuid:655ab16f-c9f8-4e84-8d91-3c4c9353fc64",
+      "fullUrl":"urn:uuid:b9c7a3eb-e4f2-44ba-990a-1bbb2506375c",
       "resource":{
         "resourceType":"Condition",
-        "id":"655ab16f-c9f8-4e84-8d91-3c4c9353fc64",
+        "id":"b9c7a3eb-e4f2-44ba-990a-1bbb2506375c",
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
           "coding":[
@@ -191,16 +191,16 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI50.1%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C428.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10091002\u0026onset=2012-03-01T07%3A00%3A00\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI50.1%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C428.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10091002\u0026onset=2012-03-01T07%3A00%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:27569bfd-e46f-460a-9576-1a7571cc1f57",
+      "fullUrl":"urn:uuid:2fdcac0a-d236-4d1c-ae8a-bb6eb7f442ab",
       "resource":{
         "resourceType":"Condition",
-        "id":"27569bfd-e46f-460a-9576-1a7571cc1f57",
+        "id":"2fdcac0a-d236-4d1c-ae8a-bb6eb7f442ab",
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
           "coding":[
@@ -217,23 +217,19 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fsnomed.info%2Fsct%7C981000124106\u0026onset=2012-03-01T07%3A05%3A00\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"Condition?code=http%3A%2F%2Fsnomed.info%2Fsct%7C981000124106\u0026onset=2012-03-01T07%3A05%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:b1345484-0786-48b0-a4fe-1988199a0b8b",
+      "fullUrl":"urn:uuid:4e69c05a-c7aa-49ed-92b2-89aee272244a",
       "resource":{
         "resourceType":"Condition",
-        "id":"b1345484-0786-48b0-a4fe-1988199a0b8b",
+        "id":"4e69c05a-c7aa-49ed-92b2-89aee272244a",
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
           "coding":[
-            {
-              "system":"http://hl7.org/fhir/sid/icd-10",
-              "code":"I20.0"
-            },
             {
               "system":"http://snomed.info/sct",
               "code":"123641001"
@@ -241,6 +237,10 @@
             {
               "system":"http://hl7.org/fhir/sid/icd-9",
               "code":"411.0"
+            },
+            {
+              "system":"http://hl7.org/fhir/sid/icd-10",
+              "code":"I20.0"
             }
           ],
           "text":"Diagnosis, Active: Ischemic Vascular Disease (Code List: 2.16.840.1.113883.3.464.1003.104.12.1003)"
@@ -251,16 +251,16 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI20.0%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C411.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C123641001\u0026onset=2012-03-01T07%3A05%3A00\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI20.0%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C411.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C123641001\u0026onset=2012-03-01T07%3A05%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:bdf1bf53-63ba-4e40-9450-17e0ba2c2f37",
+      "fullUrl":"urn:uuid:3bc855ba-3d4d-4df0-8c76-7d0dc2ec0475",
       "resource":{
         "resourceType":"Condition",
-        "id":"bdf1bf53-63ba-4e40-9450-17e0ba2c2f37",
+        "id":"3bc855ba-3d4d-4df0-8c76-7d0dc2ec0475",
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
           "coding":[
@@ -281,14 +281,14 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C401.1%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10725009\u0026onset=2012-03-01T07%3A30%3A00\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C401.1%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10725009\u0026onset=2012-03-01T07%3A30%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:a3af48b0-5a43-40d6-beaf-e8e12b047575",
+      "fullUrl":"urn:uuid:f9125ac3-7345-4585-aab1-db7abfbda93a",
       "resource":{
         "resourceType":"Observation",
-        "id":"a3af48b0-5a43-40d6-beaf-e8e12b047575",
+        "id":"f9125ac3-7345-4585-aab1-db7abfbda93a",
         "status":"final",
         "code":{
           "coding":[
@@ -300,10 +300,10 @@
           "text":"Laboratory Test, Result: HbA1c Laboratory Test"
         },
         "subject":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "encounter":{
-          "reference":"urn:uuid:336e9277-e7d5-4c04-a2c6-910a7dfb704d"
+          "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
           "start":"2011-11-01T08:16:40-04:00",
@@ -316,16 +316,16 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Observation?code=http%3A%2F%2Floinc.org%7C17856-6\u0026date=sa2011-11-01T08%3A16%3A39\u0026date=lt2011-11-01T08%3A16%3A41\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026value-quantity=8%7C%7C%25"
+        "url":"Observation?code=http%3A%2F%2Floinc.org%7C17856-6\u0026date=sa2011-11-01T08%3A16%3A39-04%3A00\u0026date=lt2011-11-01T08%3A16%3A41-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026value-quantity=8%7C%7C%25"
       }
     },
     {
-      "fullUrl":"urn:uuid:0ca22c46-8538-4549-8f80-dc580a82d3cf",
+      "fullUrl":"urn:uuid:23ba1dfd-56a1-42eb-928c-ab156bcca6ba",
       "resource":{
         "resourceType":"Procedure",
-        "id":"0ca22c46-8538-4549-8f80-dc580a82d3cf",
+        "id":"23ba1dfd-56a1-42eb-928c-ab156bcca6ba",
         "subject":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "status":"completed",
         "code":{
@@ -342,24 +342,24 @@
           "end":"2011-11-01T11:03:20-04:00"
         },
         "encounter":{
-          "reference":"urn:uuid:336e9277-e7d5-4c04-a2c6-910a7dfb704d"
+          "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "report":[
           {
-            "reference":"urn:uuid:58266f35-abd6-4971-8bff-476231373767"
+            "reference":"urn:uuid:8187f11e-9cbe-4ded-854c-c199ce457c05"
           }
         ]
       },
       "request":{
         "method":"PUT",
-        "url":"Procedure?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39\u0026date=lt2011-11-01T08%3A16%3A41\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"Procedure?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39-04%3A00\u0026date=lt2011-11-01T08%3A16%3A41-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:58266f35-abd6-4971-8bff-476231373767",
+      "fullUrl":"urn:uuid:8187f11e-9cbe-4ded-854c-c199ce457c05",
       "resource":{
         "resourceType":"DiagnosticReport",
-        "id":"58266f35-abd6-4971-8bff-476231373767",
+        "id":"8187f11e-9cbe-4ded-854c-c199ce457c05",
         "status":"final",
         "code":{
           "coding":[
@@ -372,10 +372,10 @@
           "text":"Procedure findings narrative"
         },
         "subject":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "encounter":{
-          "reference":"urn:uuid:336e9277-e7d5-4c04-a2c6-910a7dfb704d"
+          "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
           "start":"2011-11-01T08:16:40-04:00",
@@ -384,26 +384,26 @@
         "issued":"2011-11-01T11:03:20-04:00",
         "result":[
           {
-            "reference":"urn:uuid:3330f7aa-1002-4f8c-b5fd-8352f676dc1e"
+            "reference":"urn:uuid:14db9366-8cbb-42fe-8d0b-c429034a43b8"
           },
           {
-            "reference":"urn:uuid:f77f0a66-2214-4457-960c-fd76f4a5e87f"
+            "reference":"urn:uuid:bb908292-aae9-4f52-a5ba-d52dfde328ad"
           },
           {
-            "reference":"urn:uuid:72b5f0c6-324d-4aa2-a270-c7d476c95c85"
+            "reference":"urn:uuid:1334be91-29dd-493a-ab24-7aad1a4f024b"
           }
         ]
       },
       "request":{
         "method":"PUT",
-        "url":"DiagnosticReport?code=http%3A%2F%2Floinc.org%7C59776-5\u0026date=sa2011-11-01T08%3A16%3A39\u0026date=lt2011-11-01T08%3A16%3A41\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"DiagnosticReport?code=http%3A%2F%2Floinc.org%7C59776-5\u0026date=sa2011-11-01T08%3A16%3A39-04%3A00\u0026date=lt2011-11-01T08%3A16%3A41-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:3330f7aa-1002-4f8c-b5fd-8352f676dc1e",
+      "fullUrl":"urn:uuid:14db9366-8cbb-42fe-8d0b-c429034a43b8",
       "resource":{
         "resourceType":"Observation",
-        "id":"3330f7aa-1002-4f8c-b5fd-8352f676dc1e",
+        "id":"14db9366-8cbb-42fe-8d0b-c429034a43b8",
         "status":"final",
         "code":{
           "coding":[
@@ -415,10 +415,10 @@
           "text":"Procedure, Result: Clinical Staging Procedure"
         },
         "subject":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "encounter":{
-          "reference":"urn:uuid:336e9277-e7d5-4c04-a2c6-910a7dfb704d"
+          "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
           "start":"2011-11-01T08:16:40-04:00",
@@ -436,14 +436,14 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Observation?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39\u0026date=lt2011-11-01T08%3A16%3A41\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026value-concept=http%3A%2F%2Fsnomed.info%2Fsct%7C433581000124101"
+        "url":"Observation?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39-04%3A00\u0026date=lt2011-11-01T08%3A16%3A41-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026value-concept=http%3A%2F%2Fsnomed.info%2Fsct%7C433581000124101"
       }
     },
     {
-      "fullUrl":"urn:uuid:f77f0a66-2214-4457-960c-fd76f4a5e87f",
+      "fullUrl":"urn:uuid:bb908292-aae9-4f52-a5ba-d52dfde328ad",
       "resource":{
         "resourceType":"Observation",
-        "id":"f77f0a66-2214-4457-960c-fd76f4a5e87f",
+        "id":"bb908292-aae9-4f52-a5ba-d52dfde328ad",
         "status":"final",
         "code":{
           "coding":[
@@ -455,10 +455,10 @@
           "text":"Procedure, Result: Clinical Staging Procedure"
         },
         "subject":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "encounter":{
-          "reference":"urn:uuid:336e9277-e7d5-4c04-a2c6-910a7dfb704d"
+          "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
           "start":"2011-11-01T08:16:40-04:00",
@@ -476,14 +476,14 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Observation?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39\u0026date=lt2011-11-01T08%3A16%3A41\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026value-concept=http%3A%2F%2Fsnomed.info%2Fsct%7C433571000124104"
+        "url":"Observation?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39-04%3A00\u0026date=lt2011-11-01T08%3A16%3A41-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026value-concept=http%3A%2F%2Fsnomed.info%2Fsct%7C433571000124104"
       }
     },
     {
-      "fullUrl":"urn:uuid:72b5f0c6-324d-4aa2-a270-c7d476c95c85",
+      "fullUrl":"urn:uuid:1334be91-29dd-493a-ab24-7aad1a4f024b",
       "resource":{
         "resourceType":"Observation",
-        "id":"72b5f0c6-324d-4aa2-a270-c7d476c95c85",
+        "id":"1334be91-29dd-493a-ab24-7aad1a4f024b",
         "status":"final",
         "code":{
           "coding":[
@@ -495,10 +495,10 @@
           "text":"Procedure, Result: Clinical Staging Procedure"
         },
         "subject":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "encounter":{
-          "reference":"urn:uuid:336e9277-e7d5-4c04-a2c6-910a7dfb704d"
+          "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
           "start":"2011-11-01T08:16:40-04:00",
@@ -516,24 +516,20 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Observation?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39\u0026date=lt2011-11-01T08%3A16%3A41\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026value-concept=http%3A%2F%2Fsnomed.info%2Fsct%7C433491000124102"
+        "url":"Observation?code=http%3A%2F%2Fsnomed.info%2Fsct%7C116783008\u0026date=sa2011-11-01T08%3A16%3A39-04%3A00\u0026date=lt2011-11-01T08%3A16%3A41-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026value-concept=http%3A%2F%2Fsnomed.info%2Fsct%7C433491000124102"
       }
     },
     {
-      "fullUrl":"urn:uuid:6f42bf92-e732-44d1-b5b1-b8b6b86acc92",
+      "fullUrl":"urn:uuid:2f948fa7-e29f-49c3-8570-fa8c852fb318",
       "resource":{
         "resourceType":"Procedure",
-        "id":"6f42bf92-e732-44d1-b5b1-b8b6b86acc92",
+        "id":"2f948fa7-e29f-49c3-8570-fa8c852fb318",
         "subject":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "status":"completed",
         "code":{
           "coding":[
-            {
-              "system":"http://hl7.org/fhir/sid/icd-9",
-              "code":"36.10"
-            },
             {
               "system":"http://hl7.org/fhir/sid/icd-10",
               "code":"0210093"
@@ -541,6 +537,10 @@
             {
               "system":"http://snomed.info/sct",
               "code":"10190003"
+            },
+            {
+              "system":"http://hl7.org/fhir/sid/icd-9",
+              "code":"36.10"
             }
           ],
           "text":"Procedure, Performed: Hospital measures-CABG"
@@ -552,16 +552,16 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Procedure?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7C0210093%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C36.10%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10190003\u0026date=sa2013-03-02T10%3A44%3A59\u0026date=lt2013-03-02T10%3A45%3A01\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"Procedure?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7C0210093%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C36.10%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10190003\u0026date=sa2013-03-02T10%3A44%3A59-05%3A00\u0026date=lt2013-03-02T10%3A45%3A01-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:f21918ff-c05a-4c2c-8d17-2613aae3efcd",
+      "fullUrl":"urn:uuid:3e766221-d86c-4a15-9f39-d7a7fb343b3d",
       "resource":{
         "resourceType":"MedicationStatement",
-        "id":"f21918ff-c05a-4c2c-8d17-2613aae3efcd",
+        "id":"3e766221-d86c-4a15-9f39-d7a7fb343b3d",
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "status":"intended",
         "effectivePeriod":{
@@ -580,14 +580,14 @@
       },
       "request":{
         "method":"PUT",
-        "url":"MedicationStatement?code=http%3A%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm%2F%7C1000048\u0026effectivedate=sa2012-10-01T07%3A59%3A59\u0026effectivedate=lt2012-10-01T08%3A00%3A01\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+        "url":"MedicationStatement?code=http%3A%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm%2F%7C1000048\u0026effectivedate=sa2012-10-01T07%3A59%3A59-04%3A00\u0026effectivedate=lt2012-10-01T08%3A00%3A01-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
-      "fullUrl":"urn:uuid:61c8f8aa-cbd4-407d-8332-78b57b009b73",
+      "fullUrl":"urn:uuid:e7fa8bfb-11aa-489d-a09b-fb73c06e2fb4",
       "resource":{
         "resourceType":"Immunization",
-        "id":"61c8f8aa-cbd4-407d-8332-78b57b009b73",
+        "id":"e7fa8bfb-11aa-489d-a09b-fb73c06e2fb4",
         "status":"completed",
         "date":"2011-08-15T08:00:00-04:00",
         "vaccineCode":{
@@ -600,19 +600,19 @@
           "text":"Medication, Administered: Pneumococcal Vaccine (Code List: 2.16.840.1.113883.3.464.1003.110.12.1027)"
         },
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         }
       },
       "request":{
         "method":"PUT",
-        "url":"Immunization?date=2011-08-15T08%3A00%3A00\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026vaccine-code=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C33"
+        "url":"Immunization?date=2011-08-15T08%3A00%3A00-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026vaccine-code=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C33"
       }
     },
     {
-      "fullUrl":"urn:uuid:749523dd-268e-4064-bf66-f1eb89633318",
+      "fullUrl":"urn:uuid:d9b99e81-39d6-4625-ba34-008b709f2045",
       "resource":{
         "resourceType":"Immunization",
-        "id":"749523dd-268e-4064-bf66-f1eb89633318",
+        "id":"d9b99e81-39d6-4625-ba34-008b709f2045",
         "status":"completed",
         "date":"2010-01-10T19:08:28-05:00",
         "vaccineCode":{
@@ -625,7 +625,7 @@
           "text":"MMR"
         },
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "vaccinationProtocol":[
           {
@@ -635,17 +635,17 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Immunization?date=2010-01-10T19%3A08%3A28\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026vaccine-code=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C03"
+        "url":"Immunization?date=2010-01-10T19%3A08%3A28-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026vaccine-code=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C03"
       }
     },
     {
-      "fullUrl":"urn:uuid:1656046c-0cbb-42d1-94ee-041d6c2652a8",
+      "fullUrl":"urn:uuid:c46dd0bc-555d-4da8-ac14-be763688d05f",
       "resource":{
         "resourceType":"AllergyIntolerance",
-        "id":"1656046c-0cbb-42d1-94ee-041d6c2652a8",
+        "id":"c46dd0bc-555d-4da8-ac14-be763688d05f",
         "onset":"2012-01-01T00:42:00-05:00",
         "patient":{
-          "reference":"urn:uuid:1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9"
+          "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "substance":{
           "coding":[
@@ -686,7 +686,7 @@
       },
       "request":{
         "method":"PUT",
-        "url":"AllergyIntolerance?onset=2012-01-01T00%3A42%3A00\u0026patient=urn%3Auuid%3A1caeaa71-0ac3-4b42-8d15-86b0b2b1cce9\u0026substance=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C111"
+        "url":"AllergyIntolerance?onset=2012-01-01T00%3A42%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026substance=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C111"
       }
     }
   ]
