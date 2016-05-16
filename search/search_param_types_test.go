@@ -443,6 +443,16 @@ func (s *SearchPTSuite) TestDateParamPrefixes(c *C) {
 	c.Assert(d.Date.Precision, Equals, Second)
 	c.Assert(d.Date.Value.UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 0, time.UTC).UnixNano())
 
+	d = ParseDateParam("sa2013-01-02T12:13:14Z", dateParamInfo)
+	c.Assert(d.Prefix, Equals, SA)
+	c.Assert(d.Date.Precision, Equals, Second)
+	c.Assert(d.Date.Value.UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 0, time.UTC).UnixNano())
+
+	d = ParseDateParam("eb2013-01-02T12:13:14Z", dateParamInfo)
+	c.Assert(d.Prefix, Equals, EB)
+	c.Assert(d.Date.Precision, Equals, Second)
+	c.Assert(d.Date.Value.UnixNano(), Equals, time.Date(2013, time.January, 2, 12, 13, 14, 0, time.UTC).UnixNano())
+
 	d = ParseDateParam("ap2013-01-02T12:13:14Z", dateParamInfo)
 	c.Assert(d.Prefix, Equals, AP)
 	c.Assert(d.Date.Precision, Equals, Second)
@@ -633,6 +643,14 @@ func (s *SearchPTSuite) TestNumberParamPrefixes(c *C) {
 	c.Assert(n.Prefix, Equals, LE)
 	c.Assert(n.Number.String(), Equals, "100")
 
+	n = ParseNumberParam("sa100", numberParamInfo)
+	c.Assert(n.Prefix, Equals, SA)
+	c.Assert(n.Number.String(), Equals, "100")
+
+	n = ParseNumberParam("eb100", numberParamInfo)
+	c.Assert(n.Prefix, Equals, EB)
+	c.Assert(n.Number.String(), Equals, "100")
+
 	n = ParseNumberParam("ap100", numberParamInfo)
 	c.Assert(n.Prefix, Equals, AP)
 	c.Assert(n.Number.String(), Equals, "100")
@@ -804,6 +822,26 @@ func (s *SearchPTSuite) TestQuantityPrefixes(c *C) {
 	c.Assert(q.Paths, HasLen, 1)
 	c.Assert(q.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "quantity"})
 	c.Assert(q.Prefix, Equals, LE)
+	c.Assert(q.Number.String(), Equals, "5.4")
+	c.Assert(q.System, Equals, "http://unitsofmeasure.org")
+	c.Assert(q.Code, Equals, "mg")
+
+	q = ParseQuantityParam("sa5.4|http://unitsofmeasure.org|mg", quantityParamInfo)
+	c.Assert(q.Name, Equals, "foo")
+	c.Assert(q.Type, Equals, "quantity")
+	c.Assert(q.Paths, HasLen, 1)
+	c.Assert(q.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "quantity"})
+	c.Assert(q.Prefix, Equals, SA)
+	c.Assert(q.Number.String(), Equals, "5.4")
+	c.Assert(q.System, Equals, "http://unitsofmeasure.org")
+	c.Assert(q.Code, Equals, "mg")
+
+	q = ParseQuantityParam("eb5.4|http://unitsofmeasure.org|mg", quantityParamInfo)
+	c.Assert(q.Name, Equals, "foo")
+	c.Assert(q.Type, Equals, "quantity")
+	c.Assert(q.Paths, HasLen, 1)
+	c.Assert(q.Paths[0], DeepEquals, SearchParamPath{Path: "bar", Type: "quantity"})
+	c.Assert(q.Prefix, Equals, EB)
 	c.Assert(q.Number.String(), Equals, "5.4")
 	c.Assert(q.System, Equals, "http://unitsofmeasure.org")
 	c.Assert(q.Code, Equals, "mg")
@@ -1482,6 +1520,14 @@ func (s *SearchPTSuite) TestPrefixes(c *C) {
 
 	x, y = ExtractPrefixAndValue("le10")
 	c.Assert(x, Equals, LE)
+	c.Assert(y, Equals, "10")
+
+	x, y = ExtractPrefixAndValue("sa10")
+	c.Assert(x, Equals, SA)
+	c.Assert(y, Equals, "10")
+
+	x, y = ExtractPrefixAndValue("eb10")
+	c.Assert(x, Equals, EB)
 	c.Assert(y, Equals, "10")
 
 	x, y = ExtractPrefixAndValue("ap10")

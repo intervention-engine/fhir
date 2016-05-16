@@ -526,6 +526,62 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 	c.Assert(cond3.Code.Coding[0].Code, Equals, "Bat")
 }
 
+func (s *BatchControllerSuite) TestConditionalUpdatesBundle(c *C) {
+	data, err := os.Open("../fixtures/conditional_update_bundle.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	decoder := json.NewDecoder(data)
+	requestBundle := &models.Bundle{}
+	err = decoder.Decode(requestBundle)
+	util.CheckErr(err)
+
+	// Do the initial post
+	data.Seek(0, 0) // Reset the file pointer
+	res, err := http.Post(s.Server.URL+"/", "application/json", data)
+	util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 200)
+
+	decoder = json.NewDecoder(res.Body)
+	responseBundle := &models.Bundle{}
+	err = decoder.Decode(responseBundle)
+	util.CheckErr(err)
+
+	c.Assert(responseBundle.Type, Equals, "transaction-response")
+	c.Assert(*responseBundle.Total, Equals, uint32(20))
+	c.Assert(responseBundle.Entry, HasLen, 20)
+
+	// Check all of the response status for created (vs updated)
+	for _, entry := range responseBundle.Entry {
+		c.Assert(entry.Response.Status, Equals, "201")
+	}
+
+	// Do it again!
+	data, err = os.Open("../fixtures/conditional_update_bundle.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	res, err = http.Post(s.Server.URL+"/", "application/json", data)
+	util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 200)
+
+	decoder = json.NewDecoder(res.Body)
+	response2Bundle := &models.Bundle{}
+	err = decoder.Decode(response2Bundle)
+	util.CheckErr(err)
+
+	c.Assert(response2Bundle.Type, Equals, "transaction-response")
+	c.Assert(*response2Bundle.Total, Equals, uint32(20))
+	c.Assert(response2Bundle.Entry, HasLen, 20)
+
+	// Now check all of the response status for updated (vs created)
+	for _, entry := range response2Bundle.Entry {
+		c.Assert(entry.Response.Status, Equals, "200")
+	}
+}
+
 func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	// Create some records to delete or update
 	condition := &models.Condition{
