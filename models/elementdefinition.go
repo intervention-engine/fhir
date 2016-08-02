@@ -41,8 +41,8 @@ type ElementDefinition struct {
 	Min                         *int32                                 `bson:"min,omitempty" json:"min,omitempty"`
 	Max                         string                                 `bson:"max,omitempty" json:"max,omitempty"`
 	Base                        *ElementDefinitionBaseComponent        `bson:"base,omitempty" json:"base,omitempty"`
+	ContentReference            string                                 `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
 	Type                        []ElementDefinitionTypeRefComponent    `bson:"type,omitempty" json:"type,omitempty"`
-	NameReference               string                                 `bson:"nameReference,omitempty" json:"nameReference,omitempty"`
 	DefaultValueAddress         *Address                               `bson:"defaultValueAddress,omitempty" json:"defaultValueAddress,omitempty"`
 	DefaultValueAnnotation      *Annotation                            `bson:"defaultValueAnnotation,omitempty" json:"defaultValueAnnotation,omitempty"`
 	DefaultValueAttachment      *Attachment                            `bson:"defaultValueAttachment,omitempty" json:"defaultValueAttachment,omitempty"`
@@ -272,6 +272,7 @@ type ElementDefinitionTypeRefComponent struct {
 	Code            string   `bson:"code,omitempty" json:"code,omitempty"`
 	Profile         []string `bson:"profile,omitempty" json:"profile,omitempty"`
 	Aggregation     []string `bson:"aggregation,omitempty" json:"aggregation,omitempty"`
+	Versioning      string   `bson:"versioning,omitempty" json:"versioning,omitempty"`
 }
 
 type ElementDefinitionConstraintComponent struct {
@@ -280,6 +281,7 @@ type ElementDefinitionConstraintComponent struct {
 	Requirements    string `bson:"requirements,omitempty" json:"requirements,omitempty"`
 	Severity        string `bson:"severity,omitempty" json:"severity,omitempty"`
 	Human           string `bson:"human,omitempty" json:"human,omitempty"`
+	Expression      string `bson:"expression,omitempty" json:"expression,omitempty"`
 	Xpath           string `bson:"xpath,omitempty" json:"xpath,omitempty"`
 }
 

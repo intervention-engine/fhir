@@ -20,11 +20,11 @@
   "contained": [{
     "resourceType": "Practitioner",
     "id": "pract1",
-    "name": {
+    "name": [{
       "family": ["Doofenshmirtz"],
       "given": ["Heinz"],
       "suffix": ["MD"]
-    }
+    }]
   }],
   "patient": {
     "reference": "https://example.com/base/Patient/4954037118555241963"

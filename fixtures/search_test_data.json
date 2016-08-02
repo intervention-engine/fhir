@@ -663,7 +663,7 @@
 }, {
   "resourceType": "Practitioner",
   "id": "7045606679745586371",
-  "name": {
+  "name": [{
     "use": "official",
     "family": [
       "Heps"
@@ -674,7 +674,7 @@
     "suffix": [
       "MD"
     ]
-  },
+	}],
   "gender": "female",
   "birthDate": "1971-11-07"
 }, {
