@@ -1,0 +1,68 @@
+{
+  "resourceType" : "Conformance",
+  // from Resource: id, meta, implicitRules, and language
+  // from DomainResource: text, contained, extension, and modifierExtension
+  "url" : "/Metadata", // Logical uri to reference this statement
+  "version" : "1", // Logical id for this version of the statement
+  "name" : "GoFHIR Conformance Statement", // Informal name for this conformance statement
+  "status" : "active", // R!  draft | active | retired
+
+  /* We should probably generate this timestamp as well */
+  "date" : "2016-08-10T00:00:00-04:00", // R!  Publication Date(/time)
+  "publisher" : "Not Provided", // Name of the publisher (Organization or individual)
+  "description" : "GoFHIR sample conformance statement", // C? Human description of the conformance statement
+  "kind" : "instance", // R!  instance | capability | requirements
+  "fhirVersion" : "1.4.0", // R!  FHIR Version the system uses
+  "acceptUnknown" : "extensions", // R!  no | extensions | elements | both
+  "format" : ["json"], // R!  formats supported (xml | json | mime type) 
+  "rest" : [{ // C? If the endpoint is a RESTful one
+    "mode" : "server", // R!  client | server
+
+    /*
+    The resources in this list will be generated automatically, populating the fields below
+    */
+
+    "resource" : [{ // Resource served on the REST interface
+      "type" : "<code>", // R!  A resource type that is supported
+
+      /* HAPI provides this, but what is it? */
+      "profile" : {
+        "reference": "<path>"
+      }, // Base System profile for all uses of resource
+
+      /*
+      We will need to generate a list of multiple codes here too
+      */
+      "interaction" : [{ // R!  What operations are supported?
+        "code" : "<code>", // R!  read | vread | update | delete | history-instance | history-type | create | search-type
+      }],
+
+      "versioning" : "no-version", // no-version | versioned | versioned-update
+      "conditionalCreate" : true, // If allows/uses conditional create
+      "conditionalUpdate" : true, // If allows/uses conditional update
+      "conditionalDelete" : "multiple", // not-supported | single | multiple - how conditional delete is supported
+
+      /*
+      We'll need to generate these
+      */
+      "searchInclude" : ["<string>"], // _include values supported by the server
+      "searchRevInclude" : ["<string>"], // _revinclude values supported by the server
+
+      "transactionMode" : "both",
+
+      /*
+      And these
+      */
+      "searchParam" : [{ // Search params supported by implementation
+        "name" : "<string>", // R!  Name of search parameter
+        "type" : "<code>", // R!  number | date | string | token | reference | composite | quantity | uri
+        "documentation" : "<string>", // Server-specific usage
+
+        /* ONLY NEEDED IF RESOURCE IS TYPE REFERENCE */
+        "target" : ["<code>"], // Types of resource (if a resource reference)
+        "chain" : ["<string>"] // Chained names supported
+      }]
+    }],
+  }],
+  /* END RESOURCE LIST */
+}
