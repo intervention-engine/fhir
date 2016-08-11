@@ -35,21 +35,21 @@ import (
 type Device struct {
 	DomainResource  `bson:",inline"`
 	Identifier      []Identifier     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
-	Note            []Annotation     `bson:"note,omitempty" json:"note,omitempty"`
+	UdiCarrier      *Identifier      `bson:"udiCarrier,omitempty" json:"udiCarrier,omitempty"`
 	Status          string           `bson:"status,omitempty" json:"status,omitempty"`
+	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	LotNumber       string           `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
 	Manufacturer    string           `bson:"manufacturer,omitempty" json:"manufacturer,omitempty"`
+	ManufactureDate *FHIRDateTime    `bson:"manufactureDate,omitempty" json:"manufactureDate,omitempty"`
+	ExpirationDate  *FHIRDateTime    `bson:"expirationDate,omitempty" json:"expirationDate,omitempty"`
 	Model           string           `bson:"model,omitempty" json:"model,omitempty"`
 	Version         string           `bson:"version,omitempty" json:"version,omitempty"`
-	ManufactureDate *FHIRDateTime    `bson:"manufactureDate,omitempty" json:"manufactureDate,omitempty"`
-	Expiry          *FHIRDateTime    `bson:"expiry,omitempty" json:"expiry,omitempty"`
-	Udi             string           `bson:"udi,omitempty" json:"udi,omitempty"`
-	LotNumber       string           `bson:"lotNumber,omitempty" json:"lotNumber,omitempty"`
-	Owner           *Reference       `bson:"owner,omitempty" json:"owner,omitempty"`
-	Location        *Reference       `bson:"location,omitempty" json:"location,omitempty"`
 	Patient         *Reference       `bson:"patient,omitempty" json:"patient,omitempty"`
+	Owner           *Reference       `bson:"owner,omitempty" json:"owner,omitempty"`
 	Contact         []ContactPoint   `bson:"contact,omitempty" json:"contact,omitempty"`
+	Location        *Reference       `bson:"location,omitempty" json:"location,omitempty"`
 	Url             string           `bson:"url,omitempty" json:"url,omitempty"`
+	Note            []Annotation     `bson:"note,omitempty" json:"note,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -100,67 +100,78 @@ type DevicePlus struct {
 }
 
 type DevicePlusRelatedResources struct {
-	IncludedPatientResourcesReferencedByPatient                   *[]Patient                  `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
-	IncludedOrganizationResourcesReferencedByOrganization         *[]Organization             `bson:"_includedOrganizationResourcesReferencedByOrganization,omitempty"`
-	IncludedLocationResourcesReferencedByLocation                 *[]Location                 `bson:"_includedLocationResourcesReferencedByLocation,omitempty"`
-	RevIncludedAppointmentResourcesReferencingActor               *[]Appointment              `bson:"_revIncludedAppointmentResourcesReferencingActor,omitempty"`
-	RevIncludedAccountResourcesReferencingSubject                 *[]Account                  `bson:"_revIncludedAccountResourcesReferencingSubject,omitempty"`
-	RevIncludedProvenanceResourcesReferencingAgent                *[]Provenance               `bson:"_revIncludedProvenanceResourcesReferencingAgent,omitempty"`
-	RevIncludedProvenanceResourcesReferencingTarget               *[]Provenance               `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingContentref     *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingSubject        *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingSubject,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingAuthor         *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingAuthor,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingRelatedref     *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
-	RevIncludedSpecimenResourcesReferencingSubject                *[]Specimen                 `bson:"_revIncludedSpecimenResourcesReferencingSubject,omitempty"`
-	RevIncludedListResourcesReferencingItem                       *[]List                     `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
-	RevIncludedListResourcesReferencingSubject                    *[]List                     `bson:"_revIncludedListResourcesReferencingSubject,omitempty"`
-	RevIncludedListResourcesReferencingSource                     *[]List                     `bson:"_revIncludedListResourcesReferencingSource,omitempty"`
-	RevIncludedDocumentReferenceResourcesReferencingSubject       *[]DocumentReference        `bson:"_revIncludedDocumentReferenceResourcesReferencingSubject,omitempty"`
-	RevIncludedDocumentReferenceResourcesReferencingAuthor        *[]DocumentReference        `bson:"_revIncludedDocumentReferenceResourcesReferencingAuthor,omitempty"`
-	RevIncludedDocumentReferenceResourcesReferencingRelatedref    *[]DocumentReference        `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
-	RevIncludedOrderResourcesReferencingSubject                   *[]Order                    `bson:"_revIncludedOrderResourcesReferencingSubject,omitempty"`
-	RevIncludedOrderResourcesReferencingDetail                    *[]Order                    `bson:"_revIncludedOrderResourcesReferencingDetail,omitempty"`
-	RevIncludedOrderResourcesReferencingTarget                    *[]Order                    `bson:"_revIncludedOrderResourcesReferencingTarget,omitempty"`
-	RevIncludedMediaResourcesReferencingSubject                   *[]Media                    `bson:"_revIncludedMediaResourcesReferencingSubject,omitempty"`
-	RevIncludedProcedureRequestResourcesReferencingOrderer        *[]ProcedureRequest         `bson:"_revIncludedProcedureRequestResourcesReferencingOrderer,omitempty"`
-	RevIncludedDeviceUseRequestResourcesReferencingDevice         *[]DeviceUseRequest         `bson:"_revIncludedDeviceUseRequestResourcesReferencingDevice,omitempty"`
-	RevIncludedDeviceMetricResourcesReferencingSource             *[]DeviceMetric             `bson:"_revIncludedDeviceMetricResourcesReferencingSource,omitempty"`
-	RevIncludedFlagResourcesReferencingAuthor                     *[]Flag                     `bson:"_revIncludedFlagResourcesReferencingAuthor,omitempty"`
-	RevIncludedAppointmentResponseResourcesReferencingActor       *[]AppointmentResponse      `bson:"_revIncludedAppointmentResponseResourcesReferencingActor,omitempty"`
-	RevIncludedObservationResourcesReferencingSubject             *[]Observation              `bson:"_revIncludedObservationResourcesReferencingSubject,omitempty"`
-	RevIncludedObservationResourcesReferencingDevice              *[]Observation              `bson:"_revIncludedObservationResourcesReferencingDevice,omitempty"`
-	RevIncludedMedicationAdministrationResourcesReferencingDevice *[]MedicationAdministration `bson:"_revIncludedMedicationAdministrationResourcesReferencingDevice,omitempty"`
-	RevIncludedContractResourcesReferencingActor                  *[]Contract                 `bson:"_revIncludedContractResourcesReferencingActor,omitempty"`
-	RevIncludedCommunicationRequestResourcesReferencingSender     *[]CommunicationRequest     `bson:"_revIncludedCommunicationRequestResourcesReferencingSender,omitempty"`
-	RevIncludedCommunicationRequestResourcesReferencingRecipient  *[]CommunicationRequest     `bson:"_revIncludedCommunicationRequestResourcesReferencingRecipient,omitempty"`
-	RevIncludedRiskAssessmentResourcesReferencingPerformer        *[]RiskAssessment           `bson:"_revIncludedRiskAssessmentResourcesReferencingPerformer,omitempty"`
-	RevIncludedBasicResourcesReferencingSubject                   *[]Basic                    `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
-	RevIncludedGroupResourcesReferencingMember                    *[]Group                    `bson:"_revIncludedGroupResourcesReferencingMember,omitempty"`
-	RevIncludedDiagnosticReportResourcesReferencingSubject        *[]DiagnosticReport         `bson:"_revIncludedDiagnosticReportResourcesReferencingSubject,omitempty"`
-	RevIncludedImagingObjectSelectionResourcesReferencingAuthor   *[]ImagingObjectSelection   `bson:"_revIncludedImagingObjectSelectionResourcesReferencingAuthor,omitempty"`
-	RevIncludedDeviceComponentResourcesReferencingSource          *[]DeviceComponent          `bson:"_revIncludedDeviceComponentResourcesReferencingSource,omitempty"`
-	RevIncludedAuditEventResourcesReferencingParticipant          *[]AuditEvent               `bson:"_revIncludedAuditEventResourcesReferencingParticipant,omitempty"`
-	RevIncludedAuditEventResourcesReferencingReference            *[]AuditEvent               `bson:"_revIncludedAuditEventResourcesReferencingReference,omitempty"`
-	RevIncludedCommunicationResourcesReferencingSender            *[]Communication            `bson:"_revIncludedCommunicationResourcesReferencingSender,omitempty"`
-	RevIncludedCommunicationResourcesReferencingRecipient         *[]Communication            `bson:"_revIncludedCommunicationResourcesReferencingRecipient,omitempty"`
-	RevIncludedCompositionResourcesReferencingSubject             *[]Composition              `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
-	RevIncludedCompositionResourcesReferencingAuthor              *[]Composition              `bson:"_revIncludedCompositionResourcesReferencingAuthor,omitempty"`
-	RevIncludedCompositionResourcesReferencingEntry               *[]Composition              `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
-	RevIncludedDetectedIssueResourcesReferencingAuthor            *[]DetectedIssue            `bson:"_revIncludedDetectedIssueResourcesReferencingAuthor,omitempty"`
-	RevIncludedDetectedIssueResourcesReferencingImplicated        *[]DetectedIssue            `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
-	RevIncludedDiagnosticOrderResourcesReferencingSubject         *[]DiagnosticOrder          `bson:"_revIncludedDiagnosticOrderResourcesReferencingSubject,omitempty"`
-	RevIncludedDiagnosticOrderResourcesReferencingActorPath1      *[]DiagnosticOrder          `bson:"_revIncludedDiagnosticOrderResourcesReferencingActorPath1,omitempty"`
-	RevIncludedDiagnosticOrderResourcesReferencingActorPath2      *[]DiagnosticOrder          `bson:"_revIncludedDiagnosticOrderResourcesReferencingActorPath2,omitempty"`
-	RevIncludedOrderResponseResourcesReferencingFulfillment       *[]OrderResponse            `bson:"_revIncludedOrderResponseResourcesReferencingFulfillment,omitempty"`
-	RevIncludedOrderResponseResourcesReferencingWho               *[]OrderResponse            `bson:"_revIncludedOrderResponseResourcesReferencingWho,omitempty"`
-	RevIncludedQuestionnaireResponseResourcesReferencingSubject   *[]QuestionnaireResponse    `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
-	RevIncludedQuestionnaireResponseResourcesReferencingAuthor    *[]QuestionnaireResponse    `bson:"_revIncludedQuestionnaireResponseResourcesReferencingAuthor,omitempty"`
-	RevIncludedDeviceUseStatementResourcesReferencingDevice       *[]DeviceUseStatement       `bson:"_revIncludedDeviceUseStatementResourcesReferencingDevice,omitempty"`
-	RevIncludedProcessResponseResourcesReferencingRequest         *[]ProcessResponse          `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
-	RevIncludedScheduleResourcesReferencingActor                  *[]Schedule                 `bson:"_revIncludedScheduleResourcesReferencingActor,omitempty"`
-	RevIncludedClinicalImpressionResourcesReferencingTrigger      *[]ClinicalImpression       `bson:"_revIncludedClinicalImpressionResourcesReferencingTrigger,omitempty"`
-	RevIncludedMessageHeaderResourcesReferencingData              *[]MessageHeader            `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
-	RevIncludedMessageHeaderResourcesReferencingTarget            *[]MessageHeader            `bson:"_revIncludedMessageHeaderResourcesReferencingTarget,omitempty"`
+	IncludedPatientResourcesReferencedByPatient                    *[]Patient                  `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
+	IncludedOrganizationResourcesReferencedByOrganization          *[]Organization             `bson:"_includedOrganizationResourcesReferencedByOrganization,omitempty"`
+	IncludedLocationResourcesReferencedByLocation                  *[]Location                 `bson:"_includedLocationResourcesReferencedByLocation,omitempty"`
+	RevIncludedAppointmentResourcesReferencingActor                *[]Appointment              `bson:"_revIncludedAppointmentResourcesReferencingActor,omitempty"`
+	RevIncludedAccountResourcesReferencingSubject                  *[]Account                  `bson:"_revIncludedAccountResourcesReferencingSubject,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingContentref      *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingSubject         *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingSubject,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingAuthor          *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingAuthor,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingRelatedref      *[]DocumentManifest         `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
+	RevIncludedDocumentReferenceResourcesReferencingSubject        *[]DocumentReference        `bson:"_revIncludedDocumentReferenceResourcesReferencingSubject,omitempty"`
+	RevIncludedDocumentReferenceResourcesReferencingAuthor         *[]DocumentReference        `bson:"_revIncludedDocumentReferenceResourcesReferencingAuthor,omitempty"`
+	RevIncludedDocumentReferenceResourcesReferencingRelatedref     *[]DocumentReference        `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
+	RevIncludedContractResourcesReferencingAgent                   *[]Contract                 `bson:"_revIncludedContractResourcesReferencingAgent,omitempty"`
+	RevIncludedContractResourcesReferencingTtopic                  *[]Contract                 `bson:"_revIncludedContractResourcesReferencingTtopic,omitempty"`
+	RevIncludedContractResourcesReferencingSubject                 *[]Contract                 `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
+	RevIncludedContractResourcesReferencingTopic                   *[]Contract                 `bson:"_revIncludedContractResourcesReferencingTopic,omitempty"`
+	RevIncludedRiskAssessmentResourcesReferencingPerformer         *[]RiskAssessment           `bson:"_revIncludedRiskAssessmentResourcesReferencingPerformer,omitempty"`
+	RevIncludedGroupResourcesReferencingMember                     *[]Group                    `bson:"_revIncludedGroupResourcesReferencingMember,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingResponsereference  *[]PaymentNotice            `bson:"_revIncludedPaymentNoticeResourcesReferencingResponsereference,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingRequestreference   *[]PaymentNotice            `bson:"_revIncludedPaymentNoticeResourcesReferencingRequestreference,omitempty"`
+	RevIncludedImplementationGuideResourcesReferencingResource     *[]ImplementationGuide      `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
+	RevIncludedDeviceComponentResourcesReferencingSource           *[]DeviceComponent          `bson:"_revIncludedDeviceComponentResourcesReferencingSource,omitempty"`
+	RevIncludedProtocolResourcesReferencingSubject                 *[]Protocol                 `bson:"_revIncludedProtocolResourcesReferencingSubject,omitempty"`
+	RevIncludedCommunicationResourcesReferencingSender             *[]Communication            `bson:"_revIncludedCommunicationResourcesReferencingSender,omitempty"`
+	RevIncludedCommunicationResourcesReferencingRecipient          *[]Communication            `bson:"_revIncludedCommunicationResourcesReferencingRecipient,omitempty"`
+	RevIncludedOrderResponseResourcesReferencingFulfillment        *[]OrderResponse            `bson:"_revIncludedOrderResponseResourcesReferencingFulfillment,omitempty"`
+	RevIncludedOrderResponseResourcesReferencingWho                *[]OrderResponse            `bson:"_revIncludedOrderResponseResourcesReferencingWho,omitempty"`
+	RevIncludedDeviceUseStatementResourcesReferencingDevice        *[]DeviceUseStatement       `bson:"_revIncludedDeviceUseStatementResourcesReferencingDevice,omitempty"`
+	RevIncludedMessageHeaderResourcesReferencingData               *[]MessageHeader            `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
+	RevIncludedMessageHeaderResourcesReferencingTarget             *[]MessageHeader            `bson:"_revIncludedMessageHeaderResourcesReferencingTarget,omitempty"`
+	RevIncludedProvenanceResourcesReferencingAgent                 *[]Provenance               `bson:"_revIncludedProvenanceResourcesReferencingAgent,omitempty"`
+	RevIncludedProvenanceResourcesReferencingTarget                *[]Provenance               `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
+	RevIncludedTaskResourcesReferencingOwner                       *[]Task                     `bson:"_revIncludedTaskResourcesReferencingOwner,omitempty"`
+	RevIncludedTaskResourcesReferencingCreator                     *[]Task                     `bson:"_revIncludedTaskResourcesReferencingCreator,omitempty"`
+	RevIncludedTaskResourcesReferencingSubject                     *[]Task                     `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
+	RevIncludedSpecimenResourcesReferencingSubject                 *[]Specimen                 `bson:"_revIncludedSpecimenResourcesReferencingSubject,omitempty"`
+	RevIncludedListResourcesReferencingItem                        *[]List                     `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
+	RevIncludedListResourcesReferencingSubject                     *[]List                     `bson:"_revIncludedListResourcesReferencingSubject,omitempty"`
+	RevIncludedListResourcesReferencingSource                      *[]List                     `bson:"_revIncludedListResourcesReferencingSource,omitempty"`
+	RevIncludedOrderResourcesReferencingSubject                    *[]Order                    `bson:"_revIncludedOrderResourcesReferencingSubject,omitempty"`
+	RevIncludedOrderResourcesReferencingDetail                     *[]Order                    `bson:"_revIncludedOrderResourcesReferencingDetail,omitempty"`
+	RevIncludedOrderResourcesReferencingTarget                     *[]Order                    `bson:"_revIncludedOrderResourcesReferencingTarget,omitempty"`
+	RevIncludedMediaResourcesReferencingSubject                    *[]Media                    `bson:"_revIncludedMediaResourcesReferencingSubject,omitempty"`
+	RevIncludedProcedureRequestResourcesReferencingOrderer         *[]ProcedureRequest         `bson:"_revIncludedProcedureRequestResourcesReferencingOrderer,omitempty"`
+	RevIncludedDeviceUseRequestResourcesReferencingDevice          *[]DeviceUseRequest         `bson:"_revIncludedDeviceUseRequestResourcesReferencingDevice,omitempty"`
+	RevIncludedDeviceMetricResourcesReferencingSource              *[]DeviceMetric             `bson:"_revIncludedDeviceMetricResourcesReferencingSource,omitempty"`
+	RevIncludedFlagResourcesReferencingAuthor                      *[]Flag                     `bson:"_revIncludedFlagResourcesReferencingAuthor,omitempty"`
+	RevIncludedAppointmentResponseResourcesReferencingActor        *[]AppointmentResponse      `bson:"_revIncludedAppointmentResponseResourcesReferencingActor,omitempty"`
+	RevIncludedObservationResourcesReferencingSubject              *[]Observation              `bson:"_revIncludedObservationResourcesReferencingSubject,omitempty"`
+	RevIncludedObservationResourcesReferencingDevice               *[]Observation              `bson:"_revIncludedObservationResourcesReferencingDevice,omitempty"`
+	RevIncludedMedicationAdministrationResourcesReferencingDevice  *[]MedicationAdministration `bson:"_revIncludedMedicationAdministrationResourcesReferencingDevice,omitempty"`
+	RevIncludedCommunicationRequestResourcesReferencingSender      *[]CommunicationRequest     `bson:"_revIncludedCommunicationRequestResourcesReferencingSender,omitempty"`
+	RevIncludedCommunicationRequestResourcesReferencingRecipient   *[]CommunicationRequest     `bson:"_revIncludedCommunicationRequestResourcesReferencingRecipient,omitempty"`
+	RevIncludedBasicResourcesReferencingSubject                    *[]Basic                    `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
+	RevIncludedDiagnosticReportResourcesReferencingSubject         *[]DiagnosticReport         `bson:"_revIncludedDiagnosticReportResourcesReferencingSubject,omitempty"`
+	RevIncludedImagingObjectSelectionResourcesReferencingAuthor    *[]ImagingObjectSelection   `bson:"_revIncludedImagingObjectSelectionResourcesReferencingAuthor,omitempty"`
+	RevIncludedAuditEventResourcesReferencingAgent                 *[]AuditEvent               `bson:"_revIncludedAuditEventResourcesReferencingAgent,omitempty"`
+	RevIncludedAuditEventResourcesReferencingEntity                *[]AuditEvent               `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
+	RevIncludedImagingExcerptResourcesReferencingAuthor            *[]ImagingExcerpt           `bson:"_revIncludedImagingExcerptResourcesReferencingAuthor,omitempty"`
+	RevIncludedCompositionResourcesReferencingSubject              *[]Composition              `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
+	RevIncludedCompositionResourcesReferencingAuthor               *[]Composition              `bson:"_revIncludedCompositionResourcesReferencingAuthor,omitempty"`
+	RevIncludedCompositionResourcesReferencingEntry                *[]Composition              `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
+	RevIncludedDetectedIssueResourcesReferencingAuthor             *[]DetectedIssue            `bson:"_revIncludedDetectedIssueResourcesReferencingAuthor,omitempty"`
+	RevIncludedDetectedIssueResourcesReferencingImplicated         *[]DetectedIssue            `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
+	RevIncludedDiagnosticOrderResourcesReferencingSubject          *[]DiagnosticOrder          `bson:"_revIncludedDiagnosticOrderResourcesReferencingSubject,omitempty"`
+	RevIncludedDiagnosticOrderResourcesReferencingActorPath1       *[]DiagnosticOrder          `bson:"_revIncludedDiagnosticOrderResourcesReferencingActorPath1,omitempty"`
+	RevIncludedDiagnosticOrderResourcesReferencingActorPath2       *[]DiagnosticOrder          `bson:"_revIncludedDiagnosticOrderResourcesReferencingActorPath2,omitempty"`
+	RevIncludedQuestionnaireResponseResourcesReferencingSubject    *[]QuestionnaireResponse    `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
+	RevIncludedQuestionnaireResponseResourcesReferencingAuthor     *[]QuestionnaireResponse    `bson:"_revIncludedQuestionnaireResponseResourcesReferencingAuthor,omitempty"`
+	RevIncludedProcessResponseResourcesReferencingRequestreference *[]ProcessResponse          `bson:"_revIncludedProcessResponseResourcesReferencingRequestreference,omitempty"`
+	RevIncludedScheduleResourcesReferencingActor                   *[]Schedule                 `bson:"_revIncludedScheduleResourcesReferencingActor,omitempty"`
+	RevIncludedClinicalImpressionResourcesReferencingTrigger       *[]ClinicalImpression       `bson:"_revIncludedClinicalImpressionResourcesReferencingTrigger,omitempty"`
 }
 
 func (d *DevicePlusRelatedResources) GetIncludedPatientResourceReferencedByPatient() (patient *Patient, err error) {
@@ -214,24 +225,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedAccountResourcesReferencingSu
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingAgent() (provenances []Provenance, err error) {
-	if d.RevIncludedProvenanceResourcesReferencingAgent == nil {
-		err = errors.New("RevIncluded provenances not requested")
-	} else {
-		provenances = *d.RevIncludedProvenanceResourcesReferencingAgent
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
-	if d.RevIncludedProvenanceResourcesReferencingTarget == nil {
-		err = errors.New("RevIncluded provenances not requested")
-	} else {
-		provenances = *d.RevIncludedProvenanceResourcesReferencingTarget
-	}
-	return
-}
-
 func (d *DevicePlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
 	if d.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
@@ -268,6 +261,240 @@ func (d *DevicePlusRelatedResources) GetRevIncludedDocumentManifestResourcesRefe
 	return
 }
 
+func (d *DevicePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingSubject() (documentReferences []DocumentReference, err error) {
+	if d.RevIncludedDocumentReferenceResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded documentReferences not requested")
+	} else {
+		documentReferences = *d.RevIncludedDocumentReferenceResourcesReferencingSubject
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingAuthor() (documentReferences []DocumentReference, err error) {
+	if d.RevIncludedDocumentReferenceResourcesReferencingAuthor == nil {
+		err = errors.New("RevIncluded documentReferences not requested")
+	} else {
+		documentReferences = *d.RevIncludedDocumentReferenceResourcesReferencingAuthor
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+	if d.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
+		err = errors.New("RevIncluded documentReferences not requested")
+	} else {
+		documentReferences = *d.RevIncludedDocumentReferenceResourcesReferencingRelatedref
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedContractResourcesReferencingAgent() (contracts []Contract, err error) {
+	if d.RevIncludedContractResourcesReferencingAgent == nil {
+		err = errors.New("RevIncluded contracts not requested")
+	} else {
+		contracts = *d.RevIncludedContractResourcesReferencingAgent
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
+	if d.RevIncludedContractResourcesReferencingTtopic == nil {
+		err = errors.New("RevIncluded contracts not requested")
+	} else {
+		contracts = *d.RevIncludedContractResourcesReferencingTtopic
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
+	if d.RevIncludedContractResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded contracts not requested")
+	} else {
+		contracts = *d.RevIncludedContractResourcesReferencingSubject
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
+	if d.RevIncludedContractResourcesReferencingTopic == nil {
+		err = errors.New("RevIncluded contracts not requested")
+	} else {
+		contracts = *d.RevIncludedContractResourcesReferencingTopic
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedRiskAssessmentResourcesReferencingPerformer() (riskAssessments []RiskAssessment, err error) {
+	if d.RevIncludedRiskAssessmentResourcesReferencingPerformer == nil {
+		err = errors.New("RevIncluded riskAssessments not requested")
+	} else {
+		riskAssessments = *d.RevIncludedRiskAssessmentResourcesReferencingPerformer
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedGroupResourcesReferencingMember() (groups []Group, err error) {
+	if d.RevIncludedGroupResourcesReferencingMember == nil {
+		err = errors.New("RevIncluded groups not requested")
+	} else {
+		groups = *d.RevIncludedGroupResourcesReferencingMember
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponsereference() (paymentNotices []PaymentNotice, err error) {
+	if d.RevIncludedPaymentNoticeResourcesReferencingResponsereference == nil {
+		err = errors.New("RevIncluded paymentNotices not requested")
+	} else {
+		paymentNotices = *d.RevIncludedPaymentNoticeResourcesReferencingResponsereference
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequestreference() (paymentNotices []PaymentNotice, err error) {
+	if d.RevIncludedPaymentNoticeResourcesReferencingRequestreference == nil {
+		err = errors.New("RevIncluded paymentNotices not requested")
+	} else {
+		paymentNotices = *d.RevIncludedPaymentNoticeResourcesReferencingRequestreference
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
+	if d.RevIncludedImplementationGuideResourcesReferencingResource == nil {
+		err = errors.New("RevIncluded implementationGuides not requested")
+	} else {
+		implementationGuides = *d.RevIncludedImplementationGuideResourcesReferencingResource
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedDeviceComponentResourcesReferencingSource() (deviceComponents []DeviceComponent, err error) {
+	if d.RevIncludedDeviceComponentResourcesReferencingSource == nil {
+		err = errors.New("RevIncluded deviceComponents not requested")
+	} else {
+		deviceComponents = *d.RevIncludedDeviceComponentResourcesReferencingSource
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedProtocolResourcesReferencingSubject() (protocols []Protocol, err error) {
+	if d.RevIncludedProtocolResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded protocols not requested")
+	} else {
+		protocols = *d.RevIncludedProtocolResourcesReferencingSubject
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingSender() (communications []Communication, err error) {
+	if d.RevIncludedCommunicationResourcesReferencingSender == nil {
+		err = errors.New("RevIncluded communications not requested")
+	} else {
+		communications = *d.RevIncludedCommunicationResourcesReferencingSender
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingRecipient() (communications []Communication, err error) {
+	if d.RevIncludedCommunicationResourcesReferencingRecipient == nil {
+		err = errors.New("RevIncluded communications not requested")
+	} else {
+		communications = *d.RevIncludedCommunicationResourcesReferencingRecipient
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedOrderResponseResourcesReferencingFulfillment() (orderResponses []OrderResponse, err error) {
+	if d.RevIncludedOrderResponseResourcesReferencingFulfillment == nil {
+		err = errors.New("RevIncluded orderResponses not requested")
+	} else {
+		orderResponses = *d.RevIncludedOrderResponseResourcesReferencingFulfillment
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedOrderResponseResourcesReferencingWho() (orderResponses []OrderResponse, err error) {
+	if d.RevIncludedOrderResponseResourcesReferencingWho == nil {
+		err = errors.New("RevIncluded orderResponses not requested")
+	} else {
+		orderResponses = *d.RevIncludedOrderResponseResourcesReferencingWho
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedDeviceUseStatementResourcesReferencingDevice() (deviceUseStatements []DeviceUseStatement, err error) {
+	if d.RevIncludedDeviceUseStatementResourcesReferencingDevice == nil {
+		err = errors.New("RevIncluded deviceUseStatements not requested")
+	} else {
+		deviceUseStatements = *d.RevIncludedDeviceUseStatementResourcesReferencingDevice
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
+	if d.RevIncludedMessageHeaderResourcesReferencingData == nil {
+		err = errors.New("RevIncluded messageHeaders not requested")
+	} else {
+		messageHeaders = *d.RevIncludedMessageHeaderResourcesReferencingData
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingTarget() (messageHeaders []MessageHeader, err error) {
+	if d.RevIncludedMessageHeaderResourcesReferencingTarget == nil {
+		err = errors.New("RevIncluded messageHeaders not requested")
+	} else {
+		messageHeaders = *d.RevIncludedMessageHeaderResourcesReferencingTarget
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingAgent() (provenances []Provenance, err error) {
+	if d.RevIncludedProvenanceResourcesReferencingAgent == nil {
+		err = errors.New("RevIncluded provenances not requested")
+	} else {
+		provenances = *d.RevIncludedProvenanceResourcesReferencingAgent
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+	if d.RevIncludedProvenanceResourcesReferencingTarget == nil {
+		err = errors.New("RevIncluded provenances not requested")
+	} else {
+		provenances = *d.RevIncludedProvenanceResourcesReferencingTarget
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedTaskResourcesReferencingOwner() (tasks []Task, err error) {
+	if d.RevIncludedTaskResourcesReferencingOwner == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *d.RevIncludedTaskResourcesReferencingOwner
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedTaskResourcesReferencingCreator() (tasks []Task, err error) {
+	if d.RevIncludedTaskResourcesReferencingCreator == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *d.RevIncludedTaskResourcesReferencingCreator
+	}
+	return
+}
+
+func (d *DevicePlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+	if d.RevIncludedTaskResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *d.RevIncludedTaskResourcesReferencingSubject
+	}
+	return
+}
+
 func (d *DevicePlusRelatedResources) GetRevIncludedSpecimenResourcesReferencingSubject() (specimen []Specimen, err error) {
 	if d.RevIncludedSpecimenResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded specimen not requested")
@@ -300,33 +527,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedListResourcesReferencingSourc
 		err = errors.New("RevIncluded lists not requested")
 	} else {
 		lists = *d.RevIncludedListResourcesReferencingSource
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingSubject() (documentReferences []DocumentReference, err error) {
-	if d.RevIncludedDocumentReferenceResourcesReferencingSubject == nil {
-		err = errors.New("RevIncluded documentReferences not requested")
-	} else {
-		documentReferences = *d.RevIncludedDocumentReferenceResourcesReferencingSubject
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingAuthor() (documentReferences []DocumentReference, err error) {
-	if d.RevIncludedDocumentReferenceResourcesReferencingAuthor == nil {
-		err = errors.New("RevIncluded documentReferences not requested")
-	} else {
-		documentReferences = *d.RevIncludedDocumentReferenceResourcesReferencingAuthor
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
-	if d.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
-		err = errors.New("RevIncluded documentReferences not requested")
-	} else {
-		documentReferences = *d.RevIncludedDocumentReferenceResourcesReferencingRelatedref
 	}
 	return
 }
@@ -439,15 +639,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedMedicationAdministrationResou
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedContractResourcesReferencingActor() (contracts []Contract, err error) {
-	if d.RevIncludedContractResourcesReferencingActor == nil {
-		err = errors.New("RevIncluded contracts not requested")
-	} else {
-		contracts = *d.RevIncludedContractResourcesReferencingActor
-	}
-	return
-}
-
 func (d *DevicePlusRelatedResources) GetRevIncludedCommunicationRequestResourcesReferencingSender() (communicationRequests []CommunicationRequest, err error) {
 	if d.RevIncludedCommunicationRequestResourcesReferencingSender == nil {
 		err = errors.New("RevIncluded communicationRequests not requested")
@@ -466,29 +657,11 @@ func (d *DevicePlusRelatedResources) GetRevIncludedCommunicationRequestResources
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedRiskAssessmentResourcesReferencingPerformer() (riskAssessments []RiskAssessment, err error) {
-	if d.RevIncludedRiskAssessmentResourcesReferencingPerformer == nil {
-		err = errors.New("RevIncluded riskAssessments not requested")
-	} else {
-		riskAssessments = *d.RevIncludedRiskAssessmentResourcesReferencingPerformer
-	}
-	return
-}
-
 func (d *DevicePlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
 	if d.RevIncludedBasicResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded basics not requested")
 	} else {
 		basics = *d.RevIncludedBasicResourcesReferencingSubject
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedGroupResourcesReferencingMember() (groups []Group, err error) {
-	if d.RevIncludedGroupResourcesReferencingMember == nil {
-		err = errors.New("RevIncluded groups not requested")
-	} else {
-		groups = *d.RevIncludedGroupResourcesReferencingMember
 	}
 	return
 }
@@ -511,47 +684,29 @@ func (d *DevicePlusRelatedResources) GetRevIncludedImagingObjectSelectionResourc
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedDeviceComponentResourcesReferencingSource() (deviceComponents []DeviceComponent, err error) {
-	if d.RevIncludedDeviceComponentResourcesReferencingSource == nil {
-		err = errors.New("RevIncluded deviceComponents not requested")
-	} else {
-		deviceComponents = *d.RevIncludedDeviceComponentResourcesReferencingSource
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingParticipant() (auditEvents []AuditEvent, err error) {
-	if d.RevIncludedAuditEventResourcesReferencingParticipant == nil {
+func (d *DevicePlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingAgent() (auditEvents []AuditEvent, err error) {
+	if d.RevIncludedAuditEventResourcesReferencingAgent == nil {
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
-		auditEvents = *d.RevIncludedAuditEventResourcesReferencingParticipant
+		auditEvents = *d.RevIncludedAuditEventResourcesReferencingAgent
 	}
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingReference() (auditEvents []AuditEvent, err error) {
-	if d.RevIncludedAuditEventResourcesReferencingReference == nil {
+func (d *DevicePlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
+	if d.RevIncludedAuditEventResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
-		auditEvents = *d.RevIncludedAuditEventResourcesReferencingReference
+		auditEvents = *d.RevIncludedAuditEventResourcesReferencingEntity
 	}
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingSender() (communications []Communication, err error) {
-	if d.RevIncludedCommunicationResourcesReferencingSender == nil {
-		err = errors.New("RevIncluded communications not requested")
+func (d *DevicePlusRelatedResources) GetRevIncludedImagingExcerptResourcesReferencingAuthor() (imagingExcerpts []ImagingExcerpt, err error) {
+	if d.RevIncludedImagingExcerptResourcesReferencingAuthor == nil {
+		err = errors.New("RevIncluded imagingExcerpts not requested")
 	} else {
-		communications = *d.RevIncludedCommunicationResourcesReferencingSender
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingRecipient() (communications []Communication, err error) {
-	if d.RevIncludedCommunicationResourcesReferencingRecipient == nil {
-		err = errors.New("RevIncluded communications not requested")
-	} else {
-		communications = *d.RevIncludedCommunicationResourcesReferencingRecipient
+		imagingExcerpts = *d.RevIncludedImagingExcerptResourcesReferencingAuthor
 	}
 	return
 }
@@ -628,24 +783,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedDiagnosticOrderResourcesRefer
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedOrderResponseResourcesReferencingFulfillment() (orderResponses []OrderResponse, err error) {
-	if d.RevIncludedOrderResponseResourcesReferencingFulfillment == nil {
-		err = errors.New("RevIncluded orderResponses not requested")
-	} else {
-		orderResponses = *d.RevIncludedOrderResponseResourcesReferencingFulfillment
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedOrderResponseResourcesReferencingWho() (orderResponses []OrderResponse, err error) {
-	if d.RevIncludedOrderResponseResourcesReferencingWho == nil {
-		err = errors.New("RevIncluded orderResponses not requested")
-	} else {
-		orderResponses = *d.RevIncludedOrderResponseResourcesReferencingWho
-	}
-	return
-}
-
 func (d *DevicePlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
 	if d.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded questionnaireResponses not requested")
@@ -664,20 +801,11 @@ func (d *DevicePlusRelatedResources) GetRevIncludedQuestionnaireResponseResource
 	return
 }
 
-func (d *DevicePlusRelatedResources) GetRevIncludedDeviceUseStatementResourcesReferencingDevice() (deviceUseStatements []DeviceUseStatement, err error) {
-	if d.RevIncludedDeviceUseStatementResourcesReferencingDevice == nil {
-		err = errors.New("RevIncluded deviceUseStatements not requested")
-	} else {
-		deviceUseStatements = *d.RevIncludedDeviceUseStatementResourcesReferencingDevice
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
-	if d.RevIncludedProcessResponseResourcesReferencingRequest == nil {
+func (d *DevicePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequestreference() (processResponses []ProcessResponse, err error) {
+	if d.RevIncludedProcessResponseResourcesReferencingRequestreference == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
-		processResponses = *d.RevIncludedProcessResponseResourcesReferencingRequest
+		processResponses = *d.RevIncludedProcessResponseResourcesReferencingRequestreference
 	}
 	return
 }
@@ -696,24 +824,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedClinicalImpressionResourcesRe
 		err = errors.New("RevIncluded clinicalImpressions not requested")
 	} else {
 		clinicalImpressions = *d.RevIncludedClinicalImpressionResourcesReferencingTrigger
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
-	if d.RevIncludedMessageHeaderResourcesReferencingData == nil {
-		err = errors.New("RevIncluded messageHeaders not requested")
-	} else {
-		messageHeaders = *d.RevIncludedMessageHeaderResourcesReferencingData
-	}
-	return
-}
-
-func (d *DevicePlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingTarget() (messageHeaders []MessageHeader, err error) {
-	if d.RevIncludedMessageHeaderResourcesReferencingTarget == nil {
-		err = errors.New("RevIncluded messageHeaders not requested")
-	} else {
-		messageHeaders = *d.RevIncludedMessageHeaderResourcesReferencingTarget
 	}
 	return
 }
@@ -755,18 +865,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedProvenanceResourcesReferencingAgent != nil {
-		for idx := range *d.RevIncludedProvenanceResourcesReferencingAgent {
-			rsc := (*d.RevIncludedProvenanceResourcesReferencingAgent)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedProvenanceResourcesReferencingTarget != nil {
-		for idx := range *d.RevIncludedProvenanceResourcesReferencingTarget {
-			rsc := (*d.RevIncludedProvenanceResourcesReferencingTarget)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *d.RevIncludedDocumentManifestResourcesReferencingContentref {
 			rsc := (*d.RevIncludedDocumentManifestResourcesReferencingContentref)[idx]
@@ -791,6 +889,162 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if d.RevIncludedDocumentReferenceResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingSubject {
+			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDocumentReferenceResourcesReferencingAuthor != nil {
+		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingAuthor {
+			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingAuthor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
+		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingAgent != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingAgent {
+			rsc := (*d.RevIncludedContractResourcesReferencingAgent)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingTtopic != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingTtopic {
+			rsc := (*d.RevIncludedContractResourcesReferencingTtopic)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingSubject {
+			rsc := (*d.RevIncludedContractResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingTopic != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingTopic {
+			rsc := (*d.RevIncludedContractResourcesReferencingTopic)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedRiskAssessmentResourcesReferencingPerformer != nil {
+		for idx := range *d.RevIncludedRiskAssessmentResourcesReferencingPerformer {
+			rsc := (*d.RevIncludedRiskAssessmentResourcesReferencingPerformer)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedGroupResourcesReferencingMember != nil {
+		for idx := range *d.RevIncludedGroupResourcesReferencingMember {
+			rsc := (*d.RevIncludedGroupResourcesReferencingMember)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
+		for idx := range *d.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
+			rsc := (*d.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
+		for idx := range *d.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
+			rsc := (*d.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedImplementationGuideResourcesReferencingResource != nil {
+		for idx := range *d.RevIncludedImplementationGuideResourcesReferencingResource {
+			rsc := (*d.RevIncludedImplementationGuideResourcesReferencingResource)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDeviceComponentResourcesReferencingSource != nil {
+		for idx := range *d.RevIncludedDeviceComponentResourcesReferencingSource {
+			rsc := (*d.RevIncludedDeviceComponentResourcesReferencingSource)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedProtocolResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedProtocolResourcesReferencingSubject {
+			rsc := (*d.RevIncludedProtocolResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedCommunicationResourcesReferencingSender != nil {
+		for idx := range *d.RevIncludedCommunicationResourcesReferencingSender {
+			rsc := (*d.RevIncludedCommunicationResourcesReferencingSender)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedCommunicationResourcesReferencingRecipient != nil {
+		for idx := range *d.RevIncludedCommunicationResourcesReferencingRecipient {
+			rsc := (*d.RevIncludedCommunicationResourcesReferencingRecipient)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
+		for idx := range *d.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			rsc := (*d.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedOrderResponseResourcesReferencingWho != nil {
+		for idx := range *d.RevIncludedOrderResponseResourcesReferencingWho {
+			rsc := (*d.RevIncludedOrderResponseResourcesReferencingWho)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDeviceUseStatementResourcesReferencingDevice != nil {
+		for idx := range *d.RevIncludedDeviceUseStatementResourcesReferencingDevice {
+			rsc := (*d.RevIncludedDeviceUseStatementResourcesReferencingDevice)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedMessageHeaderResourcesReferencingData != nil {
+		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingData {
+			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingData)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedMessageHeaderResourcesReferencingTarget != nil {
+		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingTarget {
+			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedProvenanceResourcesReferencingAgent != nil {
+		for idx := range *d.RevIncludedProvenanceResourcesReferencingAgent {
+			rsc := (*d.RevIncludedProvenanceResourcesReferencingAgent)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedProvenanceResourcesReferencingTarget != nil {
+		for idx := range *d.RevIncludedProvenanceResourcesReferencingTarget {
+			rsc := (*d.RevIncludedProvenanceResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedTaskResourcesReferencingOwner != nil {
+		for idx := range *d.RevIncludedTaskResourcesReferencingOwner {
+			rsc := (*d.RevIncludedTaskResourcesReferencingOwner)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedTaskResourcesReferencingCreator != nil {
+		for idx := range *d.RevIncludedTaskResourcesReferencingCreator {
+			rsc := (*d.RevIncludedTaskResourcesReferencingCreator)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*d.RevIncludedTaskResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if d.RevIncludedSpecimenResourcesReferencingSubject != nil {
 		for idx := range *d.RevIncludedSpecimenResourcesReferencingSubject {
 			rsc := (*d.RevIncludedSpecimenResourcesReferencingSubject)[idx]
@@ -812,24 +1066,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 	if d.RevIncludedListResourcesReferencingSource != nil {
 		for idx := range *d.RevIncludedListResourcesReferencingSource {
 			rsc := (*d.RevIncludedListResourcesReferencingSource)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedDocumentReferenceResourcesReferencingSubject != nil {
-		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingSubject {
-			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingSubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedDocumentReferenceResourcesReferencingAuthor != nil {
-		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingAuthor {
-			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingAuthor)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
-		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
-			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -905,12 +1141,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedContractResourcesReferencingActor != nil {
-		for idx := range *d.RevIncludedContractResourcesReferencingActor {
-			rsc := (*d.RevIncludedContractResourcesReferencingActor)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedCommunicationRequestResourcesReferencingSender != nil {
 		for idx := range *d.RevIncludedCommunicationRequestResourcesReferencingSender {
 			rsc := (*d.RevIncludedCommunicationRequestResourcesReferencingSender)[idx]
@@ -923,21 +1153,9 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedRiskAssessmentResourcesReferencingPerformer != nil {
-		for idx := range *d.RevIncludedRiskAssessmentResourcesReferencingPerformer {
-			rsc := (*d.RevIncludedRiskAssessmentResourcesReferencingPerformer)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedBasicResourcesReferencingSubject != nil {
 		for idx := range *d.RevIncludedBasicResourcesReferencingSubject {
 			rsc := (*d.RevIncludedBasicResourcesReferencingSubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedGroupResourcesReferencingMember != nil {
-		for idx := range *d.RevIncludedGroupResourcesReferencingMember {
-			rsc := (*d.RevIncludedGroupResourcesReferencingMember)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -953,33 +1171,21 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedDeviceComponentResourcesReferencingSource != nil {
-		for idx := range *d.RevIncludedDeviceComponentResourcesReferencingSource {
-			rsc := (*d.RevIncludedDeviceComponentResourcesReferencingSource)[idx]
+	if d.RevIncludedAuditEventResourcesReferencingAgent != nil {
+		for idx := range *d.RevIncludedAuditEventResourcesReferencingAgent {
+			rsc := (*d.RevIncludedAuditEventResourcesReferencingAgent)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedAuditEventResourcesReferencingParticipant != nil {
-		for idx := range *d.RevIncludedAuditEventResourcesReferencingParticipant {
-			rsc := (*d.RevIncludedAuditEventResourcesReferencingParticipant)[idx]
+	if d.RevIncludedAuditEventResourcesReferencingEntity != nil {
+		for idx := range *d.RevIncludedAuditEventResourcesReferencingEntity {
+			rsc := (*d.RevIncludedAuditEventResourcesReferencingEntity)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedAuditEventResourcesReferencingReference != nil {
-		for idx := range *d.RevIncludedAuditEventResourcesReferencingReference {
-			rsc := (*d.RevIncludedAuditEventResourcesReferencingReference)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedCommunicationResourcesReferencingSender != nil {
-		for idx := range *d.RevIncludedCommunicationResourcesReferencingSender {
-			rsc := (*d.RevIncludedCommunicationResourcesReferencingSender)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedCommunicationResourcesReferencingRecipient != nil {
-		for idx := range *d.RevIncludedCommunicationResourcesReferencingRecipient {
-			rsc := (*d.RevIncludedCommunicationResourcesReferencingRecipient)[idx]
+	if d.RevIncludedImagingExcerptResourcesReferencingAuthor != nil {
+		for idx := range *d.RevIncludedImagingExcerptResourcesReferencingAuthor {
+			rsc := (*d.RevIncludedImagingExcerptResourcesReferencingAuthor)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1031,18 +1237,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
-		for idx := range *d.RevIncludedOrderResponseResourcesReferencingFulfillment {
-			rsc := (*d.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedOrderResponseResourcesReferencingWho != nil {
-		for idx := range *d.RevIncludedOrderResponseResourcesReferencingWho {
-			rsc := (*d.RevIncludedOrderResponseResourcesReferencingWho)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
 		for idx := range *d.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
 			rsc := (*d.RevIncludedQuestionnaireResponseResourcesReferencingSubject)[idx]
@@ -1055,15 +1249,9 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedDeviceUseStatementResourcesReferencingDevice != nil {
-		for idx := range *d.RevIncludedDeviceUseStatementResourcesReferencingDevice {
-			rsc := (*d.RevIncludedDeviceUseStatementResourcesReferencingDevice)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedProcessResponseResourcesReferencingRequest != nil {
-		for idx := range *d.RevIncludedProcessResponseResourcesReferencingRequest {
-			rsc := (*d.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
+	if d.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
+		for idx := range *d.RevIncludedProcessResponseResourcesReferencingRequestreference {
+			rsc := (*d.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1076,18 +1264,6 @@ func (d *DevicePlusRelatedResources) GetRevIncludedResources() map[string]interf
 	if d.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
 		for idx := range *d.RevIncludedClinicalImpressionResourcesReferencingTrigger {
 			rsc := (*d.RevIncludedClinicalImpressionResourcesReferencingTrigger)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedMessageHeaderResourcesReferencingData != nil {
-		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingData {
-			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingData)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedMessageHeaderResourcesReferencingTarget != nil {
-		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingTarget {
-			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingTarget)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1126,18 +1302,6 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedProvenanceResourcesReferencingAgent != nil {
-		for idx := range *d.RevIncludedProvenanceResourcesReferencingAgent {
-			rsc := (*d.RevIncludedProvenanceResourcesReferencingAgent)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedProvenanceResourcesReferencingTarget != nil {
-		for idx := range *d.RevIncludedProvenanceResourcesReferencingTarget {
-			rsc := (*d.RevIncludedProvenanceResourcesReferencingTarget)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *d.RevIncludedDocumentManifestResourcesReferencingContentref {
 			rsc := (*d.RevIncludedDocumentManifestResourcesReferencingContentref)[idx]
@@ -1162,6 +1326,162 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if d.RevIncludedDocumentReferenceResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingSubject {
+			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDocumentReferenceResourcesReferencingAuthor != nil {
+		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingAuthor {
+			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingAuthor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
+		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
+			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingAgent != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingAgent {
+			rsc := (*d.RevIncludedContractResourcesReferencingAgent)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingTtopic != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingTtopic {
+			rsc := (*d.RevIncludedContractResourcesReferencingTtopic)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingSubject {
+			rsc := (*d.RevIncludedContractResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedContractResourcesReferencingTopic != nil {
+		for idx := range *d.RevIncludedContractResourcesReferencingTopic {
+			rsc := (*d.RevIncludedContractResourcesReferencingTopic)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedRiskAssessmentResourcesReferencingPerformer != nil {
+		for idx := range *d.RevIncludedRiskAssessmentResourcesReferencingPerformer {
+			rsc := (*d.RevIncludedRiskAssessmentResourcesReferencingPerformer)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedGroupResourcesReferencingMember != nil {
+		for idx := range *d.RevIncludedGroupResourcesReferencingMember {
+			rsc := (*d.RevIncludedGroupResourcesReferencingMember)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
+		for idx := range *d.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
+			rsc := (*d.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
+		for idx := range *d.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
+			rsc := (*d.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedImplementationGuideResourcesReferencingResource != nil {
+		for idx := range *d.RevIncludedImplementationGuideResourcesReferencingResource {
+			rsc := (*d.RevIncludedImplementationGuideResourcesReferencingResource)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDeviceComponentResourcesReferencingSource != nil {
+		for idx := range *d.RevIncludedDeviceComponentResourcesReferencingSource {
+			rsc := (*d.RevIncludedDeviceComponentResourcesReferencingSource)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedProtocolResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedProtocolResourcesReferencingSubject {
+			rsc := (*d.RevIncludedProtocolResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedCommunicationResourcesReferencingSender != nil {
+		for idx := range *d.RevIncludedCommunicationResourcesReferencingSender {
+			rsc := (*d.RevIncludedCommunicationResourcesReferencingSender)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedCommunicationResourcesReferencingRecipient != nil {
+		for idx := range *d.RevIncludedCommunicationResourcesReferencingRecipient {
+			rsc := (*d.RevIncludedCommunicationResourcesReferencingRecipient)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
+		for idx := range *d.RevIncludedOrderResponseResourcesReferencingFulfillment {
+			rsc := (*d.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedOrderResponseResourcesReferencingWho != nil {
+		for idx := range *d.RevIncludedOrderResponseResourcesReferencingWho {
+			rsc := (*d.RevIncludedOrderResponseResourcesReferencingWho)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedDeviceUseStatementResourcesReferencingDevice != nil {
+		for idx := range *d.RevIncludedDeviceUseStatementResourcesReferencingDevice {
+			rsc := (*d.RevIncludedDeviceUseStatementResourcesReferencingDevice)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedMessageHeaderResourcesReferencingData != nil {
+		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingData {
+			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingData)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedMessageHeaderResourcesReferencingTarget != nil {
+		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingTarget {
+			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedProvenanceResourcesReferencingAgent != nil {
+		for idx := range *d.RevIncludedProvenanceResourcesReferencingAgent {
+			rsc := (*d.RevIncludedProvenanceResourcesReferencingAgent)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedProvenanceResourcesReferencingTarget != nil {
+		for idx := range *d.RevIncludedProvenanceResourcesReferencingTarget {
+			rsc := (*d.RevIncludedProvenanceResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedTaskResourcesReferencingOwner != nil {
+		for idx := range *d.RevIncludedTaskResourcesReferencingOwner {
+			rsc := (*d.RevIncludedTaskResourcesReferencingOwner)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedTaskResourcesReferencingCreator != nil {
+		for idx := range *d.RevIncludedTaskResourcesReferencingCreator {
+			rsc := (*d.RevIncludedTaskResourcesReferencingCreator)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if d.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *d.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*d.RevIncludedTaskResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if d.RevIncludedSpecimenResourcesReferencingSubject != nil {
 		for idx := range *d.RevIncludedSpecimenResourcesReferencingSubject {
 			rsc := (*d.RevIncludedSpecimenResourcesReferencingSubject)[idx]
@@ -1183,24 +1503,6 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 	if d.RevIncludedListResourcesReferencingSource != nil {
 		for idx := range *d.RevIncludedListResourcesReferencingSource {
 			rsc := (*d.RevIncludedListResourcesReferencingSource)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedDocumentReferenceResourcesReferencingSubject != nil {
-		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingSubject {
-			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingSubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedDocumentReferenceResourcesReferencingAuthor != nil {
-		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingAuthor {
-			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingAuthor)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
-		for idx := range *d.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
-			rsc := (*d.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1276,12 +1578,6 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedContractResourcesReferencingActor != nil {
-		for idx := range *d.RevIncludedContractResourcesReferencingActor {
-			rsc := (*d.RevIncludedContractResourcesReferencingActor)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedCommunicationRequestResourcesReferencingSender != nil {
 		for idx := range *d.RevIncludedCommunicationRequestResourcesReferencingSender {
 			rsc := (*d.RevIncludedCommunicationRequestResourcesReferencingSender)[idx]
@@ -1294,21 +1590,9 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedRiskAssessmentResourcesReferencingPerformer != nil {
-		for idx := range *d.RevIncludedRiskAssessmentResourcesReferencingPerformer {
-			rsc := (*d.RevIncludedRiskAssessmentResourcesReferencingPerformer)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedBasicResourcesReferencingSubject != nil {
 		for idx := range *d.RevIncludedBasicResourcesReferencingSubject {
 			rsc := (*d.RevIncludedBasicResourcesReferencingSubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedGroupResourcesReferencingMember != nil {
-		for idx := range *d.RevIncludedGroupResourcesReferencingMember {
-			rsc := (*d.RevIncludedGroupResourcesReferencingMember)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1324,33 +1608,21 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedDeviceComponentResourcesReferencingSource != nil {
-		for idx := range *d.RevIncludedDeviceComponentResourcesReferencingSource {
-			rsc := (*d.RevIncludedDeviceComponentResourcesReferencingSource)[idx]
+	if d.RevIncludedAuditEventResourcesReferencingAgent != nil {
+		for idx := range *d.RevIncludedAuditEventResourcesReferencingAgent {
+			rsc := (*d.RevIncludedAuditEventResourcesReferencingAgent)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedAuditEventResourcesReferencingParticipant != nil {
-		for idx := range *d.RevIncludedAuditEventResourcesReferencingParticipant {
-			rsc := (*d.RevIncludedAuditEventResourcesReferencingParticipant)[idx]
+	if d.RevIncludedAuditEventResourcesReferencingEntity != nil {
+		for idx := range *d.RevIncludedAuditEventResourcesReferencingEntity {
+			rsc := (*d.RevIncludedAuditEventResourcesReferencingEntity)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedAuditEventResourcesReferencingReference != nil {
-		for idx := range *d.RevIncludedAuditEventResourcesReferencingReference {
-			rsc := (*d.RevIncludedAuditEventResourcesReferencingReference)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedCommunicationResourcesReferencingSender != nil {
-		for idx := range *d.RevIncludedCommunicationResourcesReferencingSender {
-			rsc := (*d.RevIncludedCommunicationResourcesReferencingSender)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedCommunicationResourcesReferencingRecipient != nil {
-		for idx := range *d.RevIncludedCommunicationResourcesReferencingRecipient {
-			rsc := (*d.RevIncludedCommunicationResourcesReferencingRecipient)[idx]
+	if d.RevIncludedImagingExcerptResourcesReferencingAuthor != nil {
+		for idx := range *d.RevIncludedImagingExcerptResourcesReferencingAuthor {
+			rsc := (*d.RevIncludedImagingExcerptResourcesReferencingAuthor)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1402,18 +1674,6 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
-		for idx := range *d.RevIncludedOrderResponseResourcesReferencingFulfillment {
-			rsc := (*d.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedOrderResponseResourcesReferencingWho != nil {
-		for idx := range *d.RevIncludedOrderResponseResourcesReferencingWho {
-			rsc := (*d.RevIncludedOrderResponseResourcesReferencingWho)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if d.RevIncludedQuestionnaireResponseResourcesReferencingSubject != nil {
 		for idx := range *d.RevIncludedQuestionnaireResponseResourcesReferencingSubject {
 			rsc := (*d.RevIncludedQuestionnaireResponseResourcesReferencingSubject)[idx]
@@ -1426,15 +1686,9 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if d.RevIncludedDeviceUseStatementResourcesReferencingDevice != nil {
-		for idx := range *d.RevIncludedDeviceUseStatementResourcesReferencingDevice {
-			rsc := (*d.RevIncludedDeviceUseStatementResourcesReferencingDevice)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedProcessResponseResourcesReferencingRequest != nil {
-		for idx := range *d.RevIncludedProcessResponseResourcesReferencingRequest {
-			rsc := (*d.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
+	if d.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
+		for idx := range *d.RevIncludedProcessResponseResourcesReferencingRequestreference {
+			rsc := (*d.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1447,18 +1701,6 @@ func (d *DevicePlusRelatedResources) GetIncludedAndRevIncludedResources() map[st
 	if d.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
 		for idx := range *d.RevIncludedClinicalImpressionResourcesReferencingTrigger {
 			rsc := (*d.RevIncludedClinicalImpressionResourcesReferencingTrigger)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedMessageHeaderResourcesReferencingData != nil {
-		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingData {
-			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingData)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if d.RevIncludedMessageHeaderResourcesReferencingTarget != nil {
-		for idx := range *d.RevIncludedMessageHeaderResourcesReferencingTarget {
-			rsc := (*d.RevIncludedMessageHeaderResourcesReferencingTarget)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

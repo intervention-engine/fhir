@@ -39,12 +39,12 @@ func (s *JSONSuite) TestUnmarshalJSON(c *check.C) {
 	c.Assert(r.Contained[0], check.FitsTypeOf, &Practitioner{})
 	contained := r.Contained[0].(*Practitioner)
 	c.Assert(contained.Id, check.Equals, "pract1")
-	c.Assert(contained.Name.Family, check.HasLen, 1)
-	c.Assert(contained.Name.Family[0], check.Equals, "Doofenshmirtz")
-	c.Assert(contained.Name.Given, check.HasLen, 1)
-	c.Assert(contained.Name.Given[0], check.Equals, "Heinz")
-	c.Assert(contained.Name.Suffix, check.HasLen, 1)
-	c.Assert(contained.Name.Suffix[0], check.Equals, "MD")
+	c.Assert(contained.Name[0].Family, check.HasLen, 1)
+	c.Assert(contained.Name[0].Family[0], check.Equals, "Doofenshmirtz")
+	c.Assert(contained.Name[0].Given, check.HasLen, 1)
+	c.Assert(contained.Name[0].Given[0], check.Equals, "Heinz")
+	c.Assert(contained.Name[0].Suffix, check.HasLen, 1)
+	c.Assert(contained.Name[0].Suffix[0], check.Equals, "MD")
 	c.Assert(r.Patient.Reference, check.Equals, "https://example.com/base/Patient/4954037118555241963")
 	c.Assert(r.Asserter.Reference, check.Equals, "#pract1")
 	c.Assert(r.Code.Coding, check.HasLen, 3)
@@ -74,10 +74,12 @@ func (s *JSONSuite) TestMarshalJSON(c *check.C) {
 	r.Contained = make([]interface{}, 1)
 	r.Contained[0] = &Practitioner{
 		DomainResource: DomainResource{Resource: Resource{Id: "pract1"}},
-		Name: &HumanName{
-			Family: []string{"Doofenshmirtz"},
-			Given:  []string{"Heinz"},
-			Suffix: []string{"MD"},
+		Name: []HumanName{
+			{
+				Family: []string{"Doofenshmirtz"},
+				Given:  []string{"Heinz"},
+				Suffix: []string{"MD"},
+			},
 		},
 	}
 	r.Patient = &Reference{Reference: "https://example.com/base/Patient/4954037118555241963"}
@@ -109,9 +111,9 @@ func (s *JSONSuite) TestMarshalJSON(c *check.C) {
 	c.Assert(j.GetPath("text", "div").MustString(), check.Equals, "<div>HTML in JavaScript.  Wow.</div>")
 	contained := j.Get("contained").GetIndex(0)
 	c.Assert(contained.Get("resourceType").MustString(), check.Equals, "Practitioner")
-	c.Assert(contained.GetPath("name", "family").GetIndex(0).MustString(), check.Equals, "Doofenshmirtz")
-	c.Assert(contained.GetPath("name", "given").GetIndex(0).MustString(), check.Equals, "Heinz")
-	c.Assert(contained.GetPath("name", "suffix").GetIndex(0).MustString(), check.Equals, "MD")
+	c.Assert(contained.Get("name").GetIndex(0).Get("family").GetIndex(0).MustString(), check.Equals, "Doofenshmirtz")
+	c.Assert(contained.Get("name").GetIndex(0).Get("given").GetIndex(0).MustString(), check.Equals, "Heinz")
+	c.Assert(contained.Get("name").GetIndex(0).Get("suffix").GetIndex(0).MustString(), check.Equals, "MD")
 	c.Assert(j.GetPath("patient", "reference").MustString(), check.Equals, "https://example.com/base/Patient/4954037118555241963")
 	c.Assert(j.GetPath("asserter", "reference").MustString(), check.Equals, "#pract1")
 	c.Assert(j.GetPath("code", "coding").MustArray(), check.HasLen, 3)
