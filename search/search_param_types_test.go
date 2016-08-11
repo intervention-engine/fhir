@@ -1686,6 +1686,16 @@ func (s *SearchPTSuite) TestQueryOptionsInvalidRevIncludeParams(c *C) {
 	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_revinclude\" content is invalid"))
 }
 
+func (s *SearchPTSuite) TestQueryOptionsInvalidFormatParam(c *C) {
+	// Format that is not supported (XML)
+	q := Query{Resource: "Patient", Query:"_format=xml"}
+	c.Assert(func() { q.Options() }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"_format\" content is invalid"))
+
+	// Valid format (json)
+	q = Query{Resource: "Patient", Query:"_format=json"}
+	q.Options()
+}
+
 func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
 	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort%3Aasc=birthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient"}
 	params := q.URLQueryParameters(true)
