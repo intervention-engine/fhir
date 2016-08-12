@@ -25,8 +25,13 @@ func (f *FHIRServer) AddMiddleware(key string, middleware gin.HandlerFunc) {
 // To run a handler against ALL resources pass "*" as the resourceType.
 //
 // Supported HTTP verbs are: POST, PUT, DELETE
-func (f *FHIRServer) AddInterceptor(httpVerb, resourceType string, handler InterceptorHandler) {
-	f.Interceptors[httpVerb] = append(f.Interceptors[httpVerb], Interceptor{ResourceType: resourceType, Handler: handler})
+func (f *FHIRServer) AddInterceptor(httpVerb, resourceType string, handler InterceptorHandler) error {
+
+	if httpVerb == "POST" || httpVerb == "PUT" || httpVerb == "DELETE" {
+		f.Interceptors[httpVerb] = append(f.Interceptors[httpVerb], Interceptor{ResourceType: resourceType, Handler: handler})
+		return nil
+	}
+	return errors.New(fmt.Sprintf("AddInterceptor: unsupported HTTP verb %s", httpVerb))
 }
 
 func NewServer(databaseHost string) *FHIRServer {
