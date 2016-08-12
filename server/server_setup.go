@@ -1,10 +1,11 @@
 package server
 
 import (
-	"log"
-
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/mgo.v2"
+	"log"
 )
 
 type FHIRServer struct {
