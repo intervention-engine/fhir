@@ -15,14 +15,14 @@ import (
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
 func NewMongoDataAccessLayer(db *mgo.Database, interceptors map[string]InterceptorList) DataAccessLayer {
 	return &mongoDataAccessLayer{
-		Database: db, 
+		Database:     db,
 		Interceptors: interceptors,
 	}
 }
 
 type mongoDataAccessLayer struct {
-	Database *mgo.Database
-	Interceptors map[string] InterceptorList
+	Database     *mgo.Database
+	Interceptors map[string]InterceptorList
 }
 
 // An interceptor executes a function on a specified resource type immediately BEFORE
@@ -30,7 +30,7 @@ type mongoDataAccessLayer struct {
 // types use a "*" as the resourceType.
 type Interceptor struct {
 	ResourceType string
-	Handler InterceptorHandler
+	Handler      InterceptorHandler
 }
 
 // A function that is executed on a single FHIR resource
@@ -42,7 +42,7 @@ type InterceptorList []Interceptor
 // Invokes the interceptor list for a particular HTTP verb and resource type.
 // Supported verbs are: POST, PUT, DELETE
 func (dal *mongoDataAccessLayer) invokeInterceptors(httpVerb, resourceType string, resource interface{}) {
-	
+
 	var interceptors InterceptorList
 
 	if httpVerb == "POST" || httpVerb == "PUT" || httpVerb == "DELETE" {
@@ -104,7 +104,7 @@ func (dal *mongoDataAccessLayer) PostWithID(id string, resource interface{}) err
 	if dal.hasInterceptorsForVerbAndType("POST", resourceType) {
 		dal.invokeInterceptors("POST", resourceType, resource)
 	}
-	
+
 	return convertMongoErr(collection.Insert(resource))
 }
 
@@ -172,7 +172,7 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 	if dal.hasInterceptorsForVerbAndType("DELETE", resourceType) {
 		// get the resources that are about to be deleted
 		var bundle *models.Bundle
-		bundle, _ = dal.Search(url.URL{}, query)  // the baseURL argument here does not matter
+		bundle, _ = dal.Search(url.URL{}, query) // the baseURL argument here does not matter
 
 		var resourceId string
 		for _, elem := range bundle.Entry {
@@ -187,12 +187,12 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 	searcher := search.NewMongoSearcher(dal.Database)
 	queryObject := searcher.CreateQueryObject(query)
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
-	
+
 	info, err := collection.RemoveAll(queryObject)
 	if info != nil {
 		count = info.Removed
 	}
-	
+
 	return count, convertMongoErr(err)
 }
 

@@ -31,9 +31,9 @@ func (f *FHIRServer) AddInterceptor(httpVerb, resourceType string, handler Inter
 
 func NewServer(databaseHost string) *FHIRServer {
 	server := &FHIRServer{
-		DatabaseHost: databaseHost,
+		DatabaseHost:     databaseHost,
 		MiddlewareConfig: make(map[string][]gin.HandlerFunc),
-		Interceptors: make(map[string]InterceptorList),
+		Interceptors:     make(map[string]InterceptorList),
 	}
 	server.Engine = gin.Default()
 	return server
