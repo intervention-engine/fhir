@@ -20,10 +20,10 @@ import (
 )
 
 type BatchControllerSuite struct {
-	Database *mgo.Database
-	Session  *mgo.Session
-	Engine   *gin.Engine
-	Server   *httptest.Server
+	Database     *mgo.Database
+	Session      *mgo.Session
+	Engine       *gin.Engine
+	Server       *httptest.Server
 	Interceptors map[string]InterceptorList
 }
 

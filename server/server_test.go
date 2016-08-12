@@ -21,12 +21,12 @@ import (
 )
 
 type ServerSuite struct {
-	Database  *mgo.Database
-	Session   *mgo.Session
-	Engine    *gin.Engine
-	Server    *httptest.Server
+	Database     *mgo.Database
+	Session      *mgo.Session
+	Engine       *gin.Engine
+	Server       *httptest.Server
 	Interceptors map[string]InterceptorList
-	FixtureID string
+	FixtureID    string
 }
 
 func Test(t *testing.T) { TestingT(t) }
