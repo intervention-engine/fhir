@@ -21,6 +21,7 @@ func (f *FHIRServer) AddMiddleware(key string, middleware gin.HandlerFunc) {
 // Adds a new interceptor for a particular HTTP verb and FHIR resource. For example:
 // AddInterceptor("POST", "Patient", handleFunc) would register the function "handleFunc"
 // to be run against a Patient resource when it is created, before being added to the database.
+//
 // To run a handler against ALL resources pass "*" as the resourceType.
 //
 // Supported HTTP verbs are: POST, PUT, DELETE
