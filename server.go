@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-
+	"github.com/intervention-engine/fhir/intercept"
 	"github.com/intervention-engine/fhir/server"
 )
 
@@ -14,6 +14,11 @@ func main() {
 	if *reqLog {
 		s.Engine.Use(server.RequestLoggerHandler)
 	}
+
+	// register some interceptors
+	s.AddInterceptor("POST", "Patient", intercept.PostInterceptor)
+	s.AddInterceptor("PUT", "Patient", intercept.PutInterceptor)
+	s.AddInterceptor("DELETE", "Patient", intercept.DeleteInterceptor)
 
 	config := server.Config{UseSmartAuth: *smartAuth}
 	s.Run(config)
