@@ -21,11 +21,12 @@ import (
 )
 
 type ServerSuite struct {
-	Database  *mgo.Database
-	Session   *mgo.Session
-	Engine    *gin.Engine
-	Server    *httptest.Server
-	FixtureID string
+	Database     *mgo.Database
+	Session      *mgo.Session
+	Engine       *gin.Engine
+	Server       *httptest.Server
+	Interceptors map[string]InterceptorList
+	FixtureID    string
 }
 
 func Test(t *testing.T) { TestingT(t) }
@@ -41,7 +42,7 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Database), Config{})
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Database, s.Interceptors), Config{})
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)

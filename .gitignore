@@ -1,5 +1,6 @@
 # Binary artifacts
 /fhir
+/test/test
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o

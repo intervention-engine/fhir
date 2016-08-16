@@ -1,24 +1,66 @@
 package server
 
 import (
-	"net/url"
-	"reflect"
-	"strconv"
-	"time"
-
 	"github.com/intervention-engine/fhir/models"
 	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"net/url"
+	"reflect"
+	"strconv"
+	"time"
 )
 
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
-func NewMongoDataAccessLayer(db *mgo.Database) DataAccessLayer {
-	return &mongoDataAccessLayer{Database: db}
+func NewMongoDataAccessLayer(db *mgo.Database, interceptors map[string]InterceptorList) DataAccessLayer {
+	return &mongoDataAccessLayer{
+		Database:     db,
+		Interceptors: interceptors,
+	}
 }
 
 type mongoDataAccessLayer struct {
-	Database *mgo.Database
+	Database     *mgo.Database
+	Interceptors map[string]InterceptorList
+}
+
+// Interceptor executes a function on a specified resource type immediately AFTER
+// the resource is modified in the database. To register an interceptor for ALL resource
+// types use a "*" as the resourceType.
+type Interceptor struct {
+	ResourceType string
+	Handler      InterceptorHandler
+}
+
+// InterceptorHandler is a function that is executed on a single FHIR resource
+type InterceptorHandler func(interface{})
+
+// InterceptorList is a list of interceptors registered for a given database operation
+type InterceptorList []Interceptor
+
+// invokeInterceptors invokes the interceptor list for a particular database operation and resource type.
+// Supported operations are: "Create", "Update", and "Delete"
+func (dal *mongoDataAccessLayer) invokeInterceptors(op, resourceType string, resource interface{}) {
+
+	for _, interceptor := range dal.Interceptors[op] {
+		if interceptor.ResourceType == resourceType || interceptor.ResourceType == "*" {
+			interceptor.Handler(resource)
+		}
+	}
+}
+
+// hasInterceptorsForOpAndType checks if any interceptors are registered for a particular database operation AND resource type
+func (dal *mongoDataAccessLayer) hasInterceptorsForOpAndType(op, resourceType string) bool {
+
+	if len(dal.Interceptors[op]) > 0 {
+		for _, interceptor := range dal.Interceptors[op] {
+			if interceptor.ResourceType == resourceType || interceptor.ResourceType == "*" {
+				// At least 1 interceptor is registered for this database operation and resource type
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (dal *mongoDataAccessLayer) Get(id, resourceType string) (result interface{}, err error) {
@@ -32,7 +74,6 @@ func (dal *mongoDataAccessLayer) Get(id, resourceType string) (result interface{
 	if err = collection.FindId(bsonID.Hex()).One(result); err != nil {
 		return nil, convertMongoErr(err)
 	}
-
 	return
 }
 
@@ -52,7 +93,12 @@ func (dal *mongoDataAccessLayer) PostWithID(id string, resource interface{}) err
 	resourceType := reflect.TypeOf(resource).Elem().Name()
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
 	updateLastUpdatedDate(resource)
-	return convertMongoErr(collection.Insert(resource))
+	err = collection.Insert(resource)
+
+	if err == nil {
+		dal.invokeInterceptors("Create", resourceType, resource)
+	}
+	return convertMongoErr(err)
 }
 
 func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNew bool, err error) {
@@ -65,10 +111,17 @@ func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNe
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
 	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	updateLastUpdatedDate(resource)
+
 	info, err := collection.UpsertId(bsonID.Hex(), resource)
 	if err == nil {
 		createdNew = (info.Updated == 0)
+		if createdNew {
+			dal.invokeInterceptors("Create", resourceType, resource)
+		} else {
+			dal.invokeInterceptors("Update", resourceType, resource)
+		}
 	}
+
 	return createdNew, convertMongoErr(err)
 }
 
@@ -96,19 +149,100 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 		return convertMongoErr(err)
 	}
 
+	var resource interface{}
+	var getError error
+	hasInterceptor := dal.hasInterceptorsForOpAndType("Delete", resourceType)
+
+	if hasInterceptor {
+		// Although this is a delete operation we need to get the resource first so we can
+		// run any interceptors on the resource before it's deleted.
+		resource, getError = dal.Get(id, resourceType)
+	}
+
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
-	return convertMongoErr(collection.RemoveId(bsonID.Hex()))
+	err = collection.RemoveId(bsonID.Hex())
+
+	if err == nil && hasInterceptor {
+		if getError == nil {
+			dal.invokeInterceptors("Delete", resourceType, resource)
+		}
+	}
+
+	return convertMongoErr(err)
 }
 
 func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count int, err error) {
+	resourceType := query.Resource
 	searcher := search.NewMongoSearcher(dal.Database)
-	queryObject := searcher.CreateQueryObject(query)
+	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
+	defaultQueryObject := searcher.CreateQueryObject(query)
+	var queryObject bson.M
 
-	collection := dal.Database.C(models.PluralizeLowerResourceName(query.Resource))
+	if dal.hasInterceptorsForOpAndType("Delete", resourceType) {
+		/* Interceptors for a conditional delete are tricky since an interceptor is only run
+		   AFTER the database operation and only on resources that were SUCCESSFULLY deleted. We use
+		   the following approach:
+		   1. Search for all matching resources by the original query (returns a bundle of resources)
+		   2. Bulk delete those resources by ID
+		   3. Search again using the SAME query, to verify that those resources were in fact deleted
+		   4. Run the interceptor(s) on all resources that ARE NOT in the second search (since they were truly deleted)
+		*/
+
+		// get the resources that are about to be deleted
+		var bundle *models.Bundle
+		bundle, err = dal.Search(url.URL{}, query) // the baseURL argument here does not matter
+
+		if err == nil {
+			resourceIds := getResourceIdsFromBundle(bundle)
+			queryObject = bson.M{"_id": bson.M{"$in": resourceIds}}
+
+			// do the bulk delete by ID
+			info, err := collection.RemoveAll(queryObject)
+			successfulIds := make([]string, len(resourceIds))
+
+			if info != nil {
+				count = info.Removed
+			}
+
+			if err != nil {
+				return count, convertMongoErr(err)
+			}
+
+			var failBundle *models.Bundle
+			var searchErr error
+
+			if count < len(resourceIds) {
+				// Not all resources were removed...
+				failBundle, searchErr = dal.Search(url.URL{}, query) // original search query
+				successfulIds = setDiff(resourceIds, getResourceIdsFromBundle(failBundle))
+			} else {
+				// All resources were successfully removed
+				successfulIds = resourceIds
+			}
+
+			if searchErr == nil {
+				for _, elem := range bundle.Entry {
+					id := reflect.ValueOf(elem.Resource).Elem().FieldByName("Id").String()
+
+					if elementInSlice(id, successfulIds) {
+						// This resource was confirmed deleted
+						dal.invokeInterceptors("Delete", resourceType, elem.Resource)
+					}
+				}
+			}
+			return count, convertMongoErr(err)
+		}
+	} else {
+		// No interceptor(s) registered, use the default conditional query
+		queryObject = defaultQueryObject
+	}
+
+	// do the bulk delete the usual way
 	info, err := collection.RemoveAll(queryObject)
 	if info != nil {
 		count = info.Removed
 	}
+
 	return count, convertMongoErr(err)
 }
 
@@ -311,4 +445,45 @@ func convertMongoErr(err error) error {
 	case mgo.ErrNotFound:
 		return ErrNotFound
 	}
+}
+
+// getResourceIdsFromBundle parses a slice of BSON resource IDs from a valid
+// bundle of resources (typically returned from a search operation). Order is
+// preserved.
+func getResourceIdsFromBundle(bundle *models.Bundle) []string {
+	resourceIds := make([]string, int(*bundle.Total))
+	for i, elem := range bundle.Entry {
+		resourceIds[i] = reflect.ValueOf(elem.Resource).Elem().FieldByName("Id").String()
+	}
+	return resourceIds
+}
+
+// setDiff returns all the elements in slice X that are not in slice Y
+func setDiff(X, Y []string) []string {
+	m := make(map[string]int)
+
+	for _, y := range Y {
+		m[y]++
+	}
+
+	var ret []string
+	for _, x := range X {
+		if m[x] > 0 {
+			m[x]--
+			continue
+		}
+		ret = append(ret, x)
+	}
+
+	return ret
+}
+
+// elementInSlice tests if a string element is in a larger slice of strings
+func elementInSlice(element string, slice []string) bool {
+	for _, el := range slice {
+		if element == el {
+			return true
+		}
+	}
+	return false
 }
