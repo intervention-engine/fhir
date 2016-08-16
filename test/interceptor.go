@@ -24,16 +24,16 @@ func main() {
 // =======================================================================================
 // 1.  GET    /Patient           -- verify that no interceptor is called
 // 2.  GET    /Condition         -- verify that no interceptor is called
-// 3.  POST   /Patient           -- verify that BOTH POST interceptors are called
+// 3.  POST   /Patient           -- verify that BOTH Create interceptors are called
 // 4.  POST   /Condition         -- verify that only the allPostsInterceptor is called
-// 5.  PUT    /Patient/:id       -- verify that BOTH PUT interceptors are called
+// 5.  PUT    /Patient/:id       -- verify that BOTH Update interceptors are called
 // 6.  PUT    /Condition/:id     -- verify that only the allPutsInterceptor is called
-// 7.  DELETE /Patient/:id       -- verify that BOTH DELETE interceptors are called
+// 7.  DELETE /Patient/:id       -- verify that BOTH Delete interceptors are called
 // 8.  DELETE /Condition/:id     -- verify that only the allDeletesInterceptor is called
 // 9-10: repeat steps 3 and 4
-// 11: PUT    /Patient?_id=:id   -- verify that BOTH PUT interceptors are called
+// 11: PUT    /Patient?_id=:id   -- verify that BOTH Update interceptors are called
 // 12: PUT    /Condition?_id=:id -- verify that only the allPutsInterceptor is called
-// 13: DELETE /Patient?_id=:id   -- verify that BOTH DELETE interceptors are called
+// 13: DELETE /Patient?_id=:id   -- verify that BOTH Delete interceptors are called
 // 14: DELETE /Condition?_id=:id -- verify that only the allDeletesInterceptor is called
 // =======================================================================================
 // Next, run ./test -noint (run the test server without any interceptors) and verify that
@@ -44,38 +44,38 @@ func main() {
 // https://syntheticmass.mitre.org/fhir/baseDstu3/Condition
 //
 func setupTestInterceptors(s *server.FHIRServer) {
-	s.AddInterceptor("POST", "Patient", postInterceptor)
-	s.AddInterceptor("POST", "*", allPostsInterceptor)
+	s.AddInterceptor("Create", "Patient", postInterceptor)
+	s.AddInterceptor("Create", "*", allPostsInterceptor)
 
-	s.AddInterceptor("PUT", "Patient", putInterceptor)
-	s.AddInterceptor("PUT", "*", allPutsInterceptor)
+	s.AddInterceptor("Update", "Patient", putInterceptor)
+	s.AddInterceptor("Update", "*", allPutsInterceptor)
 
-	s.AddInterceptor("DELETE", "Patient", deleteInterceptor)
-	s.AddInterceptor("DELETE", "*", allDeletesInterceptor)
+	s.AddInterceptor("Delete", "Patient", deleteInterceptor)
+	s.AddInterceptor("Delete", "*", allDeletesInterceptor)
 }
 
 func postInterceptor(resource interface{}) {
-	fmt.Printf("POST intercepted for resource: %s\n", getResourceType(resource))
+	fmt.Printf("Create intercepted for resource: %s\n", getResourceType(resource))
 }
 
 func allPostsInterceptor(resource interface{}) {
-	fmt.Printf("POST intercepted for ALL resources\n")
+	fmt.Printf("Create intercepted for ALL resources\n")
 }
 
 func putInterceptor(resource interface{}) {
-	fmt.Printf("PUT intercepted for resource: %s\n", getResourceType(resource))
+	fmt.Printf("Update intercepted for resource: %s\n", getResourceType(resource))
 }
 
 func allPutsInterceptor(resource interface{}) {
-	fmt.Printf("PUT intercepted for ALL resources\n")
+	fmt.Printf("Update intercepted for ALL resources\n")
 }
 
 func deleteInterceptor(resource interface{}) {
-	fmt.Printf("DELETE intercepted for resource: %s\n", getResourceType(resource))
+	fmt.Printf("Delete intercepted for resource: %s\n", getResourceType(resource))
 }
 
 func allDeletesInterceptor(resource interface{}) {
-	fmt.Printf("DELETE intercepted for ALL resources\n")
+	fmt.Printf("Delete intercepted for ALL resources\n")
 }
 
 func getResourceType(resource interface{}) string {
