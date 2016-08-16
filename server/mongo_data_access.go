@@ -190,7 +190,7 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 
 		if err == nil {
 			resourceIds := getResourceIdsFromBundle(bundle)
-			queryObject = bson.M{ "_id": bson.M{"$in": resourceIds} }
+			queryObject = bson.M{"_id": bson.M{"$in": resourceIds}}
 
 			// do the bulk delete by ID
 			info, err := collection.RemoveAll(queryObject)
@@ -458,20 +458,20 @@ func getResourceIdsFromBundle(bundle *models.Bundle) []string {
 func setDiff(X, Y []string) []string {
 	m := make(map[string]int)
 
-    for _, y := range Y {
-        m[y]++
-    }
+	for _, y := range Y {
+		m[y]++
+	}
 
-    var ret []string
-    for _, x := range X {
-        if m[x] > 0 {
-            m[x]--
-            continue
-        }
-        ret = append(ret, x)
-    }
+	var ret []string
+	for _, x := range X {
+		if m[x] > 0 {
+			m[x]--
+			continue
+		}
+		ret = append(ret, x)
+	}
 
-    return ret
+	return ret
 }
 
 // elementInSlice tests if a string element is in a larger slice of strings
