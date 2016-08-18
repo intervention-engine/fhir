@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/intervention-engine/fhir/server"
-	"reflect"
 )
 
 func main() {
@@ -21,21 +20,21 @@ func main() {
 }
 
 // With this test server running, verfiy the following (by viewing server log):
-// =======================================================================================
+// ================================================================================================
 // 1.  GET    /Patient           -- verify that no interceptor is called
 // 2.  GET    /Condition         -- verify that no interceptor is called
 // 3.  POST   /Patient           -- verify that BOTH Create interceptors are called
-// 4.  POST   /Condition         -- verify that only the allPostsInterceptor is called
+// 4.  POST   /Condition         -- verify that only the TestUniversalCreateInterceptor is called
 // 5.  PUT    /Patient/:id       -- verify that BOTH Update interceptors are called
-// 6.  PUT    /Condition/:id     -- verify that only the allPutsInterceptor is called
+// 6.  PUT    /Condition/:id     -- verify that only the TestUniversalUpdateInterceptor is called
 // 7.  DELETE /Patient/:id       -- verify that BOTH Delete interceptors are called
-// 8.  DELETE /Condition/:id     -- verify that only the allDeletesInterceptor is called
+// 8.  DELETE /Condition/:id     -- verify that only the TestUniversalDeleteInterceptor is called
 // 9-10: repeat steps 3 and 4
 // 11: PUT    /Patient?_id=:id   -- verify that BOTH Update interceptors are called
-// 12: PUT    /Condition?_id=:id -- verify that only the allPutsInterceptor is called
+// 12: PUT    /Condition?_id=:id -- verify that only the TestUniversalUpdateInterceptor is called
 // 13: DELETE /Patient?_id=:id   -- verify that BOTH Delete interceptors are called
-// 14: DELETE /Condition?_id=:id -- verify that only the allDeletesInterceptor is called
-// =======================================================================================
+// 14: DELETE /Condition?_id=:id -- verify that only the TestUniversalDeleteInterceptor is called
+// ================================================================================================
 // Next, run ./test -noint (run the test server without any interceptors) and verify that
 // the new interceptor logic does not interfere with normal server operation.
 //
@@ -44,41 +43,88 @@ func main() {
 // https://syntheticmass.mitre.org/fhir/baseDstu3/Condition
 //
 func setupTestInterceptors(s *server.FHIRServer) {
-	s.AddInterceptor("Create", "Patient", postInterceptor)
-	s.AddInterceptor("Create", "*", allPostsInterceptor)
-
-	s.AddInterceptor("Update", "Patient", putInterceptor)
-	s.AddInterceptor("Update", "*", allPutsInterceptor)
-
-	s.AddInterceptor("Delete", "Patient", deleteInterceptor)
-	s.AddInterceptor("Delete", "*", allDeletesInterceptor)
+	s.AddInterceptor("Create", "Patient", &TestPatientCreateInterceptor{})
+	s.AddInterceptor("Update", "Patient", &TestPatientUpdateInterceptor{})
+	s.AddInterceptor("Delete", "Patient", &TestPatientDeleteInterceptor{})
+	s.AddInterceptor("Create", "*", &TestUniversalCreateInterceptor{})
+	s.AddInterceptor("Update", "*", &TestUniversalUpdateInterceptor{})
+	s.AddInterceptor("Delete", "*", &TestUniversalDeleteInterceptor{})
 }
 
-func postInterceptor(resource interface{}) {
-	fmt.Printf("Create intercepted for resource: %s\n", getResourceType(resource))
+// Interceptors that will be registered to operate on Patient resources only:
+// ----------------------------------------------------------------------------
+
+// TestPatientCreateInterceptor operates on a Patient resource after it is created
+type TestPatientCreateInterceptor struct{}
+
+func (s *TestPatientCreateInterceptor) Before(resource interface{}) {}
+
+func (s *TestPatientCreateInterceptor) After(resource interface{}) {
+	fmt.Println("TestPatientCreateInterceptor: After()")
 }
 
-func allPostsInterceptor(resource interface{}) {
-	fmt.Printf("Create intercepted for ALL resources\n")
+func (s *TestPatientCreateInterceptor) OnError(err error, resource interface{}) {}
+
+// TestPatientUpdateInterceptor operates on a Patient resource both before and
+// after it is updated
+type TestPatientUpdateInterceptor struct{}
+
+func (s *TestPatientUpdateInterceptor) Before(resource interface{}) {
+	fmt.Println("TestPatientUpdateInterceptor: Before()")
 }
 
-func putInterceptor(resource interface{}) {
-	fmt.Printf("Update intercepted for resource: %s\n", getResourceType(resource))
+func (s *TestPatientUpdateInterceptor) After(resource interface{}) {
+	fmt.Println("TestPatientUpdateInterceptor: After()")
 }
 
-func allPutsInterceptor(resource interface{}) {
-	fmt.Printf("Update intercepted for ALL resources\n")
+func (s *TestPatientUpdateInterceptor) OnError(err error, resource interface{}) {}
+
+// TestPatientDeleteInterceptor operates on a Patient resource only before it is deleted
+type TestPatientDeleteInterceptor struct{}
+
+func (s *TestPatientDeleteInterceptor) Before(resource interface{}) {
+	fmt.Println("TestPatientDeleteInterceptor: Before()")
 }
 
-func deleteInterceptor(resource interface{}) {
-	fmt.Printf("Delete intercepted for resource: %s\n", getResourceType(resource))
+func (s *TestPatientDeleteInterceptor) After(resource interface{}) {}
+
+func (s *TestPatientDeleteInterceptor) OnError(err error, resource interface{}) {}
+
+// Interceptors that will be registered to operate on ANY resource:
+// ----------------------------------------------------------------------------
+
+// TestUniversalCreateInterceptor operates on any resource after it is created
+type TestUniversalCreateInterceptor struct{}
+
+func (s *TestUniversalCreateInterceptor) Before(resource interface{}) {}
+
+func (s *TestUniversalCreateInterceptor) After(resource interface{}) {
+	fmt.Println("TestUniversalCreateInterceptor: After()")
 }
 
-func allDeletesInterceptor(resource interface{}) {
-	fmt.Printf("Delete intercepted for ALL resources\n")
+func (s *TestUniversalCreateInterceptor) OnError(err error, resource interface{}) {}
+
+// TestUniversalUpdateInterceptor operates on any resource both before and after
+// it is updated
+type TestUniversalUpdateInterceptor struct{}
+
+func (s *TestUniversalUpdateInterceptor) Before(resource interface{}) {
+	fmt.Println("TestUniversalUpdateInterceptor: Before()")
 }
 
-func getResourceType(resource interface{}) string {
-	resType := reflect.TypeOf(resource).Elem().Name()
-	return resType
+func (s *TestUniversalUpdateInterceptor) After(resource interface{}) {
+	fmt.Println("TestUniversalUpdateInterceptor: After()")
 }
+
+func (s *TestUniversalUpdateInterceptor) OnError(err error, resource interface{}) {}
+
+// TestUniversalDeleteInterceptor operates on any resource after it is deleted
+type TestUniversalDeleteInterceptor struct{}
+
+func (s *TestUniversalDeleteInterceptor) Before(resource interface{}) {}
+
+func (s *TestUniversalDeleteInterceptor) After(resource interface{}) {
+	fmt.Println("TestUniversalDeleteInterceptor: After()")
+}
+
+func (s *TestUniversalDeleteInterceptor) OnError(err error, resource interface{}) {}
