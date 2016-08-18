@@ -9,6 +9,8 @@ import (
 	"reflect"
 	"strconv"
 	"time"
+	"errors"
+	"fmt"
 )
 
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
@@ -275,6 +277,10 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 					if elementInSlice(id, successfulIds) {
 						// This resource was confirmed deleted
 						dal.invokeInterceptorsAfter("Delete", resourceType, elem.Resource)
+					} else {
+						// This resource was not confirmed deleted, which is an error
+						resourceErr := errors.New(fmt.Sprintf("ConditionalDelete: failed to delete resource %s with ID %s", resourceType, id))
+						dal.invokeInterceptorsOnError("Delete", resourceType, resourceErr, elem.Resource)
 					}
 				}
 			}
