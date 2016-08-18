@@ -121,11 +121,17 @@ func (dal *mongoDataAccessLayer) PostWithID(id string, resource interface{}) err
 	resourceType := reflect.TypeOf(resource).Elem().Name()
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
 	updateLastUpdatedDate(resource)
+
+	dal.invokeInterceptorsBefore("Create", resourceType, resource)
+
 	err = collection.Insert(resource)
 
 	if err == nil {
 		dal.invokeInterceptorsAfter("Create", resourceType, resource)
+	} else {
+		dal.invokeInterceptorsOnError("Create", resourceType, err, resource)
 	}
+
 	return convertMongoErr(err)
 }
 
@@ -140,6 +146,8 @@ func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNe
 	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	updateLastUpdatedDate(resource)
 
+	dal.invokeInterceptorsBefore("Update", resourceType, resource)
+
 	info, err := collection.UpsertId(bsonID.Hex(), resource)
 	if err == nil {
 		createdNew = (info.Updated == 0)
@@ -148,6 +156,8 @@ func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNe
 		} else {
 			dal.invokeInterceptorsAfter("Update", resourceType, resource)
 		}
+	} else {
+		dal.invokeInterceptorsOnError("Update", resourceType, err, resource)
 	}
 
 	return createdNew, convertMongoErr(err)
@@ -185,14 +195,17 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 		// Although this is a delete operation we need to get the resource first so we can
 		// run any interceptors on the resource before it's deleted.
 		resource, getError = dal.Get(id, resourceType)
+		dal.invokeInterceptorsBefore("Delete", resourceType, resource)
 	}
 
 	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
 	err = collection.RemoveId(bsonID.Hex())
 
-	if err == nil && hasInterceptor {
-		if getError == nil {
+	if hasInterceptor {
+		if err == nil && getError == nil {
 			dal.invokeInterceptorsAfter("Delete", resourceType, resource)
+		} else {
+			dal.invokeInterceptorsOnError("Delete", resourceType, err, resource)
 		}
 	}
 
@@ -224,6 +237,10 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 			resourceIds := getResourceIdsFromBundle(bundle)
 			queryObject = bson.M{"_id": bson.M{"$in": resourceIds}}
 
+			for _, elem := range bundle.Entry {
+				dal.invokeInterceptorsBefore("Delete", resourceType, elem.Resource)
+			}
+
 			// do the bulk delete by ID
 			info, err := collection.RemoveAll(queryObject)
 			successfulIds := make([]string, len(resourceIds))
@@ -233,6 +250,9 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 			}
 
 			if err != nil {
+				for _, elem := range bundle.Entry {
+					dal.invokeInterceptorsOnError("Delete", resourceType, err, elem.Resource)
+				}
 				return count, convertMongoErr(err)
 			}
 
