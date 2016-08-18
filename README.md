@@ -61,6 +61,7 @@ The *fhir* server accepts connections on port 3001 by default.
 
 If you wish to test the server with synthetic patient data, please reference [Generate and Upload Synthetic Patient Data](https://github.com/intervention-engine/ie/blob/master/docs/dev_install.md#generate-and-upload-synthetic-patient-data).
 
+
 Development
 -----------
 
@@ -74,6 +75,18 @@ $ go test ./models ./search ./server ./upload
 
 This will ensure that the vendor directory is not included when running the test
 suite.
+
+Testing Interceptors
+--------------------
+
+This server supports "interceptors", functions that allow interaction with resources before, after, and following a failed database operation. These are invoked at the data access layer. To test the interceptors:
+
+```
+$ cd $GOPATH/src/github.com/intervention-engine/fhir/test
+$ go build
+$ ./test
+```
+This runs a testing variant of the fhir server with some test interceptors installed. Follow the testing instructions in `test/interceptor.go` to verify that the interceptors are working correctly.
 
 License
 -------
