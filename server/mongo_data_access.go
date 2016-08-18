@@ -36,7 +36,7 @@ type Interceptor struct {
 }
 
 // InterceptorHandler is an interface that defines three methods that are executed on a resource
-// before the database operation, after the database operation SUCCEEDS, and fter the database
+// before the database operation, after the database operation SUCCEEDS, and after the database
 // operation FAILS.
 type InterceptorHandler interface {
 	Before(resource interface{})
@@ -44,7 +44,7 @@ type InterceptorHandler interface {
 	OnError(err error, resource interface{})
 }
 
-// invokeInterceptorsAfter invokes the interceptor list for the given resource type before a database
+// invokeInterceptorsBefore invokes the interceptor list for the given resource type before a database
 // operation occurs.
 func (dal *mongoDataAccessLayer) invokeInterceptorsBefore(op, resourceType string, resource interface{}) {
 
