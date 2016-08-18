@@ -1,6 +1,8 @@
 package server
 
 import (
+	"errors"
+	"fmt"
 	"github.com/intervention-engine/fhir/models"
 	"github.com/intervention-engine/fhir/search"
 	"gopkg.in/mgo.v2"
@@ -9,8 +11,6 @@ import (
 	"reflect"
 	"strconv"
 	"time"
-	"errors"
-	"fmt"
 )
 
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
