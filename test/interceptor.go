@@ -55,7 +55,7 @@ func setupTestInterceptors(s *server.FHIRServer) {
 // ----------------------------------------------------------------------------
 
 // TestPatientCreateInterceptor operates on a Patient resource after it is created
-type TestPatientCreateInterceptor struct {}
+type TestPatientCreateInterceptor struct{}
 
 func (s *TestPatientCreateInterceptor) Before(resource interface{}) {}
 
@@ -65,10 +65,9 @@ func (s *TestPatientCreateInterceptor) After(resource interface{}) {
 
 func (s *TestPatientCreateInterceptor) OnError(err error, resource interface{}) {}
 
-
-// TestPatientUpdateInterceptor operates on a Patient resource both before and 
+// TestPatientUpdateInterceptor operates on a Patient resource both before and
 // after it is updated
-type TestPatientUpdateInterceptor struct {}
+type TestPatientUpdateInterceptor struct{}
 
 func (s *TestPatientUpdateInterceptor) Before(resource interface{}) {
 	fmt.Println("TestPatientUpdateInterceptor: Before()")
@@ -81,7 +80,7 @@ func (s *TestPatientUpdateInterceptor) After(resource interface{}) {
 func (s *TestPatientUpdateInterceptor) OnError(err error, resource interface{}) {}
 
 // TestPatientDeleteInterceptor operates on a Patient resource only before it is deleted
-type TestPatientDeleteInterceptor struct {}
+type TestPatientDeleteInterceptor struct{}
 
 func (s *TestPatientDeleteInterceptor) Before(resource interface{}) {
 	fmt.Println("TestPatientDeleteInterceptor: Before()")
@@ -95,7 +94,7 @@ func (s *TestPatientDeleteInterceptor) OnError(err error, resource interface{}) 
 // ----------------------------------------------------------------------------
 
 // TestUniversalCreateInterceptor operates on any resource after it is created
-type TestUniversalCreateInterceptor struct {}
+type TestUniversalCreateInterceptor struct{}
 
 func (s *TestUniversalCreateInterceptor) Before(resource interface{}) {}
 
@@ -107,7 +106,7 @@ func (s *TestUniversalCreateInterceptor) OnError(err error, resource interface{}
 
 // TestUniversalUpdateInterceptor operates on any resource both before and after
 // it is updated
-type TestUniversalUpdateInterceptor struct {}
+type TestUniversalUpdateInterceptor struct{}
 
 func (s *TestUniversalUpdateInterceptor) Before(resource interface{}) {
 	fmt.Println("TestUniversalUpdateInterceptor: Before()")
@@ -120,7 +119,7 @@ func (s *TestUniversalUpdateInterceptor) After(resource interface{}) {
 func (s *TestUniversalUpdateInterceptor) OnError(err error, resource interface{}) {}
 
 // TestUniversalDeleteInterceptor operates on any resource after it is deleted
-type TestUniversalDeleteInterceptor struct {}
+type TestUniversalDeleteInterceptor struct{}
 
 func (s *TestUniversalDeleteInterceptor) Before(resource interface{}) {}
 

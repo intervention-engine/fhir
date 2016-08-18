@@ -32,7 +32,7 @@ type InterceptorList []Interceptor
 // types use a "*" as the resourceType.
 type Interceptor struct {
 	ResourceType string
-	Handler InterceptorHandler
+	Handler      InterceptorHandler
 }
 
 // InterceptorHandler is an interface that defines three methods that are executed on a resource
