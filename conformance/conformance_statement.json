@@ -1,6 +1,6 @@
 {
     "acceptUnknown": "extensions",
-    "date": "2016-08-16T14:32:21-04:00",
+    "date": "2016-08-19T11:50:17-04:00",
     "description": "GoFHIR sample conformance statement",
     "fhirVersion": "1.4.0",
     "format": [
