@@ -1,7 +1,7 @@
 {
     "acceptUnknown": "extensions",
-    "date": "2016-08-19T11:50:17-04:00",
-    "description": "GoFHIR sample conformance statement",
+    "date": "2016-08-22T12:12:00-04:00",
+    "description": "GoFHIR conformance statement",
     "fhirVersion": "1.4.0",
     "format": [
         "json"
@@ -961,10 +961,6 @@
                                 "RelatedPerson"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "related",
-                            "type": "composite"
                         },
                         {
                             "name": "relatedcode",
@@ -3411,10 +3407,6 @@
                             "type": "token"
                         },
                         {
-                            "name": "event-status-date",
-                            "type": "composite"
-                        },
-                        {
                             "name": "identifier",
                             "type": "token"
                         },
@@ -3429,10 +3421,6 @@
                         {
                             "name": "item-status",
                             "type": "token"
-                        },
-                        {
-                            "name": "item-status-date",
-                            "type": "composite"
                         },
                         {
                             "name": "orderer",
@@ -3907,10 +3895,6 @@
                         {
                             "name": "relation",
                             "type": "token"
-                        },
-                        {
-                            "name": "relationship",
-                            "type": "composite"
                         },
                         {
                             "name": "securitylabel",
@@ -5045,10 +5029,6 @@
                         {
                             "name": "characteristic",
                             "type": "token"
-                        },
-                        {
-                            "name": "characteristic-value",
-                            "type": "composite"
                         },
                         {
                             "name": "code",
@@ -7359,16 +7339,8 @@
                             "type": "token"
                         },
                         {
-                            "name": "code-value-[x]",
-                            "type": "composite"
-                        },
-                        {
                             "name": "component-code",
                             "type": "token"
-                        },
-                        {
-                            "name": "component-code-value-[x]",
-                            "type": "composite"
                         },
                         {
                             "name": "component-data-absent-reason",
@@ -7429,10 +7401,6 @@
                                 "RelatedPerson"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "related",
-                            "type": "composite"
                         },
                         {
                             "name": "related-target",
@@ -8112,10 +8080,6 @@
                             "type": "token"
                         },
                         {
-                            "name": "email",
-                            "type": "token"
-                        },
-                        {
                             "name": "family",
                             "type": "string"
                         },
@@ -8152,10 +8116,6 @@
                                 "Organization"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "phone",
-                            "type": "token"
                         },
                         {
                             "name": "phonetic",
@@ -8468,10 +8428,6 @@
                             "type": "date"
                         },
                         {
-                            "name": "email",
-                            "type": "token"
-                        },
-                        {
                             "name": "gender",
                             "type": "token"
                         },
@@ -8506,10 +8462,6 @@
                                 "Patient"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "phone",
-                            "type": "token"
                         },
                         {
                             "name": "phonetic",
@@ -8611,10 +8563,6 @@
                             "type": "token"
                         },
                         {
-                            "name": "email",
-                            "type": "token"
-                        },
-                        {
                             "name": "family",
                             "type": "string"
                         },
@@ -8647,10 +8595,6 @@
                                 "Organization"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "phone",
-                            "type": "token"
                         },
                         {
                             "name": "phonetic",
@@ -8719,10 +8663,6 @@
                             "type": "token"
                         },
                         {
-                            "name": "email",
-                            "type": "token"
-                        },
-                        {
                             "name": "identifier",
                             "type": "token"
                         },
@@ -8739,10 +8679,6 @@
                                 "Organization"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "phone",
-                            "type": "token"
                         },
                         {
                             "name": "practitioner",
@@ -9696,10 +9632,6 @@
                             "type": "date"
                         },
                         {
-                            "name": "email",
-                            "type": "token"
-                        },
-                        {
                             "name": "gender",
                             "type": "token"
                         },
@@ -9717,10 +9649,6 @@
                                 "Patient"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "phone",
-                            "type": "token"
                         },
                         {
                             "name": "phonetic",
@@ -10033,10 +9961,6 @@
                         {
                             "name": "chromosome",
                             "type": "token"
-                        },
-                        {
-                            "name": "coordinate",
-                            "type": "composite"
                         },
                         {
                             "name": "end",
