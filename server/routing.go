@@ -36,6 +36,9 @@ func RegisterRoutes(e *gin.Engine, config map[string][]gin.HandlerFunc, dal Data
 	batchHandlers = append(batchHandlers, batch.Post)
 	e.POST("/", batchHandlers...)
 
+	// Conformance Statement
+	e.StaticFile("metadata", "conformance/conformance_statement.json")
+
 	// Resources
 
 	RegisterController("Appointment", e, config["Appointment"], dal, serverConfig)
