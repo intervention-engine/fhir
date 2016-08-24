@@ -176,72 +176,24 @@ type ElementDefinition struct {
 	ExampleTiming               *Timing                                `bson:"exampleTiming,omitempty" json:"exampleTiming,omitempty"`
 	ExampleUnsignedInt          *uint32                                `bson:"exampleUnsignedInt,omitempty" json:"exampleUnsignedInt,omitempty"`
 	ExampleUri                  string                                 `bson:"exampleUri,omitempty" json:"exampleUri,omitempty"`
-	MinValueAddress             *Address                               `bson:"minValueAddress,omitempty" json:"minValueAddress,omitempty"`
-	MinValueAnnotation          *Annotation                            `bson:"minValueAnnotation,omitempty" json:"minValueAnnotation,omitempty"`
-	MinValueAttachment          *Attachment                            `bson:"minValueAttachment,omitempty" json:"minValueAttachment,omitempty"`
-	MinValueBase64Binary        string                                 `bson:"minValueBase64Binary,omitempty" json:"minValueBase64Binary,omitempty"`
-	MinValueBoolean             *bool                                  `bson:"minValueBoolean,omitempty" json:"minValueBoolean,omitempty"`
-	MinValueCode                string                                 `bson:"minValueCode,omitempty" json:"minValueCode,omitempty"`
-	MinValueCodeableConcept     *CodeableConcept                       `bson:"minValueCodeableConcept,omitempty" json:"minValueCodeableConcept,omitempty"`
-	MinValueCoding              *Coding                                `bson:"minValueCoding,omitempty" json:"minValueCoding,omitempty"`
-	MinValueContactPoint        *ContactPoint                          `bson:"minValueContactPoint,omitempty" json:"minValueContactPoint,omitempty"`
 	MinValueDate                *FHIRDateTime                          `bson:"minValueDate,omitempty" json:"minValueDate,omitempty"`
 	MinValueDateTime            *FHIRDateTime                          `bson:"minValueDateTime,omitempty" json:"minValueDateTime,omitempty"`
-	MinValueDecimal             *float64                               `bson:"minValueDecimal,omitempty" json:"minValueDecimal,omitempty"`
-	MinValueHumanName           *HumanName                             `bson:"minValueHumanName,omitempty" json:"minValueHumanName,omitempty"`
-	MinValueId                  string                                 `bson:"minValueId,omitempty" json:"minValueId,omitempty"`
-	MinValueIdentifier          *Identifier                            `bson:"minValueIdentifier,omitempty" json:"minValueIdentifier,omitempty"`
 	MinValueInstant             *FHIRDateTime                          `bson:"minValueInstant,omitempty" json:"minValueInstant,omitempty"`
-	MinValueInteger             *int32                                 `bson:"minValueInteger,omitempty" json:"minValueInteger,omitempty"`
-	MinValueMarkdown            string                                 `bson:"minValueMarkdown,omitempty" json:"minValueMarkdown,omitempty"`
-	MinValueMeta                *Meta                                  `bson:"minValueMeta,omitempty" json:"minValueMeta,omitempty"`
-	MinValueOid                 string                                 `bson:"minValueOid,omitempty" json:"minValueOid,omitempty"`
-	MinValuePeriod              *Period                                `bson:"minValuePeriod,omitempty" json:"minValuePeriod,omitempty"`
-	MinValuePositiveInt         *uint32                                `bson:"minValuePositiveInt,omitempty" json:"minValuePositiveInt,omitempty"`
-	MinValueQuantity            *Quantity                              `bson:"minValueQuantity,omitempty" json:"minValueQuantity,omitempty"`
-	MinValueRange               *Range                                 `bson:"minValueRange,omitempty" json:"minValueRange,omitempty"`
-	MinValueRatio               *Ratio                                 `bson:"minValueRatio,omitempty" json:"minValueRatio,omitempty"`
-	MinValueReference           *Reference                             `bson:"minValueReference,omitempty" json:"minValueReference,omitempty"`
-	MinValueSampledData         *SampledData                           `bson:"minValueSampledData,omitempty" json:"minValueSampledData,omitempty"`
-	MinValueSignature           *Signature                             `bson:"minValueSignature,omitempty" json:"minValueSignature,omitempty"`
-	MinValueString              string                                 `bson:"minValueString,omitempty" json:"minValueString,omitempty"`
 	MinValueTime                *FHIRDateTime                          `bson:"minValueTime,omitempty" json:"minValueTime,omitempty"`
-	MinValueTiming              *Timing                                `bson:"minValueTiming,omitempty" json:"minValueTiming,omitempty"`
+	MinValueDecimal             *float64                               `bson:"minValueDecimal,omitempty" json:"minValueDecimal,omitempty"`
+	MinValueInteger             *int32                                 `bson:"minValueInteger,omitempty" json:"minValueInteger,omitempty"`
+	MinValuePositiveInt         *uint32                                `bson:"minValuePositiveInt,omitempty" json:"minValuePositiveInt,omitempty"`
 	MinValueUnsignedInt         *uint32                                `bson:"minValueUnsignedInt,omitempty" json:"minValueUnsignedInt,omitempty"`
-	MinValueUri                 string                                 `bson:"minValueUri,omitempty" json:"minValueUri,omitempty"`
-	MaxValueAddress             *Address                               `bson:"maxValueAddress,omitempty" json:"maxValueAddress,omitempty"`
-	MaxValueAnnotation          *Annotation                            `bson:"maxValueAnnotation,omitempty" json:"maxValueAnnotation,omitempty"`
-	MaxValueAttachment          *Attachment                            `bson:"maxValueAttachment,omitempty" json:"maxValueAttachment,omitempty"`
-	MaxValueBase64Binary        string                                 `bson:"maxValueBase64Binary,omitempty" json:"maxValueBase64Binary,omitempty"`
-	MaxValueBoolean             *bool                                  `bson:"maxValueBoolean,omitempty" json:"maxValueBoolean,omitempty"`
-	MaxValueCode                string                                 `bson:"maxValueCode,omitempty" json:"maxValueCode,omitempty"`
-	MaxValueCodeableConcept     *CodeableConcept                       `bson:"maxValueCodeableConcept,omitempty" json:"maxValueCodeableConcept,omitempty"`
-	MaxValueCoding              *Coding                                `bson:"maxValueCoding,omitempty" json:"maxValueCoding,omitempty"`
-	MaxValueContactPoint        *ContactPoint                          `bson:"maxValueContactPoint,omitempty" json:"maxValueContactPoint,omitempty"`
+	MinValueQuantity            *Quantity                              `bson:"minValueQuantity,omitempty" json:"minValueQuantity,omitempty"`
 	MaxValueDate                *FHIRDateTime                          `bson:"maxValueDate,omitempty" json:"maxValueDate,omitempty"`
 	MaxValueDateTime            *FHIRDateTime                          `bson:"maxValueDateTime,omitempty" json:"maxValueDateTime,omitempty"`
-	MaxValueDecimal             *float64                               `bson:"maxValueDecimal,omitempty" json:"maxValueDecimal,omitempty"`
-	MaxValueHumanName           *HumanName                             `bson:"maxValueHumanName,omitempty" json:"maxValueHumanName,omitempty"`
-	MaxValueId                  string                                 `bson:"maxValueId,omitempty" json:"maxValueId,omitempty"`
-	MaxValueIdentifier          *Identifier                            `bson:"maxValueIdentifier,omitempty" json:"maxValueIdentifier,omitempty"`
 	MaxValueInstant             *FHIRDateTime                          `bson:"maxValueInstant,omitempty" json:"maxValueInstant,omitempty"`
-	MaxValueInteger             *int32                                 `bson:"maxValueInteger,omitempty" json:"maxValueInteger,omitempty"`
-	MaxValueMarkdown            string                                 `bson:"maxValueMarkdown,omitempty" json:"maxValueMarkdown,omitempty"`
-	MaxValueMeta                *Meta                                  `bson:"maxValueMeta,omitempty" json:"maxValueMeta,omitempty"`
-	MaxValueOid                 string                                 `bson:"maxValueOid,omitempty" json:"maxValueOid,omitempty"`
-	MaxValuePeriod              *Period                                `bson:"maxValuePeriod,omitempty" json:"maxValuePeriod,omitempty"`
-	MaxValuePositiveInt         *uint32                                `bson:"maxValuePositiveInt,omitempty" json:"maxValuePositiveInt,omitempty"`
-	MaxValueQuantity            *Quantity                              `bson:"maxValueQuantity,omitempty" json:"maxValueQuantity,omitempty"`
-	MaxValueRange               *Range                                 `bson:"maxValueRange,omitempty" json:"maxValueRange,omitempty"`
-	MaxValueRatio               *Ratio                                 `bson:"maxValueRatio,omitempty" json:"maxValueRatio,omitempty"`
-	MaxValueReference           *Reference                             `bson:"maxValueReference,omitempty" json:"maxValueReference,omitempty"`
-	MaxValueSampledData         *SampledData                           `bson:"maxValueSampledData,omitempty" json:"maxValueSampledData,omitempty"`
-	MaxValueSignature           *Signature                             `bson:"maxValueSignature,omitempty" json:"maxValueSignature,omitempty"`
-	MaxValueString              string                                 `bson:"maxValueString,omitempty" json:"maxValueString,omitempty"`
 	MaxValueTime                *FHIRDateTime                          `bson:"maxValueTime,omitempty" json:"maxValueTime,omitempty"`
-	MaxValueTiming              *Timing                                `bson:"maxValueTiming,omitempty" json:"maxValueTiming,omitempty"`
+	MaxValueDecimal             *float64                               `bson:"maxValueDecimal,omitempty" json:"maxValueDecimal,omitempty"`
+	MaxValueInteger             *int32                                 `bson:"maxValueInteger,omitempty" json:"maxValueInteger,omitempty"`
+	MaxValuePositiveInt         *uint32                                `bson:"maxValuePositiveInt,omitempty" json:"maxValuePositiveInt,omitempty"`
 	MaxValueUnsignedInt         *uint32                                `bson:"maxValueUnsignedInt,omitempty" json:"maxValueUnsignedInt,omitempty"`
-	MaxValueUri                 string                                 `bson:"maxValueUri,omitempty" json:"maxValueUri,omitempty"`
+	MaxValueQuantity            *Quantity                              `bson:"maxValueQuantity,omitempty" json:"maxValueQuantity,omitempty"`
 	MaxLength                   *int32                                 `bson:"maxLength,omitempty" json:"maxLength,omitempty"`
 	Condition                   []string                               `bson:"condition,omitempty" json:"condition,omitempty"`
 	Constraint                  []ElementDefinitionConstraintComponent `bson:"constraint,omitempty" json:"constraint,omitempty"`
@@ -270,7 +222,8 @@ type ElementDefinitionBaseComponent struct {
 type ElementDefinitionTypeRefComponent struct {
 	BackboneElement `bson:",inline"`
 	Code            string   `bson:"code,omitempty" json:"code,omitempty"`
-	Profile         []string `bson:"profile,omitempty" json:"profile,omitempty"`
+	Profile         string   `bson:"profile,omitempty" json:"profile,omitempty"`
+	TargetProfile   string   `bson:"targetProfile,omitempty" json:"targetProfile,omitempty"`
 	Aggregation     []string `bson:"aggregation,omitempty" json:"aggregation,omitempty"`
 	Versioning      string   `bson:"versioning,omitempty" json:"versioning,omitempty"`
 }

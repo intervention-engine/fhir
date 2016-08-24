@@ -35,6 +35,7 @@ import (
 type ClaimResponse struct {
 	DomainResource                `bson:",inline"`
 	Identifier                    []Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status                        string                            `bson:"status,omitempty" json:"status,omitempty"`
 	RequestIdentifier             *Identifier                       `bson:"requestIdentifier,omitempty" json:"requestIdentifier,omitempty"`
 	RequestReference              *Reference                        `bson:"requestReference,omitempty" json:"requestReference,omitempty"`
 	Ruleset                       *Coding                           `bson:"ruleset,omitempty" json:"ruleset,omitempty"`
@@ -46,23 +47,19 @@ type ClaimResponse struct {
 	RequestProviderReference      *Reference                        `bson:"requestProviderReference,omitempty" json:"requestProviderReference,omitempty"`
 	RequestOrganizationIdentifier *Identifier                       `bson:"requestOrganizationIdentifier,omitempty" json:"requestOrganizationIdentifier,omitempty"`
 	RequestOrganizationReference  *Reference                        `bson:"requestOrganizationReference,omitempty" json:"requestOrganizationReference,omitempty"`
-	Outcome                       string                            `bson:"outcome,omitempty" json:"outcome,omitempty"`
+	Outcome                       *Coding                           `bson:"outcome,omitempty" json:"outcome,omitempty"`
 	Disposition                   string                            `bson:"disposition,omitempty" json:"disposition,omitempty"`
 	PayeeType                     *Coding                           `bson:"payeeType,omitempty" json:"payeeType,omitempty"`
-	Item                          []ClaimResponseItemsComponent     `bson:"item,omitempty" json:"item,omitempty"`
+	Item                          []ClaimResponseItemComponent      `bson:"item,omitempty" json:"item,omitempty"`
 	AddItem                       []ClaimResponseAddedItemComponent `bson:"addItem,omitempty" json:"addItem,omitempty"`
-	Error                         []ClaimResponseErrorsComponent    `bson:"error,omitempty" json:"error,omitempty"`
+	Error                         []ClaimResponseErrorComponent     `bson:"error,omitempty" json:"error,omitempty"`
 	TotalCost                     *Quantity                         `bson:"totalCost,omitempty" json:"totalCost,omitempty"`
 	UnallocDeductable             *Quantity                         `bson:"unallocDeductable,omitempty" json:"unallocDeductable,omitempty"`
 	TotalBenefit                  *Quantity                         `bson:"totalBenefit,omitempty" json:"totalBenefit,omitempty"`
-	PaymentAdjustment             *Quantity                         `bson:"paymentAdjustment,omitempty" json:"paymentAdjustment,omitempty"`
-	PaymentAdjustmentReason       *Coding                           `bson:"paymentAdjustmentReason,omitempty" json:"paymentAdjustmentReason,omitempty"`
-	PaymentDate                   *FHIRDateTime                     `bson:"paymentDate,omitempty" json:"paymentDate,omitempty"`
-	PaymentAmount                 *Quantity                         `bson:"paymentAmount,omitempty" json:"paymentAmount,omitempty"`
-	PaymentRef                    *Identifier                       `bson:"paymentRef,omitempty" json:"paymentRef,omitempty"`
+	Payment                       *ClaimResponsePaymentComponent    `bson:"payment,omitempty" json:"payment,omitempty"`
 	Reserved                      *Coding                           `bson:"reserved,omitempty" json:"reserved,omitempty"`
 	Form                          *Coding                           `bson:"form,omitempty" json:"form,omitempty"`
-	Note                          []ClaimResponseNotesComponent     `bson:"note,omitempty" json:"note,omitempty"`
+	Note                          []ClaimResponseNoteComponent      `bson:"note,omitempty" json:"note,omitempty"`
 	Coverage                      []ClaimResponseCoverageComponent  `bson:"coverage,omitempty" json:"coverage,omitempty"`
 }
 
@@ -108,15 +105,15 @@ func (x *ClaimResponse) checkResourceType() error {
 	return nil
 }
 
-type ClaimResponseItemsComponent struct {
+type ClaimResponseItemComponent struct {
 	BackboneElement `bson:",inline"`
-	SequenceLinkId  *uint32                                  `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
-	NoteNumber      []uint32                                 `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
-	Adjudication    []ClaimResponseItemAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
-	Detail          []ClaimResponseItemDetailComponent       `bson:"detail,omitempty" json:"detail,omitempty"`
+	SequenceLinkId  *uint32                              `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
+	NoteNumber      []uint32                             `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
+	Adjudication    []ClaimResponseAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
+	Detail          []ClaimResponseItemDetailComponent   `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
-type ClaimResponseItemAdjudicationComponent struct {
+type ClaimResponseAdjudicationComponent struct {
 	BackboneElement `bson:",inline"`
 	Category        *Coding   `bson:"category,omitempty" json:"category,omitempty"`
 	Reason          *Coding   `bson:"reason,omitempty" json:"reason,omitempty"`
@@ -126,67 +123,44 @@ type ClaimResponseItemAdjudicationComponent struct {
 
 type ClaimResponseItemDetailComponent struct {
 	BackboneElement `bson:",inline"`
-	SequenceLinkId  *uint32                                    `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
-	Adjudication    []ClaimResponseDetailAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
-	SubDetail       []ClaimResponseSubDetailComponent          `bson:"subDetail,omitempty" json:"subDetail,omitempty"`
-}
-
-type ClaimResponseDetailAdjudicationComponent struct {
-	BackboneElement `bson:",inline"`
-	Category        *Coding   `bson:"category,omitempty" json:"category,omitempty"`
-	Reason          *Coding   `bson:"reason,omitempty" json:"reason,omitempty"`
-	Amount          *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
-	Value           *float64  `bson:"value,omitempty" json:"value,omitempty"`
+	SequenceLinkId  *uint32                              `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
+	NoteNumber      []uint32                             `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
+	Adjudication    []ClaimResponseAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
+	SubDetail       []ClaimResponseSubDetailComponent    `bson:"subDetail,omitempty" json:"subDetail,omitempty"`
 }
 
 type ClaimResponseSubDetailComponent struct {
 	BackboneElement `bson:",inline"`
-	SequenceLinkId  *uint32                                       `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
-	Adjudication    []ClaimResponseSubdetailAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
-}
-
-type ClaimResponseSubdetailAdjudicationComponent struct {
-	BackboneElement `bson:",inline"`
-	Category        *Coding   `bson:"category,omitempty" json:"category,omitempty"`
-	Reason          *Coding   `bson:"reason,omitempty" json:"reason,omitempty"`
-	Amount          *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
-	Value           *float64  `bson:"value,omitempty" json:"value,omitempty"`
+	SequenceLinkId  *uint32                              `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
+	NoteNumber      []uint32                             `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
+	Adjudication    []ClaimResponseAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
 }
 
 type ClaimResponseAddedItemComponent struct {
-	BackboneElement  `bson:",inline"`
-	SequenceLinkId   []uint32                                      `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
-	Service          *Coding                                       `bson:"service,omitempty" json:"service,omitempty"`
-	Fee              *Quantity                                     `bson:"fee,omitempty" json:"fee,omitempty"`
-	NoteNumberLinkId []uint32                                      `bson:"noteNumberLinkId,omitempty" json:"noteNumberLinkId,omitempty"`
-	Adjudication     []ClaimResponseAddedItemAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
-	Detail           []ClaimResponseAddedItemsDetailComponent      `bson:"detail,omitempty" json:"detail,omitempty"`
-}
-
-type ClaimResponseAddedItemAdjudicationComponent struct {
 	BackboneElement `bson:",inline"`
-	Category        *Coding   `bson:"category,omitempty" json:"category,omitempty"`
-	Reason          *Coding   `bson:"reason,omitempty" json:"reason,omitempty"`
-	Amount          *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
-	Value           *float64  `bson:"value,omitempty" json:"value,omitempty"`
+	SequenceLinkId  []uint32                                 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
+	Revenue         *Coding                                  `bson:"revenue,omitempty" json:"revenue,omitempty"`
+	Category        *Coding                                  `bson:"category,omitempty" json:"category,omitempty"`
+	Service         *Coding                                  `bson:"service,omitempty" json:"service,omitempty"`
+	Modifier        []Coding                                 `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	Fee             *Quantity                                `bson:"fee,omitempty" json:"fee,omitempty"`
+	NoteNumber      []uint32                                 `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
+	Adjudication    []ClaimResponseAdjudicationComponent     `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
+	Detail          []ClaimResponseAddedItemsDetailComponent `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
 type ClaimResponseAddedItemsDetailComponent struct {
 	BackboneElement `bson:",inline"`
-	Service         *Coding                                             `bson:"service,omitempty" json:"service,omitempty"`
-	Fee             *Quantity                                           `bson:"fee,omitempty" json:"fee,omitempty"`
-	Adjudication    []ClaimResponseAddedItemDetailAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
+	Revenue         *Coding                              `bson:"revenue,omitempty" json:"revenue,omitempty"`
+	Category        *Coding                              `bson:"category,omitempty" json:"category,omitempty"`
+	Service         *Coding                              `bson:"service,omitempty" json:"service,omitempty"`
+	Modifier        []Coding                             `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	Fee             *Quantity                            `bson:"fee,omitempty" json:"fee,omitempty"`
+	NoteNumber      []uint32                             `bson:"noteNumber,omitempty" json:"noteNumber,omitempty"`
+	Adjudication    []ClaimResponseAdjudicationComponent `bson:"adjudication,omitempty" json:"adjudication,omitempty"`
 }
 
-type ClaimResponseAddedItemDetailAdjudicationComponent struct {
-	BackboneElement `bson:",inline"`
-	Category        *Coding   `bson:"category,omitempty" json:"category,omitempty"`
-	Reason          *Coding   `bson:"reason,omitempty" json:"reason,omitempty"`
-	Amount          *Quantity `bson:"amount,omitempty" json:"amount,omitempty"`
-	Value           *float64  `bson:"value,omitempty" json:"value,omitempty"`
-}
-
-type ClaimResponseErrorsComponent struct {
+type ClaimResponseErrorComponent struct {
 	BackboneElement         `bson:",inline"`
 	SequenceLinkId          *uint32 `bson:"sequenceLinkId,omitempty" json:"sequenceLinkId,omitempty"`
 	DetailSequenceLinkId    *uint32 `bson:"detailSequenceLinkId,omitempty" json:"detailSequenceLinkId,omitempty"`
@@ -194,11 +168,22 @@ type ClaimResponseErrorsComponent struct {
 	Code                    *Coding `bson:"code,omitempty" json:"code,omitempty"`
 }
 
-type ClaimResponseNotesComponent struct {
+type ClaimResponsePaymentComponent struct {
+	BackboneElement  `bson:",inline"`
+	Type             *Coding       `bson:"type,omitempty" json:"type,omitempty"`
+	Adjustment       *Quantity     `bson:"adjustment,omitempty" json:"adjustment,omitempty"`
+	AdjustmentReason *Coding       `bson:"adjustmentReason,omitempty" json:"adjustmentReason,omitempty"`
+	Date             *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
+	Amount           *Quantity     `bson:"amount,omitempty" json:"amount,omitempty"`
+	Identifier       *Identifier   `bson:"identifier,omitempty" json:"identifier,omitempty"`
+}
+
+type ClaimResponseNoteComponent struct {
 	BackboneElement `bson:",inline"`
 	Number          *uint32 `bson:"number,omitempty" json:"number,omitempty"`
 	Type            *Coding `bson:"type,omitempty" json:"type,omitempty"`
 	Text            string  `bson:"text,omitempty" json:"text,omitempty"`
+	Language        *Coding `bson:"language,omitempty" json:"language,omitempty"`
 }
 
 type ClaimResponseCoverageComponent struct {
@@ -218,23 +203,29 @@ type ClaimResponsePlus struct {
 }
 
 type ClaimResponsePlusRelatedResources struct {
-	IncludedOrganizationResourcesReferencedByOrganizationreference *[]Organization          `bson:"_includedOrganizationResourcesReferencedByOrganizationreference,omitempty"`
 	IncludedClaimResourcesReferencedByRequestreference             *[]Claim                 `bson:"_includedClaimResourcesReferencedByRequestreference,omitempty"`
+	IncludedOrganizationResourcesReferencedByOrganizationreference *[]Organization          `bson:"_includedOrganizationResourcesReferencedByOrganizationreference,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingContentref      *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingRelatedref      *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
+	RevIncludedConsentResourcesReferencingData                     *[]Consent               `bson:"_revIncludedConsentResourcesReferencingData,omitempty"`
 	RevIncludedDocumentReferenceResourcesReferencingRelatedref     *[]DocumentReference     `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
 	RevIncludedContractResourcesReferencingTtopic                  *[]Contract              `bson:"_revIncludedContractResourcesReferencingTtopic,omitempty"`
 	RevIncludedContractResourcesReferencingSubject                 *[]Contract              `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
 	RevIncludedContractResourcesReferencingTopic                   *[]Contract              `bson:"_revIncludedContractResourcesReferencingTopic,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingResponsereference  *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponsereference,omitempty"`
 	RevIncludedPaymentNoticeResourcesReferencingRequestreference   *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingRequestreference,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingResponsereference  *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponsereference,omitempty"`
 	RevIncludedImplementationGuideResourcesReferencingResource     *[]ImplementationGuide   `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
-	RevIncludedOrderResponseResourcesReferencingFulfillment        *[]OrderResponse         `bson:"_revIncludedOrderResponseResourcesReferencingFulfillment,omitempty"`
+	RevIncludedCommunicationResourcesReferencingBasedon            *[]Communication         `bson:"_revIncludedCommunicationResourcesReferencingBasedon,omitempty"`
 	RevIncludedMessageHeaderResourcesReferencingData               *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
 	RevIncludedProvenanceResourcesReferencingTarget                *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
-	RevIncludedTaskResourcesReferencingSubject                     *[]Task                  `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
+	RevIncludedTaskResourcesReferencingFocus                       *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
 	RevIncludedListResourcesReferencingItem                        *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
-	RevIncludedOrderResourcesReferencingDetail                     *[]Order                 `bson:"_revIncludedOrderResourcesReferencingDetail,omitempty"`
+	RevIncludedDiagnosticRequestResourcesReferencingReplaces       *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingReplaces,omitempty"`
+	RevIncludedDiagnosticRequestResourcesReferencingBasedon        *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedDiagnosticRequestResourcesReferencingDefinition     *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingDefinition,omitempty"`
+	RevIncludedDeviceUseRequestResourcesReferencingReplaces        *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingReplaces,omitempty"`
+	RevIncludedDeviceUseRequestResourcesReferencingBasedon         *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedDeviceUseRequestResourcesReferencingDefinition      *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingDefinition,omitempty"`
 	RevIncludedBasicResourcesReferencingSubject                    *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
 	RevIncludedAuditEventResourcesReferencingEntity                *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
 	RevIncludedCompositionResourcesReferencingSubject              *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
@@ -242,18 +233,6 @@ type ClaimResponsePlusRelatedResources struct {
 	RevIncludedDetectedIssueResourcesReferencingImplicated         *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
 	RevIncludedQuestionnaireResponseResourcesReferencingSubject    *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
 	RevIncludedProcessResponseResourcesReferencingRequestreference *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequestreference,omitempty"`
-	RevIncludedClinicalImpressionResourcesReferencingTrigger       *[]ClinicalImpression    `bson:"_revIncludedClinicalImpressionResourcesReferencingTrigger,omitempty"`
-}
-
-func (c *ClaimResponsePlusRelatedResources) GetIncludedOrganizationResourceReferencedByOrganizationreference() (organization *Organization, err error) {
-	if c.IncludedOrganizationResourcesReferencedByOrganizationreference == nil {
-		err = errors.New("Included organizations not requested")
-	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference))
-	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference) == 1 {
-		organization = &(*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[0]
-	}
-	return
 }
 
 func (c *ClaimResponsePlusRelatedResources) GetIncludedClaimResourceReferencedByRequestreference() (claim *Claim, err error) {
@@ -263,6 +242,17 @@ func (c *ClaimResponsePlusRelatedResources) GetIncludedClaimResourceReferencedBy
 		err = fmt.Errorf("Expected 0 or 1 claim, but found %d", len(*c.IncludedClaimResourcesReferencedByRequestreference))
 	} else if len(*c.IncludedClaimResourcesReferencedByRequestreference) == 1 {
 		claim = &(*c.IncludedClaimResourcesReferencedByRequestreference)[0]
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetIncludedOrganizationResourceReferencedByOrganizationreference() (organization *Organization, err error) {
+	if c.IncludedOrganizationResourcesReferencedByOrganizationreference == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference))
+	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference) == 1 {
+		organization = &(*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[0]
 	}
 	return
 }
@@ -281,6 +271,15 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedDocumentManifestResour
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
 		documentManifests = *c.RevIncludedDocumentManifestResourcesReferencingRelatedref
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
+	if c.RevIncludedConsentResourcesReferencingData == nil {
+		err = errors.New("RevIncluded consents not requested")
+	} else {
+		consents = *c.RevIncludedConsentResourcesReferencingData
 	}
 	return
 }
@@ -321,20 +320,20 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedContractResourcesRefer
 	return
 }
 
-func (c *ClaimResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponsereference() (paymentNotices []PaymentNotice, err error) {
-	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference == nil {
-		err = errors.New("RevIncluded paymentNotices not requested")
-	} else {
-		paymentNotices = *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference
-	}
-	return
-}
-
 func (c *ClaimResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequestreference() (paymentNotices []PaymentNotice, err error) {
 	if c.RevIncludedPaymentNoticeResourcesReferencingRequestreference == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
 		paymentNotices = *c.RevIncludedPaymentNoticeResourcesReferencingRequestreference
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponsereference() (paymentNotices []PaymentNotice, err error) {
+	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference == nil {
+		err = errors.New("RevIncluded paymentNotices not requested")
+	} else {
+		paymentNotices = *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference
 	}
 	return
 }
@@ -348,11 +347,11 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedImplementationGuideRes
 	return
 }
 
-func (c *ClaimResponsePlusRelatedResources) GetRevIncludedOrderResponseResourcesReferencingFulfillment() (orderResponses []OrderResponse, err error) {
-	if c.RevIncludedOrderResponseResourcesReferencingFulfillment == nil {
-		err = errors.New("RevIncluded orderResponses not requested")
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
+	if c.RevIncludedCommunicationResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded communications not requested")
 	} else {
-		orderResponses = *c.RevIncludedOrderResponseResourcesReferencingFulfillment
+		communications = *c.RevIncludedCommunicationResourcesReferencingBasedon
 	}
 	return
 }
@@ -375,11 +374,11 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedProvenanceResourcesRef
 	return
 }
 
-func (c *ClaimResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
-	if c.RevIncludedTaskResourcesReferencingSubject == nil {
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
+	if c.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
-		tasks = *c.RevIncludedTaskResourcesReferencingSubject
+		tasks = *c.RevIncludedTaskResourcesReferencingFocus
 	}
 	return
 }
@@ -393,11 +392,56 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedListResourcesReferenci
 	return
 }
 
-func (c *ClaimResponsePlusRelatedResources) GetRevIncludedOrderResourcesReferencingDetail() (orders []Order, err error) {
-	if c.RevIncludedOrderResourcesReferencingDetail == nil {
-		err = errors.New("RevIncluded orders not requested")
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
+	if c.RevIncludedDiagnosticRequestResourcesReferencingReplaces == nil {
+		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
-		orders = *c.RevIncludedOrderResourcesReferencingDetail
+		diagnosticRequests = *c.RevIncludedDiagnosticRequestResourcesReferencingReplaces
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
+	if c.RevIncludedDiagnosticRequestResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded diagnosticRequests not requested")
+	} else {
+		diagnosticRequests = *c.RevIncludedDiagnosticRequestResourcesReferencingBasedon
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
+	if c.RevIncludedDiagnosticRequestResourcesReferencingDefinition == nil {
+		err = errors.New("RevIncluded diagnosticRequests not requested")
+	} else {
+		diagnosticRequests = *c.RevIncludedDiagnosticRequestResourcesReferencingDefinition
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
+	if c.RevIncludedDeviceUseRequestResourcesReferencingReplaces == nil {
+		err = errors.New("RevIncluded deviceUseRequests not requested")
+	} else {
+		deviceUseRequests = *c.RevIncludedDeviceUseRequestResourcesReferencingReplaces
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
+	if c.RevIncludedDeviceUseRequestResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded deviceUseRequests not requested")
+	} else {
+		deviceUseRequests = *c.RevIncludedDeviceUseRequestResourcesReferencingBasedon
+	}
+	return
+}
+
+func (c *ClaimResponsePlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
+	if c.RevIncludedDeviceUseRequestResourcesReferencingDefinition == nil {
+		err = errors.New("RevIncluded deviceUseRequests not requested")
+	} else {
+		deviceUseRequests = *c.RevIncludedDeviceUseRequestResourcesReferencingDefinition
 	}
 	return
 }
@@ -465,26 +509,17 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedProcessResponseResourc
 	return
 }
 
-func (c *ClaimResponsePlusRelatedResources) GetRevIncludedClinicalImpressionResourcesReferencingTrigger() (clinicalImpressions []ClinicalImpression, err error) {
-	if c.RevIncludedClinicalImpressionResourcesReferencingTrigger == nil {
-		err = errors.New("RevIncluded clinicalImpressions not requested")
-	} else {
-		clinicalImpressions = *c.RevIncludedClinicalImpressionResourcesReferencingTrigger
-	}
-	return
-}
-
 func (c *ClaimResponsePlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if c.IncludedOrganizationResourcesReferencedByOrganizationreference != nil {
-		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganizationreference {
-			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if c.IncludedClaimResourcesReferencedByRequestreference != nil {
 		for idx := range *c.IncludedClaimResourcesReferencedByRequestreference {
 			rsc := (*c.IncludedClaimResourcesReferencedByRequestreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.IncludedOrganizationResourcesReferencedByOrganizationreference != nil {
+		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganizationreference {
+			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -505,6 +540,12 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedResources() map[string
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if c.RevIncludedConsentResourcesReferencingData != nil {
+		for idx := range *c.RevIncludedConsentResourcesReferencingData {
+			rsc := (*c.RevIncludedConsentResourcesReferencingData)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if c.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
 		for idx := range *c.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
 			rsc := (*c.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
@@ -529,15 +570,15 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedResources() map[string
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if c.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
 		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
 			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
+		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
+			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -547,9 +588,9 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedResources() map[string
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
-		for idx := range *c.RevIncludedOrderResponseResourcesReferencingFulfillment {
-			rsc := (*c.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
+	if c.RevIncludedCommunicationResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedCommunicationResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedCommunicationResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -565,9 +606,9 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedResources() map[string
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedTaskResourcesReferencingSubject != nil {
-		for idx := range *c.RevIncludedTaskResourcesReferencingSubject {
-			rsc := (*c.RevIncludedTaskResourcesReferencingSubject)[idx]
+	if c.RevIncludedTaskResourcesReferencingFocus != nil {
+		for idx := range *c.RevIncludedTaskResourcesReferencingFocus {
+			rsc := (*c.RevIncludedTaskResourcesReferencingFocus)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -577,9 +618,39 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedResources() map[string
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedOrderResourcesReferencingDetail != nil {
-		for idx := range *c.RevIncludedOrderResourcesReferencingDetail {
-			rsc := (*c.RevIncludedOrderResourcesReferencingDetail)[idx]
+	if c.RevIncludedDiagnosticRequestResourcesReferencingReplaces != nil {
+		for idx := range *c.RevIncludedDiagnosticRequestResourcesReferencingReplaces {
+			rsc := (*c.RevIncludedDiagnosticRequestResourcesReferencingReplaces)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDiagnosticRequestResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedDiagnosticRequestResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedDiagnosticRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDiagnosticRequestResourcesReferencingDefinition != nil {
+		for idx := range *c.RevIncludedDiagnosticRequestResourcesReferencingDefinition {
+			rsc := (*c.RevIncludedDiagnosticRequestResourcesReferencingDefinition)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDeviceUseRequestResourcesReferencingReplaces != nil {
+		for idx := range *c.RevIncludedDeviceUseRequestResourcesReferencingReplaces {
+			rsc := (*c.RevIncludedDeviceUseRequestResourcesReferencingReplaces)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDeviceUseRequestResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedDeviceUseRequestResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedDeviceUseRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDeviceUseRequestResourcesReferencingDefinition != nil {
+		for idx := range *c.RevIncludedDeviceUseRequestResourcesReferencingDefinition {
+			rsc := (*c.RevIncludedDeviceUseRequestResourcesReferencingDefinition)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -625,26 +696,20 @@ func (c *ClaimResponsePlusRelatedResources) GetRevIncludedResources() map[string
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
-		for idx := range *c.RevIncludedClinicalImpressionResourcesReferencingTrigger {
-			rsc := (*c.RevIncludedClinicalImpressionResourcesReferencingTrigger)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	return resourceMap
 }
 
 func (c *ClaimResponsePlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if c.IncludedOrganizationResourcesReferencedByOrganizationreference != nil {
-		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganizationreference {
-			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if c.IncludedClaimResourcesReferencedByRequestreference != nil {
 		for idx := range *c.IncludedClaimResourcesReferencedByRequestreference {
 			rsc := (*c.IncludedClaimResourcesReferencedByRequestreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.IncludedOrganizationResourcesReferencedByOrganizationreference != nil {
+		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganizationreference {
+			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -660,6 +725,12 @@ func (c *ClaimResponsePlusRelatedResources) GetIncludedAndRevIncludedResources()
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if c.RevIncludedConsentResourcesReferencingData != nil {
+		for idx := range *c.RevIncludedConsentResourcesReferencingData {
+			rsc := (*c.RevIncludedConsentResourcesReferencingData)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if c.RevIncludedDocumentReferenceResourcesReferencingRelatedref != nil {
 		for idx := range *c.RevIncludedDocumentReferenceResourcesReferencingRelatedref {
 			rsc := (*c.RevIncludedDocumentReferenceResourcesReferencingRelatedref)[idx]
@@ -684,15 +755,15 @@ func (c *ClaimResponsePlusRelatedResources) GetIncludedAndRevIncludedResources()
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if c.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
 		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
 			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
+		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
+			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -702,9 +773,9 @@ func (c *ClaimResponsePlusRelatedResources) GetIncludedAndRevIncludedResources()
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedOrderResponseResourcesReferencingFulfillment != nil {
-		for idx := range *c.RevIncludedOrderResponseResourcesReferencingFulfillment {
-			rsc := (*c.RevIncludedOrderResponseResourcesReferencingFulfillment)[idx]
+	if c.RevIncludedCommunicationResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedCommunicationResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedCommunicationResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -720,9 +791,9 @@ func (c *ClaimResponsePlusRelatedResources) GetIncludedAndRevIncludedResources()
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedTaskResourcesReferencingSubject != nil {
-		for idx := range *c.RevIncludedTaskResourcesReferencingSubject {
-			rsc := (*c.RevIncludedTaskResourcesReferencingSubject)[idx]
+	if c.RevIncludedTaskResourcesReferencingFocus != nil {
+		for idx := range *c.RevIncludedTaskResourcesReferencingFocus {
+			rsc := (*c.RevIncludedTaskResourcesReferencingFocus)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -732,9 +803,39 @@ func (c *ClaimResponsePlusRelatedResources) GetIncludedAndRevIncludedResources()
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedOrderResourcesReferencingDetail != nil {
-		for idx := range *c.RevIncludedOrderResourcesReferencingDetail {
-			rsc := (*c.RevIncludedOrderResourcesReferencingDetail)[idx]
+	if c.RevIncludedDiagnosticRequestResourcesReferencingReplaces != nil {
+		for idx := range *c.RevIncludedDiagnosticRequestResourcesReferencingReplaces {
+			rsc := (*c.RevIncludedDiagnosticRequestResourcesReferencingReplaces)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDiagnosticRequestResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedDiagnosticRequestResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedDiagnosticRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDiagnosticRequestResourcesReferencingDefinition != nil {
+		for idx := range *c.RevIncludedDiagnosticRequestResourcesReferencingDefinition {
+			rsc := (*c.RevIncludedDiagnosticRequestResourcesReferencingDefinition)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDeviceUseRequestResourcesReferencingReplaces != nil {
+		for idx := range *c.RevIncludedDeviceUseRequestResourcesReferencingReplaces {
+			rsc := (*c.RevIncludedDeviceUseRequestResourcesReferencingReplaces)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDeviceUseRequestResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedDeviceUseRequestResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedDeviceUseRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedDeviceUseRequestResourcesReferencingDefinition != nil {
+		for idx := range *c.RevIncludedDeviceUseRequestResourcesReferencingDefinition {
+			rsc := (*c.RevIncludedDeviceUseRequestResourcesReferencingDefinition)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -777,12 +878,6 @@ func (c *ClaimResponsePlusRelatedResources) GetIncludedAndRevIncludedResources()
 	if c.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
 		for idx := range *c.RevIncludedProcessResponseResourcesReferencingRequestreference {
 			rsc := (*c.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if c.RevIncludedClinicalImpressionResourcesReferencingTrigger != nil {
-		for idx := range *c.RevIncludedClinicalImpressionResourcesReferencingTrigger {
-			rsc := (*c.RevIncludedClinicalImpressionResourcesReferencingTrigger)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

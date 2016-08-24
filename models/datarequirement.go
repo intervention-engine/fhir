@@ -28,7 +28,7 @@ package models
 
 type DataRequirement struct {
 	Type        string                               `bson:"type,omitempty" json:"type,omitempty"`
-	Profile     *Reference                           `bson:"profile,omitempty" json:"profile,omitempty"`
+	Profile     []Reference                          `bson:"profile,omitempty" json:"profile,omitempty"`
 	MustSupport []string                             `bson:"mustSupport,omitempty" json:"mustSupport,omitempty"`
 	CodeFilter  []DataRequirementCodeFilterComponent `bson:"codeFilter,omitempty" json:"codeFilter,omitempty"`
 	DateFilter  []DataRequirementDateFilterComponent `bson:"dateFilter,omitempty" json:"dateFilter,omitempty"`
@@ -49,4 +49,5 @@ type DataRequirementDateFilterComponent struct {
 	Path            string        `bson:"path,omitempty" json:"path,omitempty"`
 	ValueDateTime   *FHIRDateTime `bson:"valueDateTime,omitempty" json:"valueDateTime,omitempty"`
 	ValuePeriod     *Period       `bson:"valuePeriod,omitempty" json:"valuePeriod,omitempty"`
+	ValueDuration   *Quantity     `bson:"valueDuration,omitempty" json:"valueDuration,omitempty"`
 }

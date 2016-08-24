@@ -36,6 +36,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "ActivityDefinition":
+		x := ActivityDefinition{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "AllergyIntolerance":
 		x := AllergyIntolerance{}
 		json.Unmarshal(b, &x)
@@ -204,6 +212,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "Consent":
+		x := Consent{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "Contract":
 		x := Contract{}
 		json.Unmarshal(b, &x)
@@ -222,14 +238,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "DataElement":
 		x := DataElement{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "DecisionSupportRule":
-		x := DecisionSupportRule{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -292,16 +300,16 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "DiagnosticOrder":
-		x := DiagnosticOrder{}
+	case "DiagnosticReport":
+		x := DiagnosticReport{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
 		} else {
 			return x
 		}
-	case "DiagnosticReport":
-		x := DiagnosticReport{}
+	case "DiagnosticRequest":
+		x := DiagnosticRequest{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -342,6 +350,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "Encounter":
 		x := Encounter{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "Endpoint":
+		x := Endpoint{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -436,16 +452,8 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "ImagingExcerpt":
-		x := ImagingExcerpt{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "ImagingObjectSelection":
-		x := ImagingObjectSelection{}
+	case "ImagingManifest":
+		x := ImagingManifest{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -588,14 +596,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "ModuleDefinition":
-		x := ModuleDefinition{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
 	case "NamingSystem":
 		x := NamingSystem{}
 		json.Unmarshal(b, &x)
@@ -604,8 +604,8 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "NutritionOrder":
-		x := NutritionOrder{}
+	case "NutritionRequest":
+		x := NutritionRequest{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -630,30 +630,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "OperationOutcome":
 		x := OperationOutcome{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "Order":
-		x := Order{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "OrderResponse":
-		x := OrderResponse{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "OrderSet":
-		x := OrderSet{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -708,6 +684,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "PlanDefinition":
+		x := PlanDefinition{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "Practitioner":
 		x := Practitioner{}
 		json.Unmarshal(b, &x)
@@ -750,14 +734,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "ProcessResponse":
 		x := ProcessResponse{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "Protocol":
-		x := Protocol{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x

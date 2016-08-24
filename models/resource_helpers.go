@@ -27,6 +27,8 @@ func StructForResourceName(name string) interface{} {
 	switch name {
 	case "Account":
 		return Account{}
+	case "ActivityDefinition":
+		return ActivityDefinition{}
 	case "AllergyIntolerance":
 		return AllergyIntolerance{}
 	case "Appointment":
@@ -69,14 +71,14 @@ func StructForResourceName(name string) interface{} {
 		return Condition{}
 	case "Conformance":
 		return Conformance{}
+	case "Consent":
+		return Consent{}
 	case "Contract":
 		return Contract{}
 	case "Coverage":
 		return Coverage{}
 	case "DataElement":
 		return DataElement{}
-	case "DecisionSupportRule":
-		return DecisionSupportRule{}
 	case "DecisionSupportServiceModule":
 		return DecisionSupportServiceModule{}
 	case "DetectedIssue":
@@ -91,10 +93,10 @@ func StructForResourceName(name string) interface{} {
 		return DeviceUseRequest{}
 	case "DeviceUseStatement":
 		return DeviceUseStatement{}
-	case "DiagnosticOrder":
-		return DiagnosticOrder{}
 	case "DiagnosticReport":
 		return DiagnosticReport{}
+	case "DiagnosticRequest":
+		return DiagnosticRequest{}
 	case "DocumentManifest":
 		return DocumentManifest{}
 	case "DocumentReference":
@@ -105,6 +107,8 @@ func StructForResourceName(name string) interface{} {
 		return EligibilityResponse{}
 	case "Encounter":
 		return Encounter{}
+	case "Endpoint":
+		return Endpoint{}
 	case "EnrollmentRequest":
 		return EnrollmentRequest{}
 	case "EnrollmentResponse":
@@ -127,10 +131,8 @@ func StructForResourceName(name string) interface{} {
 		return GuidanceResponse{}
 	case "HealthcareService":
 		return HealthcareService{}
-	case "ImagingExcerpt":
-		return ImagingExcerpt{}
-	case "ImagingObjectSelection":
-		return ImagingObjectSelection{}
+	case "ImagingManifest":
+		return ImagingManifest{}
 	case "ImagingStudy":
 		return ImagingStudy{}
 	case "Immunization":
@@ -165,24 +167,16 @@ func StructForResourceName(name string) interface{} {
 		return MedicationStatement{}
 	case "MessageHeader":
 		return MessageHeader{}
-	case "ModuleDefinition":
-		return ModuleDefinition{}
 	case "NamingSystem":
 		return NamingSystem{}
-	case "NutritionOrder":
-		return NutritionOrder{}
+	case "NutritionRequest":
+		return NutritionRequest{}
 	case "Observation":
 		return Observation{}
 	case "OperationDefinition":
 		return OperationDefinition{}
 	case "OperationOutcome":
 		return OperationOutcome{}
-	case "Order":
-		return Order{}
-	case "OrderResponse":
-		return OrderResponse{}
-	case "OrderSet":
-		return OrderSet{}
 	case "Organization":
 		return Organization{}
 	case "Patient":
@@ -193,6 +187,8 @@ func StructForResourceName(name string) interface{} {
 		return PaymentReconciliation{}
 	case "Person":
 		return Person{}
+	case "PlanDefinition":
+		return PlanDefinition{}
 	case "Practitioner":
 		return Practitioner{}
 	case "PractitionerRole":
@@ -205,8 +201,6 @@ func StructForResourceName(name string) interface{} {
 		return ProcessRequest{}
 	case "ProcessResponse":
 		return ProcessResponse{}
-	case "Protocol":
-		return Protocol{}
 	case "Provenance":
 		return Provenance{}
 	case "Questionnaire":
@@ -271,6 +265,8 @@ func StructPlusForResourceName(name string) interface{} {
 	switch name {
 	case "Account":
 		return AccountPlus{}
+	case "ActivityDefinition":
+		return ActivityDefinitionPlus{}
 	case "AllergyIntolerance":
 		return AllergyIntolerancePlus{}
 	case "Appointment":
@@ -313,14 +309,14 @@ func StructPlusForResourceName(name string) interface{} {
 		return ConditionPlus{}
 	case "Conformance":
 		return ConformancePlus{}
+	case "Consent":
+		return ConsentPlus{}
 	case "Contract":
 		return ContractPlus{}
 	case "Coverage":
 		return CoveragePlus{}
 	case "DataElement":
 		return DataElementPlus{}
-	case "DecisionSupportRule":
-		return DecisionSupportRulePlus{}
 	case "DecisionSupportServiceModule":
 		return DecisionSupportServiceModulePlus{}
 	case "DetectedIssue":
@@ -335,10 +331,10 @@ func StructPlusForResourceName(name string) interface{} {
 		return DeviceUseRequestPlus{}
 	case "DeviceUseStatement":
 		return DeviceUseStatementPlus{}
-	case "DiagnosticOrder":
-		return DiagnosticOrderPlus{}
 	case "DiagnosticReport":
 		return DiagnosticReportPlus{}
+	case "DiagnosticRequest":
+		return DiagnosticRequestPlus{}
 	case "DocumentManifest":
 		return DocumentManifestPlus{}
 	case "DocumentReference":
@@ -349,6 +345,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return EligibilityResponsePlus{}
 	case "Encounter":
 		return EncounterPlus{}
+	case "Endpoint":
+		return EndpointPlus{}
 	case "EnrollmentRequest":
 		return EnrollmentRequestPlus{}
 	case "EnrollmentResponse":
@@ -371,10 +369,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return GuidanceResponsePlus{}
 	case "HealthcareService":
 		return HealthcareServicePlus{}
-	case "ImagingExcerpt":
-		return ImagingExcerptPlus{}
-	case "ImagingObjectSelection":
-		return ImagingObjectSelectionPlus{}
+	case "ImagingManifest":
+		return ImagingManifestPlus{}
 	case "ImagingStudy":
 		return ImagingStudyPlus{}
 	case "Immunization":
@@ -409,24 +405,16 @@ func StructPlusForResourceName(name string) interface{} {
 		return MedicationStatementPlus{}
 	case "MessageHeader":
 		return MessageHeaderPlus{}
-	case "ModuleDefinition":
-		return ModuleDefinitionPlus{}
 	case "NamingSystem":
 		return NamingSystemPlus{}
-	case "NutritionOrder":
-		return NutritionOrderPlus{}
+	case "NutritionRequest":
+		return NutritionRequestPlus{}
 	case "Observation":
 		return ObservationPlus{}
 	case "OperationDefinition":
 		return OperationDefinitionPlus{}
 	case "OperationOutcome":
 		return OperationOutcomePlus{}
-	case "Order":
-		return OrderPlus{}
-	case "OrderResponse":
-		return OrderResponsePlus{}
-	case "OrderSet":
-		return OrderSetPlus{}
 	case "Organization":
 		return OrganizationPlus{}
 	case "Patient":
@@ -437,6 +425,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return PaymentReconciliationPlus{}
 	case "Person":
 		return PersonPlus{}
+	case "PlanDefinition":
+		return PlanDefinitionPlus{}
 	case "Practitioner":
 		return PractitionerPlus{}
 	case "PractitionerRole":
@@ -449,8 +439,6 @@ func StructPlusForResourceName(name string) interface{} {
 		return ProcessRequestPlus{}
 	case "ProcessResponse":
 		return ProcessResponsePlus{}
-	case "Protocol":
-		return ProtocolPlus{}
 	case "Provenance":
 		return ProvenancePlus{}
 	case "Questionnaire":
@@ -503,6 +491,8 @@ func PluralizeLowerResourceName(name string) string {
 	switch name {
 	case "Account":
 		return "accounts"
+	case "ActivityDefinition":
+		return "activitydefinitions"
 	case "AllergyIntolerance":
 		return "allergyintolerances"
 	case "Appointment":
@@ -545,14 +535,14 @@ func PluralizeLowerResourceName(name string) string {
 		return "conditions"
 	case "Conformance":
 		return "conformances"
+	case "Consent":
+		return "consents"
 	case "Contract":
 		return "contracts"
 	case "Coverage":
 		return "coverages"
 	case "DataElement":
 		return "dataelements"
-	case "DecisionSupportRule":
-		return "decisionsupportrules"
 	case "DecisionSupportServiceModule":
 		return "decisionsupportservicemodules"
 	case "DetectedIssue":
@@ -567,10 +557,10 @@ func PluralizeLowerResourceName(name string) string {
 		return "deviceuserequests"
 	case "DeviceUseStatement":
 		return "deviceusestatements"
-	case "DiagnosticOrder":
-		return "diagnosticorders"
 	case "DiagnosticReport":
 		return "diagnosticreports"
+	case "DiagnosticRequest":
+		return "diagnosticrequests"
 	case "DocumentManifest":
 		return "documentmanifests"
 	case "DocumentReference":
@@ -581,6 +571,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "eligibilityresponses"
 	case "Encounter":
 		return "encounters"
+	case "Endpoint":
+		return "endpoints"
 	case "EnrollmentRequest":
 		return "enrollmentrequests"
 	case "EnrollmentResponse":
@@ -603,10 +595,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "guidanceresponses"
 	case "HealthcareService":
 		return "healthcareservices"
-	case "ImagingExcerpt":
-		return "imagingexcerpts"
-	case "ImagingObjectSelection":
-		return "imagingobjectselections"
+	case "ImagingManifest":
+		return "imagingmanifests"
 	case "ImagingStudy":
 		return "imagingstudies"
 	case "Immunization":
@@ -641,24 +631,16 @@ func PluralizeLowerResourceName(name string) string {
 		return "medicationstatements"
 	case "MessageHeader":
 		return "messageheaders"
-	case "ModuleDefinition":
-		return "moduledefinitions"
 	case "NamingSystem":
 		return "namingsystems"
-	case "NutritionOrder":
-		return "nutritionorders"
+	case "NutritionRequest":
+		return "nutritionrequests"
 	case "Observation":
 		return "observations"
 	case "OperationDefinition":
 		return "operationdefinitions"
 	case "OperationOutcome":
 		return "operationoutcomes"
-	case "Order":
-		return "orders"
-	case "OrderResponse":
-		return "orderresponses"
-	case "OrderSet":
-		return "ordersets"
 	case "Organization":
 		return "organizations"
 	case "Patient":
@@ -669,6 +651,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "paymentreconciliations"
 	case "Person":
 		return "people"
+	case "PlanDefinition":
+		return "plandefinitions"
 	case "Practitioner":
 		return "practitioners"
 	case "PractitionerRole":
@@ -681,8 +665,6 @@ func PluralizeLowerResourceName(name string) string {
 		return "processrequests"
 	case "ProcessResponse":
 		return "processresponses"
-	case "Protocol":
-		return "protocols"
 	case "Provenance":
 		return "provenances"
 	case "Questionnaire":
