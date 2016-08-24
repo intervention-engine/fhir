@@ -30,7 +30,7 @@
             "resource": {
                 "resourceType": "Condition",
                 "verificationStatus": "confirmed",
-                "patient": {
+                "subject": {
                     "reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12"
                 },
                 "code": {
@@ -53,7 +53,7 @@
             "resource": {
                 "resourceType": "Condition",
                 "verificationStatus": "confirmed",
-                "patient": {
+                "subject": {
                     "reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12"
                 },
                 "code": {
@@ -76,7 +76,7 @@
             "resource": {
                 "resourceType": "Condition",
                 "verificationStatus": "confirmed",
-                "patient": {
+                "subject": {
                     "reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12"
                 },
                 "code": {

@@ -1372,7 +1372,7 @@ func (s *SearchPTSuite) TestOrDateParams(c *C) {
 }
 
 func (s *SearchPTSuite) TestOrQueryIsParsedCorrectly(c *C) {
-	q := Query{"Condition", "onset=2013-01-02T12:13:14.999-07:00,2013-01-02T12:13:14.999Z,2013-01-02T12:13:14.999&code=foo|bar"}
+	q := Query{"Condition", "onset-date=2013-01-02T12:13:14.999-07:00,2013-01-02T12:13:14.999Z,2013-01-02T12:13:14.999&code=foo|bar"}
 	p := q.Params()
 
 	c.Assert(p, HasLen, 2)
@@ -1383,14 +1383,14 @@ func (s *SearchPTSuite) TestOrQueryIsParsedCorrectly(c *C) {
 	}
 
 	c.Assert(p[onset], FitsTypeOf, &OrParam{})
-	c.Assert(p[onset].getInfo().Name, Equals, "onset")
+	c.Assert(p[onset].getInfo().Name, Equals, "onset-date")
 	c.Assert(p[onset].getInfo().Type, Equals, "or")
 	c.Assert(p[onset].getInfo().Paths, HasLen, 0)
 	c.Assert(p[onset].getInfo().Composites, HasLen, 0)
 	c.Assert(p[onset].(*OrParam).Items, HasLen, 3)
 	for i := 0; i < 3; i++ {
 		c.Assert(p[onset].(*OrParam).Items[i], FitsTypeOf, &DateParam{})
-		c.Assert(p[onset].(*OrParam).Items[i].getInfo().Name, Equals, "onset")
+		c.Assert(p[onset].(*OrParam).Items[i].getInfo().Name, Equals, "onset-date")
 		c.Assert(p[onset].(*OrParam).Items[i].getInfo().Type, Equals, "date")
 		c.Assert(p[onset].(*OrParam).Items[i].getInfo().Paths, HasLen, 2)
 		c.Assert(p[onset].(*OrParam).Items[i].(*DateParam).Prefix, Equals, EQ)
@@ -1554,7 +1554,7 @@ func (s *SearchPTSuite) TestURLQueryParameters(c *C) {
 }
 
 func (s *SearchPTSuite) TestQueryOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:careprovider&_include=Patient:organization&_revinclude=Condition:patient&_revinclude=Encounter:patient&_sort=family&_sort:asc=given&_sort:desc=birthdate"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=M&_count=10&_offset=20&_include=Patient:general-practitioner&_include=Patient:organization&_revinclude=Condition:subject&_revinclude=Encounter:patient&_sort=family&_sort:asc=given&_sort:desc=birthdate"}
 	o := q.Options()
 	c.Assert(o.Count, Equals, 10)
 	c.Assert(o.Offset, Equals, 20)
@@ -1567,11 +1567,11 @@ func (s *SearchPTSuite) TestQueryOptions(c *C) {
 	c.Assert(o.Sort[2].Parameter.Name, Equals, "birthdate")
 	c.Assert(o.Include, HasLen, 2)
 	c.Assert(o.Include[0].Resource, Equals, "Patient")
-	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "general-practitioner")
 	c.Assert(o.Include[1].Resource, Equals, "Patient")
 	c.Assert(o.Include[1].Parameter.Name, Equals, "organization")
 	c.Assert(o.RevInclude[0].Resource, Equals, "Condition")
-	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "patient")
+	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "subject")
 	c.Assert(o.RevInclude[1].Resource, Equals, "Encounter")
 	c.Assert(o.RevInclude[1].Parameter.Name, Equals, "patient")
 }
@@ -1594,27 +1594,27 @@ func (s *SearchPTSuite) TestQueryOptionsInvalidSortParam(c *C) {
 }
 
 func (s *SearchPTSuite) TestQueryOptionsIncludeTargets(c *C) {
-	q := Query{Resource: "Patient", Query: "_include=Patient:careprovider:Organization"}
+	q := Query{Resource: "Patient", Query: "_include=Patient:general-practitioner:Organization"}
 	o := q.Options()
 	c.Assert(o.Include, HasLen, 1)
 	c.Assert(o.Include[0].Resource, Equals, "Patient")
-	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "general-practitioner")
 	c.Assert(o.Include[0].Parameter.Targets, HasLen, 1)
 	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Organization")
 
-	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider:Practitioner"}
+	q = Query{Resource: "Patient", Query: "_include=Patient:general-practitioner:Practitioner"}
 	o = q.Options()
 	c.Assert(o.Include, HasLen, 1)
 	c.Assert(o.Include[0].Resource, Equals, "Patient")
-	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "general-practitioner")
 	c.Assert(o.Include[0].Parameter.Targets, HasLen, 1)
 	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Practitioner")
 
-	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider"}
+	q = Query{Resource: "Patient", Query: "_include=Patient:general-practitioner"}
 	o = q.Options()
 	c.Assert(o.Include, HasLen, 1)
 	c.Assert(o.Include[0].Resource, Equals, "Patient")
-	c.Assert(o.Include[0].Parameter.Name, Equals, "careprovider")
+	c.Assert(o.Include[0].Parameter.Name, Equals, "general-practitioner")
 	c.Assert(o.Include[0].Parameter.Targets, HasLen, 2)
 	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Organization")
 	c.Assert(o.Include[0].Parameter.Targets[1], Equals, "Practitioner")
@@ -1630,15 +1630,15 @@ func (s *SearchPTSuite) TestQueryOptionsInvalidIncludeParams(c *C) {
 	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
 
 	// Invalid target
-	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider:Procedure"}
+	q = Query{Resource: "Patient", Query: "_include=Patient:general-practitioner:Procedure"}
 	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
 
 	// Too few parts
-	q = Query{Resource: "Patient", Query: "_include=careprovider"}
+	q = Query{Resource: "Patient", Query: "_include=general-practitioner"}
 	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
 
 	// Too many parts
-	q = Query{Resource: "Patient", Query: "_include=Patient:careprovider:Procedure:0"}
+	q = Query{Resource: "Patient", Query: "_include=Patient:general-practitioner:Procedure:0"}
 	c.Assert(func() { q.Options() }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"_include\" content is invalid"))
 }
 
@@ -1688,16 +1688,16 @@ func (s *SearchPTSuite) TestQueryOptionsInvalidRevIncludeParams(c *C) {
 
 func (s *SearchPTSuite) TestQueryOptionsInvalidFormatParam(c *C) {
 	// Format that is not supported (XML)
-	q := Query{Resource: "Patient", Query:"_format=xml"}
+	q := Query{Resource: "Patient", Query: "_format=xml"}
 	c.Assert(func() { q.Options() }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"_format\" content is invalid"))
 
 	// Valid format (json)
-	q = Query{Resource: "Patient", Query:"_format=json"}
+	q = Query{Resource: "Patient", Query: "_format=json"}
 	q.Options()
 }
 
 func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort%3Aasc=birthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort%3Aasc=birthdate&_offset=20&_count=10&_include=Patient%3Ageneral-practitioner&_include=Patient%3Aorganization&_revinclude=Condition%3Asubject&_revinclude=Encounter%3Apatient"}
 	params := q.URLQueryParameters(true)
 	all := params.All()
 	c.Assert(all, HasLen, 11)
@@ -1708,24 +1708,24 @@ func (s *SearchPTSuite) TestReconstructQueryWithPassedInOptions(c *C) {
 	c.Assert(all[4], DeepEquals, URLQueryParameter{Key: SortParam, Value: "birthdate"})
 	c.Assert(all[5], DeepEquals, URLQueryParameter{Key: OffsetParam, Value: "20"})
 	c.Assert(all[6], DeepEquals, URLQueryParameter{Key: CountParam, Value: "10"})
-	c.Assert(all[7], DeepEquals, URLQueryParameter{Key: IncludeParam, Value: "Patient:careprovider"})
+	c.Assert(all[7], DeepEquals, URLQueryParameter{Key: IncludeParam, Value: "Patient:general-practitioner"})
 	c.Assert(all[8], DeepEquals, URLQueryParameter{Key: IncludeParam, Value: "Patient:organization"})
-	c.Assert(all[9], DeepEquals, URLQueryParameter{Key: RevIncludeParam, Value: "Condition:patient"})
+	c.Assert(all[9], DeepEquals, URLQueryParameter{Key: RevIncludeParam, Value: "Condition:subject"})
 	c.Assert(all[10], DeepEquals, URLQueryParameter{Key: RevIncludeParam, Value: "Encounter:patient"})
 }
 
 func (s *SearchPTSuite) TestReconstructQueryStringWithSorts(c *C) {
 	// The main purpose of this is to ensure that the _sort parameters remain in the correct order
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort%3Aasc=birthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort%3Aasc=birthdate&_offset=20&_count=10&_include=Patient%3Ageneral-practitioner&_include=Patient%3Aorganization&_revinclude=Condition%3Asubject&_revinclude=Encounter%3Apatient"}
 	params := q.URLQueryParameters(true)
-	c.Assert(params.Encode(), Equals, "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort=birthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient")
+	c.Assert(params.Encode(), Equals, "name%3Aexact=Robert+Smith&gender=male&_sort=family&_sort%3Adesc=given&_sort=birthdate&_offset=20&_count=10&_include=Patient%3Ageneral-practitioner&_include=Patient%3Aorganization&_revinclude=Condition%3Asubject&_revinclude=Encounter%3Apatient")
 }
 
 func (s *SearchPTSuite) TestReconstructQueryStringWithSTU3Sorts(c *C) {
 	// The main purpose of this is to ensure that STU3-style sort gets reconstructed in STU3-style
-	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family%2C-given%2Cbirthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient"}
+	q := Query{Resource: "Patient", Query: "name%3Aexact=Robert+Smith&gender=male&_sort=family%2C-given%2Cbirthdate&_offset=20&_count=10&_include=Patient%3Ageneral-practitioner&_include=Patient%3Aorganization&_revinclude=Condition%3Asubject&_revinclude=Encounter%3Apatient"}
 	params := q.URLQueryParameters(true)
-	c.Assert(params.Encode(), Equals, "name%3Aexact=Robert+Smith&gender=male&_sort=family%2C-given%2Cbirthdate&_offset=20&_count=10&_include=Patient%3Acareprovider&_include=Patient%3Aorganization&_revinclude=Condition%3Apatient&_revinclude=Encounter%3Apatient")
+	c.Assert(params.Encode(), Equals, "name%3Aexact=Robert+Smith&gender=male&_sort=family%2C-given%2Cbirthdate&_offset=20&_count=10&_include=Patient%3Ageneral-practitioner&_include=Patient%3Aorganization&_revinclude=Condition%3Asubject&_revinclude=Encounter%3Apatient")
 }
 
 func (s *SearchPTSuite) TestQueryOptionsURLQueryParameters(c *C) {
@@ -1733,7 +1733,7 @@ func (s *SearchPTSuite) TestQueryOptionsURLQueryParameters(c *C) {
 		Count:  123,
 		Offset: 456,
 		Include: []IncludeOption{
-			{Resource: "Patient", Parameter: SearchParameterDictionary["Patient"]["careprovider"]},
+			{Resource: "Patient", Parameter: SearchParameterDictionary["Patient"]["general-practitioner"]},
 		},
 		RevInclude: []RevIncludeOption{
 			{Resource: "Encounter", Parameter: SearchParameterDictionary["Encounter"]["patient"]},
@@ -1750,6 +1750,6 @@ func (s *SearchPTSuite) TestQueryOptionsURLQueryParameters(c *C) {
 	c.Assert(all[1], DeepEquals, URLQueryParameter{Key: SortParam + ":desc", Value: "birthdate"})
 	c.Assert(all[2], DeepEquals, URLQueryParameter{Key: OffsetParam, Value: "456"})
 	c.Assert(all[3], DeepEquals, URLQueryParameter{Key: CountParam, Value: "123"})
-	c.Assert(all[4], DeepEquals, URLQueryParameter{Key: IncludeParam, Value: "Patient:careprovider"})
+	c.Assert(all[4], DeepEquals, URLQueryParameter{Key: IncludeParam, Value: "Patient:general-practitioner"})
 	c.Assert(all[5], DeepEquals, URLQueryParameter{Key: RevIncludeParam, Value: "Encounter:patient"})
 }

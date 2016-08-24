@@ -128,7 +128,7 @@
 	"resourceType": "Condition",
 	"id": "8664777288161060797",
 	"verificationStatus": "confirmed",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"asserter": {
@@ -152,7 +152,7 @@
 	"resourceType": "Condition",
 	"id": "4248502720904412195",
 	"verificationStatus": "confirmed",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"code": {
@@ -167,7 +167,7 @@
 	"resourceType": "Condition",
 	"id": "8382342521862968868",
 	"verificationStatus": "confirmed",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"code": {
@@ -188,7 +188,7 @@
 	"resourceType": "Condition",
 	"id": "5852315345721171557",
 	"verificationStatus": "confirmed",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"code": {
@@ -212,7 +212,7 @@
 		"tag": [{ "system": "foo", "code": "bar" }]
 	},
 	"verificationStatus": "confirmed",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"asserter": {
@@ -233,7 +233,7 @@
 	"resourceType": "Condition",
 	"id": "8664777288161038467",
 	"verificationStatus": "confirmed",
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555579315"
 	},
 	"code": {
@@ -316,10 +316,10 @@
 	},
 	"effectiveDateTime": "2011-11-01T11:03:20-04:00",
 	"issued": "2011-11-02T13:30:00-04:00",
-	"performer": {
+	"performer": [{
 		"reference": "Organization/4072118964683285544",
 		"display": "Acme Laboratory, Inc"
-	},
+	}],
 	"result": [{
 		"reference": "Observation/5433989216383325950"
 	}, {
@@ -522,12 +522,7 @@
         {
           "number": 1,
           "uid": "urn:oid:2.16.124.113543.6003.189642796.63084.16748.2599092903",
-          "sopClass": "urn:oid:1.2.840.10008.5.1.4.1.1.2",
-          "content": [
-            {
-              "url": "http://localhost/fhir/Binary/1.2.840.11361907579238403408700.3.0.14.19970327150033"
-            }
-          ]
+          "sopClass": "urn:oid:1.2.840.10008.5.1.4.1.1.2"
         }
       ]
     }
@@ -586,7 +581,7 @@
   "resourceType": "Observation",
   "id": "7045606679745526996",
   "status": "final",
-  "category": {
+  "category": [{
     "coding": [
       {
         "system": "http://hl7.org/fhir/observation-category",
@@ -594,7 +589,7 @@
         "display": "Vital Signs"
       }
     ]
-  },
+	}],
   "code": {
     "coding": [
       {

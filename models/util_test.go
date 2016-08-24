@@ -20,7 +20,7 @@ func (s *UtilSuite) TestUnmarshalJSON(c *check.C) {
 
 	r, ok := MapToResource(i, false).(Condition)
 	c.Assert(ok, check.Equals, true)
-	c.Assert(r.Patient.Reference, check.Equals, "https://example.com/base/Patient/4954037118555241963")
+	c.Assert(r.Subject.Reference, check.Equals, "https://example.com/base/Patient/4954037118555241963")
 	c.Assert(r.Code.Coding, check.HasLen, 3)
 	c.Assert(r.Code.MatchesCode("http://snomed.info/sct", "10091002"), check.Equals, true)
 	c.Assert(r.Code.MatchesCode("http://hl7.org/fhir/sid/icd-9", "428.0"), check.Equals, true)

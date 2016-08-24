@@ -124,7 +124,7 @@
       "resource": {
 				"resourceType": "Condition",
 				"verificationStatus": "confirmed",
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"code": {
@@ -152,7 +152,7 @@
       "resource": {
 				"resourceType": "Condition",
 				"verificationStatus": "confirmed",
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"code": {
@@ -174,7 +174,7 @@
       "resource": {
 				"resourceType": "Condition",
 				"verificationStatus": "confirmed",
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"code": {
@@ -202,7 +202,7 @@
       "resource": {
 				"resourceType": "Condition",
 				"verificationStatus": "confirmed",
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"code": {
@@ -230,7 +230,7 @@
       "resource": {
 				"resourceType": "Condition",
 				"verificationStatus": "confirmed",
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"code": {
@@ -334,10 +334,10 @@
 				},
 				"effectiveDateTime": "2011-11-01T11:03:20-04:00",
 				"issued": "2011-11-02T13:30:00-04:00",
-				"performer": {
+				"performer": [{
 				  "reference": "Organization/4072118964683285544",
 				  "display": "Acme Laboratory, Inc"
-				},
+				}],
 				"result": [{
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f17"
 				}, {

@@ -2,7 +2,7 @@
   "resourceType": "Condition",
   "id": "8664777288161060797",
   "verificationStatus": "confirmed",
-  "patient": {
+  "subject": {
     "reference": "https://example.com/base/Patient/4954037118555241963"
   },
   "code": {

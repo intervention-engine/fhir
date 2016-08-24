@@ -59,7 +59,7 @@ func (s *BatchControllerSuite) TearDownSuite(c *C) {
 func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
 	// Put some records in the database to delete
 	condition := &models.Condition{
-		Patient: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
+		Subject: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
 		Code: &models.CodeableConcept{
 			Coding: []models.Coding{
 				{System: "Foo", Code: "Bar"},
@@ -69,7 +69,7 @@ func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
 	}
 	condition.Id = "56afe6b85cdc7ec329dfe6a1"
 	condition2 := &models.Condition{
-		Patient: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
+		Subject: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
 		Code: &models.CodeableConcept{
 			Coding: []models.Coding{
 				{System: "Foo", Code: "Baz"},
@@ -332,11 +332,11 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 	s.checkReference(c, responseBundle.Entry[2].Resource.(*models.Encounter).Patient, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Encounter).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[5].Resource.(*models.Condition).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[6].Resource.(*models.Condition).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[7].Resource.(*models.Condition).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[8].Resource.(*models.Condition).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[9].Resource.(*models.Condition).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[5].Resource.(*models.Condition).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[6].Resource.(*models.Condition).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[7].Resource.(*models.Condition).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[8].Resource.(*models.Condition).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[9].Resource.(*models.Condition).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[10].Resource.(*models.Observation).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[11].Resource.(*models.Procedure).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[12].Resource.(*models.DiagnosticReport).Subject, patientID, "Patient")
@@ -382,7 +382,7 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 	}
 	patient.Id = "56afe6b85cdc7ec329dfe6a0"
 	condition := &models.Condition{
-		Patient: &models.Reference{
+		Subject: &models.Reference{
 			Type:         "Patient",
 			Reference:    s.Server.URL + "/Patient/56afe6b85cdc7ec329dfe6a0",
 			ReferencedID: "56afe6b85cdc7ec329dfe6a0",
@@ -397,7 +397,7 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 	}
 	condition.Id = "56afe6b85cdc7ec329dfe6a1"
 	condition2 := &models.Condition{
-		Patient: &models.Reference{
+		Subject: &models.Reference{
 			Type:         "Patient",
 			Reference:    s.Server.URL + "/Patient/56afe6b85cdc7ec329dfe6a0",
 			ReferencedID: "56afe6b85cdc7ec329dfe6a0",
@@ -472,7 +472,7 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 		c.Assert(resEntry.Resource, FitsTypeOf, &models.Condition{})
 
 		// Reference to patient should be to upserted patient
-		s.checkReference(c, resEntry.Resource.(*models.Condition).Patient, "56afe6b85cdc7ec329dfe6a0", "Patient")
+		s.checkReference(c, resEntry.Resource.(*models.Condition).Subject, "56afe6b85cdc7ec329dfe6a0", "Patient")
 
 		// check full URL and ID match expected values
 		c.Assert(resEntry.FullUrl, Equals, s.Server.URL+"/Condition/"+expectedIDs[i-1])
@@ -586,7 +586,7 @@ func (s *BatchControllerSuite) TestConditionalUpdatesBundle(c *C) {
 func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	// Create some records to delete or update
 	condition := &models.Condition{
-		Patient: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
+		Subject: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
 		Code: &models.CodeableConcept{
 			Coding: []models.Coding{
 				{System: "Foo", Code: "Bar"},
@@ -757,7 +757,7 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	patientID := responseBundle.Entry[2].Resource.(*models.Patient).Id
 	c.Assert(bson.IsObjectIdHex(patientID), Equals, true)
 	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Condition).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Condition).Subject, patientID, "Patient")
 }
 
 func (s *BatchControllerSuite) checkReference(c *C, ref *models.Reference, id string, typ string) {

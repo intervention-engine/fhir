@@ -165,7 +165,7 @@
       "resource":{
         "resourceType":"Condition",
         "id":"b9c7a3eb-e4f2-44ba-990a-1bbb2506375c",
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
@@ -191,7 +191,7 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI50.1%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C428.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10091002\u0026onset=2012-03-01T07%3A00%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
+        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI50.1%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C428.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10091002\u0026onset-date=2012-03-01T07%3A00%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
@@ -199,7 +199,7 @@
       "resource":{
         "resourceType":"Condition",
         "id":"2fdcac0a-d236-4d1c-ae8a-bb6eb7f442ab",
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
@@ -217,7 +217,7 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fsnomed.info%2Fsct%7C981000124106\u0026onset=2012-03-01T07%3A05%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
+        "url":"Condition?code=http%3A%2F%2Fsnomed.info%2Fsct%7C981000124106\u0026onset-date=2012-03-01T07%3A05%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
@@ -225,7 +225,7 @@
       "resource":{
         "resourceType":"Condition",
         "id":"4e69c05a-c7aa-49ed-92b2-89aee272244a",
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
@@ -251,7 +251,7 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI20.0%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C411.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C123641001\u0026onset=2012-03-01T07%3A05%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
+        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-10%7CI20.0%2Chttp%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C411.0%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C123641001\u0026onset-date=2012-03-01T07%3A05%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
@@ -259,7 +259,7 @@
       "resource":{
         "resourceType":"Condition",
         "id":"3bc855ba-3d4d-4df0-8c76-7d0dc2ec0475",
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "code":{
@@ -281,7 +281,7 @@
       },
       "request":{
         "method":"PUT",
-        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C401.1%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10725009\u0026onset=2012-03-01T07%3A30%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
+        "url":"Condition?code=http%3A%2F%2Fhl7.org%2Ffhir%2Fsid%2Ficd-9%7C401.1%2Chttp%3A%2F%2Fsnomed.info%2Fsct%7C10725009\u0026onset-date=2012-03-01T07%3A30%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {
@@ -647,7 +647,7 @@
         "patient":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
-        "substance":{
+        "code":{
           "coding":[
             {
               "system":"http://www2a.cdc.gov/vaccines/iis/iisstandards/vaccines.asp?rpt=cvx",
@@ -686,7 +686,7 @@
       },
       "request":{
         "method":"PUT",
-        "url":"AllergyIntolerance?onset=2012-01-01T00%3A42%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026substance=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C111"
+        "url":"AllergyIntolerance?onset=2012-01-01T00%3A42%3A00-05%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0\u0026code=http%3A%2F%2Fwww2a.cdc.gov%2Fvaccines%2Fiis%2Fiisstandards%2Fvaccines.asp%3Frpt%3Dcvx%7C111"
       }
     }
   ]

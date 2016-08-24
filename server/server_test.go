@@ -312,7 +312,7 @@ func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
 	err = decoder.Decode(condition)
 	util.CheckErr(err)
 	// Set condition patient
-	condition.Patient = &models.Reference{
+	condition.Subject = &models.Reference{
 		Reference:    "Patient/" + patient.Id,
 		Type:         "Patient",
 		ReferencedID: patient.Id,

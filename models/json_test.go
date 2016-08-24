@@ -45,7 +45,7 @@ func (s *JSONSuite) TestUnmarshalJSON(c *check.C) {
 	c.Assert(contained.Name[0].Given[0], check.Equals, "Heinz")
 	c.Assert(contained.Name[0].Suffix, check.HasLen, 1)
 	c.Assert(contained.Name[0].Suffix[0], check.Equals, "MD")
-	c.Assert(r.Patient.Reference, check.Equals, "https://example.com/base/Patient/4954037118555241963")
+	c.Assert(r.Subject.Reference, check.Equals, "https://example.com/base/Patient/4954037118555241963")
 	c.Assert(r.Asserter.Reference, check.Equals, "#pract1")
 	c.Assert(r.Code.Coding, check.HasLen, 3)
 	c.Assert(r.Code.MatchesCode("http://snomed.info/sct", "10091002"), check.Equals, true)
@@ -82,7 +82,7 @@ func (s *JSONSuite) TestMarshalJSON(c *check.C) {
 			},
 		},
 	}
-	r.Patient = &Reference{Reference: "https://example.com/base/Patient/4954037118555241963"}
+	r.Subject = &Reference{Reference: "https://example.com/base/Patient/4954037118555241963"}
 	r.Asserter = &Reference{Reference: "#pract1"}
 	r.Code = &CodeableConcept{
 		Coding: []Coding{
@@ -114,7 +114,7 @@ func (s *JSONSuite) TestMarshalJSON(c *check.C) {
 	c.Assert(contained.Get("name").GetIndex(0).Get("family").GetIndex(0).MustString(), check.Equals, "Doofenshmirtz")
 	c.Assert(contained.Get("name").GetIndex(0).Get("given").GetIndex(0).MustString(), check.Equals, "Heinz")
 	c.Assert(contained.Get("name").GetIndex(0).Get("suffix").GetIndex(0).MustString(), check.Equals, "MD")
-	c.Assert(j.GetPath("patient", "reference").MustString(), check.Equals, "https://example.com/base/Patient/4954037118555241963")
+	c.Assert(j.GetPath("subject", "reference").MustString(), check.Equals, "https://example.com/base/Patient/4954037118555241963")
 	c.Assert(j.GetPath("asserter", "reference").MustString(), check.Equals, "#pract1")
 	c.Assert(j.GetPath("code", "coding").MustArray(), check.HasLen, 3)
 	c.Assert(j.GetPath("code", "coding").GetIndex(0).Get("system").MustString(), check.Equals, "http://snomed.info/sct")
