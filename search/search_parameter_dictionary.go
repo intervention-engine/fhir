@@ -1183,15 +1183,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				"RelatedPerson",
 			},
 		},
-		"related": SearchParamInfo{
-			Resource: "CarePlan",
-			Name:     "related",
-			Type:     "composite",
-			Composites: []string{
-				"relatedcode",
-				"relatedplan",
-			},
-		},
 		"relatedcode": SearchParamInfo{
 			Resource: "CarePlan",
 			Name:     "relatedcode",
@@ -3605,15 +3596,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				SearchParamPath{Path: "[]event.status", Type: "code"},
 			},
 		},
-		"event-status-date": SearchParamInfo{
-			Resource: "DiagnosticOrder",
-			Name:     "event-status-date",
-			Type:     "composite",
-			Composites: []string{
-				"event-date",
-				"event-status",
-			},
-		},
 		"identifier": SearchParamInfo{
 			Resource: "DiagnosticOrder",
 			Name:     "identifier",
@@ -3644,15 +3626,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Type:     "token",
 			Paths: []SearchParamPath{
 				SearchParamPath{Path: "[]item.status", Type: "code"},
-			},
-		},
-		"item-status-date": SearchParamInfo{
-			Resource: "DiagnosticOrder",
-			Name:     "item-status-date",
-			Type:     "composite",
-			Composites: []string{
-				"item-date",
-				"item-past-status",
 			},
 		},
 		"orderer": SearchParamInfo{
@@ -4306,15 +4279,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Type:     "token",
 			Paths: []SearchParamPath{
 				SearchParamPath{Path: "[]relatesTo.code", Type: "code"},
-			},
-		},
-		"relationship": SearchParamInfo{
-			Resource: "DocumentReference",
-			Name:     "relationship",
-			Type:     "composite",
-			Composites: []string{
-				"relatesto",
-				"relation",
 			},
 		},
 		"securitylabel": SearchParamInfo{
@@ -5361,15 +5325,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Type:     "token",
 			Paths: []SearchParamPath{
 				SearchParamPath{Path: "[]characteristic.code", Type: "CodeableConcept"},
-			},
-		},
-		"characteristic-value": SearchParamInfo{
-			Resource: "Group",
-			Name:     "characteristic-value",
-			Type:     "composite",
-			Composites: []string{
-				"characteristic",
-				"value",
 			},
 		},
 		"code": SearchParamInfo{
@@ -7792,30 +7747,12 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				SearchParamPath{Path: "code", Type: "CodeableConcept"},
 			},
 		},
-		"code-value-[x]": SearchParamInfo{
-			Resource: "Observation",
-			Name:     "code-value-[x]",
-			Type:     "composite",
-			Composites: []string{
-				"code",
-				"value[x]",
-			},
-		},
 		"component-code": SearchParamInfo{
 			Resource: "Observation",
 			Name:     "component-code",
 			Type:     "token",
 			Paths: []SearchParamPath{
 				SearchParamPath{Path: "[]component.code", Type: "CodeableConcept"},
-			},
-		},
-		"component-code-value-[x]": SearchParamInfo{
-			Resource: "Observation",
-			Name:     "component-code-value-[x]",
-			Type:     "composite",
-			Composites: []string{
-				"component-code",
-				"component-value[x]",
 			},
 		},
 		"component-data-absent-reason": SearchParamInfo{
@@ -7921,15 +7858,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				"Patient",
 				"Practitioner",
 				"RelatedPerson",
-			},
-		},
-		"related": SearchParamInfo{
-			Resource: "Observation",
-			Name:     "related",
-			Type:     "composite",
-			Composites: []string{
-				"related-target",
-				"related-type",
 			},
 		},
 		"related-target": SearchParamInfo{
@@ -8739,11 +8667,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				SearchParamPath{Path: "deceasedBoolean", Type: "boolean"},
 			},
 		},
-		"email": SearchParamInfo{
-			Resource: "Patient",
-			Name:     "email",
-			Type:     "token",
-		},
 		"family": SearchParamInfo{
 			Resource: "Patient",
 			Name:     "family",
@@ -8813,11 +8736,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Targets: []string{
 				"Organization",
 			},
-		},
-		"phone": SearchParamInfo{
-			Resource: "Patient",
-			Name:     "phone",
-			Type:     "token",
 		},
 		"phonetic": SearchParamInfo{
 			Resource: "Patient",
@@ -9033,11 +8951,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				SearchParamPath{Path: "birthDate", Type: "date"},
 			},
 		},
-		"email": SearchParamInfo{
-			Resource: "Person",
-			Name:     "email",
-			Type:     "token",
-		},
 		"gender": SearchParamInfo{
 			Resource: "Person",
 			Name:     "gender",
@@ -9097,11 +9010,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Targets: []string{
 				"Patient",
 			},
-		},
-		"phone": SearchParamInfo{
-			Resource: "Person",
-			Name:     "phone",
-			Type:     "token",
 		},
 		"phonetic": SearchParamInfo{
 			Resource: "Person",
@@ -9239,11 +9147,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				SearchParamPath{Path: "[]communication", Type: "CodeableConcept"},
 			},
 		},
-		"email": SearchParamInfo{
-			Resource: "Practitioner",
-			Name:     "email",
-			Type:     "token",
-		},
 		"family": SearchParamInfo{
 			Resource: "Practitioner",
 			Name:     "family",
@@ -9305,11 +9208,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Targets: []string{
 				"Organization",
 			},
-		},
-		"phone": SearchParamInfo{
-			Resource: "Practitioner",
-			Name:     "phone",
-			Type:     "token",
 		},
 		"phonetic": SearchParamInfo{
 			Resource: "Practitioner",
@@ -10336,11 +10234,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 				SearchParamPath{Path: "birthDate", Type: "date"},
 			},
 		},
-		"email": SearchParamInfo{
-			Resource: "RelatedPerson",
-			Name:     "email",
-			Type:     "token",
-		},
 		"gender": SearchParamInfo{
 			Resource: "RelatedPerson",
 			Name:     "gender",
@@ -10375,11 +10268,6 @@ var SearchParameterDictionary = map[string]map[string]SearchParamInfo{
 			Targets: []string{
 				"Patient",
 			},
-		},
-		"phone": SearchParamInfo{
-			Resource: "RelatedPerson",
-			Name:     "phone",
-			Type:     "token",
 		},
 		"phonetic": SearchParamInfo{
 			Resource: "RelatedPerson",

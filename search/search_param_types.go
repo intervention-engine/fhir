@@ -30,7 +30,7 @@ const (
 	ContainedParam     = "_contained"
 	ContainedTypeParam = "_containedType"
 	OffsetParam        = "_offset" // Custom param, not in FHIR spec
-	FormatParam		   = "_format"
+	FormatParam        = "_format"
 )
 
 var globalSearchParams = map[string]bool{IDParam: true, LastUpdatedParam: true, TagParam: true,
@@ -191,7 +191,7 @@ func (q *Query) Options() *QueryOptions {
 				// Currently we only support JSON
 				panic(createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"_format\" content is invalid"))
 			}
-			
+
 		default:
 			panic(createUnsupportedSearchError("MSG_PARAM_UNKNOWN", fmt.Sprintf("Parameter \"%s\" not understood", param)))
 		}
