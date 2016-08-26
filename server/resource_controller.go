@@ -167,7 +167,6 @@ func (rc *ResourceController) ConditionalUpdateHandler(c *gin.Context) {
 	c.Set("Resource", rc.Name)
 
 	c.Header("Location", responseURL(c.Request, rc.Name, id).String())
-	c.Header("Access-Control-Allow-Origin", "*")
 	if createdNew {
 		c.Set("Action", "create")
 		c.JSON(http.StatusCreated, resource)
@@ -190,7 +189,6 @@ func (rc *ResourceController) DeleteHandler(c *gin.Context) {
 	c.Set("Resource", rc.Name)
 	c.Set("Action", "delete")
 
-	c.Header("Access-Control-Allow-Origin", "*")
 	c.Status(http.StatusNoContent)
 }
 
@@ -207,7 +205,6 @@ func (rc *ResourceController) ConditionalDeleteHandler(c *gin.Context) {
 	c.Set("Resource", rc.Name)
 	c.Set("Action", "delete")
 
-	c.Header("Access-Control-Allow-Origin", "*")
 	c.Status(http.StatusNoContent)
 }
 
