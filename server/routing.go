@@ -12,7 +12,7 @@ func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal Dat
 	}
 
 	if config.UseSmartAuth {
-		rcBase.Use(SmartAuthHandler(name))
+		rcBase.Use(HEARTScopesHandler(name))
 	}
 
 	rcBase.GET("", rc.IndexHandler)
