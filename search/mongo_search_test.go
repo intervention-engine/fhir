@@ -2124,7 +2124,7 @@ func (m *MongoSearchSuite) TestInvalidSearchParameterPanics(c *C) {
 // Test that unimplemented features PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestCompositeSearchPanics(c *C) {
 	q := Query{"Group", "characteristic-value=gender$male"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"characteristic-value\" not understood"))
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createInvalidSearchError("SEARCH_NONE", "Error: no processable search found for Group search parameters \"characteristic-value\""))
 }
 
 func (m *MongoSearchSuite) TestPrefixedDateSearchPanicsForUnsupportedPrefix(c *C) {
