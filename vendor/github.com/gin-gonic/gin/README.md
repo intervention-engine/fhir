@@ -3,6 +3,7 @@
 <img align="right" src="https://raw.githubusercontent.com/gin-gonic/gin/master/logo.jpg">
 [![Build Status](https://travis-ci.org/gin-gonic/gin.svg)](https://travis-ci.org/gin-gonic/gin)
 [![Coverage Status](https://coveralls.io/repos/gin-gonic/gin/badge.svg?branch=master)](https://coveralls.io/r/gin-gonic/gin?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gin-gonic/gin)](https://goreportcard.com/report/github.com/gin-gonic/gin)
 [![GoDoc](https://godoc.org/github.com/gin-gonic/gin?status.svg)](https://godoc.org/github.com/gin-gonic/gin)
 [![Join the chat at https://gitter.im/gin-gonic/gin](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gin-gonic/gin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -73,7 +74,7 @@ BenchmarkZeus_GithubAll 		| 2000 		| 944234 	| 300688 	| 2648
 (3): Heap Memory (B/op)  
 (4): Average Allocations per Repetition (allocs/op)  
 
-##Gin v1. stable
+## Gin v1. stable
 
 - [x] Zero allocation router.
 - [x] Still the fastest http router and framework. From routing to writing.
@@ -83,6 +84,7 @@ BenchmarkZeus_GithubAll 		| 2000 		| 944234 	| 300688 	| 2648
 
 
 ## Start using it
+
 1. Download and install it:
 
     ```sh
@@ -101,7 +103,7 @@ BenchmarkZeus_GithubAll 		| 2000 		| 944234 	| 300688 	| 2648
     import "net/http"
     ```
 
-##API Examples
+## API Examples
 
 #### Using GET, POST, PUT, PATCH, DELETE and OPTIONS
 
@@ -220,7 +222,7 @@ id: 1234; page: 1; name: manu; message: this_is_great
 
 ### Another example: upload file
 
-Reference issue [#548](https://github.com/gin-gonic/gin/issues/548)
+References issue [#548](https://github.com/gin-gonic/gin/issues/548).
 
 ```go
 func main() {
@@ -300,7 +302,7 @@ func main() {
 
 	// Authorization group
 	// authorized := r.Group("/", AuthRequired())
-	// exactly the same than:
+	// exactly the same as:
 	authorized := r.Group("/")
 	// per group middleware! in this case we use the custom created
 	// AuthRequired() middleware just in the "authorized" group.
@@ -411,7 +413,7 @@ $ curl -v --form user=user --form password=password http://localhost:8080/login
 ```
 
 
-#### XML and JSON rendering
+#### XML, JSON and YAML rendering
 
 ```go
 func main() {
@@ -439,6 +441,10 @@ func main() {
 
 	r.GET("/someXML", func(c *gin.Context) {
 		c.XML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
+	})
+
+	r.GET("/someYAML", func(c *gin.Context) {
+		c.YAML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
 	})
 
 	// Listen and server on 0.0.0.0:8080
@@ -645,7 +651,7 @@ func main() {
 			// simulate a long task with time.Sleep(). 5 seconds
 			time.Sleep(5 * time.Second)
 
-			// note than you are using the copied context "c_cp", IMPORTANT
+			// note that you are using the copied context "cCp", IMPORTANT
 			log.Println("Done! in path " + cCp.Request.URL.Path)
 		}()
 	})
@@ -693,13 +699,9 @@ func main() {
 #### Graceful restart or stop
 
 Do you want to graceful restart or stop your web server?
-There be some ways.
+There are some ways this can be done.
 
-We can using fvbock/endless to replace the default ListenAndServe
-
-Refer the issue for more details:
-
-https://github.com/gin-gonic/gin/issues/296
+We can use [fvbock/endless](https://github.com/fvbock/endless) to replace the default `ListenAndServe`. Refer issue [#296](https://github.com/gin-gonic/gin/issues/296) for more details.
 
 ```go
 router := gin.Default()
@@ -711,3 +713,10 @@ endless.ListenAndServe(":4242", router)
 An alternative to endless:
 
 * [manners](https://github.com/braintree/manners): A polite Go HTTP server that shuts down gracefully.
+
+## Example
+
+Awesome project lists using [Gin](https://github.com/gin-gonic/gin) web framework.
+
+* [drone](https://github.com/drone/drone): Drone is a Continuous Delivery platform built on Docker, written in Go
+* [gorush](https://github.com/appleboy/gorush): A push notification server written in Go.
