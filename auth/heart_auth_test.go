@@ -1,9 +1,10 @@
-package server
+package auth
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pebbe/util"
@@ -12,6 +13,8 @@ import (
 
 type HEARTScopesSuite struct {
 }
+
+func Test(t *testing.T) { TestingT(t) }
 
 var _ = Suite(&HEARTScopesSuite{})
 

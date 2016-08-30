@@ -1,6 +1,9 @@
 package server
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/intervention-engine/fhir/auth"
+)
 
 // RegisterController registers the CRUD routes (and middleware) for a FHIR resource
 func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal DataAccessLayer, config Config) {
@@ -12,7 +15,7 @@ func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal Dat
 	}
 
 	if config.UseSmartAuth {
-		rcBase.Use(HEARTScopesHandler(name))
+		rcBase.Use(auth.HEARTScopesHandler(name))
 	}
 
 	rcBase.GET("", rc.IndexHandler)
