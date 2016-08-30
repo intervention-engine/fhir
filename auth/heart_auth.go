@@ -27,6 +27,12 @@ func HEARTScopesHandler(resourceName string) gin.HandlerFunc {
 	writeScope := fmt.Sprintf("user/%s.write", resourceName)
 	allScope := fmt.Sprintf("user/%s.*", resourceName)
 	return func(c *gin.Context) {
+		_, exists := c.Get("UserInfo")
+		if exists {
+			// This is an OIDC authenticated request. Let it pass through.
+			return
+		}
+
 		if c.Request.Method == "GET" {
 			if !includesAnyScope(c, allResourcesAllScope, allResourcesReadScope, readScope, allScope) {
 				c.String(http.StatusForbidden, "You do not have permission to view this resource")
