@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"time"
 
@@ -26,12 +27,18 @@ func (b *BindSuite) TestJSONFHIRBinding(c *C) {
 func testBinding(c *C, contentType string) {
 	data, _ := os.Open("../fixtures/condition.json")
 
-	ctx, _, _ := gin.CreateTestContext()
-	ctx.Request, _ = http.NewRequest("POST", "/Condition", data)
-	ctx.Request.Header.Add("Content-Type", contentType)
+	r, _ := http.NewRequest("POST", "/Condition", data)
+	r.Header.Add("Content-Type", contentType)
+	rw := httptest.NewRecorder()
 
 	var condition models.Condition
-	FHIRBind(ctx, &condition)
+
+	e := gin.New()
+	e.POST("/Condition", func(ctx *gin.Context) {
+		FHIRBind(ctx, &condition)
+	})
+
+	e.ServeHTTP(rw, r)
 
 	c.Assert(condition.ResourceType, Equals, "Condition")
 	c.Assert(condition.Id, Equals, "8664777288161060797")
