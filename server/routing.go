@@ -1,8 +1,11 @@
 package server
 
 import (
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/intervention-engine/fhir/auth"
+	"github.com/mitre/heart"
+	"golang.org/x/oauth2"
 )
 
 // RegisterController registers the CRUD routes (and middleware) for a FHIR resource
@@ -14,7 +17,12 @@ func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal Dat
 		rcBase.Use(m...)
 	}
 
-	if config.UseSmartAuth {
+	switch config.Auth.Method {
+	case auth.AuthTypeNone:
+		// do nothing
+	case auth.AuthTypeOIDC:
+		rcBase.Use(auth.HEARTScopesHandler(name))
+	case auth.AuthTypeHEART:
 		rcBase.Use(auth.HEARTScopesHandler(name))
 	}
 
@@ -31,6 +39,45 @@ func RegisterController(name string, e *gin.Engine, m []gin.HandlerFunc, dal Dat
 
 // RegisterRoutes registers the routes for each of the FHIR resources
 func RegisterRoutes(e *gin.Engine, config map[string][]gin.HandlerFunc, dal DataAccessLayer, serverConfig Config) {
+
+	switch serverConfig.Auth.Method {
+	case auth.AuthTypeNone:
+		// do nothing
+	case auth.AuthTypeOIDC:
+		// Set up sessions so we can keep track of the logged in user
+		store := sessions.NewCookieStore([]byte(serverConfig.Auth.SessionSecret))
+		e.Use(sessions.Sessions("mysession", store))
+		// The OIDCAuthenticationHandler is set up before the IndexHandler in the handler function
+		// chain. It will check to see if the user is logged in based on their session. If they are not
+		// the user will be redirected to the authentication endpoint at the OP.
+		oauthConfig := oauth2.Config{ClientID: serverConfig.Auth.ClientID,
+			ClientSecret: serverConfig.Auth.ClientSecret,
+			Endpoint: oauth2.Endpoint{AuthURL: serverConfig.Auth.AuthorizationURL,
+				TokenURL: serverConfig.Auth.TokenURL},
+		}
+		oidcHandler := auth.OIDCAuthenticationHandler(oauthConfig)
+		oauthHandler := auth.OAuthIntrospectionHandler(serverConfig.Auth.ClientID,
+			serverConfig.Auth.ClientSecret, serverConfig.Auth.IntrospectionURL)
+		e.Use(func(c *gin.Context) {
+			if c.Request.Header.Get("Authorization") != "" {
+				oauthHandler(c)
+			} else {
+				oidcHandler(c)
+			}
+		})
+		// This handler is to take the redirect from the OP when the user logs in. It will
+		// then fetch information about the user by hitting the user info endpoint and put
+		// that in the session. Lastly, this handler is set up to redirect the user back
+		// to the root.
+		e.GET("/redirect", auth.RedirectHandler(oauthConfig, serverConfig.ServerURL,
+			serverConfig.Auth.UserInfoURL))
+		e.GET("/logout", heart.LogoutHandler)
+
+	case auth.AuthTypeHEART:
+		heart.SetUpRoutes(serverConfig.Auth.JWKPath, serverConfig.Auth.ClientID, serverConfig.Auth.OPURL,
+			serverConfig.ServerURL, serverConfig.Auth.SessionSecret, e)
+
+	}
 
 	// Batch Support
 	batch := NewBatchController(dal)
