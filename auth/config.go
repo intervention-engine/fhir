@@ -5,7 +5,7 @@ type Method int
 
 const (
 	// No authentication or authorization
-	AuthTypeNone = iota
+	AuthTypeNone Method = iota
 	// "Plain" OpenID Connect and OAuth 2.0
 	AuthTypeOIDC
 	// HEART profiled OpenID Connect and OAuth 2.0
