@@ -297,7 +297,36 @@ func getIdentifiersComparisonValue(iSlice []models.Identifier, descending bool) 
 	return strs[0]
 }
 
-// TODO: Test token searches on boolean, code, string, and ContactPoint
+// Tests token searches on boolean
+
+func (m *MongoSearchSuite) TestImmunizationNotGivenQueryObject(c *C) {
+	q := Query{"Immunization", "notgiven=false"}
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"wasNotGiven": false,
+	})
+}
+
+func (m *MongoSearchSuite) TestImmunizationNotGivenQuery(c *C) {
+	q := Query{"Immunization", "notgiven=false"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+
+	q = Query{"Immunization", "notgiven=true"}
+	mq = m.MongoSearcher.CreateQuery(q)
+	num, err = mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 0)
+}
+
+func (m *MongoSearchSuite) TestInvalidBooleanValuePanics(c *C) {
+	q := Query{"Immunization", "notgiven=maybe"}
+	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"notgiven\" content is invalid"))
+}
+
+// TODO: Test token searches on code, string, and ContactPoint
 
 // Tests reference searches by reference id
 
