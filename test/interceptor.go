@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/intervention-engine/fhir/auth"
 	"github.com/intervention-engine/fhir/server"
 )
 
@@ -15,7 +17,7 @@ func main() {
 		setupTestInterceptors(s)
 	}
 
-	config := server.Config{UseSmartAuth: false}
+	config := server.Config{Auth: auth.None()}
 	s.Run(config)
 }
 
