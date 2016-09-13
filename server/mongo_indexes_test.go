@@ -4,17 +4,24 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/suite"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/dbtest"
 )
 
 type MongoIndexesTestSuite struct {
 	suite.Suite
-	Database     *mgo.Database
+	DBServer     *dbtest.DBServer
+	EST          *time.Location
+	Local        *time.Location
 	Session      *mgo.Session
+	Database     *mgo.Database
 	Engine       *gin.Engine
 	Server       *httptest.Server
 	Interceptors map[string]InterceptorList
@@ -22,19 +29,26 @@ type MongoIndexesTestSuite struct {
 }
 
 func (s *MongoIndexesTestSuite) SetupSuite() {
+	s.EST = time.FixedZone("EST", -5*60*60)
+	s.Local, _ = time.LoadLocation("Local")
+
 	// Server configuration
 	config := DefaultConfig
 	config.DatabaseName = "fhir-test"
 	config.IndexConfigPath = "../fixtures/test_indexes.conf"
 
-	// setup the mongo database
+	// Create a temporary directory for the test database
 	var err error
-	s.Session, err = mgo.Dial(config.ServerURL)
+	err = os.Mkdir("./testdb", 0775)
 
 	if err != nil {
 		panic(err)
 	}
 
+	// setup the mongo database
+	s.DBServer = &dbtest.DBServer{}
+	s.DBServer.SetPath("./testdb")
+	s.Session = s.DBServer.Session()
 	s.Database = s.Session.DB(config.DatabaseName)
 
 	// Set gin to release mode (less verbose output)
@@ -52,9 +66,23 @@ func (s *MongoIndexesTestSuite) SetupSuite() {
 }
 
 func (s *MongoIndexesTestSuite) TearDownSuite() {
-	s.Database.DropDatabase()
 	s.Session.Close()
-	s.Server.Close()
+	s.DBServer.Wipe()
+	s.DBServer.Stop()
+
+	// remove the temporary database directory
+	var err error
+	err = RemoveContents("./testdb")
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.Remove("./testdb")
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestMongoIndexes(t *testing.T) {
@@ -138,4 +166,23 @@ func indexInSlice(indexesSlice []mgo.Index, want mgo.Index) bool {
 		}
 	}
 	return false
+}
+
+func RemoveContents(dir string) error {
+	d, err := os.Open(dir)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	names, err := d.Readdirnames(-1)
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		err = os.RemoveAll(filepath.Join(dir, name))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

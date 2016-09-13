@@ -23,7 +23,7 @@ func ConfigureIndexes(session *mgo.Session, config Config) {
 	// Read the config file
 	idxConfig, err := ioutil.ReadFile(config.IndexConfigPath)
 	if err != nil {
-		log.Fatal("Could not find indexes configuration file")
+		log.Println("[WARNING] Could not find indexes configuration file")
 	}
 
 	// parse the config file
@@ -46,6 +46,7 @@ func ConfigureIndexes(session *mgo.Session, config Config) {
 			}
 		}
 	}
+	session.Close()
 }
 
 func parseIndexes(fileContents string, configuredDBName string) (map[string][]mgo.Index, error) {
