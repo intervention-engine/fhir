@@ -33,15 +33,23 @@ func Test(t *testing.T) { TestingT(t) }
 var _ = Suite(&ServerSuite{})
 
 func (s *ServerSuite) SetUpSuite(c *C) {
+	// Server configuration
+	config := DefaultConfig
+	config.DatabaseName = "fhir-test"
+	config.IndexConfigPath = "../fixtures/test_indexes.conf"
+
 	// Set up the database
 	var err error
 	s.Session, err = mgo.Dial("localhost")
 	util.CheckErr(err)
-	s.Database = s.Session.DB("fhir-test")
+	s.Database = s.Session.DB(config.DatabaseName)
+
+	// Set gin to release mode (less verbose output)
+	gin.SetMode(gin.ReleaseMode)
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Database), Config{})
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Database), config)
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)
