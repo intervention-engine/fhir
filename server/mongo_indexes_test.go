@@ -99,8 +99,8 @@ func TestMongoIndexes(t *testing.T) {
 
 func (s *MongoIndexesTestSuite) TestParseIndexesStandardIndexAsc() {
 
-	indexStr := "fhir-test.testcollection.foo_1"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.foo_1"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(err, "Should return without error")
 
 	indexes, ok := indexMap["testcollection"]
@@ -115,8 +115,8 @@ func (s *MongoIndexesTestSuite) TestParseIndexesStandardIndexAsc() {
 
 func (s *MongoIndexesTestSuite) TestParseIndexesStandardIndexDesc() {
 
-	indexStr := "fhir-test.testcollection.foo_-1"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.foo_-1"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(err, "Should return without error")
 
 	indexes, ok := indexMap["testcollection"]
@@ -128,8 +128,8 @@ func (s *MongoIndexesTestSuite) TestParseIndexesStandardIndexDesc() {
 
 func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexAsc() {
 
-	indexStr := "fhir-test.testcollection.(foo_1, bar_1)"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.(foo_1, bar_1)"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(err, "Should return without error")
 
 	indexes, ok := indexMap["testcollection"]
@@ -142,8 +142,8 @@ func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexAsc() {
 
 func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexDesc() {
 
-	indexStr := "fhir-test.testcollection.(foo_-1, bar_-1)"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.(foo_-1, bar_-1)"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(err, "Should return without error")
 
 	indexes, ok := indexMap["testcollection"]
@@ -156,8 +156,8 @@ func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexDesc() {
 
 func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexMixed() {
 
-	indexStr := "fhir-test.testcollection.(foo_-1, bar_1)"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.(foo_-1, bar_1)"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(err, "Should return without error")
 
 	indexes, ok := indexMap["testcollection"]
@@ -171,7 +171,7 @@ func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexMixed() {
 func (s *MongoIndexesTestSuite) TestParseIndexesNoIndexes() {
 
 	indexStr := ""
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexMap, err := parseIndexes(indexStr)
 	keys := getKeys(indexMap)
 	s.Nil(err, "Should return without error")
 	s.Equal(len(keys), 0, "Should return a map with no indexes in it")
@@ -180,64 +180,55 @@ func (s *MongoIndexesTestSuite) TestParseIndexesNoIndexes() {
 func (s *MongoIndexesTestSuite) TestParseIndexesBadIndexFormat() {
 
 	indexStr := "asdfasdf"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(indexMap, "IndexMap should be nil")
 	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'asdfasdf' is invalid: Not of format <db_name>.<collection_name>.<index(es)>", "Error message should match expected", "Unexpected error returned")
-}
-
-func (s *MongoIndexesTestSuite) TestParseIndexesBadDbName() {
-
-	indexStr := "foo.testcollection.(foo_-1, bar_1)"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
-	s.Nil(indexMap, "IndexMap should be nil")
-	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'foo.testcollection.(foo_-1, bar_1)' is invalid: DB name does not match server configuration", "Unexpected error returned")
+	s.Equal(err.Error(), "Index 'asdfasdf' is invalid: Not of format <collection_name>.<index(es)>", "Error message should match expected", "Unexpected error returned")
 }
 
 func (s *MongoIndexesTestSuite) TestParseIndexesNoCollectionName() {
 
-	indexStr := "fhir-test..(foo_-1, bar_1)"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := ".(foo_-1, bar_1)"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(indexMap, "IndexMap should be nil")
 	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'fhir-test..(foo_-1, bar_1)' is invalid: No collection name given", "Unexpected error returned")
+	s.Equal(err.Error(), "Index '.(foo_-1, bar_1)' is invalid: No collection name given", "Unexpected error returned")
 }
 
 func (s *MongoIndexesTestSuite) TestParseIndexesNoKeys() {
 
-	indexStr := "fhir-test.testcollection."
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection."
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(indexMap, "IndexMap should be nil")
 	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'fhir-test.testcollection.' is invalid: No index key(s) given", "Unexpected error returned")
+	s.Equal(err.Error(), "Index 'testcollection.' is invalid: No index key(s) given", "Unexpected error returned")
 }
 
 func (s *MongoIndexesTestSuite) TestParseIndexesBadStandardKeyFormat() {
 
-	indexStr := "fhir-test.testcollection.foo"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.foo"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(indexMap, "IndexMap should be nil")
 	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'fhir-test.testcollection.foo' is invalid: Standard key not of format: <key>_(-)1", "Unexpected error returned")
+	s.Equal(err.Error(), "Index 'testcollection.foo' is invalid: Standard key not of format: <key>_(-)1", "Unexpected error returned")
 }
 
 func (s *MongoIndexesTestSuite) TestParseIndexesBadCompoundKeyFormat() {
 
-	indexStr := "fhir-test.testcollection.(foobar"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.(foobar"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(indexMap, "IndexMap should be nil")
 	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'fhir-test.testcollection.(foobar' is invalid: Compound key not of format: (<key1>_(-)1, <key2>_(-)1, ...)", "Unexpected error returned")
+	s.Equal(err.Error(), "Index 'testcollection.(foobar' is invalid: Compound key not of format: (<key1>_(-)1, <key2>_(-)1, ...)", "Unexpected error returned")
 }
 
 func (s *MongoIndexesTestSuite) TestParseIndexesBadCompoundKeySubKeyFormat() {
 
-	indexStr := "fhir-test.testcollection.(foo, bar_1)"
-	indexMap, err := parseIndexes(indexStr, "fhir-test")
+	indexStr := "testcollection.(foo, bar_1)"
+	indexMap, err := parseIndexes(indexStr)
 	s.Nil(indexMap, "IndexMap should be nil")
 	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'fhir-test.testcollection.(foo, bar_1)' is invalid: Compound key sub-key not of format: <key>_(-)1", "Unexpected error returned")
+	s.Equal(err.Error(), "Index 'testcollection.(foo, bar_1)' is invalid: Compound key sub-key not of format: <key>_(-)1", "Unexpected error returned")
 }
 
 func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
@@ -276,7 +267,7 @@ func (s *MongoIndexesTestSuite) compareIndexes(expected, actual []mgo.Index) {
 			continue
 		}
 
-		s.True(indexInSlice(expected, idx), fmt.Sprintf("Index fhir-test.testcollection: %s was not parsed correctly", idx.Key[0]))
+		s.True(indexInSlice(expected, idx), fmt.Sprintf("Index testcollection: %s was not parsed correctly", idx.Key[0]))
 	}
 }
 
