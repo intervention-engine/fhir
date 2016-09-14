@@ -97,143 +97,149 @@ func TestMongoIndexes(t *testing.T) {
 	suite.Run(t, new(MongoIndexesTestSuite))
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesStandardIndexAsc() {
+func (s *MongoIndexesTestSuite) TestParseIndexStandardIndexAsc() {
 
 	indexStr := "testcollection.foo_1"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(err, "Should return without error")
+	collectionName, index, err := parseIndex(indexStr)
 
-	indexes, ok := indexMap["testcollection"]
-	s.True(ok, "'testcollection' should be a key in the index map")
-	s.Equal(len(indexes), 1, "indexMap[testcollection] should contain one index")
-	s.Equal(len(indexes[0].Key), 1, "The created index should contain one key")
-	s.Equal(indexes[0].Key[0], "foo", "The index key should be 'foo'")
+	s.Nil(err, "Should return without error")
+	s.Equal(collectionName, "testcollection", "Collection name should be 'testcollection'")
+	s.Equal(len(index.Key), 1, "The created index should contain one key")
+	s.Equal(index.Key[0], "foo", "The index key should be 'foo'")
 
 	// We only need to check this once, since it's done for all successful indexes
-	s.True(indexes[0].Background, "The index should be set to build in the background")
+	s.True(index.Background, "The index should be set to build in the background")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesStandardIndexDesc() {
+func (s *MongoIndexesTestSuite) TestParseIndexStandardIndexDesc() {
 
 	indexStr := "testcollection.foo_-1"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(err, "Should return without error")
+	collectionName, index, err := parseIndex(indexStr)
 
-	indexes, ok := indexMap["testcollection"]
-	s.True(ok, "'testcollection' should be a key in the index map")
-	s.Equal(len(indexes), 1, "indexMap[testcollection] should contain one index")
-	s.Equal(len(indexes[0].Key), 1, "The created index should contain one key")
-	s.Equal(indexes[0].Key[0], "-foo", "The index key should be '-foo'")
+	s.Nil(err, "Should return without error")
+	s.Equal(collectionName, "testcollection", "Collection name should be 'testcollection'")
+	s.Equal(len(index.Key), 1, "The created index should contain one key")
+	s.Equal(index.Key[0], "-foo", "The index key should be '-foo'")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexAsc() {
+func (s *MongoIndexesTestSuite) TestParseIndexCompoundIndexAsc() {
 
 	indexStr := "testcollection.(foo_1, bar_1)"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(err, "Should return without error")
+	collectionName, index, err := parseIndex(indexStr)
 
-	indexes, ok := indexMap["testcollection"]
-	s.True(ok, "'testcollection' should be a key in the index map")
-	s.Equal(len(indexes), 1, "indexMap[testcollection] should contain one index")
-	s.Equal(len(indexes[0].Key), 2, "The created index should contain 2 keys")
-	s.Equal(indexes[0].Key[0], "foo", "The prefix index key should be 'foo'")
-	s.Equal(indexes[0].Key[1], "bar", "The second index key should be 'bar'")
+	s.Nil(err, "Should return without error")
+	s.Equal(collectionName, "testcollection", "Collection name should be 'testcollection'")
+	s.Equal(len(index.Key), 2, "The created index should contain 2 keys")
+	s.Equal(index.Key[0], "foo", "The prefix index key should be 'foo'")
+	s.Equal(index.Key[1], "bar", "The second index key should be 'bar'")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexDesc() {
+func (s *MongoIndexesTestSuite) TestParseIndexCompoundIndexDesc() {
 
 	indexStr := "testcollection.(foo_-1, bar_-1)"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(err, "Should return without error")
+	collectionName, index, err := parseIndex(indexStr)
 
-	indexes, ok := indexMap["testcollection"]
-	s.True(ok, "'testcollection' should be a key in the index map")
-	s.Equal(len(indexes), 1, "indexMap[testcollection] should contain one index")
-	s.Equal(len(indexes[0].Key), 2, "The created index should contain 2 keys")
-	s.Equal(indexes[0].Key[0], "-foo", "The prefix index key should be '-foo'")
-	s.Equal(indexes[0].Key[1], "-bar", "The second index key should be '-bar'")
+	s.Nil(err, "Should return without error")
+	s.Equal(collectionName, "testcollection", "Collection name should be 'testcollection'")
+	s.Equal(len(index.Key), 2, "The created index should contain 2 keys")
+	s.Equal(index.Key[0], "-foo", "The prefix index key should be '-foo'")
+	s.Equal(index.Key[1], "-bar", "The second index key should be '-bar'")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesCompoundIndexMixed() {
+func (s *MongoIndexesTestSuite) TestParseIndexCompoundIndexMixed() {
 
 	indexStr := "testcollection.(foo_-1, bar_1)"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(err, "Should return without error")
+	collectionName, index, err := parseIndex(indexStr)
 
-	indexes, ok := indexMap["testcollection"]
-	s.True(ok, "'testcollection' should be a key in the index map")
-	s.Equal(len(indexes), 1, "indexMap[testcollection] should contain one index")
-	s.Equal(len(indexes[0].Key), 2, "The created index should contain 2 keys")
-	s.Equal(indexes[0].Key[0], "-foo", "The prefix index key should be '-foo'")
-	s.Equal(indexes[0].Key[1], "bar", "The second index key should be 'bar'")
+	s.Nil(err, "Should return without error")
+	s.Equal(collectionName, "testcollection", "Collection name should be 'testcollection'")
+	s.Equal(len(index.Key), 2, "The created index should contain 2 keys")
+	s.Equal(index.Key[0], "-foo", "The prefix index key should be '-foo'")
+	s.Equal(index.Key[1], "bar", "The second index key should be 'bar'")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesNoIndexes() {
+func (s *MongoIndexesTestSuite) TestParseIndexNoIndex() {
 
 	indexStr := ""
-	indexMap, err := parseIndexes(indexStr)
-	keys := getKeys(indexMap)
-	s.Nil(err, "Should return without error")
-	s.Equal(len(keys), 0, "Should return a map with no indexes in it")
+	collectionName, index, err := parseIndex(indexStr)
+
+	s.Equal(collectionName, "", "Collection name should be blank")
+	s.Nil(index, "Index should be nil")
+	s.NotNil(err, "Should return an error")
+	s.Equal(err.Error(), "Index '' is invalid: Not of format <collection_name>.<index(es)>", "Unexpected error returned")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesBadIndexFormat() {
+func (s *MongoIndexesTestSuite) TestParseIndexBadIndexFormat() {
 
 	indexStr := "asdfasdf"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(indexMap, "IndexMap should be nil")
+	collectionName, index, err := parseIndex(indexStr)
+
+	s.Equal(collectionName, "", "Collection name should be blank")
+	s.Nil(index, "Index should be nil")
 	s.NotNil(err, "Should return an error")
-	s.Equal(err.Error(), "Index 'asdfasdf' is invalid: Not of format <collection_name>.<index(es)>", "Error message should match expected", "Unexpected error returned")
+	s.Equal(err.Error(), "Index 'asdfasdf' is invalid: Not of format <collection_name>.<index(es)>", "Unexpected error returned")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesNoCollectionName() {
+func (s *MongoIndexesTestSuite) TestParseIndexNoCollectionName() {
 
 	indexStr := ".(foo_-1, bar_1)"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(indexMap, "IndexMap should be nil")
+	collectionName, index, err := parseIndex(indexStr)
+
+	s.Equal(collectionName, "", "Collection name should be blank")
+	s.Nil(index, "Index should be nil")
 	s.NotNil(err, "Should return an error")
 	s.Equal(err.Error(), "Index '.(foo_-1, bar_1)' is invalid: No collection name given", "Unexpected error returned")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesNoKeys() {
+func (s *MongoIndexesTestSuite) TestParseIndexNoKeys() {
 
 	indexStr := "testcollection."
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(indexMap, "IndexMap should be nil")
+	collectionName, index, err := parseIndex(indexStr)
+
+	s.Equal(collectionName, "", "Collection name should be blank")
+	s.Nil(index, "Index should be nil")
 	s.NotNil(err, "Should return an error")
 	s.Equal(err.Error(), "Index 'testcollection.' is invalid: No index key(s) given", "Unexpected error returned")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesBadStandardKeyFormat() {
+func (s *MongoIndexesTestSuite) TestParseIndexBadStandardKeyFormat() {
 
 	indexStr := "testcollection.foo"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(indexMap, "IndexMap should be nil")
+	collectionName, index, err := parseIndex(indexStr)
+
+	s.Equal(collectionName, "", "Collection name should be blank")
+	s.Nil(index, "Index should be nil")
 	s.NotNil(err, "Should return an error")
 	s.Equal(err.Error(), "Index 'testcollection.foo' is invalid: Standard key not of format: <key>_(-)1", "Unexpected error returned")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesBadCompoundKeyFormat() {
+func (s *MongoIndexesTestSuite) TestParseIndexBadCompoundKeyFormat() {
 
 	indexStr := "testcollection.(foobar"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(indexMap, "IndexMap should be nil")
+	collectionName, index, err := parseIndex(indexStr)
+
+	s.Equal(collectionName, "", "Collection name should be blank")
+	s.Nil(index, "Index should be nil")
 	s.NotNil(err, "Should return an error")
 	s.Equal(err.Error(), "Index 'testcollection.(foobar' is invalid: Compound key not of format: (<key1>_(-)1, <key2>_(-)1, ...)", "Unexpected error returned")
 }
 
-func (s *MongoIndexesTestSuite) TestParseIndexesBadCompoundKeySubKeyFormat() {
+func (s *MongoIndexesTestSuite) TestParseIndexBadCompoundKeySubKeyFormat() {
 
 	indexStr := "testcollection.(foo, bar_1)"
-	indexMap, err := parseIndexes(indexStr)
-	s.Nil(indexMap, "IndexMap should be nil")
+	collectionName, index, err := parseIndex(indexStr)
+
+	s.Equal(collectionName, "", "Collection name should be blank")
+	s.Nil(index, "Index should be nil")
 	s.NotNil(err, "Should return an error")
 	s.Equal(err.Error(), "Index 'testcollection.(foo, bar_1)' is invalid: Compound key sub-key not of format: <key>_(-)1", "Unexpected error returned")
 }
 
 func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 	// Configure test indexes
-	ConfigureIndexes(s.Session.Copy(), s.Config)
+	indexSession := s.Session.Copy()
+	ConfigureIndexes(indexSession, s.Config)
+	indexSession.Close()
 
 	// get the "testcollection" collection. This should have been auto-magically
 	// created by ConfigureIndexes
@@ -254,7 +260,9 @@ func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 func (s *MongoIndexesTestSuite) TestConfigureIndexesNoConfigFile() {
 
 	s.Config.IndexConfigPath = "./does_not_exist.conf"
-	s.NotPanics(func() { ConfigureIndexes(s.Session.Copy(), s.Config) }, "Should not panic if no config file is found")
+	indexSession := s.Session.Copy()
+	s.NotPanics(func() { ConfigureIndexes(indexSession, s.Config) }, "Should not panic if no config file is found")
+	indexSession.Close()
 }
 
 func (s *MongoIndexesTestSuite) compareIndexes(expected, actual []mgo.Index) {
