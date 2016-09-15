@@ -335,7 +335,7 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientId(c *C) {
 
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
-		"subject.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
+		"subject.referenceid": "4954037118555241963",
 		"subject.type":        "Patient",
 	})
 }
@@ -354,7 +354,7 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientTypeAndId(c
 	q := Query{"Condition", "patient=Patient/4954037118555241963"}
 
 	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{"subject.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"}, "subject.type": "Patient"})
+	c.Assert(o, DeepEquals, bson.M{"subject.referenceid": "4954037118555241963", "subject.type": "Patient"})
 }
 
 func (m *MongoSearchSuite) TestConditionPatientQueryByTypeAndId(c *C) {
@@ -422,7 +422,7 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageId(c *C) {
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
 		"entry.0.resource.resourceType": "MessageHeader",
-		"entry.0.resource._id":          bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
+		"entry.0.resource._id":          "4954037118555241963",
 	})
 }
 
@@ -1502,7 +1502,7 @@ func (m *MongoSearchSuite) TestConditionIdQueryObject(c *C) {
 	q := Query{"Condition", "_id=123456789"}
 
 	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{"_id": bson.RegEx{Pattern: "^123456789$", Options: "i"}})
+	c.Assert(o, DeepEquals, bson.M{"_id": "123456789"})
 }
 
 func (m *MongoSearchSuite) TestConditionIdQuery(c *C) {
@@ -1643,7 +1643,7 @@ func (m *MongoSearchSuite) TestConditionPatientAndCodeAndOnsetQueryObject(c *C) 
 	c.Assert(o, HasLen, 4)
 
 	// Check the patient part of the query
-	c.Assert(o["subject.referenceid"], DeepEquals, bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"})
+	c.Assert(o["subject.referenceid"], DeepEquals, "4954037118555241963")
 	c.Assert(o["subject.type"], Equals, "Patient")
 
 	// Check the code part of the query
@@ -1711,7 +1711,7 @@ func (m *MongoSearchSuite) TestConditionPatientAndMultipleCodesQueryObject(c *C)
 	c.Assert(o, HasLen, 3)
 
 	// Check the patient part of the query
-	c.Assert(o["subject.referenceid"], DeepEquals, bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"})
+	c.Assert(o["subject.referenceid"], DeepEquals, "4954037118555241963")
 	c.Assert(o["subject.type"], Equals, "Patient")
 
 	// Check the code part of the query
@@ -1744,15 +1744,15 @@ func (m *MongoSearchSuite) TestConditionMultiplePatientAndMultipleCodesQueryObje
 
 	expectedTopOr := []bson.M{
 		{
-			"subject.referenceid": bson.RegEx{Pattern: "^4954037118555241963$", Options: "i"},
+			"subject.referenceid": "4954037118555241963",
 			"subject.type":        "Patient",
 		},
 		{
-			"subject.referenceid": bson.RegEx{Pattern: "^123456789$", Options: "i"},
+			"subject.referenceid": "123456789",
 			"subject.type":        "Patient",
 		},
 		{
-			"subject.referenceid": bson.RegEx{Pattern: "^ABCDEFG$", Options: "i"},
+			"subject.referenceid": "ABCDEFG",
 			"subject.type":        "Patient",
 		},
 	}
