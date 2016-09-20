@@ -1601,6 +1601,9 @@ func (s *SearchPTSuite) TestQueryOptionsIncludeTargets(c *C) {
 	c.Assert(o.Include[0].Parameter.Name, Equals, "general-practitioner")
 	c.Assert(o.Include[0].Parameter.Targets, HasLen, 1)
 	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Organization")
+	// Test this once for not _include=* queries
+	c.Assert(o.IsIncludeAll, Equals, false)
+	c.Assert(o.IsRevincludeAll, Equals, false)
 
 	q = Query{Resource: "Patient", Query: "_include=Patient:general-practitioner:Practitioner"}
 	o = q.Options()
@@ -1618,6 +1621,19 @@ func (s *SearchPTSuite) TestQueryOptionsIncludeTargets(c *C) {
 	c.Assert(o.Include[0].Parameter.Targets, HasLen, 2)
 	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Organization")
 	c.Assert(o.Include[0].Parameter.Targets[1], Equals, "Practitioner")
+
+	q = Query{Resource: "Patient", Query: "_include=*"}
+	o = q.Options()
+	inclNames := getAllIncludeNames("Patient")
+	c.Assert(o.Include, HasLen, len(inclNames))
+	c.Assert(o.IsIncludeAll, Equals, true)
+	c.Assert(o.IsRevincludeAll, Equals, false)
+
+	// The order of these includes is not deterministic, so we just check for their existence
+	for _, include := range o.Include {
+		c.Assert(include.Resource, Equals, "Patient")
+		c.Assert(elementInSlice(include.Parameter.Name, inclNames), Equals, true)
+	}
 }
 
 func (s *SearchPTSuite) TestQueryOptionsInvalidIncludeParams(c *C) {
@@ -1650,6 +1666,9 @@ func (s *SearchPTSuite) TestQueryOptionsRevIncludeTargets(c *C) {
 	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "subject")
 	c.Assert(o.RevInclude[0].Parameter.Targets, HasLen, 1)
 	c.Assert(o.RevInclude[0].Parameter.Targets[0], Equals, "Patient")
+	// Test this once for not _revinclude=* queries
+	c.Assert(o.IsIncludeAll, Equals, false)
+	c.Assert(o.IsRevincludeAll, Equals, false)
 
 	q = Query{Resource: "Patient", Query: "_revinclude=Observation:subject"}
 	o = q.Options()
@@ -1658,6 +1677,19 @@ func (s *SearchPTSuite) TestQueryOptionsRevIncludeTargets(c *C) {
 	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "subject")
 	c.Assert(o.RevInclude[0].Parameter.Targets, HasLen, 1)
 	c.Assert(o.RevInclude[0].Parameter.Targets[0], Equals, "Patient")
+
+	q = Query{Resource: "Patient", Query: "_revinclude=*"}
+	o = q.Options()
+	revinclNames := getAllRevincludeNames("Patient")
+	c.Assert(o.RevInclude, HasLen, len(revinclNames))
+	c.Assert(o.IsIncludeAll, Equals, false)
+	c.Assert(o.IsRevincludeAll, Equals, true)
+
+	// The order of these revincludes is not deterministic, so we just check for their existence
+	for _, include := range o.RevInclude {
+		c.Assert(elementInSlice("Patient", include.Parameter.Targets), Equals, true)
+		c.Assert(elementInSlice(include.Parameter.Name, revinclNames), Equals, true)
+	}
 }
 
 func (s *SearchPTSuite) TestQueryOptionsInvalidRevIncludeParams(c *C) {
@@ -1752,4 +1784,44 @@ func (s *SearchPTSuite) TestQueryOptionsURLQueryParameters(c *C) {
 	c.Assert(all[3], DeepEquals, URLQueryParameter{Key: CountParam, Value: "123"})
 	c.Assert(all[4], DeepEquals, URLQueryParameter{Key: IncludeParam, Value: "Patient:general-practitioner"})
 	c.Assert(all[5], DeepEquals, URLQueryParameter{Key: RevIncludeParam, Value: "Encounter:patient"})
+}
+
+// getAllIncludeNames obtains the names of all includes that would be included with
+// _include=* from the SearchParameterDictionary
+func getAllIncludeNames(resourceName string) []string {
+	inclNames := []string{}
+	resourceSearchParamInfos, ok := SearchParameterDictionary[resourceName]
+
+	if ok {
+		for _, param := range resourceSearchParamInfos {
+			if param.Type == "reference" {
+				inclNames = append(inclNames, param.Name)
+			}
+		}
+	}
+	return inclNames
+}
+
+// getAllRevincludeNames obtains the names of all revincludes that would be included
+// with _revinclude=* from the SearchParameterDictionary
+func getAllRevincludeNames(resourceName string) []string {
+	revinclNames := []string{}
+	for _, resourceSearchParams := range SearchParameterDictionary {
+		for _, revInclParam := range resourceSearchParams {
+			if revInclParam.Type == "reference" && contains(revInclParam.Targets, resourceName) {
+				revinclNames = append(revinclNames, revInclParam.Name)
+			}
+		}
+	}
+	return revinclNames
+}
+
+// elementInSlice tests if a string element is in a larger slice of strings
+func elementInSlice(element string, slice []string) bool {
+	for _, el := range slice {
+		if element == el {
+			return true
+		}
+	}
+	return false
 }
