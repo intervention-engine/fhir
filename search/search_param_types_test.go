@@ -1601,6 +1601,9 @@ func (s *SearchPTSuite) TestQueryOptionsIncludeTargets(c *C) {
 	c.Assert(o.Include[0].Parameter.Name, Equals, "general-practitioner")
 	c.Assert(o.Include[0].Parameter.Targets, HasLen, 1)
 	c.Assert(o.Include[0].Parameter.Targets[0], Equals, "Organization")
+	// Test this once for not _include=* queries
+	c.Assert(o.IsIncludeAll, Equals, false)
+	c.Assert(o.IsRevincludeAll, Equals, false)
 
 	q = Query{Resource: "Patient", Query: "_include=Patient:general-practitioner:Practitioner"}
 	o = q.Options()
@@ -1624,6 +1627,7 @@ func (s *SearchPTSuite) TestQueryOptionsIncludeTargets(c *C) {
 	inclNames := getAllIncludeNames("Patient")
 	c.Assert(o.Include, HasLen, len(inclNames))
 	c.Assert(o.IsIncludeAll, Equals, true)
+	c.Assert(o.IsRevincludeAll, Equals, false)
 
 	// The order of these includes is not deterministic, so we just check for their existence
 	for _, include := range o.Include {
@@ -1662,6 +1666,9 @@ func (s *SearchPTSuite) TestQueryOptionsRevIncludeTargets(c *C) {
 	c.Assert(o.RevInclude[0].Parameter.Name, Equals, "subject")
 	c.Assert(o.RevInclude[0].Parameter.Targets, HasLen, 1)
 	c.Assert(o.RevInclude[0].Parameter.Targets[0], Equals, "Patient")
+	// Test this once for not _revinclude=* queries
+	c.Assert(o.IsIncludeAll, Equals, false)
+	c.Assert(o.IsRevincludeAll, Equals, false)
 
 	q = Query{Resource: "Patient", Query: "_revinclude=Observation:subject"}
 	o = q.Options()
@@ -1675,6 +1682,7 @@ func (s *SearchPTSuite) TestQueryOptionsRevIncludeTargets(c *C) {
 	o = q.Options()
 	revinclNames := getAllRevincludeNames("Patient")
 	c.Assert(o.RevInclude, HasLen, len(revinclNames))
+	c.Assert(o.IsIncludeAll, Equals, false)
 	c.Assert(o.IsRevincludeAll, Equals, true)
 
 	// The order of these revincludes is not deterministic, so we just check for their existence
