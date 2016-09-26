@@ -50,9 +50,13 @@ func (f *FHIRServer) Run(config Config) {
 	log.Println("Connected to mongodb")
 	defer session.Close()
 
-	Database = session.DB("fhir")
+	Database = session.DB(config.DatabaseName)
 
 	RegisterRoutes(f.Engine, f.MiddlewareConfig, NewMongoDataAccessLayer(Database), config)
+
+	indexSession := session.Copy()
+	ConfigureIndexes(indexSession, config)
+	indexSession.Close()
 
 	for _, ar := range f.AfterRoutes {
 		ar(f.Engine)
