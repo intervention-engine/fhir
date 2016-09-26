@@ -41,7 +41,7 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 
 	// Set up the database
 	var err error
-	s.Session, err = mgo.Dial(config.ServerURL)
+	s.Session, err = mgo.Dial("localhost")
 	util.CheckErr(err)
 	s.Database = s.Session.DB(config.DatabaseName)
 
