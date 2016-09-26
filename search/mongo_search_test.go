@@ -494,6 +494,30 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageDestination(c *C) {
 	c.Assert(num, Equals, 0)
 }
 
+// These tests ensure that a modifier works with a chained search
+func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageHeaderDestination(c *C) {
+	q := Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/fhir"}
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"entry.0.resource.resourceType":         "MessageHeader",
+		"entry.0.resource.destination.endpoint": "http://acme.com/ehr/fhir",
+	})
+}
+
+func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageHeaderDestination(c *C) {
+	q := Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/fhir"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	num, err := mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 1)
+
+	q = Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/foo"}
+	mq = m.MongoSearcher.CreateQuery(q)
+	num, err = mq.Count()
+	util.CheckErr(err)
+	c.Assert(num, Equals, 0)
+}
+
 // Test date searches on DateTime / Period
 
 func (m *MongoSearchSuite) TestConditionOnsetQueryObject(c *C) {
