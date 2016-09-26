@@ -1314,8 +1314,8 @@ func ParseParamNameModifierAndPostFix(fullParam string) (param string, modifier 
 		param = split[0]
 		postfix = split[1]
 	}
-	if strings.Contains(fullParam, ":") {
-		split := strings.SplitN(fullParam, ":", 2)
+	if strings.Contains(param, ":") {
+		split := strings.SplitN(param, ":", 2)
 		param = split[0]
 		modifier = split[1]
 	}
