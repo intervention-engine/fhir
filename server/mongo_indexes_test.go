@@ -59,7 +59,7 @@ func (s *MongoIndexesTestSuite) SetupSuite() {
 	s.DBServer.SetPath("./testdb")
 
 	s.Connection = new(MongoConnection)
-	s.Connection.DatabaseName = s.Config.DatabaseName
+	s.Connection.SetDatabaseName(s.Config.DatabaseName)
 	s.Connection.SetSession(s.DBServer.Session())
 
 	// Set gin to release mode (less verbose output)

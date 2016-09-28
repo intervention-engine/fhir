@@ -16,14 +16,19 @@ import (
 
 // MongoConnection manages the direct connection to the Mongo database
 type MongoConnection struct {
-	session      *mgo.Session
-	DatabaseName string
+	session *mgo.Session
+	dbname  string
 }
 
 // Connect establishes a session with the mongo database
 func (dc *MongoConnection) Connect(host string) (err error) {
 	dc.session, err = mgo.Dial(host)
 	return
+}
+
+// SetDatabaseName sets the name of the database MongoConnection should use
+func (dc *MongoConnection) SetDatabaseName(dbname string) {
+	dc.dbname = dbname
 }
 
 // SetSession allows you to set the MongoConnection session to an existing session
@@ -45,14 +50,14 @@ func (dc *MongoConnection) SetTimeout(d time.Duration) {
 // Copy returns a copy of the current MongoConnection and session
 func (dc *MongoConnection) Copy() *MongoConnection {
 	return &MongoConnection{
-		session:      dc.session.Copy(),
-		DatabaseName: dc.DatabaseName,
+		session: dc.session.Copy(),
+		dbname:  dc.dbname,
 	}
 }
 
 // Database returns a database accessible from the current session
 func (dc *MongoConnection) Database() *mgo.Database {
-	return dc.session.DB(dc.DatabaseName)
+	return dc.session.DB(dc.dbname)
 }
 
 // Close closes the current database session
@@ -61,9 +66,9 @@ func (dc *MongoConnection) Close() {
 }
 
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
-func NewMongoDataAccessLayer(dc *MongoConnection, interceptors map[string]InterceptorList) DataAccessLayer {
+func NewMongoDataAccessLayer(connection *MongoConnection, interceptors map[string]InterceptorList) DataAccessLayer {
 	return &mongoDataAccessLayer{
-		Connection:   dc,
+		Connection:   connection,
 		Interceptors: interceptors,
 	}
 }

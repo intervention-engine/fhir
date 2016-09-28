@@ -40,7 +40,7 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 		panic(err)
 	}
 
-	s.Connection.DatabaseName = "fhir-test"
+	s.Connection.SetDatabaseName("fhir-test")
 
 	// Build routes for testing
 	s.Engine = gin.New()

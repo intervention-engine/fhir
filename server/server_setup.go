@@ -70,7 +70,7 @@ func (f *FHIRServer) Run(config Config) {
 
 	// Setup the database connection
 	connection := new(MongoConnection)
-	connection.DatabaseName = config.DatabaseName
+	connection.SetDatabaseName(config.DatabaseName)
 
 	err = connection.Connect(f.DatabaseHost)
 	if err != nil {

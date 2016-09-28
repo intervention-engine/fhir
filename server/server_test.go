@@ -46,7 +46,7 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 		panic(err)
 	}
 
-	s.Connection.DatabaseName = config.DatabaseName
+	s.Connection.SetDatabaseName(config.DatabaseName)
 
 	// Set gin to release mode (less verbose output)
 	gin.SetMode(gin.ReleaseMode)
