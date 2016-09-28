@@ -29,8 +29,7 @@ type MongoIndexesTestSuite struct {
 	DBServer     *dbtest.DBServer
 	EST          *time.Location
 	Local        *time.Location
-	Session      *mgo.Session
-	Database     *mgo.Database
+	Connection   *MongoConnection
 	Engine       *gin.Engine
 	Server       *httptest.Server
 	Config       Config
@@ -58,22 +57,24 @@ func (s *MongoIndexesTestSuite) SetupSuite() {
 	// setup the mongo database
 	s.DBServer = &dbtest.DBServer{}
 	s.DBServer.SetPath("./testdb")
-	s.Session = s.DBServer.Session()
-	s.Database = s.Session.DB(s.Config.DatabaseName)
+
+	s.Connection = new(MongoConnection)
+	s.Connection.DatabaseName = s.Config.DatabaseName
+	s.Connection.SetSession(s.DBServer.Session())
 
 	// Set gin to release mode (less verbose output)
 	gin.SetMode(gin.ReleaseMode)
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Database, s.Interceptors), s.Config)
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Connection, s.Interceptors), s.Config)
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)
 }
 
 func (s *MongoIndexesTestSuite) TearDownSuite() {
-	s.Session.Close()
+	s.Connection.Close()
 	s.DBServer.Wipe()
 	s.DBServer.Stop()
 
@@ -237,13 +238,11 @@ func (s *MongoIndexesTestSuite) TestParseIndexBadCompoundKeySubKeyFormat() {
 
 func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 	// Configure test indexes
-	indexSession := s.Session.Copy()
-	ConfigureIndexes(indexSession, s.Config)
-	indexSession.Close()
+	ConfigureIndexes(s.Connection, s.Config)
 
 	// get the "testcollection" collection. This should have been auto-magically
 	// created by ConfigureIndexes
-	c := s.Database.C("testcollection")
+	c := s.Connection.Database().C("testcollection")
 
 	// get the indexes for this collection
 	indexes, err := c.Indexes()
@@ -260,9 +259,7 @@ func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 func (s *MongoIndexesTestSuite) TestConfigureIndexesNoConfigFile() {
 
 	s.Config.IndexConfigPath = "./does_not_exist.conf"
-	indexSession := s.Session.Copy()
-	s.NotPanics(func() { ConfigureIndexes(indexSession, s.Config) }, "Should not panic if no config file is found")
-	indexSession.Close()
+	s.NotPanics(func() { ConfigureIndexes(s.Connection, s.Config) }, "Should not panic if no config file is found")
 }
 
 func (s *MongoIndexesTestSuite) compareIndexes(expected, actual []mgo.Index) {

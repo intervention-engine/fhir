@@ -14,16 +14,62 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// MongoConnection manages the direct connection to the Mongo database
+type MongoConnection struct {
+	session      *mgo.Session
+	DatabaseName string
+}
+
+// Connect establishes a session with the mongo database
+func (dc *MongoConnection) Connect(host string) (err error) {
+	dc.session, err = mgo.Dial(host)
+	return
+}
+
+// SetSession allows you to set the MongoConnection session to an existing session
+// object rather than using Connect. Currently this is just used for testing. SetSession
+// will fail if the MongoConnection already has an established session.
+func (dc *MongoConnection) SetSession(session *mgo.Session) (err error) {
+	if dc.session != nil {
+		return errors.New("MongoConnection: Cannot set session, session already established")
+	}
+	dc.session = session
+	return nil
+}
+
+// SetTimeout sets the session timeout for the current connection. The default timeout is 1 minute.
+func (dc *MongoConnection) SetTimeout(d time.Duration) {
+	dc.session.SetSocketTimeout(d)
+}
+
+// Copy returns a copy of the current MongoConnection and session
+func (dc *MongoConnection) Copy() *MongoConnection {
+	return &MongoConnection{
+		session:      dc.session.Copy(),
+		DatabaseName: dc.DatabaseName,
+	}
+}
+
+// Database returns a database accessible from the current session
+func (dc *MongoConnection) Database() *mgo.Database {
+	return dc.session.DB(dc.DatabaseName)
+}
+
+// Close closes the current database session
+func (dc *MongoConnection) Close() {
+	dc.session.Close()
+}
+
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
-func NewMongoDataAccessLayer(db *mgo.Database, interceptors map[string]InterceptorList) DataAccessLayer {
+func NewMongoDataAccessLayer(dc *MongoConnection, interceptors map[string]InterceptorList) DataAccessLayer {
 	return &mongoDataAccessLayer{
-		Database:     db,
+		Connection:   dc,
 		Interceptors: interceptors,
 	}
 }
 
 type mongoDataAccessLayer struct {
-	Database     *mgo.Database
+	Connection   *MongoConnection
 	Interceptors map[string]InterceptorList
 }
 
@@ -100,7 +146,10 @@ func (dal *mongoDataAccessLayer) Get(id, resourceType string) (result interface{
 		return nil, convertMongoErr(err)
 	}
 
-	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
+	session := dal.Connection.Copy()
+	defer session.Close()
+
+	collection := session.Database().C(models.PluralizeLowerResourceName(resourceType))
 	result = models.NewStructForResourceName(resourceType)
 	if err = collection.FindId(bsonID.Hex()).One(result); err != nil {
 		return nil, convertMongoErr(err)
@@ -120,9 +169,12 @@ func (dal *mongoDataAccessLayer) PostWithID(id string, resource interface{}) err
 		return convertMongoErr(err)
 	}
 
+	session := dal.Connection.Copy()
+	defer session.Close()
+
 	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	resourceType := reflect.TypeOf(resource).Elem().Name()
-	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
+	collection := session.Database().C(models.PluralizeLowerResourceName(resourceType))
 	updateLastUpdatedDate(resource)
 
 	dal.invokeInterceptorsBefore("Create", resourceType, resource)
@@ -144,8 +196,11 @@ func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNe
 		return false, convertMongoErr(err)
 	}
 
+	session := dal.Connection.Copy()
+	defer session.Close()
+
 	resourceType := reflect.TypeOf(resource).Elem().Name()
-	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
+	collection := session.Database().C(models.PluralizeLowerResourceName(resourceType))
 	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	updateLastUpdatedDate(resource)
 
@@ -196,6 +251,9 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 		return convertMongoErr(err)
 	}
 
+	session := dal.Connection.Copy()
+	defer session.Close()
+
 	var resource interface{}
 	var getError error
 	hasInterceptor := dal.hasInterceptorsForOpAndType("Delete", resourceType)
@@ -207,7 +265,7 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 		dal.invokeInterceptorsBefore("Delete", resourceType, resource)
 	}
 
-	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
+	collection := session.Database().C(models.PluralizeLowerResourceName(resourceType))
 	err = collection.RemoveId(bsonID.Hex())
 
 	if hasInterceptor {
@@ -222,9 +280,13 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 }
 
 func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count int, err error) {
+
+	session := dal.Connection.Copy()
+	defer session.Close()
+
 	resourceType := query.Resource
-	searcher := search.NewMongoSearcher(dal.Database)
-	collection := dal.Database.C(models.PluralizeLowerResourceName(resourceType))
+	searcher := search.NewMongoSearcher(session.Database())
+	collection := session.Database().C(models.PluralizeLowerResourceName(resourceType))
 	defaultQueryObject := searcher.CreateQueryObject(query)
 	var queryObject bson.M
 
@@ -308,7 +370,11 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 }
 
 func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Query) (*models.Bundle, error) {
-	searcher := search.NewMongoSearcher(dal.Database)
+
+	session := dal.Connection.Copy()
+	defer session.Close()
+
+	searcher := search.NewMongoSearcher(session.Database())
 
 	var result interface{}
 	var err error
@@ -381,6 +447,10 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 }
 
 func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string, err error) {
+
+	session := dal.Connection.Copy()
+	defer session.Close()
+
 	// First create a new query with the unsupported query options filtered out
 	oldParams := searchQuery.URLQueryParameters(false)
 	newParams := search.URLQueryParameters{}
@@ -396,7 +466,7 @@ func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string
 	newQuery := search.Query{Resource: searchQuery.Resource, Query: newParams.Encode()}
 
 	// Now search on that query, unmarshaling to a temporary struct and converting results to []string
-	searcher := search.NewMongoSearcher(dal.Database)
+	searcher := search.NewMongoSearcher(session.Database())
 	mgoQuery := searcher.CreateQuery(newQuery).Select(bson.M{"_id": 1})
 	results := []struct {
 		ID string `bson:"_id"`

@@ -1,13 +1,6 @@
 package server
 
-import (
-	"github.com/intervention-engine/fhir/auth"
-	"gopkg.in/mgo.v2"
-)
-
-// Although we got rid of the global in the fhir package, the ie project still needs it
-// Once ie removes the dependency on the global, this should go away
-var Database *mgo.Database
+import "github.com/intervention-engine/fhir/auth"
 
 // DefaultConfig is the default server configuration
 var DefaultConfig = Config{

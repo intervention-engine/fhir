@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	mgo "gopkg.in/mgo.v2"
 )
@@ -21,9 +22,13 @@ type IndexMap map[string][]*mgo.Index
 // on the size of the collection it may take some time before the index is created.
 // This will block the current thread until the indexing completes, but will not block
 // other connections to the mongo database.
-func ConfigureIndexes(session *mgo.Session, config Config) {
+func ConfigureIndexes(connection *MongoConnection, config Config) {
 	var err error
-	db := session.DB(config.DatabaseName)
+
+	session := connection.Copy()
+	session.SetTimeout(5 * time.Minute) // Some indexes take a long time to build
+	defer session.Close()
+	db := session.Database()
 
 	// Read the config file
 	f, err := os.Open(config.IndexConfigPath)
