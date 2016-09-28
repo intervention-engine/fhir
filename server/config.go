@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/intervention-engine/fhir/auth"
-	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2"
 )
 
 // Although we got rid of the global in the fhir package, the ie project still needs it

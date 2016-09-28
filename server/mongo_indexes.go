@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2"
 )
 
 // IndexMap is a map of index arrays with the collection name as the key. Each index array
@@ -25,10 +25,10 @@ type IndexMap map[string][]*mgo.Index
 func ConfigureIndexes(connection *MongoConnection, config Config) {
 	var err error
 
-	session := connection.Copy()
-	session.SetTimeout(5 * time.Minute) // Some indexes take a long time to build
-	defer session.Close()
-	db := session.Database()
+	conn := connection.Copy()
+	defer conn.Close()
+	conn.SetTimeout(5 * time.Minute) // Some indexes take a long time to build
+	db := conn.DB()
 
 	// Read the config file
 	f, err := os.Open(config.IndexConfigPath)

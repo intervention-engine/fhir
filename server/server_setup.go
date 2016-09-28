@@ -79,7 +79,7 @@ func (f *FHIRServer) Run(config Config) {
 	log.Println("Connected to mongodb")
 	defer connection.Close()
 
-	Database = connection.Database()
+	Database = connection.DB()
 
 	RegisterRoutes(f.Engine, f.MiddlewareConfig, NewMongoDataAccessLayer(connection, f.Interceptors), config)
 	ConfigureIndexes(connection, config)

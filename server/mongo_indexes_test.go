@@ -242,7 +242,7 @@ func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 
 	// get the "testcollection" collection. This should have been auto-magically
 	// created by ConfigureIndexes
-	c := s.Connection.Database().C("testcollection")
+	c := s.Connection.DB().C("testcollection")
 
 	// get the indexes for this collection
 	indexes, err := c.Indexes()

@@ -35,11 +35,7 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 	var err error
 	s.Connection = new(MongoConnection)
 	err = s.Connection.Connect("localhost")
-
-	if err != nil {
-		panic(err)
-	}
-
+	util.CheckErr(err)
 	s.Connection.SetDatabaseName("fhir-test")
 
 	// Build routes for testing
@@ -51,7 +47,7 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 }
 
 func (s *BatchControllerSuite) TearDownTest(c *C) {
-	s.Connection.Database().DropDatabase()
+	s.Connection.DB().DropDatabase()
 }
 
 func (s *BatchControllerSuite) TearDownSuite(c *C) {
@@ -91,10 +87,10 @@ func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
 	encounter2.Id = "56afe6b85cdc7ec329dfe6a4"
 
 	// Insert the conditions and encounters into the db
-	condCollection := s.Connection.Database().C("conditions")
+	condCollection := s.Connection.DB().C("conditions")
 	err := condCollection.Insert(condition, condition2)
 	util.CheckErr(err)
-	encCollection := s.Connection.Database().C("encounters")
+	encCollection := s.Connection.DB().C("encounters")
 	err = encCollection.Insert(encounter, encounter2)
 	util.CheckErr(err)
 
@@ -187,7 +183,7 @@ func (s *BatchControllerSuite) TestConditionalDeleteEntriesBundle(c *C) {
 	encounter4.Id = "56afe6b85cdc7ec329dfe6b4"
 
 	// Insert the encounters into the db
-	encCollection := s.Connection.Database().C("encounters")
+	encCollection := s.Connection.DB().C("encounters")
 	err := encCollection.Insert(encounter, encounter2, encounter3, encounter4)
 	util.CheckErr(err)
 
@@ -322,7 +318,7 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 
 		// make sure it was stored to the DB
 		rName := reflect.TypeOf(resEntry.Resource).Elem().Name()
-		coll := s.Connection.Database().C(models.PluralizeLowerResourceName(rName))
+		coll := s.Connection.DB().C(models.PluralizeLowerResourceName(rName))
 		num, err := coll.Find(bson.M{"_id": s.getResourceID(resEntry)}).Count()
 		util.CheckErr(err)
 		c.Assert(num, Equals, 1)
@@ -416,10 +412,10 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 	condition2.Id = "56afe6b85cdc7ec329dfe6a2"
 
 	// Insert the conditions into the db
-	patCollection := s.Connection.Database().C("patients")
+	patCollection := s.Connection.DB().C("patients")
 	err := patCollection.Insert(patient)
 	util.CheckErr(err)
-	condCollection := s.Connection.Database().C("conditions")
+	condCollection := s.Connection.DB().C("conditions")
 	err = condCollection.Insert(condition, condition2)
 	util.CheckErr(err)
 
@@ -608,10 +604,10 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	encounter2.Id = "56afe6b85cdc7ec329dfe6a7"
 
 	// Put those records in the db to delete or update
-	encCollection := s.Connection.Database().C("encounters")
+	encCollection := s.Connection.DB().C("encounters")
 	err := encCollection.Insert(encounter, encounter2)
 	util.CheckErr(err)
-	condCollection := s.Connection.Database().C("conditions")
+	condCollection := s.Connection.DB().C("conditions")
 	err = condCollection.Insert(condition)
 	util.CheckErr(err)
 
@@ -709,7 +705,7 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 
 		// make sure it was stored to the DB
 		rName := reflect.TypeOf(resEntry.Resource).Elem().Name()
-		coll := s.Connection.Database().C(models.PluralizeLowerResourceName(rName))
+		coll := s.Connection.DB().C(models.PluralizeLowerResourceName(rName))
 		num, err := coll.Find(bson.M{"_id": s.getResourceID(resEntry)}).Count()
 		util.CheckErr(err)
 		c.Assert(num, Equals, 1)

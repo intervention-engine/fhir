@@ -41,11 +41,7 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 	var err error
 	s.Connection = new(MongoConnection)
 	err = s.Connection.Connect("localhost")
-
-	if err != nil {
-		panic(err)
-	}
-
+	util.CheckErr(err)
 	s.Connection.SetDatabaseName(config.DatabaseName)
 
 	// Set gin to release mode (less verbose output)
@@ -66,11 +62,11 @@ func (s *ServerSuite) SetUpTest(c *C) {
 }
 
 func (s *ServerSuite) TearDownTest(c *C) {
-	s.Connection.Database().C("patients").DropCollection()
+	s.Connection.DB().C("patients").DropCollection()
 }
 
 func (s *ServerSuite) TearDownSuite(c *C) {
-	s.Connection.Database().DropDatabase()
+	s.Connection.DB().DropDatabase()
 	s.Connection.Close()
 	s.Server.Close()
 }
@@ -259,7 +255,7 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 	util.CheckErr(err)
 
 	var result []models.Patient
-	collection := s.Connection.Database().C("patients")
+	collection := s.Connection.DB().C("patients")
 	iter := collection.Find(nil).Iter()
 	err = iter.All(&result)
 	util.CheckErr(err)
@@ -299,7 +295,7 @@ func (s *ServerSuite) TestCreatePatientByPut(c *C) {
 }
 
 func (s *ServerSuite) checkCreatedPatient(createdPatientID string, c *C) {
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	patient := models.Patient{}
 	err := patientCollection.Find(bson.M{"_id": createdPatientID}).One(&patient)
 	util.CheckErr(err)
@@ -330,7 +326,7 @@ func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
 		External:     new(bool),
 	}
 	condition.Id = bson.NewObjectId().Hex()
-	err = s.Connection.Database().C("conditions").Insert(condition)
+	err = s.Connection.DB().C("conditions").Insert(condition)
 	util.CheckErr(err)
 
 	assertBundleCount(c, s.Server.URL+"/Condition", 1, 1)
@@ -363,7 +359,7 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 	res, err := http.DefaultClient.Do(req)
 
 	c.Assert(res.StatusCode, Equals, 200)
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	patient := models.Patient{}
 	err = patientCollection.FindId(s.FixtureID).One(&patient)
 	util.CheckErr(err)
@@ -388,7 +384,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientNoMatch(c *C) {
 	splitLocation := strings.Split(res.Header["Location"][0], "/")
 	createdPatientID := splitLocation[len(splitLocation)-1]
 
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	count, err := patientCollection.Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 2)
@@ -421,7 +417,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 	res, err := http.DefaultClient.Do(req)
 
 	c.Assert(res.StatusCode, Equals, 200)
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	count, err := patientCollection.Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 1)
@@ -452,7 +448,7 @@ func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
 	c.Assert(res.StatusCode, Equals, 412)
 
 	// Ensure there are still only two
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	count, err := patientCollection.Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 2)
@@ -484,14 +480,14 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	res, err = http.DefaultClient.Do(req)
 
 	c.Assert(res.StatusCode, Equals, 204)
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	count, err := patientCollection.FindId(createdPatientID).Count()
 	c.Assert(count, Equals, 0)
 }
 
 func (s *ServerSuite) TestConditionalDelete(c *C) {
 	// Add 39 more patients (with total 32 male and 8 female)
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	for i := 0; i < 39; i++ {
 		patient := loadPatientFromFixture("../fixtures/patient-example-a.json")
 		patient.Id = bson.NewObjectId().Hex()
@@ -563,7 +559,7 @@ func assertPagingLinkWithParams(c *C, link models.BundleLinkComponent, relation 
 }
 
 func (s *ServerSuite) insertPatientFromFixture(filePath string) *models.Patient {
-	patientCollection := s.Connection.Database().C("patients")
+	patientCollection := s.Connection.DB().C("patients")
 	patient := loadPatientFromFixture(filePath)
 	patient.Id = bson.NewObjectId().Hex()
 	err := patientCollection.Insert(patient)
