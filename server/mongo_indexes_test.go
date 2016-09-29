@@ -26,15 +26,16 @@ var expectedIndexes = []mgo.Index{
 
 type MongoIndexesTestSuite struct {
 	suite.Suite
-	DBServer     *dbtest.DBServer
-	EST          *time.Location
-	Local        *time.Location
-	Connection   *MongoConnection
-	Engine       *gin.Engine
-	Server       *httptest.Server
-	Config       Config
-	Interceptors map[string]InterceptorList
-	FixtureID    string
+	DBServer       *dbtest.DBServer
+	EST            *time.Location
+	Local          *time.Location
+	initialSession *mgo.Session
+	MasterSession  *MasterSession
+	Engine         *gin.Engine
+	Server         *httptest.Server
+	Config         Config
+	Interceptors   map[string]InterceptorList
+	FixtureID      string
 }
 
 func (s *MongoIndexesTestSuite) SetupSuite() {
@@ -57,24 +58,22 @@ func (s *MongoIndexesTestSuite) SetupSuite() {
 	// setup the mongo database
 	s.DBServer = &dbtest.DBServer{}
 	s.DBServer.SetPath("./testdb")
-
-	s.Connection = new(MongoConnection)
-	s.Connection.SetDatabaseName(s.Config.DatabaseName)
-	s.Connection.SetSession(s.DBServer.Session())
+	s.initialSession = s.DBServer.Session()
+	s.MasterSession = NewMasterSession(s.initialSession, s.Config.DatabaseName)
 
 	// Set gin to release mode (less verbose output)
 	gin.SetMode(gin.ReleaseMode)
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Connection, s.Interceptors), s.Config)
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.MasterSession, s.Interceptors), s.Config)
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)
 }
 
 func (s *MongoIndexesTestSuite) TearDownSuite() {
-	s.Connection.Close()
+	s.initialSession.Close()
 	s.DBServer.Wipe()
 	s.DBServer.Stop()
 
@@ -238,11 +237,13 @@ func (s *MongoIndexesTestSuite) TestParseIndexBadCompoundKeySubKeyFormat() {
 
 func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 	// Configure test indexes
-	ConfigureIndexes(s.Connection, s.Config)
+	ConfigureIndexes(s.MasterSession, s.Config)
 
 	// get the "testcollection" collection. This should have been auto-magically
 	// created by ConfigureIndexes
-	c := s.Connection.DB().C("testcollection")
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+	c := worker.DB().C("testcollection")
 
 	// get the indexes for this collection
 	indexes, err := c.Indexes()
@@ -259,7 +260,7 @@ func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 func (s *MongoIndexesTestSuite) TestConfigureIndexesNoConfigFile() {
 
 	s.Config.IndexConfigPath = "./does_not_exist.conf"
-	s.NotPanics(func() { ConfigureIndexes(s.Connection, s.Config) }, "Should not panic if no config file is found")
+	s.NotPanics(func() { ConfigureIndexes(s.MasterSession, s.Config) }, "Should not panic if no config file is found")
 }
 
 func (s *MongoIndexesTestSuite) compareIndexes(expected, actual []mgo.Index) {

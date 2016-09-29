@@ -15,14 +15,16 @@ import (
 	"github.com/intervention-engine/fhir/models"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type BatchControllerSuite struct {
-	Connection   *MongoConnection
-	Engine       *gin.Engine
-	Server       *httptest.Server
-	Interceptors map[string]InterceptorList
+	initialSession *mgo.Session
+	MasterSession  *MasterSession
+	Engine         *gin.Engine
+	Server         *httptest.Server
+	Interceptors   map[string]InterceptorList
 }
 
 var _ = Suite(&BatchControllerSuite{})
@@ -33,29 +35,34 @@ func (s *BatchControllerSuite) SetUpSuite(c *C) {
 
 	// Set up the database
 	var err error
-	s.Connection = new(MongoConnection)
-	err = s.Connection.Connect("localhost")
+	s.initialSession, err = mgo.Dial("localhost")
 	util.CheckErr(err)
-	s.Connection.SetDatabaseName("fhir-test")
+	s.MasterSession = NewMasterSession(s.initialSession, "fhir-test")
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Connection, s.Interceptors), Config{})
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.MasterSession, s.Interceptors), Config{})
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)
 }
 
 func (s *BatchControllerSuite) TearDownTest(c *C) {
-	s.Connection.DB().DropDatabase()
+	worker := s.MasterSession.GetWorkerSession()
+	worker.DB().DropDatabase()
+	worker.Close()
 }
 
 func (s *BatchControllerSuite) TearDownSuite(c *C) {
-	s.Connection.Close()
+	s.initialSession.Close()
 	s.Server.Close()
 }
 
 func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	// Put some records in the database to delete
 	condition := &models.Condition{
 		Subject: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
@@ -87,10 +94,10 @@ func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
 	encounter2.Id = "56afe6b85cdc7ec329dfe6a4"
 
 	// Insert the conditions and encounters into the db
-	condCollection := s.Connection.DB().C("conditions")
+	condCollection := worker.DB().C("conditions")
 	err := condCollection.Insert(condition, condition2)
 	util.CheckErr(err)
-	encCollection := s.Connection.DB().C("encounters")
+	encCollection := worker.DB().C("encounters")
 	err = encCollection.Insert(encounter, encounter2)
 	util.CheckErr(err)
 
@@ -164,6 +171,10 @@ func (s *BatchControllerSuite) TestDeleteEntriesBundle(c *C) {
 }
 
 func (s *BatchControllerSuite) TestConditionalDeleteEntriesBundle(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	// Put some records in the database to delete
 	encounter := &models.Encounter{
 		Status: "finished",
@@ -183,7 +194,7 @@ func (s *BatchControllerSuite) TestConditionalDeleteEntriesBundle(c *C) {
 	encounter4.Id = "56afe6b85cdc7ec329dfe6b4"
 
 	// Insert the encounters into the db
-	encCollection := s.Connection.DB().C("encounters")
+	encCollection := worker.DB().C("encounters")
 	err := encCollection.Insert(encounter, encounter2, encounter3, encounter4)
 	util.CheckErr(err)
 
@@ -265,6 +276,10 @@ func (s *BatchControllerSuite) TestConditionalDeleteEntriesBundle(c *C) {
 }
 
 func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	data, err := os.Open("../fixtures/john_peters_bundle.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -318,7 +333,7 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 
 		// make sure it was stored to the DB
 		rName := reflect.TypeOf(resEntry.Resource).Elem().Name()
-		coll := s.Connection.DB().C(models.PluralizeLowerResourceName(rName))
+		coll := worker.DB().C(models.PluralizeLowerResourceName(rName))
 		num, err := coll.Find(bson.M{"_id": s.getResourceID(resEntry)}).Count()
 		util.CheckErr(err)
 		c.Assert(num, Equals, 1)
@@ -370,6 +385,10 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 }
 
 func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	// Put some records in the database to update
 	patient := &models.Patient{
 		Identifier: []models.Identifier{
@@ -412,10 +431,10 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 	condition2.Id = "56afe6b85cdc7ec329dfe6a2"
 
 	// Insert the conditions into the db
-	patCollection := s.Connection.DB().C("patients")
+	patCollection := worker.DB().C("patients")
 	err := patCollection.Insert(patient)
 	util.CheckErr(err)
-	condCollection := s.Connection.DB().C("conditions")
+	condCollection := worker.DB().C("conditions")
 	err = condCollection.Insert(condition, condition2)
 	util.CheckErr(err)
 
@@ -527,6 +546,10 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 }
 
 func (s *BatchControllerSuite) TestConditionalUpdatesBundle(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	data, err := os.Open("../fixtures/conditional_update_bundle.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -583,6 +606,10 @@ func (s *BatchControllerSuite) TestConditionalUpdatesBundle(c *C) {
 }
 
 func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	// Create some records to delete or update
 	condition := &models.Condition{
 		Subject: &models.Reference{Reference: "https://example.com/base/Patient/4954037112938410473"},
@@ -604,10 +631,10 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	encounter2.Id = "56afe6b85cdc7ec329dfe6a7"
 
 	// Put those records in the db to delete or update
-	encCollection := s.Connection.DB().C("encounters")
+	encCollection := worker.DB().C("encounters")
 	err := encCollection.Insert(encounter, encounter2)
 	util.CheckErr(err)
-	condCollection := s.Connection.DB().C("conditions")
+	condCollection := worker.DB().C("conditions")
 	err = condCollection.Insert(condition)
 	util.CheckErr(err)
 
@@ -705,7 +732,7 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 
 		// make sure it was stored to the DB
 		rName := reflect.TypeOf(resEntry.Resource).Elem().Name()
-		coll := s.Connection.DB().C(models.PluralizeLowerResourceName(rName))
+		coll := worker.DB().C(models.PluralizeLowerResourceName(rName))
 		num, err := coll.Find(bson.M{"_id": s.getResourceID(resEntry)}).Count()
 		util.CheckErr(err)
 		c.Assert(num, Equals, 1)

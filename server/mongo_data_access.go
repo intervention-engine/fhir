@@ -14,78 +14,82 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// MongoConnection manages the direct connection to the Mongo database
-type MongoConnection struct {
+// MasterSession manages a master session connected to the Mongo database.
+// The user is responsible for creating and closing this master session.
+// Each request to the database should first obtain a new WorkerSession,
+// perform the desired operation(s), then close the WorkerSession.
+type MasterSession struct {
 	session *mgo.Session
 	dbname  string
 }
 
-// Connect establishes a session with the mongo database
-func (m *MongoConnection) Connect(host string) (err error) {
-	m.session, err = mgo.Dial(host)
+// WorkerSession is obtained from MasterSession.GetWorkerSession() and manages
+// a temporary copy of the master session. A WorkerSession should be used for all
+// requests to the database. When a WorkerSession is no longer needed it must
+// be closed.
+type WorkerSession struct {
+	session *mgo.Session
+	dbname  string
+}
+
+// NewMasterSession returns a new MasterSession object with an established
+// session and database. Once instantiated the MasterSession object cannot
+// be changed.
+func NewMasterSession(session *mgo.Session, dbname string) (master *MasterSession) {
+	return &MasterSession{
+		session: session,
+		dbname:  dbname,
+	}
+}
+
+// GetWorkerSession returns a new WorkerSession with a copy of the master
+// mongo session.
+func (ms *MasterSession) GetWorkerSession() (worker *WorkerSession) {
+
+	if ms.session == nil {
+		return nil
+	}
+
+	return &WorkerSession{
+		session: ms.session.Copy(),
+		dbname:  ms.dbname,
+	}
+}
+
+// SetTimeout sets the session timeout for requests made using
+// the worker's session. The default timeout is 1 minute.
+func (ws *WorkerSession) SetTimeout(d time.Duration) {
+	if ws.session != nil {
+		ws.session.SetSocketTimeout(d)
+	}
+}
+
+// DB returns the mongo database available on the current session.
+func (ws *WorkerSession) DB() (db *mgo.Database) {
+	if ws.session != nil && ws.dbname != "" {
+		db = ws.session.DB(ws.dbname)
+	}
 	return
 }
 
-// SetDatabaseName sets the name of the database MongoConnection should use
-func (m *MongoConnection) SetDatabaseName(dbname string) {
-	m.dbname = dbname
-}
-
-// SetSession allows you to set the MongoConnection session to an existing session
-// object rather than using Connect. Currently this is just used for testing. SetSession
-// will fail if the MongoConnection already has an established session.
-func (m *MongoConnection) SetSession(session *mgo.Session) (err error) {
-	if m.session != nil {
-		return errors.New("MongoConnection: Cannot set session, session already established")
-	}
-	m.session = session
-	return nil
-}
-
-// SetTimeout sets the session timeout for the current connection. The default timeout is 1 minute.
-func (m *MongoConnection) SetTimeout(d time.Duration) {
-	if m.session != nil {
-		m.session.SetSocketTimeout(d)
-	}
-}
-
-// Copy returns a copy of the current MongoConnection and session
-func (m *MongoConnection) Copy() *MongoConnection {
-	var session *mgo.Session
-
-	if m.session != nil {
-		session = m.session.Copy()
-	}
-
-	return &MongoConnection{
-		session: session,
-		dbname:  m.dbname,
-	}
-}
-
-// DB returns a database accessible from the current session
-func (m *MongoConnection) DB() *mgo.Database {
-	return m.session.DB(m.dbname)
-}
-
-// Close closes the current database session
-func (m *MongoConnection) Close() {
-	if m.session != nil {
-		m.session.Close()
+// Close closes the master session copy used by WorkerSession
+func (ws *WorkerSession) Close() {
+	if ws.session != nil {
+		ws.session.Close()
 	}
 }
 
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
-func NewMongoDataAccessLayer(connection *MongoConnection, interceptors map[string]InterceptorList) DataAccessLayer {
+func NewMongoDataAccessLayer(ms *MasterSession, interceptors map[string]InterceptorList) DataAccessLayer {
 	return &mongoDataAccessLayer{
-		Connection:   connection,
-		Interceptors: interceptors,
+		MasterSession: ms,
+		Interceptors:  interceptors,
 	}
 }
 
 type mongoDataAccessLayer struct {
-	Connection   *MongoConnection
-	Interceptors map[string]InterceptorList
+	MasterSession *MasterSession
+	Interceptors  map[string]InterceptorList
 }
 
 // InterceptorList is a list of interceptors registered for a given database operation
@@ -161,10 +165,10 @@ func (dal *mongoDataAccessLayer) Get(id, resourceType string) (result interface{
 		return nil, convertMongoErr(err)
 	}
 
-	connection := dal.Connection.Copy()
-	defer connection.Close()
+	worker := dal.MasterSession.GetWorkerSession()
+	defer worker.Close()
 
-	collection := connection.DB().C(models.PluralizeLowerResourceName(resourceType))
+	collection := worker.DB().C(models.PluralizeLowerResourceName(resourceType))
 	result = models.NewStructForResourceName(resourceType)
 	if err = collection.FindId(bsonID.Hex()).One(result); err != nil {
 		return nil, convertMongoErr(err)
@@ -184,12 +188,12 @@ func (dal *mongoDataAccessLayer) PostWithID(id string, resource interface{}) err
 		return convertMongoErr(err)
 	}
 
-	connection := dal.Connection.Copy()
-	defer connection.Close()
+	worker := dal.MasterSession.GetWorkerSession()
+	defer worker.Close()
 
 	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	resourceType := reflect.TypeOf(resource).Elem().Name()
-	collection := connection.DB().C(models.PluralizeLowerResourceName(resourceType))
+	collection := worker.DB().C(models.PluralizeLowerResourceName(resourceType))
 	updateLastUpdatedDate(resource)
 
 	dal.invokeInterceptorsBefore("Create", resourceType, resource)
@@ -211,11 +215,11 @@ func (dal *mongoDataAccessLayer) Put(id string, resource interface{}) (createdNe
 		return false, convertMongoErr(err)
 	}
 
-	connection := dal.Connection.Copy()
-	defer connection.Close()
+	worker := dal.MasterSession.GetWorkerSession()
+	defer worker.Close()
 
 	resourceType := reflect.TypeOf(resource).Elem().Name()
-	collection := connection.DB().C(models.PluralizeLowerResourceName(resourceType))
+	collection := worker.DB().C(models.PluralizeLowerResourceName(resourceType))
 	reflect.ValueOf(resource).Elem().FieldByName("Id").SetString(bsonID.Hex())
 	updateLastUpdatedDate(resource)
 
@@ -266,8 +270,8 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 		return convertMongoErr(err)
 	}
 
-	connection := dal.Connection.Copy()
-	defer connection.Close()
+	worker := dal.MasterSession.GetWorkerSession()
+	defer worker.Close()
 
 	var resource interface{}
 	var getError error
@@ -280,7 +284,7 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 		dal.invokeInterceptorsBefore("Delete", resourceType, resource)
 	}
 
-	collection := connection.DB().C(models.PluralizeLowerResourceName(resourceType))
+	collection := worker.DB().C(models.PluralizeLowerResourceName(resourceType))
 	err = collection.RemoveId(bsonID.Hex())
 
 	if hasInterceptor {
@@ -296,12 +300,12 @@ func (dal *mongoDataAccessLayer) Delete(id, resourceType string) error {
 
 func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count int, err error) {
 
-	connection := dal.Connection.Copy()
-	defer connection.Close()
+	worker := dal.MasterSession.GetWorkerSession()
+	defer worker.Close()
 
 	resourceType := query.Resource
-	searcher := search.NewMongoSearcher(connection.DB())
-	collection := connection.DB().C(models.PluralizeLowerResourceName(resourceType))
+	searcher := search.NewMongoSearcher(worker.DB())
+	collection := worker.DB().C(models.PluralizeLowerResourceName(resourceType))
 	defaultQueryObject := searcher.CreateQueryObject(query)
 	var queryObject bson.M
 
@@ -386,10 +390,10 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 
 func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Query) (*models.Bundle, error) {
 
-	connection := dal.Connection.Copy()
-	defer connection.Close()
+	worker := dal.MasterSession.GetWorkerSession()
+	defer worker.Close()
 
-	searcher := search.NewMongoSearcher(connection.DB())
+	searcher := search.NewMongoSearcher(worker.DB())
 
 	var result interface{}
 	var err error
@@ -463,8 +467,8 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 
 func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string, err error) {
 
-	connection := dal.Connection.Copy()
-	defer connection.Close()
+	worker := dal.MasterSession.GetWorkerSession()
+	defer worker.Close()
 
 	// First create a new query with the unsupported query options filtered out
 	oldParams := searchQuery.URLQueryParameters(false)
@@ -481,7 +485,7 @@ func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string
 	newQuery := search.Query{Resource: searchQuery.Resource, Query: newParams.Encode()}
 
 	// Now search on that query, unmarshaling to a temporary struct and converting results to []string
-	searcher := search.NewMongoSearcher(connection.DB())
+	searcher := search.NewMongoSearcher(worker.DB())
 	mgoQuery := searcher.CreateQuery(newQuery).Select(bson.M{"_id": 1})
 	results := []struct {
 		ID string `bson:"_id"`

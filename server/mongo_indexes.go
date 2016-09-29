@@ -22,13 +22,12 @@ type IndexMap map[string][]*mgo.Index
 // on the size of the collection it may take some time before the index is created.
 // This will block the current thread until the indexing completes, but will not block
 // other connections to the mongo database.
-func ConfigureIndexes(connection *MongoConnection, config Config) {
+func ConfigureIndexes(ms *MasterSession, config Config) {
 	var err error
 
-	conn := connection.Copy()
-	defer conn.Close()
-	conn.SetTimeout(5 * time.Minute) // Some indexes take a long time to build
-	db := conn.DB()
+	worker := ms.GetWorkerSession()
+	defer worker.Close()
+	worker.SetTimeout(5 * time.Minute) // Some indexes take a long time to build
 
 	// Read the config file
 	f, err := os.Open(config.IndexConfigPath)
@@ -61,7 +60,7 @@ func ConfigureIndexes(connection *MongoConnection, config Config) {
 
 	// ensure all indexes in the config file
 	for k := range indexMap {
-		collection := db.C(k)
+		collection := worker.DB().C(k)
 
 		for _, index := range indexMap[k] {
 			log.Printf("Ensuring index: %s.%s: %s\n", config.DatabaseName, k, sprintIndexKeys(index))

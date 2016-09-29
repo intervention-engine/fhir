@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/itsjamie/gin-cors"
+	"gopkg.in/mgo.v2"
 )
 
 type AfterRoutes func(*gin.Engine)
@@ -68,21 +69,22 @@ func NewServer(databaseHost string) *FHIRServer {
 func (f *FHIRServer) Run(config Config) {
 	var err error
 
-	// Setup the database connection
-	connection := new(MongoConnection)
-	connection.SetDatabaseName(config.DatabaseName)
+	// Establish initial connection to mongo
+	session, err := mgo.Dial(f.DatabaseHost)
 
-	err = connection.Connect(f.DatabaseHost)
 	if err != nil {
 		panic(err)
 	}
+
+	defer session.Close()
+	Database = session.DB(config.DatabaseName)
 	log.Println("Connected to mongodb")
-	defer connection.Close()
 
-	Database = connection.DB()
+	// Establish master session
+	masterSession := NewMasterSession(session, config.DatabaseName)
 
-	RegisterRoutes(f.Engine, f.MiddlewareConfig, NewMongoDataAccessLayer(connection, f.Interceptors), config)
-	ConfigureIndexes(connection, config)
+	RegisterRoutes(f.Engine, f.MiddlewareConfig, NewMongoDataAccessLayer(masterSession, f.Interceptors), config)
+	ConfigureIndexes(masterSession, config)
 
 	for _, ar := range f.AfterRoutes {
 		ar(f.Engine)

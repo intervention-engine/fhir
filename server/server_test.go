@@ -16,15 +16,17 @@ import (
 	"github.com/intervention-engine/fhir/search"
 	"github.com/pebbe/util"
 	. "gopkg.in/check.v1"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 type ServerSuite struct {
-	Connection   *MongoConnection
-	Engine       *gin.Engine
-	Server       *httptest.Server
-	Interceptors map[string]InterceptorList
-	FixtureID    string
+	initialSession *mgo.Session
+	MasterSession  *MasterSession
+	Engine         *gin.Engine
+	Server         *httptest.Server
+	Interceptors   map[string]InterceptorList
+	FixtureID      string
 }
 
 func Test(t *testing.T) { TestingT(t) }
@@ -39,17 +41,16 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 
 	// Set up the database
 	var err error
-	s.Connection = new(MongoConnection)
-	err = s.Connection.Connect("localhost")
+	s.initialSession, err = mgo.Dial("localhost")
 	util.CheckErr(err)
-	s.Connection.SetDatabaseName(config.DatabaseName)
+	s.MasterSession = NewMasterSession(s.initialSession, "fhir-test")
 
 	// Set gin to release mode (less verbose output)
 	gin.SetMode(gin.ReleaseMode)
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.Connection, s.Interceptors), config)
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.MasterSession, s.Interceptors), config)
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)
@@ -62,12 +63,17 @@ func (s *ServerSuite) SetUpTest(c *C) {
 }
 
 func (s *ServerSuite) TearDownTest(c *C) {
-	s.Connection.DB().C("patients").DropCollection()
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+	worker.DB().C("patients").DropCollection()
 }
 
 func (s *ServerSuite) TearDownSuite(c *C) {
-	s.Connection.DB().DropDatabase()
-	s.Connection.Close()
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	worker.DB().DropDatabase()
+	s.initialSession.Close()
 	s.Server.Close()
 }
 
@@ -246,6 +252,10 @@ func (s *ServerSuite) TestGetNonExistingPatient(c *C) {
 }
 
 func (s *ServerSuite) TestShowPatient(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	res, err := http.Get(s.Server.URL + "/Patient")
 	util.CheckErr(err)
 
@@ -255,7 +265,7 @@ func (s *ServerSuite) TestShowPatient(c *C) {
 	util.CheckErr(err)
 
 	var result []models.Patient
-	collection := s.Connection.DB().C("patients")
+	collection := worker.DB().C("patients")
 	iter := collection.Find(nil).Iter()
 	err = iter.All(&result)
 	util.CheckErr(err)
@@ -295,7 +305,11 @@ func (s *ServerSuite) TestCreatePatientByPut(c *C) {
 }
 
 func (s *ServerSuite) checkCreatedPatient(createdPatientID string, c *C) {
-	patientCollection := s.Connection.DB().C("patients")
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	patientCollection := worker.DB().C("patients")
 	patient := models.Patient{}
 	err := patientCollection.Find(bson.M{"_id": createdPatientID}).One(&patient)
 	util.CheckErr(err)
@@ -307,6 +321,10 @@ func (s *ServerSuite) checkCreatedPatient(createdPatientID string, c *C) {
 }
 
 func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	// Add 1 more patient
 	patient := s.insertPatientFromFixture("../fixtures/patient-example-a.json")
 
@@ -326,7 +344,7 @@ func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
 		External:     new(bool),
 	}
 	condition.Id = bson.NewObjectId().Hex()
-	err = s.Connection.DB().C("conditions").Insert(condition)
+	err = worker.DB().C("conditions").Insert(condition)
 	util.CheckErr(err)
 
 	assertBundleCount(c, s.Server.URL+"/Condition", 1, 1)
@@ -349,6 +367,10 @@ func (s *ServerSuite) TestWrongResource(c *C) {
 }
 
 func (s *ServerSuite) TestUpdatePatient(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	data, err := os.Open("../fixtures/patient-example-c.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -359,7 +381,7 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 	res, err := http.DefaultClient.Do(req)
 
 	c.Assert(res.StatusCode, Equals, 200)
-	patientCollection := s.Connection.DB().C("patients")
+	patientCollection := worker.DB().C("patients")
 	patient := models.Patient{}
 	err = patientCollection.FindId(s.FixtureID).One(&patient)
 	util.CheckErr(err)
@@ -371,6 +393,10 @@ func (s *ServerSuite) TestUpdatePatient(c *C) {
 }
 
 func (s *ServerSuite) TestConditionalUpdatePatientNoMatch(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	data, err := os.Open("../fixtures/patient-example-c.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -384,7 +410,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientNoMatch(c *C) {
 	splitLocation := strings.Split(res.Header["Location"][0], "/")
 	createdPatientID := splitLocation[len(splitLocation)-1]
 
-	patientCollection := s.Connection.DB().C("patients")
+	patientCollection := worker.DB().C("patients")
 	count, err := patientCollection.Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 2)
@@ -407,6 +433,10 @@ func (s *ServerSuite) TestConditionalUpdatePatientNoMatch(c *C) {
 }
 
 func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	data, err := os.Open("../fixtures/patient-example-c.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -417,7 +447,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 	res, err := http.DefaultClient.Do(req)
 
 	c.Assert(res.StatusCode, Equals, 200)
-	patientCollection := s.Connection.DB().C("patients")
+	patientCollection := worker.DB().C("patients")
 	count, err := patientCollection.Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 1)
@@ -432,6 +462,10 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 }
 
 func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	// Add another duck to the database so we can have multiple results
 	p2 := s.insertPatientFromFixture("../fixtures/patient-example-b.json")
 
@@ -448,7 +482,7 @@ func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
 	c.Assert(res.StatusCode, Equals, 412)
 
 	// Ensure there are still only two
-	patientCollection := s.Connection.DB().C("patients")
+	patientCollection := worker.DB().C("patients")
 	count, err := patientCollection.Count()
 	util.CheckErr(err)
 	c.Assert(count, Equals, 2)
@@ -465,6 +499,10 @@ func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
 }
 
 func (s *ServerSuite) TestDeletePatient(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	data, err := os.Open("../fixtures/patient-example-d.json")
 	util.CheckErr(err)
 	defer data.Close()
@@ -480,14 +518,18 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	res, err = http.DefaultClient.Do(req)
 
 	c.Assert(res.StatusCode, Equals, 204)
-	patientCollection := s.Connection.DB().C("patients")
+	patientCollection := worker.DB().C("patients")
 	count, err := patientCollection.FindId(createdPatientID).Count()
 	c.Assert(count, Equals, 0)
 }
 
 func (s *ServerSuite) TestConditionalDelete(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
 	// Add 39 more patients (with total 32 male and 8 female)
-	patientCollection := s.Connection.DB().C("patients")
+	patientCollection := worker.DB().C("patients")
 	for i := 0; i < 39; i++ {
 		patient := loadPatientFromFixture("../fixtures/patient-example-a.json")
 		patient.Id = bson.NewObjectId().Hex()
@@ -559,7 +601,11 @@ func assertPagingLinkWithParams(c *C, link models.BundleLinkComponent, relation 
 }
 
 func (s *ServerSuite) insertPatientFromFixture(filePath string) *models.Patient {
-	patientCollection := s.Connection.DB().C("patients")
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	patientCollection := worker.DB().C("patients")
 	patient := loadPatientFromFixture(filePath)
 	patient.Id = bson.NewObjectId().Hex()
 	err := patientCollection.Insert(patient)
