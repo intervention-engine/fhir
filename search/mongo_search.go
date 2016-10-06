@@ -591,13 +591,13 @@ func (m *MongoSearcher) createTokenQueryObject(t *TokenParam) bson.M {
 				panic(createInvalidSearchError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", t.Name)))
 			}
 		case "code", "string":
-			// criteria isn't a bson, so just return the right answer
+			// We do case-insensitive matching for any string parameter. The "codes" that fall-through to this case
+			// are also case-insensitive matched. In practice only the "gender" code falls into this category. Case-sensitive
+			// codes are in violation of the FHIR spec but are a necessary performance tradeoff to avoid the use of regular expressions.
 			return buildBSON(p.Path, ci(t.Code))
 
 		case "id":
-			// code and id do not need the case-insensitive match. Case-sensitive codes
-			// are in violation of the FHIR spec but are a necessary performance tradeoff
-			// to avoid the use of regular expressions.
+			// IDs do not need the case-insensitive match.
 			return buildBSON(p.Path, t.Code)
 		}
 
