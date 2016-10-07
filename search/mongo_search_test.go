@@ -85,7 +85,7 @@ func (m *MongoSearchSuite) TestConditionCodeQueryObjectBySystemAndCode(c *C) {
 		"code.coding": bson.M{
 			"$elemMatch": bson.M{
 				"system": bson.RegEx{Pattern: "^http://snomed\\.info/sct$", Options: "i"},
-				"code":   bson.RegEx{Pattern: "^123641001$", Options: "i"},
+				"code":   "123641001",
 			},
 		},
 	})
@@ -122,7 +122,7 @@ func (m *MongoSearchSuite) TestConditionCodeQueryObjectByCode(c *C) {
 	q := Query{"Condition", "code=123641001"}
 
 	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{"code.coding.code": bson.RegEx{Pattern: "^123641001$", Options: "i"}})
+	c.Assert(o, DeepEquals, bson.M{"code.coding.code": "123641001"})
 }
 
 func (m *MongoSearchSuite) TestConditionCodeQueryByCode(c *C) {
@@ -197,7 +197,7 @@ func (m *MongoSearchSuite) TestImagingStudyBodySiteQueryObjectBySystemAndCode(c 
 		"series": bson.M{
 			"$elemMatch": bson.M{
 				"bodySite.system": bson.RegEx{Pattern: "^http://snomed\\.info/sct$", Options: "i"},
-				"bodySite.code":   bson.RegEx{Pattern: "^67734004$", Options: "i"},
+				"bodySite.code":   "67734004",
 			},
 		},
 	})
@@ -228,7 +228,7 @@ func (m *MongoSearchSuite) TestEncounterIdentifierQueryObjectBySystemAndValue(c 
 		"identifier": bson.M{
 			"$elemMatch": bson.M{
 				"system": bson.RegEx{Pattern: "^http://acme\\.com$", Options: "i"},
-				"value":  bson.RegEx{Pattern: "^1$", Options: "i"},
+				"value":  "1",
 			},
 		},
 	})
@@ -1306,14 +1306,14 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndSystemAndCode(c
 				"component": bson.M{
 					"$elemMatch": bson.M{
 						"valueQuantity.value":  bson.M{"$gte": 184.5, "$lt": 185.5},
-						"valueQuantity.code":   bson.RegEx{Pattern: "^\\[lb_av\\]$", Options: "i"},
+						"valueQuantity.code":   "[lb_av]",
 						"valueQuantity.system": bson.RegEx{Pattern: "^http://unitsofmeasure\\.org$", Options: "i"},
 					},
 				},
 			},
 			bson.M{
 				"valueQuantity.value":  bson.M{"$gte": 184.5, "$lt": 185.5},
-				"valueQuantity.code":   bson.RegEx{Pattern: "^\\[lb_av\\]$", Options: "i"},
+				"valueQuantity.code":   "[lb_av]",
 				"valueQuantity.system": bson.RegEx{Pattern: "^http://unitsofmeasure\\.org$", Options: "i"},
 			},
 		},
@@ -1562,7 +1562,7 @@ func (m *MongoSearchSuite) TestConditionTagQueryObject(c *C) {
 		"meta.tag": bson.M{
 			"$elemMatch": bson.M{
 				"system": bson.RegEx{Pattern: "^foo$", Options: "i"},
-				"code":   bson.RegEx{Pattern: "^bar$", Options: "i"},
+				"code":   "bar",
 			}},
 	})
 }
@@ -1597,21 +1597,21 @@ func (m *MongoSearchSuite) TestConditionMultipleCodesQueryObject(c *C) {
 				"code.coding": bson.M{
 					"$elemMatch": bson.M{
 						"system": bson.RegEx{Pattern: "^http://hl7\\.org/fhir/sid/icd-9$", Options: "i"},
-						"code":   bson.RegEx{Pattern: "^428\\.0$", Options: "i"},
+						"code":   "428.0",
 					}},
 			},
 			bson.M{
 				"code.coding": bson.M{
 					"$elemMatch": bson.M{
 						"system": bson.RegEx{Pattern: "^http://snomed\\.info/sct$", Options: "i"},
-						"code":   bson.RegEx{Pattern: "^981000124106$", Options: "i"},
+						"code":   "981000124106",
 					}},
 			},
 			bson.M{
 				"code.coding": bson.M{
 					"$elemMatch": bson.M{
 						"system": bson.RegEx{Pattern: "^http://hl7\\.org/fhir/sid/icd-10$", Options: "i"},
-						"code":   bson.RegEx{Pattern: "^I20\\.0$", Options: "i"},
+						"code":   "I20.0",
 					}},
 			},
 		},
@@ -1650,7 +1650,7 @@ func (m *MongoSearchSuite) TestConditionPatientAndCodeAndOnsetQueryObject(c *C) 
 	c.Assert(o["code.coding"], DeepEquals, bson.M{
 		"$elemMatch": bson.M{
 			"system": bson.RegEx{Pattern: "^http://hl7\\.org/fhir/sid/icd-9$", Options: "i"},
-			"code":   bson.RegEx{Pattern: "^428\\.0$", Options: "i"},
+			"code":   "428.0",
 		},
 	})
 
@@ -1720,7 +1720,7 @@ func (m *MongoSearchSuite) TestConditionPatientAndMultipleCodesQueryObject(c *C)
 			"code.coding": bson.M{
 				"$elemMatch": bson.M{
 					"system": bson.RegEx{Pattern: "^http://hl7\\.org/fhir/sid/icd-9$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^428\\.0$", Options: "i"},
+					"code":   "428.0",
 				},
 			},
 		},
@@ -1728,7 +1728,7 @@ func (m *MongoSearchSuite) TestConditionPatientAndMultipleCodesQueryObject(c *C)
 			"code.coding": bson.M{
 				"$elemMatch": bson.M{
 					"system": bson.RegEx{Pattern: "^http://snomed\\.info/sct$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^981000124106$", Options: "i"},
+					"code":   "981000124106",
 				},
 			},
 		},
@@ -1762,7 +1762,7 @@ func (m *MongoSearchSuite) TestConditionMultiplePatientAndMultipleCodesQueryObje
 			"code.coding": bson.M{
 				"$elemMatch": bson.M{
 					"system": bson.RegEx{Pattern: "^http://hl7\\.org/fhir/sid/icd-9$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^428\\.0$", Options: "i"},
+					"code":   "428.0",
 				},
 			},
 		},
@@ -1770,7 +1770,7 @@ func (m *MongoSearchSuite) TestConditionMultiplePatientAndMultipleCodesQueryObje
 			"code.coding": bson.M{
 				"$elemMatch": bson.M{
 					"system": bson.RegEx{Pattern: "^http://snomed\\.info/sct$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^981000124106$", Options: "i"},
+					"code":   "981000124106",
 				},
 			},
 		},
@@ -1813,7 +1813,7 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsWithCount(c *C) {
 		"type.coding": bson.M{
 			"$elemMatch": bson.M{
 				"system": bson.RegEx{Pattern: "^http://www\\.ama-assn\\.org/go/cpt$", Options: "i"},
-				"code":   bson.RegEx{Pattern: "^99201$", Options: "i"},
+				"code":   "99201",
 			},
 		},
 	})
@@ -1842,7 +1842,7 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForOffset(c *C) {
 		"type.coding": bson.M{
 			"$elemMatch": bson.M{
 				"system": bson.RegEx{Pattern: "^http://www\\.ama-assn\\.org/go/cpt$", Options: "i"},
-				"code":   bson.RegEx{Pattern: "^99201$", Options: "i"},
+				"code":   "99201",
 			},
 		},
 	})
@@ -1871,7 +1871,7 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForCountAndOffset(c *C) 
 		"type.coding": bson.M{
 			"$elemMatch": bson.M{
 				"system": bson.RegEx{Pattern: "^http://www\\.ama-assn\\.org/go/cpt$", Options: "i"},
-				"code":   bson.RegEx{Pattern: "^99201$", Options: "i"},
+				"code":   "99201",
 			},
 		},
 	})
@@ -1986,7 +1986,7 @@ func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
 			"component.code.coding": bson.M{
 				"$elemMatch": bson.M{
 					"system": bson.RegEx{Pattern: "^http://loinc\\.org$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^17856-6$", Options: "i"},
+					"code":   "17856-6",
 				},
 			},
 		},
@@ -1994,7 +1994,7 @@ func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
 			"code.coding": bson.M{
 				"$elemMatch": bson.M{
 					"system": bson.RegEx{Pattern: "^http://loinc\\.org$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^17856-6$", Options: "i"},
+					"code":   "17856-6",
 				},
 			},
 		},
