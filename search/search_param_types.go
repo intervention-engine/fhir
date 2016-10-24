@@ -842,7 +842,16 @@ func ParseReferenceParam(paramStr string, info SearchParamInfo) *ReferenceParam 
 	if info.Postfix != "" {
 		typ := findReferencedType("", info)
 		q := Query{Resource: typ, Query: info.Postfix + "=" + paramStr}
-		return &ReferenceParam{info, ChainedQueryReference{Type: typ, ChainedQuery: q}}
+
+		// determine if the ChainedQueryReference is embedded (points to a Resource in
+		// the same document instead of a Reference in another collection.)
+		var isembedded bool
+		for _, path := range info.Paths {
+			if path.Type == "Resource" {
+				isembedded = true
+			}
+		}
+		return &ReferenceParam{info, ChainedQueryReference{Type: typ, ChainedQuery: q, IsEmbedded: isembedded}}
 	} else {
 		ref := unescape(paramStr)
 		re := regexp.MustCompile("\\/?(([^\\/]+)\\/)?([^\\/]+)$")
@@ -912,6 +921,7 @@ type ExternalReference struct {
 type ChainedQueryReference struct {
 	Type         string
 	ChainedQuery Query
+	IsEmbedded   bool
 }
 
 // StringParam represents a string-flavored search parameter.  The

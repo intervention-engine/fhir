@@ -399,8 +399,10 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	var err error
 	usesIncludes := len(searchQuery.Options().Include) > 0
 	usesRevIncludes := len(searchQuery.Options().RevInclude) > 0
+	usesChainedSearch := testUsesChainedSearch(searchQuery)
+
 	// Only use (slower) pipeline if it is needed
-	if usesIncludes || usesRevIncludes {
+	if usesIncludes || usesRevIncludes || usesChainedSearch {
 		result = models.NewSlicePlusForResourceName(searchQuery.Resource, 0, 0)
 		err = searcher.CreatePipeline(searchQuery).All(result)
 	} else {
@@ -463,6 +465,23 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	bundle.Link = generatePagingLinks(baseURL, searchQuery, total)
 
 	return &bundle, nil
+}
+
+// testUsesChainedSearch tests if a search.Query has at least one SearchParam
+// that is a ReferenceParam of type ChainedQueryReference; therefore the query
+// uses chained search.
+func testUsesChainedSearch(q search.Query) bool {
+	for _, p := range q.Params() {
+		switch p := p.(type) {
+		case *search.ReferenceParam:
+			// test if p is a chained search parameter
+			switch p.Reference.(type) {
+			case search.ChainedQueryReference:
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string, err error) {
