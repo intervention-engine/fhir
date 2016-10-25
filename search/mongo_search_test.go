@@ -456,7 +456,6 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientGender(c *C
 
 func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
 	var result interface{}
-	var count int
 
 	q := Query{"Condition", "patient.gender=male"}
 	result = models.NewSlicePlusForResourceName(q.Resource, 0, 0)
@@ -464,11 +463,7 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
 	err := p.All(result)
 	util.CheckErr(err)
 	resultVal := reflect.ValueOf(result).Elem()
-	count = 0
-	for i := 0; i < resultVal.Len(); i++ {
-		count++
-	}
-	c.Assert(count, Equals, 5)
+	c.Assert(resultVal.Len(), Equals, 5)
 
 	q = Query{"Condition", "patient.gender=female"}
 	result = models.NewSlicePlusForResourceName(q.Resource, 0, 0)
@@ -476,11 +471,7 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
 	err = p.All(result)
 	util.CheckErr(err)
 	resultVal = reflect.ValueOf(result).Elem()
-	count = 0
-	for i := 0; i < resultVal.Len(); i++ {
-		count++
-	}
-	c.Assert(count, Equals, 1)
+	c.Assert(resultVal.Len(), Equals, 1)
 }
 
 // These next tests ensure that the indexer is properly converted to a mongo
@@ -1980,16 +1971,16 @@ func (m *MongoSearchSuite) TestConditionSortWithMultipleSortParamsDescending(c *
 	}
 }
 
-// func (m *MongoSearchSuite) TestSortingOnParallelArrayPathsDoesntPanic(c *C) {
-// 	var patients []*models.Patient
-// 	// NOTE: Sorting on family and patient normally causes MongoDB to balk because they have "parallel arrays", but we
-// 	// should just drop the second sort param instead of panicing
-// 	q := Query{"Patient", "_sort=family&_sort=given"}
-// 	mq := m.MongoSearcher.CreateQuery(q)
-// 	err := mq.All(&patients)
-// 	util.CheckErr(err)
-// 	c.Assert(patients, HasLen, 2)
-// }
+func (m *MongoSearchSuite) TestSortingOnParallelArrayPathsDoesntPanic(c *C) {
+	var patients []*models.Patient
+	// NOTE: Sorting on family and patient normally causes MongoDB to balk because they have "parallel arrays", but we
+	// should just drop the second sort param instead of panicing
+	q := Query{"Patient", "_sort=family&_sort=given"}
+	mq := m.MongoSearcher.CreateQuery(q)
+	err := mq.All(&patients)
+	util.CheckErr(err)
+	c.Assert(patients, HasLen, 2)
+}
 
 func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
 	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:patient&_include=Observation:encounter"}
