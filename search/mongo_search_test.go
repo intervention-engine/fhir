@@ -455,17 +455,23 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientGender(c *C
 }
 
 func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
+	var result interface{}
+
 	q := Query{"Condition", "patient.gender=male"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	result = models.NewSlicePlusForResourceName(q.Resource, 0, 0)
+	p := m.MongoSearcher.CreatePipeline(q)
+	err := p.All(result)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 5)
+	resultVal := reflect.ValueOf(result).Elem()
+	c.Assert(resultVal.Len(), Equals, 5)
 
 	q = Query{"Condition", "patient.gender=female"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+	result = models.NewSlicePlusForResourceName(q.Resource, 0, 0)
+	p = m.MongoSearcher.CreatePipeline(q)
+	err = p.All(result)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultVal = reflect.ValueOf(result).Elem()
+	c.Assert(resultVal.Len(), Equals, 1)
 }
 
 // These next tests ensure that the indexer is properly converted to a mongo

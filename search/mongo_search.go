@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"unicode"
 
 	"github.com/intervention-engine/fhir/models"
 	mgo "gopkg.in/mgo.v2"
@@ -96,9 +97,62 @@ func (m *MongoSearcher) createQuery(query Query, withOptions bool) *mgo.Query {
 // are used (since CreateQuery can't support joins).
 func (m *MongoSearcher) CreatePipeline(query Query) *mgo.Pipe {
 	c := m.db.C(models.PluralizeLowerResourceName(query.Resource))
-	p := []bson.M{{"$match": m.createQueryObject(query)}}
+	params := query.Params()
 
+	// Separate out all the chained SearchParams thare are NOT embedded (point
+	// to a Reference in a different document instead of a Resource embedded in the
+	// same document). These can be searched using a $lookup in the pipeline.
+	searchParams := []SearchParam{}
+	chainedSearchParams := []ReferenceParam{}
+
+	for _, p := range params {
+		switch p := p.(type) {
+		case *ReferenceParam:
+			// test if p is embedded
+			switch r := p.Reference.(type) {
+			case ChainedQueryReference:
+				if !r.IsEmbedded {
+					chainedSearchParams = append(chainedSearchParams, *p)
+					continue
+				}
+			}
+		}
+		searchParams = append(searchParams, p)
+	}
+
+	p := []bson.M{{"$match": m.createQueryObjectFromParams(searchParams)}}
 	o := query.Options()
+
+	// Support for chained search. Chained search is a 2-step process:
+	// 1. $lookup all foreign documents referenced by the chained search parameter(s)
+	// 2. $match the fields/values in those referenced documents specified by each chained search parameter
+
+	for _, chainedParam := range chainedSearchParams {
+
+		// The key, value pair for a chained search parameter is something like:
+		// ("subject:Patient.gender", "male")
+		param, val := chainedParam.getQueryParamAndValue()
+		info := chainedParam.getInfo()
+		fields := strings.FieldsFunc(param, func(c rune) bool { return !unicode.IsLetter(c) }) // splits on any non-letter character (e.g. ":", ".")
+		from := models.PluralizeLowerResourceName(fields[1])
+		localField := strings.ToLower(info.Paths[0].Path) + ".referenceid"
+		as := "_" + strings.ToLower(info.Paths[0].Path)
+
+		p = append(p, bson.M{"$lookup": bson.M{
+			"from":         from,
+			"localField":   localField,
+			"foreignField": "_id",
+			"as":           as,
+		}})
+
+		// Immediately follow each $lookup with a $match to narrow down the result set as soon as possible
+		key := as + "." + fields[2]
+		p = append(p, bson.M{"$match": bson.M{
+			key: val,
+		}})
+	}
+
+	// TODO: Use $project to clean up the "_" fields created by the $lookup stages above (needs features coming in Mongo 3.4)
 
 	// support for _sort
 	removeParallelArraySorts(o)
@@ -198,8 +252,12 @@ func (m *MongoSearcher) CreatePipeline(query Query) *mgo.Pipe {
 }
 
 func (m *MongoSearcher) createQueryObject(query Query) bson.M {
+	return m.createQueryObjectFromParams(query.Params())
+}
+
+func (m *MongoSearcher) createQueryObjectFromParams(params []SearchParam) bson.M {
 	result := bson.M{}
-	for _, p := range m.createParamObjects(query.Params()) {
+	for _, p := range m.createParamObjects(params) {
 		merge(result, p)
 	}
 	return result
