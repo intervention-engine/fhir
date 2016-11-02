@@ -240,6 +240,21 @@ func (q *Query) Options() *QueryOptions {
 	return options
 }
 
+// UsesIncludes returns true if the query has any _includes options
+func (q *Query) UsesIncludes() bool {
+	return len(q.Options().Include) > 0
+}
+
+// UsesRevIncludes returns true if the query has any _revincludes options
+func (q *Query) UsesRevIncludes() bool {
+	return len(q.Options().RevInclude) > 0
+}
+
+// UsesPipeline returns true if the query requires a pipeline to execute
+func (q *Query) UsesPipeline() bool {
+	return q.UsesIncludes() || q.UsesRevIncludes()
+}
+
 func getSingletonParamValue(param string, values []string) string {
 	if len(values) != 1 {
 		panic(createInvalidSearchError("MSG_PARAM_NO_REPEAT", fmt.Sprintf("Parameter \"%s\" is not allowed to repeat", param)))

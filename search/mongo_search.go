@@ -11,6 +11,33 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// BSONQuery is a BSON document constructed from the original string search query.
+type BSONQuery struct {
+	Resource string
+	Query    bson.M
+	Pipeline []bson.M
+}
+
+// NewBSONQuery initializes a new BSONQuery and returns a pointer to that BSONQuery.
+func NewBSONQuery(resource string) *BSONQuery {
+	return &BSONQuery{Resource: resource}
+}
+
+// UsesPipeline checks if the query contains includes, revincludes, or chained searches.
+// If so, mongo's (slower) aggregation pipeline must be used. In these instances Query is
+// nil and Pipeline contains zero or more stages.
+func (b *BSONQuery) UsesPipeline() bool {
+	return b.Query == nil
+}
+
+// AddStage adds a stage to the Pipeline. If the query doesn't use
+// a pipeline AddStage fails silently.
+func (b *BSONQuery) AddStage(stage bson.M) {
+	if b.UsesPipeline() {
+		b.Pipeline = append(b.Pipeline, stage)
+	}
+}
+
 // MongoSearcher implements FHIR searches using the Mongo database.
 type MongoSearcher struct {
 	db *mgo.Database
@@ -28,77 +55,134 @@ func (m *MongoSearcher) GetDB() *mgo.Database {
 	return m.db
 }
 
-// CreateQuery takes a FHIR-based Query and returns a pointer to the
-// corresponding mgo.Query.  The returned mgo.Query will obey any options
-// passed in through the query string (such as _count and _offset) and will
-// also use default options when none are passed in (e.g., count = 100).
-// The caller is responsible for executing the returned query (allowing
-// additional flexibility in how results are returned).
-//
-// CreateQuery CANNOT be used when the _include and _revinclude options
-// are used (since CreateQuery can't support joins).
-func (m *MongoSearcher) CreateQuery(query Query) *mgo.Query {
-	return m.createQuery(query, true)
+// Search takes a Query and returns a set of results (Resources).
+// If an error occurs during the search the corresponding mongo error
+// is returned and results will be nil.
+func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, err error) {
+
+	// Check if the search uses _include or _revinclude. If so, we'll need to
+	// return a slice of Resources PLUS related Resources.
+	if query.UsesIncludes() || query.UsesRevIncludes() {
+		results = models.NewSlicePlusForResourceName(query.Resource, 0, 0)
+	} else {
+		results = models.NewSliceForResourceName(query.Resource, 0, 0)
+	}
+
+	// build the BSON query (without any options)
+	bsonQuery := m.convertToBSON(query)
+
+	// execute the query
+	if bsonQuery.UsesPipeline() {
+		// The (slower) aggregation pipeline is used if the query contains includes or revincludes
+		var mgoPipe *mgo.Pipe
+		mgoPipe, total, err = m.aggregate(bsonQuery, query.Options())
+		if err != nil {
+			return nil, 0, err
+		}
+		err = mgoPipe.All(results)
+	} else {
+		// Otherwise, the (faster) standard query is used
+		var mgoQuery *mgo.Query
+		mgoQuery, total, err = m.find(bsonQuery, query.Options())
+		if err != nil {
+			return nil, 0, err
+		}
+		err = mgoQuery.All(results)
+	}
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return results, total, nil
 }
 
-// CreateQueryWithoutOptions takes a FHIR-based Query and returns a pointer to
-// the corresponding mgo.Query.  Any options passed in through the query (such
-// as _count and _offset) are ignored and no default options are applied (e.g.,
-// there is no set count / limit)  The caller is responsible for executing
-// the returned query (allowing flexibility in how results are returned).
-func (m *MongoSearcher) CreateQueryWithoutOptions(query Query) *mgo.Query {
-	return m.createQuery(query, false)
+func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (pipe *mgo.Pipe, total uint32, err error) {
+	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
+
+	// First get a count of the total results (doesn't apply any options)
+	if len(bsonQuery.Pipeline) == 0 {
+		// The pipeline has no matching so we can just count the total number of documents in the collection
+		intTotal, err := c.Count()
+		if err != nil {
+			return nil, 0, err
+		}
+		total = uint32(intTotal)
+	} else {
+		// Do the count in the aggregation framework
+		countStage := bson.M{"$group": bson.M{
+			"_id":   nil,
+			"total": bson.M{"$sum": 1},
+		}}
+		countPipeline := make([]bson.M, len(bsonQuery.Pipeline))
+		copy(countPipeline, bsonQuery.Pipeline)
+		countPipeline = append(countPipeline, countStage)
+
+		result := struct {
+			Total float64 `bson:"total"`
+		}{}
+
+		err = c.Pipe(countPipeline).One(&result)
+		if err != nil {
+			return nil, 0, err
+		}
+		total = uint32(result.Total)
+	}
+
+	// Now setup the search pipeline (applying options, if any)
+	searchPipeline := bsonQuery.Pipeline
+	if options != nil {
+		searchPipeline = append(searchPipeline, m.convertOptionsToPipelineStages(bsonQuery.Resource, options)...)
+	}
+	return c.Pipe(searchPipeline).AllowDiskUse(), total, nil
 }
 
-// CreateQueryObject is temporarily exposed as public to support ConditionalDelete.
-// This should be made private again when all mongo implementations are in a single
-// package.
-func (m *MongoSearcher) CreateQueryObject(query Query) bson.M {
-	return m.createQueryObject(query)
-}
+func (m *MongoSearcher) find(bsonQuery *BSONQuery, options *QueryOptions) (query *mgo.Query, total uint32, err error) {
+	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
 
-func (m *MongoSearcher) createQuery(query Query, withOptions bool) *mgo.Query {
-	c := m.db.C(models.PluralizeLowerResourceName(query.Resource))
-	q := m.createQueryObject(query)
-	mgoQuery := c.Find(q)
+	// First get a count of the total results (doesn't apply any options)
+	intTotal, err := c.Find(bsonQuery.Query).Count()
+	if err != nil {
+		return nil, 0, err
+	}
+	total = uint32(intTotal)
 
-	if withOptions {
-		o := query.Options()
-		removeParallelArraySorts(o)
-		if len(o.Sort) > 0 {
-			fields := make([]string, len(o.Sort))
-			for i := range o.Sort {
+	searchQuery := c.Find(bsonQuery.Query)
+	if options != nil {
+		removeParallelArraySorts(options)
+		if len(options.Sort) > 0 {
+			fields := make([]string, len(options.Sort))
+			for i := range options.Sort {
 				// Note: If there are multiple paths, we only look at the first one -- not ideal, but otherwise it gets tricky
-				field := convertSearchPathToMongoField(o.Sort[i].Parameter.Paths[0].Path)
-				if o.Sort[i].Descending {
+				field := convertSearchPathToMongoField(options.Sort[i].Parameter.Paths[0].Path)
+				if options.Sort[i].Descending {
 					field = "-" + field
 				}
 				fields[i] = field
 			}
-			mgoQuery = mgoQuery.Sort(fields...)
+			searchQuery = searchQuery.Sort(fields...)
 		}
-		if o.Offset > 0 {
-			mgoQuery = mgoQuery.Skip(o.Offset)
+		if options.Offset > 0 {
+			searchQuery = searchQuery.Skip(options.Offset)
 		}
-		mgoQuery = mgoQuery.Limit(o.Count)
+		searchQuery = searchQuery.Limit(options.Count)
 	}
-	return mgoQuery
+	return searchQuery, total, nil
 }
 
-// CreatePipeline takes a FHIR-based Query and returns a pointer to the
-// corresponding mgo.Pipe.  The returned mgo.Pipe will obey any options
-// passed in through the query string (such as _count and _offset) and will
-// also use default options when none are passed in (e.g., count = 100).
-// The caller is responsible for executing the returned pipe (allowing
-// additional flexibility in how results are returned).
-//
-// CreatePipeline must be used when the _include and _revinclude options
-// are used (since CreateQuery can't support joins).
-func (m *MongoSearcher) CreatePipeline(query Query) *mgo.Pipe {
-	c := m.db.C(models.PluralizeLowerResourceName(query.Resource))
-	p := []bson.M{{"$match": m.createQueryObject(query)}}
+func (m *MongoSearcher) convertToBSON(query Query) *BSONQuery {
+	bsonQuery := NewBSONQuery(query.Resource)
 
-	o := query.Options()
+	if query.UsesPipeline() {
+		bsonQuery.Pipeline = m.createPipelineObject(query)
+	} else {
+		bsonQuery.Query = m.createQueryObject(query)
+	}
+	return bsonQuery
+}
+
+func (m *MongoSearcher) convertOptionsToPipelineStages(resource string, o *QueryOptions) []bson.M {
+	p := []bson.M{}
 
 	// support for _sort
 	removeParallelArraySorts(o)
@@ -160,7 +244,7 @@ func (m *MongoSearcher) CreatePipeline(query Query) *mgo.Pipe {
 			// we only want parameters that have the search resource as their target
 			targetsSearchResource := false
 			for _, inclTarget := range incl.Parameter.Targets {
-				if inclTarget == query.Resource || inclTarget == "Any" {
+				if inclTarget == resource || inclTarget == "Any" {
 					targetsSearchResource = true
 					break
 				}
@@ -193,8 +277,41 @@ func (m *MongoSearcher) CreatePipeline(query Query) *mgo.Pipe {
 			}
 		}
 	}
+	return p
+}
 
-	return c.Pipe(p)
+// CreateQueryWithoutOptions is deprecated and will be removed in a future version
+// (after chained search is implemented using pipelines)
+func (m *MongoSearcher) CreateQueryWithoutOptions(query Query) *mgo.Query {
+	return m.createQuery(query, false)
+}
+
+func (m *MongoSearcher) createQuery(query Query, withOptions bool) *mgo.Query {
+	c := m.db.C(models.PluralizeLowerResourceName(query.Resource))
+	q := m.createQueryObject(query)
+	mgoQuery := c.Find(q)
+
+	if withOptions {
+		o := query.Options()
+		removeParallelArraySorts(o)
+		if len(o.Sort) > 0 {
+			fields := make([]string, len(o.Sort))
+			for i := range o.Sort {
+				// Note: If there are multiple paths, we only look at the first one -- not ideal, but otherwise it gets tricky
+				field := convertSearchPathToMongoField(o.Sort[i].Parameter.Paths[0].Path)
+				if o.Sort[i].Descending {
+					field = "-" + field
+				}
+				fields[i] = field
+			}
+			mgoQuery = mgoQuery.Sort(fields...)
+		}
+		if o.Offset > 0 {
+			mgoQuery = mgoQuery.Skip(o.Offset)
+		}
+		mgoQuery = mgoQuery.Limit(o.Count)
+	}
+	return mgoQuery
 }
 
 func (m *MongoSearcher) createQueryObject(query Query) bson.M {
@@ -243,6 +360,11 @@ func (m *MongoSearcher) createParamObjects(params []SearchParam) []bson.M {
 	}
 
 	return results
+}
+
+func (m *MongoSearcher) createPipelineObject(query Query) []bson.M {
+	// Currently this is just a $match stage with the same query that would be used in find()
+	return []bson.M{{"$match": m.createQueryObject(query)}}
 }
 
 func panicOnUnsupportedFeatures(p SearchParam) {

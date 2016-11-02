@@ -92,12 +92,19 @@ func (m *MongoSearchSuite) TestConditionCodeQueryObjectBySystemAndCode(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionCodeQueryBySystemAndCode(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "code=http://snomed.info/sct|123641001"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	foundIvd, foundCad := false, false
 	for _, cond := range conditions {
 		if strings.Contains(cond.Code.Text, "Ischemic Vascular Disease") {
@@ -110,12 +117,12 @@ func (m *MongoSearchSuite) TestConditionCodeQueryBySystemAndCode(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionCodeQueryByWrongCodeSystem(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "code=http://hl7.org/fhir/sid/icd-9|123641001"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestConditionCodeQueryObjectByCode(c *C) {
@@ -126,12 +133,19 @@ func (m *MongoSearchSuite) TestConditionCodeQueryObjectByCode(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionCodeQueryByCode(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "code=123641001"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	foundIvd, foundCad := false, false
 	for _, cond := range conditions {
 		if strings.Contains(cond.Code.Text, "Ischemic Vascular Disease") {
@@ -144,12 +158,19 @@ func (m *MongoSearchSuite) TestConditionCodeQueryByCode(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortByCodeAscending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort=code"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	var lastVal string
 	for _, cond := range conditions {
 		thisVal := getCodeableConceptComparisonValue(cond.Code)
@@ -159,12 +180,19 @@ func (m *MongoSearchSuite) TestConditionSortByCodeAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortByCodeDescending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort:desc=code"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	lastVal := "~"
 	for _, cond := range conditions {
 		thisVal := getCodeableConceptComparisonValue(cond.Code)
@@ -205,18 +233,20 @@ func (m *MongoSearchSuite) TestImagingStudyBodySiteQueryObjectBySystemAndCode(c 
 
 func (m *MongoSearchSuite) TestImagingStudyBodySiteQueryBySystemAndCode(c *C) {
 	q := Query{"ImagingStudy", "bodysite=http://snomed.info/sct|67734004"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestImagingStudyBodySiteQueryByWrongCodeSystem(c *C) {
 	q := Query{"ImagingStudy", "bodysite=http://hl7.org/fhir/sid/icd-9|67734004"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 // Tests token searches on []Identifier
@@ -236,27 +266,36 @@ func (m *MongoSearchSuite) TestEncounterIdentifierQueryObjectBySystemAndValue(c 
 
 func (m *MongoSearchSuite) TestEncounterIdentifierQueryBySystemAndValue(c *C) {
 	q := Query{"Encounter", "identifier=http://acme.com|1"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestEncounterIdentifierQueryByWrongSystem(c *C) {
 	q := Query{"Encounter", "identifier=http://example.com|1"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestEncounterSortByIdentifierAscending(c *C) {
-	var encounters []*models.Encounter
 	q := Query{"Encounter", "_sort=identifier"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&encounters)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(encounters, HasLen, 4)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 4)
+
+	// convert search results to encounters
+	encounters := make([]models.Encounter, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		encounters[i] = resultsVal.Index(i).Interface().(models.Encounter)
+	}
+
 	var lastVal string
 	for _, enc := range encounters {
 		thisVal := getIdentifiersComparisonValue(enc.Identifier, false)
@@ -266,12 +305,19 @@ func (m *MongoSearchSuite) TestEncounterSortByIdentifierAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestEncounterSortByIdentifierDescending(c *C) {
-	var encounters []*models.Encounter
 	q := Query{"Encounter", "_sort:desc=identifier"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&encounters)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(encounters, HasLen, 4)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 4)
+
+	// convert search results to encounters
+	encounters := make([]models.Encounter, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		encounters[i] = resultsVal.Index(i).Interface().(models.Encounter)
+	}
+
 	lastVal := "~"
 	for _, enc := range encounters {
 		thisVal := getIdentifiersComparisonValue(enc.Identifier, true)
@@ -309,21 +355,23 @@ func (m *MongoSearchSuite) TestImmunizationNotGivenQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestImmunizationNotGivenQuery(c *C) {
 	q := Query{"Immunization", "notgiven=false"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
 	q = Query{"Immunization", "notgiven=true"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestInvalidBooleanValuePanics(c *C) {
 	q := Query{"Immunization", "notgiven=maybe"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"notgiven\" content is invalid"))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createInvalidSearchError("MSG_PARAM_INVALID", "Parameter \"notgiven\" content is invalid"))
 }
 
 // TODO: Test token searches on code, string, and ContactPoint
@@ -341,13 +389,12 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientId(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientId(c *C) {
-	var conditions []*models.Condition
-
 	q := Query{"Condition", "patient=4954037118555241963"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 5)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
 }
 
 func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientTypeAndId(c *C) {
@@ -358,13 +405,12 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientTypeAndId(c
 }
 
 func (m *MongoSearchSuite) TestConditionPatientQueryByTypeAndId(c *C) {
-	var conditions []*models.Condition
-
 	q := Query{"Condition", "patient=Patient/4954037118555241963"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 5)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
 }
 
 func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientURL(c *C) {
@@ -375,12 +421,19 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientURL(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortByPatientAscending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort=patient"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	var lastVal string
 	for _, cond := range conditions {
 		thisVal := getReferenceComparisonValue(cond.Subject)
@@ -390,12 +443,19 @@ func (m *MongoSearchSuite) TestConditionSortByPatientAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortByPatientDescending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort:desc=patient"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	lastVal := "~"
 	for _, cond := range conditions {
 		thisVal := getReferenceComparisonValue(cond.Subject)
@@ -428,16 +488,16 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageId(c *C) {
 
 func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageId(c *C) {
 	q := Query{"Bundle", "message=5542705384245559634"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
 	q = Query{"Bundle", "message=5542705384245559635"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 // TODO: Test execution of reference search on PatientURL (as above)
@@ -456,16 +516,16 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientGender(c *C
 
 func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
 	q := Query{"Condition", "patient.gender=male"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 5)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
 
 	q = Query{"Condition", "patient.gender=female"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 // These next tests ensure that the indexer is properly converted to a mongo
@@ -482,16 +542,16 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageDestination(c 
 
 func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageDestination(c *C) {
 	q := Query{"Bundle", "message.destination-uri=http://acme.com/ehr/fhir"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
 	q = Query{"Bundle", "message.destination-uri=http://acme.com/ehr/foo"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 // Test date searches on DateTime / Period
@@ -516,14 +576,19 @@ func (m *MongoSearchSuite) TestConditionOnsetQueryObject(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetQueryToMinute(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "onset-date=2012-03-01T07:00-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
-	cond := conditions[0]
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
+	cond := &conditions[0]
 	cond2 := &models.Condition{}
 	err = m.Session.DB("fhir-test").C("conditions").FindId("8664777288161060797").One(cond2)
 
@@ -532,18 +597,18 @@ func (m *MongoSearchSuite) TestConditionOnsetQueryToMinute(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetQueryToDay(c *C) {
 	q := Query{"Condition", "onset-date=2012-03-01"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 5)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetQueryWrongTime(c *C) {
 	q := Query{"Condition", "onset-date=2012-03-01T08:00-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetGTQueryObject(c *C) {
@@ -572,10 +637,10 @@ func (m *MongoSearchSuite) TestConditionOnsetGTQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetGTQuery(c *C) {
 	q := Query{"Condition", "onset-date=gt2012-03-01T07:05-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetSAQueryObject(c *C) {
@@ -600,10 +665,10 @@ func (m *MongoSearchSuite) TestConditionOnsetSAQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetSAQuery(c *C) {
 	q := Query{"Condition", "onset-date=sa2012-03-01T07:05-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetLTQueryObject(c *C) {
@@ -632,10 +697,10 @@ func (m *MongoSearchSuite) TestConditionOnsetLTQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetLTQuery(c *C) {
 	q := Query{"Condition", "onset-date=lt2012-03-01T07:05-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetEBQueryObject(c *C) {
@@ -660,10 +725,10 @@ func (m *MongoSearchSuite) TestConditionOnsetEBQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetEBQuery(c *C) {
 	q := Query{"Condition", "onset-date=eb2012-03-01T07:05-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetGEQueryObject(c *C) {
@@ -697,10 +762,10 @@ func (m *MongoSearchSuite) TestConditionOnsetGEQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetGEQuery(c *C) {
 	q := Query{"Condition", "onset-date=ge2012-03-01T07:05-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 4)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 4)
 }
 
 func (m *MongoSearchSuite) TestConditionOnsetLEQueryObject(c *C) {
@@ -734,19 +799,25 @@ func (m *MongoSearchSuite) TestConditionOnsetLEQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionOnsetLEQuery(c *C) {
 	q := Query{"Condition", "onset-date=le2012-03-01T07:05-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 5)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
 }
 
 func (m *MongoSearchSuite) TestConditionSortByOnsetAscending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort=onset-date"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	var lastVal time.Time
 	for _, cond := range conditions {
 		thisVal := cond.OnsetDateTime.Time
@@ -756,12 +827,17 @@ func (m *MongoSearchSuite) TestConditionSortByOnsetAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortByOnsetDescending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort:desc=onset-date"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
 	lastVal := time.Date(3000, time.January, 1, 0, 0, 0, 0, time.UTC)
 	for _, cond := range conditions {
 		thisVal := cond.OnsetDateTime.Time
@@ -791,18 +867,18 @@ func (m *MongoSearchSuite) TestEncounterPeriodQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodQuery(c *C) {
 	q := Query{"Encounter", "date=2012-11-01T08:50-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodQueryWrongTime(c *C) {
 	q := Query{"Encounter", "date=2012-11-01T07:50:00-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodGTQueryObject(c *C) {
@@ -827,10 +903,10 @@ func (m *MongoSearchSuite) TestEncounterPeriodGTQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodGTQuery(c *C) {
 	q := Query{"Encounter", "date=gt2012-11-01T08:50-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodSAQueryObject(c *C) {
@@ -847,10 +923,10 @@ func (m *MongoSearchSuite) TestEncounterPeriodSAQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodSAQuery(c *C) {
 	q := Query{"Encounter", "date=sa2012-11-01T08:45-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodLTQueryObject(c *C) {
@@ -875,10 +951,10 @@ func (m *MongoSearchSuite) TestEncounterPeriodLTQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodLTQuery(c *C) {
 	q := Query{"Encounter", "date=lt2012-11-01T08:50-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 3)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 3)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodEBQueryObject(c *C) {
@@ -895,10 +971,10 @@ func (m *MongoSearchSuite) TestEncounterPeriodEBQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodEBQuery(c *C) {
 	q := Query{"Encounter", "date=eb2012-11-01T09:00-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 3)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 3)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodGEQueryObject(c *C) {
@@ -928,10 +1004,10 @@ func (m *MongoSearchSuite) TestEncounterPeriodGEQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodGEQuery(c *C) {
 	q := Query{"Encounter", "date=ge2012-11-01T08:50-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestEncounterPeriodLEQueryObject(c *C) {
@@ -961,19 +1037,26 @@ func (m *MongoSearchSuite) TestEncounterPeriodLEQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterPeriodLEQuery(c *C) {
 	q := Query{"Encounter", "date=le2012-11-01T08:50-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 4)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 4)
 }
 
 func (m *MongoSearchSuite) TestEncounterSortByPeriodAscending(c *C) {
-	var encounters []*models.Encounter
 	q := Query{"Encounter", "_sort=date"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&encounters)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(encounters, HasLen, 4)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 4)
+
+	// convert search results to encounters
+	encounters := make([]models.Encounter, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		encounters[i] = resultsVal.Index(i).Interface().(models.Encounter)
+	}
+
 	var lastVal time.Time
 	for _, enc := range encounters {
 		thisVal := enc.Period.Start.Time
@@ -983,12 +1066,19 @@ func (m *MongoSearchSuite) TestEncounterSortByPeriodAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestEncounterSortByPeriodDescending(c *C) {
-	var encounters []*models.Encounter
 	q := Query{"Encounter", "_sort:desc=date"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&encounters)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(encounters, HasLen, 4)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 4)
+
+	// convert search results to encounters
+	encounters := make([]models.Encounter, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		encounters[i] = resultsVal.Index(i).Interface().(models.Encounter)
+	}
+
 	lastVal := time.Date(3000, time.January, 1, 0, 0, 0, 0, time.UTC)
 	for _, enc := range encounters {
 		thisVal := enc.Period.Start.Time
@@ -1019,24 +1109,24 @@ func (m *MongoSearchSuite) TestImmunizationDoseSequenceNumberQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestImmunizationDoseSequenceNumberQuery(c *C) {
 	q := Query{"Immunization", "dose-sequence=1"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestImmunizationDoseSequenceWrongNumberQuery(c *C) {
 	q := Query{"Immunization", "dose-sequence=0"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 
 	q = Query{"Immunization", "dose-sequence=2"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 // TODO: Test number searches on decimal, integer, and unsignedInt
@@ -1052,14 +1142,12 @@ func (m *MongoSearchSuite) TestDeviceStringQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestDeviceStringQuery(c *C) {
 	q := Query{"Device", "manufacturer=Acme"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
-
-	dev := &models.Device{}
-	err = mq.One(dev)
-	util.CheckErr(err)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
+	res := resultsVal.Index(0).Interface().(models.Device)
+	dev := &res
 
 	dev2 := &models.Device{}
 	err = m.Session.DB("fhir-test").C("devices").FindId("7045606679745526995").One(dev2)
@@ -1069,19 +1157,26 @@ func (m *MongoSearchSuite) TestDeviceStringQuery(c *C) {
 
 func (m *MongoSearchSuite) TestNonMatchingDeviceStringQuery(c *C) {
 	q := Query{"Device", "manufacturer=Zinc"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestPatientSortByGivenAscending(c *C) {
-	var patients []*models.Patient
 	q := Query{"Patient", "_sort=given"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&patients)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(patients, HasLen, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	// convert search results to patients
+	patients := make([]models.Patient, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		patients[i] = resultsVal.Index(i).Interface().(models.Patient)
+	}
+
 	var lastVal string
 	for _, p := range patients {
 		thisVal := p.Name[0].Given[0]
@@ -1091,12 +1186,19 @@ func (m *MongoSearchSuite) TestPatientSortByGivenAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestPatientSortByGivenDescending(c *C) {
-	var patients []*models.Patient
 	q := Query{"Patient", "_sort:desc=given"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&patients)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(patients, HasLen, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	// convert search results to patients
+	patients := make([]models.Patient, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		patients[i] = resultsVal.Index(i).Interface().(models.Patient)
+	}
+
 	lastVal := "~"
 	for _, p := range patients {
 		thisVal := p.Name[0].Given[0]
@@ -1122,33 +1224,40 @@ func (m *MongoSearchSuite) TestPatientNameStringQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestPatientNameStringQuery(c *C) {
 	q := Query{"Patient", "name=Peters"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 
 	q = Query{"Patient", "name=John"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestNonMatchingPatientNameStringQuery(c *C) {
 	q := Query{"Patient", "name=Peterson"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestPatientSortByNameAscending(c *C) {
-	var patients []*models.Patient
 	q := Query{"Patient", "_sort=name"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&patients)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(patients, HasLen, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	// convert search results to patients
+	patients := make([]models.Patient, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		patients[i] = resultsVal.Index(i).Interface().(models.Patient)
+	}
+
 	var lastVal string
 	for _, p := range patients {
 		thisVal := getHumanNamesComparisonValue(p.Name, false)
@@ -1158,12 +1267,19 @@ func (m *MongoSearchSuite) TestPatientSortByNameAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestPatientSortByNameDescending(c *C) {
-	var patients []*models.Patient
 	q := Query{"Patient", "_sort:desc=name"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&patients)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(patients, HasLen, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	// convert search results to patients
+	patients := make([]models.Patient, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		patients[i] = resultsVal.Index(i).Interface().(models.Patient)
+	}
+
 	lastVal := "~"
 	for _, p := range patients {
 		thisVal := getHumanNamesComparisonValue(p.Name, true)
@@ -1222,18 +1338,18 @@ func (m *MongoSearchSuite) TestPatientAddressStringQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestPatientAddressStringQuery(c *C) {
 	q := Query{"Patient", "address=AK"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestNonMatchingPatientAddressStringQuery(c *C) {
 	q := Query{"Patient", "address=CA"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 // Test quantity searches on Quantity
@@ -1267,34 +1383,34 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnit(c *C) {
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndUnit(c *C) {
 	q := Query{"Observation", "value-quantity=185||lbs"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndCode(c *C) {
 	q := Query{"Observation", "value-quantity=185||[lb_av]"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByWrongValueAndUnit(c *C) {
 	q := Query{"Observation", "value-quantity=186||lbs"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndWrongUnit(c *C) {
 	q := Query{"Observation", "value-quantity=185||pounds"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndSystemAndCode(c *C) {
@@ -1322,44 +1438,51 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndSystemAndCode(c
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndSystemAndCode(c *C) {
 	q := Query{"Observation", "value-quantity=185|http://unitsofmeasure.org|[lb_av]"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByWrongValueAndSystemAndCode(c *C) {
 	q := Query{"Observation", "value-quantity=184|http://unitsofmeasure.org|[lb_av]"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndWrongSystemAndCode(c *C) {
 	q := Query{"Observation", "value-quantity=185|http://loinc.org|[lb_av]"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndSystemAndWrongCode(c *C) {
 	q := Query{"Observation", "value-quantity=185|http://unitsofmeasure.org|lbs"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestObservationSortByValueQuantityAscending(c *C) {
 	c.Skip("Sorting by parameters that resolve to multiple paths is not supported")
-	var observations []*models.Observation
 	q := Query{"Observation", "_sort=value-quantity"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&observations)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(observations, HasLen, 5)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
+
+	// convert search results to observations
+	observations := make([]models.Observation, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		observations[i] = resultsVal.Index(i).Interface().(models.Observation)
+	}
+
 	var lastVal string
 	for _, o := range observations {
 		thisVal := getQuantityComparisonValue(o.ValueQuantity)
@@ -1370,12 +1493,19 @@ func (m *MongoSearchSuite) TestObservationSortByValueQuantityAscending(c *C) {
 
 func (m *MongoSearchSuite) TestObservationSortByValueQuantityDescending(c *C) {
 	c.Skip("Sorting by parameters that resolve to multiple paths is not supported")
-	var observations []*models.Observation
 	q := Query{"Observation", "_sort:desc=value-quantity"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&observations)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(observations, HasLen, 5)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
+
+	// convert search results to observations
+	observations := make([]models.Observation, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		observations[i] = resultsVal.Index(i).Interface().(models.Observation)
+	}
+
 	lastVal := "~"
 	for _, o := range observations {
 		thisVal := getQuantityComparisonValue(o.ValueQuantity)
@@ -1411,10 +1541,10 @@ func (m *MongoSearchSuite) TestSubscriptionURLQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestSubscriptionURLQuery(c *C) {
 	q := Query{"Subscription", "url=https://biliwatch.com/customers/mount-auburn-miu/on-result"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 // TODO: Test composite searches
@@ -1490,10 +1620,10 @@ func (m *MongoSearchSuite) TestBroCustomQuery(c *C) {
 	GlobalMongoRegistry().RegisterBSONBuilder("test.bro", BroBSONBuilder)
 
 	q := Query{"Patient", "bro=true"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 // Tests special searches on _id
@@ -1507,14 +1637,13 @@ func (m *MongoSearchSuite) TestConditionIdQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionIdQuery(c *C) {
 	q := Query{"Condition", "_id=8664777288161060797"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
-	cond := &models.Condition{}
-	err = mq.One(cond)
-	util.CheckErr(err)
+	res := resultsVal.Index(0).Interface().(models.Condition)
+	cond := &res
 
 	cond2 := &models.Condition{}
 	err = m.Session.DB("fhir-test").C("conditions").FindId("8664777288161060797").One(cond2)
@@ -1523,12 +1652,19 @@ func (m *MongoSearchSuite) TestConditionIdQuery(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortByIdAscending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort=_id"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	var lastVal string
 	for _, cond := range conditions {
 		thisVal := cond.Id
@@ -1538,12 +1674,19 @@ func (m *MongoSearchSuite) TestConditionSortByIdAscending(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortByIdDescending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort:desc=_id"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	lastVal := "~"
 	for _, cond := range conditions {
 		thisVal := cond.Id
@@ -1569,14 +1712,13 @@ func (m *MongoSearchSuite) TestConditionTagQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionTagQuery(c *C) {
 	q := Query{"Condition", "_tag=foo|bar"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
-	cond := &models.Condition{}
-	err = mq.One(cond)
-	util.CheckErr(err)
+	res := resultsVal.Index(0).Interface().(models.Condition)
+	cond := &res
 
 	cond2 := &models.Condition{}
 	err = m.Session.DB("fhir-test").C("conditions").FindId("4072118967138896162").One(cond2)
@@ -1620,18 +1762,18 @@ func (m *MongoSearchSuite) TestConditionMultipleCodesQueryObject(c *C) {
 
 func (m *MongoSearchSuite) TestConditionMultipleCodesQuery(c *C) {
 	q := Query{"Condition", "code=http://hl7.org/fhir/sid/icd-9|428.0,http://snomed.info/sct|981000124106,http://hl7.org/fhir/sid/icd-10|I20.0"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 4)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 4)
 }
 
 func (m *MongoSearchSuite) TestConditionMultipleCodesWrongICD10Query(c *C) {
 	q := Query{"Condition", "code=http://hl7.org/fhir/sid/icd-9|428.0,http://snomed.info/sct|981000124106,http://hl7.org/fhir/sid/icd-10|I21.0"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 // Test searches with multiple parameters
@@ -1672,34 +1814,34 @@ func (m *MongoSearchSuite) TestConditionPatientAndCodeAndOnsetQueryObject(c *C) 
 
 func (m *MongoSearchSuite) TestConditionPatientAndCodeAndOnsetQuery(c *C) {
 	q := Query{"Condition", "patient=4954037118555241963&code=http://hl7.org/fhir/sid/icd-9|428.0&onset-date=2012-03-01T07:00-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 func (m *MongoSearchSuite) TestConditionWrongPatientAndCodeAndOnsetQuery(c *C) {
 	q := Query{"Condition", "patient=123456789&code=http://hl7.org/fhir/sid/icd-9|428.0&onset-date=2012-03-01T07:00-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestConditionPatientAndWrongCodeAndOnsetQuery(c *C) {
 	q := Query{"Condition", "patient=4954037118555241963&code=http://snomed.info/sct|981000124106&onset-date=2012-03-01T07:00-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestConditionPatientAndCodeAndWrongOnsetQuery(c *C) {
 	q := Query{"Condition", "patient=4954037118555241963&code=http://hl7.org/fhir/sid/icd-9|428.0&onset-date=2012-03-01T07:05-05:00"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 // Test multiple parameters with multiple values
@@ -1797,11 +1939,10 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsWithDefaultOptions(c *C)
 
 func (m *MongoSearchSuite) TestEncounterTypeQueryWithDefaultOptions(c *C) {
 	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201"}
-	mq := m.MongoSearcher.CreateQuery(q)
-
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 3)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 3)
 }
 
 func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsWithCount(c *C) {
@@ -1826,11 +1967,10 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsWithCount(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterTypeQueryWithCount(c *C) {
 	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_count=2"}
-	mq := m.MongoSearcher.CreateQuery(q)
-
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForOffset(c *C) {
@@ -1855,11 +1995,10 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForOffset(c *C) {
 
 func (m *MongoSearchSuite) TestEncounterTypeQueryWithOffset(c *C) {
 	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_offset=1"}
-	mq := m.MongoSearcher.CreateQuery(q)
-
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForCountAndOffset(c *C) {
@@ -1885,39 +2024,41 @@ func (m *MongoSearchSuite) TestEncounterTypeQueryOptionsForCountAndOffset(c *C) 
 func (m *MongoSearchSuite) TestEncounterTypeQueryWithCountAndOffset(c *C) {
 	// First do with an offset of 1
 	q := Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_offset=1&_count=1"}
-	mq := m.MongoSearcher.CreateQuery(q)
-
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
-	offset1 := &models.Encounter{}
-	err = mq.One(offset1)
-	util.CheckErr(err)
+	res := resultsVal.Index(0).Interface().(models.Encounter)
+	offset1 := &res
 
 	// Now do an offset of 2
 	q = Query{"Encounter", "type=http://www.ama-assn.org/go/cpt|99201&_offset=2&_count=1"}
-	mq = m.MongoSearcher.CreateQuery(q)
-
-	num, err = mq.Count()
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
-	offset2 := &models.Encounter{}
-	err = mq.One(offset2)
-	util.CheckErr(err)
+	res2 := resultsVal.Index(0).Interface().(models.Encounter)
+	offset2 := &res2
 
 	// Now make sure they are not the same
 	c.Assert(offset1.Id, Not(Equals), offset2.Id)
 }
 
 func (m *MongoSearchSuite) TestConditionSortWithMultipleSortParams(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort=patient&_sort=onset-date&_sort=code"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	var lastPatient string
 	var lastOnset time.Time
 	var lastCode string
@@ -1939,12 +2080,18 @@ func (m *MongoSearchSuite) TestConditionSortWithMultipleSortParams(c *C) {
 }
 
 func (m *MongoSearchSuite) TestConditionSortWithMultipleSortParamsDescending(c *C) {
-	var conditions []*models.Condition
 	q := Query{"Condition", "_sort:desc=patient&_sort:desc=onset-date&_sort:desc=code"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&conditions)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(conditions, HasLen, 6)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
+
+	// convert search results to conditions
+	conditions := make([]models.Condition, resultsVal.Len())
+	for i := 0; i < resultsVal.Len(); i++ {
+		conditions[i] = resultsVal.Index(i).Interface().(models.Condition)
+	}
+
 	lastPatient := "~"
 	lastOnset := time.Date(3000, time.January, 1, 0, 0, 0, 0, time.UTC)
 	lastCode := "~"
@@ -1966,14 +2113,13 @@ func (m *MongoSearchSuite) TestConditionSortWithMultipleSortParamsDescending(c *
 }
 
 func (m *MongoSearchSuite) TestSortingOnParallelArrayPathsDoesntPanic(c *C) {
-	var patients []*models.Patient
 	// NOTE: Sorting on family and patient normally causes MongoDB to balk because they have "parallel arrays", but we
 	// should just drop the second sort param instead of panicing
 	q := Query{"Patient", "_sort=family&_sort=given"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	err := mq.All(&patients)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(patients, HasLen, 2)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
 }
 
 func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
@@ -2012,12 +2158,12 @@ func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
 func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
 	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:patient&_include=Observation:encounter"}
 
-	var results []models.ObservationPlus
-	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(results, HasLen, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
-	obs := results[0]
+	obs := resultsVal.Index(0).Interface().(models.ObservationPlus)
 	c.Assert(obs.Code.Coding, HasLen, 1)
 	c.Assert(obs.Code.Text, Equals, "Laboratory Test, Result: HbA1c Laboratory Test")
 	c.Assert(obs.Subject.ReferencedID, Equals, "4954037118555241963")
@@ -2051,18 +2197,21 @@ func (m *MongoSearchSuite) TestObservationQueryForIncludeWithArrayFieldAndTarget
 	// http://stackoverflow.com/questions/34967482/lookup-on-objectids-in-an-array
 	c.Skip("Joining on fields that are arrays is currently not supported")
 	q := Query{"Observation", "_id=5637152931209212154,5433989216383325950&_include=Observation:performer:Practitioner"}
-	var results []models.ObservationPlus
-	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(results, HasLen, 2)
-	obs := results[0]
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	obs := resultsVal.Index(0).Interface().(models.ObservationPlus)
 	incl := obs.GetIncludedResources()
 	c.Assert(incl, HasLen, 1)
 	practitioners, err := obs.GetIncludedPractitionerResourcesReferencedByPerformer()
 	util.CheckErr(err)
 	c.Assert(practitioners, HasLen, 1)
 	c.Assert(practitioners[0].Id, Equals, "7045606679745586371")
-	obs = results[1]
+
+	obs = resultsVal.Index(1).Interface().(models.ObservationPlus)
 	incl = obs.GetIncludedResources()
 	c.Assert(incl, HasLen, 1)
 	organizations, err := obs.GetIncludedOrganizationResourcesReferencedByPerformer()
@@ -2073,17 +2222,20 @@ func (m *MongoSearchSuite) TestObservationQueryForIncludeWithArrayFieldAndTarget
 
 func (m *MongoSearchSuite) TestConditionQueryForIncludeWithTargets(c *C) {
 	q := Query{"Condition", "_id=8664777288161060797,4072118967138896162&_include=Condition:asserter"}
-	var results []models.ConditionPlus
-	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(results, HasLen, 2)
-	cond := results[0]
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	cond := resultsVal.Index(0).Interface().(models.ConditionPlus)
 	incl := cond.GetIncludedResources()
 	c.Assert(incl, HasLen, 1)
 	patient, err := cond.GetIncludedPatientResourceReferencedByAsserter()
 	util.CheckErr(err)
 	c.Assert(patient.Id, Equals, "4954037118555241963")
-	cond = results[1]
+
+	cond = resultsVal.Index(1).Interface().(models.ConditionPlus)
 	incl = cond.GetIncludedResources()
 	c.Assert(incl, HasLen, 1)
 	practitioner, err := cond.GetIncludedPractitionerResourceReferencedByAsserter()
@@ -2091,27 +2243,33 @@ func (m *MongoSearchSuite) TestConditionQueryForIncludeWithTargets(c *C) {
 	c.Assert(practitioner.Id, Equals, "7045606679745586371")
 
 	q = Query{"Condition", "_id=8664777288161060797,4072118967138896162&_include=Condition:asserter:Patient"}
-	err = m.MongoSearcher.CreatePipeline(q).All(&results)
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(results, HasLen, 2)
-	cond = results[0]
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	cond = resultsVal.Index(0).Interface().(models.ConditionPlus)
 	incl = cond.GetIncludedResources()
 	c.Assert(incl, HasLen, 1)
 	patient, err = cond.GetIncludedPatientResourceReferencedByAsserter()
 	util.CheckErr(err)
 	c.Assert(patient.Id, Equals, "4954037118555241963")
-	cond = results[1]
+
+	cond = resultsVal.Index(1).Interface().(models.ConditionPlus)
 	incl = cond.GetIncludedResources()
 	c.Assert(incl, HasLen, 0)
 
 	q = Query{"Condition", "_id=8664777288161060797,4072118967138896162&_include=Condition:asserter:Practitioner"}
-	err = m.MongoSearcher.CreatePipeline(q).All(&results)
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(results, HasLen, 2)
-	cond = results[0]
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	cond = resultsVal.Index(0).Interface().(models.ConditionPlus)
 	incl = cond.GetIncludedResources()
 	c.Assert(incl, HasLen, 0)
-	cond = results[1]
+
+	cond = resultsVal.Index(1).Interface().(models.ConditionPlus)
 	incl = cond.GetIncludedResources()
 	c.Assert(incl, HasLen, 1)
 	practitioner, err = cond.GetIncludedPractitionerResourceReferencedByAsserter()
@@ -2140,12 +2298,12 @@ func (m *MongoSearchSuite) TestPatientGenderQueryOptionsForRevInclude(c *C) {
 func (m *MongoSearchSuite) TestPatientGenderQueryForRevInclude(c *C) {
 	q := Query{"Patient", "gender=male&_revinclude=Condition:patient&_revinclude=Encounter:patient"}
 
-	var results []models.PatientPlus
-	err := m.MongoSearcher.CreatePipeline(q).All(&results)
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(results, HasLen, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
-	patient := results[0]
+	patient := resultsVal.Index(0).Interface().(models.PatientPlus)
 	c.Assert(patient.Id, Equals, "4954037118555241963")
 	c.Assert(patient.Name[0].Given[0], Equals, "John")
 	c.Assert(patient.Name[0].Family[0], Equals, "Peters")
@@ -2181,43 +2339,43 @@ func (m *MongoSearchSuite) TestPatientGenderQueryForRevInclude(c *C) {
 // Test that invalid search parameters PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestInvalidSearchParameterPanics(c *C) {
 	q := Query{"Condition", "abatement=2012"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createInvalidSearchError("SEARCH_NONE", "Error: no processable search found for Condition search parameters \"abatement\""))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createInvalidSearchError("SEARCH_NONE", "Error: no processable search found for Condition search parameters \"abatement\""))
 }
 
 // Test that unimplemented features PANIC (to ensure people know they are broken)
 func (m *MongoSearchSuite) TestCompositeSearchPanics(c *C) {
 	q := Query{"Group", "characteristic-value=gender$male"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createInvalidSearchError("SEARCH_NONE", "Error: no processable search found for Group search parameters \"characteristic-value\""))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createInvalidSearchError("SEARCH_NONE", "Error: no processable search found for Group search parameters \"characteristic-value\""))
 }
 
 func (m *MongoSearchSuite) TestPrefixedDateSearchPanicsForUnsupportedPrefix(c *C) {
 	q := Query{"Condition", "onset-date=ap2012"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"onset-date\" content is invalid"))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"onset-date\" content is invalid"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedNumberSearchPanics(c *C) {
 	q := Query{"Immunization", "dose-sequence=gt1"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"dose-sequence\" content is invalid"))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"dose-sequence\" content is invalid"))
 }
 
 func (m *MongoSearchSuite) TestPrefixedQuantitySearchPanics(c *C) {
 	q := Query{"Observation", "value-quantity=ap1||mg"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"value-quantity\" content is invalid"))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_INVALID", "Parameter \"value-quantity\" content is invalid"))
 }
 
 func (m *MongoSearchSuite) TestModifierSearchPanics(c *C) {
 	q := Query{"Condition", "code:text=headache"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"code\" modifier is invalid"))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_MODIFIER_INVALID", "Parameter \"code\" modifier is invalid"))
 }
 
 func (m *MongoSearchSuite) TestUnsupportedSearchResultParameterPanics(c *C) {
 	q := Query{"Condition", "_contained=true"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_contained\" not understood"))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_contained\" not understood"))
 }
 
 func (m *MongoSearchSuite) TestUsupportedGlobalSearchParameterPanics(c *C) {
 	q := Query{"Condition", "_text=diabetes"}
-	c.Assert(func() { m.MongoSearcher.CreateQuery(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_text\" not understood"))
+	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_text\" not understood"))
 }
 
 // Test internally used functions
