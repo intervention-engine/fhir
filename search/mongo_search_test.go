@@ -508,7 +508,7 @@ func (m *MongoSearchSuite) TestConditionChainedSearchPipelineObject(c *C) {
 	bsonQuery := m.MongoSearcher.convertToBSON(q)
 	c.Assert(bsonQuery.Resource, Equals, "Condition")
 	c.Assert(bsonQuery.Query, IsNil)
-	c.Assert(bsonQuery.UsesPipeline(), Equals, true)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
 
 	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
 		bson.M{"$match": bson.M{}},
@@ -530,7 +530,7 @@ func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithOr(c *C) {
 	bsonQuery := m.MongoSearcher.convertToBSON(q)
 	c.Assert(bsonQuery.Resource, Equals, "Condition")
 	c.Assert(bsonQuery.Query, IsNil)
-	c.Assert(bsonQuery.UsesPipeline(), Equals, true)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
 
 	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
 		bson.M{"$match": bson.M{}},
