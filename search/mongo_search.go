@@ -276,43 +276,13 @@ func (m *MongoSearcher) convertOptionsToPipelineStages(resource string, o *Query
 	return p
 }
 
-// CreateQueryWithoutOptions is deprecated and will be removed in a future version
-// (after chained search is implemented using pipelines)
-func (m *MongoSearcher) CreateQueryWithoutOptions(query Query) *mgo.Query {
-	return m.createQuery(query, false)
-}
-
-func (m *MongoSearcher) createQuery(query Query, withOptions bool) *mgo.Query {
-	c := m.db.C(models.PluralizeLowerResourceName(query.Resource))
-	q := m.createQueryObject(query)
-	mgoQuery := c.Find(q)
-
-	if withOptions {
-		o := query.Options()
-		removeParallelArraySorts(o)
-		if len(o.Sort) > 0 {
-			fields := make([]string, len(o.Sort))
-			for i := range o.Sort {
-				// Note: If there are multiple paths, we only look at the first one -- not ideal, but otherwise it gets tricky
-				field := convertSearchPathToMongoField(o.Sort[i].Parameter.Paths[0].Path)
-				if o.Sort[i].Descending {
-					field = "-" + field
-				}
-				fields[i] = field
-			}
-			mgoQuery = mgoQuery.Sort(fields...)
-		}
-		if o.Offset > 0 {
-			mgoQuery = mgoQuery.Skip(o.Offset)
-		}
-		mgoQuery = mgoQuery.Limit(o.Count)
-	}
-	return mgoQuery
-}
-
 func (m *MongoSearcher) createQueryObject(query Query) bson.M {
+	return m.createQueryObjectFromParams(query.Params())
+}
+
+func (m *MongoSearcher) createQueryObjectFromParams(params []SearchParam) bson.M {
 	result := bson.M{}
-	for _, p := range m.createParamObjects(query.Params()) {
+	for _, p := range m.createParamObjects(params) {
 		merge(result, p)
 	}
 	return result
@@ -359,8 +329,136 @@ func (m *MongoSearcher) createParamObjects(params []SearchParam) []bson.M {
 }
 
 func (m *MongoSearcher) createPipelineObject(query Query) []bson.M {
-	// Currently this is just a $match stage with the same query that would be used in find()
-	return []bson.M{{"$match": m.createQueryObject(query)}}
+	standardSearchParams := []SearchParam{}
+	chainedSearchParams := []SearchParam{}
+
+	// Separate out chained search parameters
+	for _, p := range query.Params() {
+		if usesChainedSearch(p) {
+			chainedSearchParams = append(chainedSearchParams, p)
+			continue
+		}
+		standardSearchParams = append(standardSearchParams, p)
+	}
+
+	// Process standard SearchParams
+	pipeline := []bson.M{{"$match": m.createQueryObjectFromParams(standardSearchParams)}}
+
+	// Process chained search parameters
+	for _, p := range chainedSearchParams {
+		pipeline = append(pipeline, m.createChainedSearchPipelineStages(p)...)
+	}
+
+	return pipeline
+}
+
+// The SearchParam argument should be either a ReferenceParam or an OrParam.
+func (m *MongoSearcher) createChainedSearchPipelineStages(searchParam SearchParam) []bson.M {
+	// This returns 2 stages in the pipeline that represent a chained query reference:
+	// 1. A $lookup for the foreign Resource being referenced
+	// 2. A $match on that foreign Resource
+	stages := make([]bson.M, 2)
+
+	// Build the $lookup. We need to get a ReferenceParam (of type ChainedQueryReference)
+	// that we can use to populate the $lookup. If it's an OR, any one of its Items
+	// should do.
+	var lookupRef *ReferenceParam
+	var ok bool
+
+	_, isOr := searchParam.(*OrParam)
+
+	if isOr {
+		lookupRef, ok = searchParam.(*OrParam).Items[0].(*ReferenceParam)
+		if !ok {
+			panic(createInternalServerError("", ""))
+		}
+	} else {
+		lookupRef = searchParam.(*ReferenceParam)
+	}
+
+	chainedRef, ok := lookupRef.Reference.(ChainedQueryReference)
+	if !ok {
+		panic(createInternalServerError("", ""))
+	}
+
+	collectionName := models.PluralizeLowerResourceName(chainedRef.Type)
+
+	stages[0] = bson.M{"$lookup": bson.M{
+		"from":         collectionName,
+		"localField":   convertSearchPathToMongoField(lookupRef.getInfo().Paths[0].Path) + ".referenceid",
+		"foreignField": "_id",
+		"as":           "_" + collectionName,
+	}}
+
+	// Build the $match. This is based on each ReferenceParam's ChainedQuery, so we'll
+	// need to get the SearchParams from those queries first.
+	var matchableParams []SearchParam
+
+	if isOr {
+		// This gets a little tricky - this is an OR of ReferenceParams, not SearchParams.
+		// We need to re-define the OR as an OR of each ReferenceParam's searchable
+		// ChainedQuery.Param() results. So let's do that.
+		orParam, _ := searchParam.(*OrParam)
+		searchableOrParam := buildSearchableOrFromChainedReferenceOr(orParam)
+		matchableParams = prependCollectionNameToSearchPaths(collectionName, []SearchParam{searchableOrParam})
+
+	} else {
+		matchableParams = prependCollectionNameToSearchPaths(collectionName, chainedRef.ChainedQuery.Params())
+	}
+
+	stages[1] = bson.M{"$match": m.createQueryObjectFromParams(matchableParams)}
+
+	// TODO: Add a third $project stage to remove the field after the $match (need Mongo 3.4)
+	return stages
+}
+
+// Prepends "_<collectionName>" to the search path(s). This mutates the SearchParams
+// by alerting their paths in its SearchParamInfos. To prevent modifying the SearchParameterDictionary
+// each SearchParamInfo is cloned before being mutated.
+func prependCollectionNameToSearchPaths(collectionName string, searchParams []SearchParam) []SearchParam {
+	prependStr := "_" + collectionName + "."
+
+	// Make a copy first so we can safely mutate the params
+	matchParams := make([]SearchParam, len(searchParams))
+	copy(matchParams, searchParams)
+
+	for _, matchParam := range matchParams {
+		switch param := matchParam.(type) {
+
+		case *OrParam:
+			// Need to prepend to the OrParam's SearchParam items instead
+			for _, item := range param.Items {
+				searchInfo := item.getInfo().clone()
+				for i, searchPath := range searchInfo.Paths {
+					searchInfo.Paths[i].Path = prependStr + searchPath.Path
+				}
+				item.setInfo(searchInfo)
+			}
+		default:
+			searchInfo := matchParam.getInfo().clone()
+			for i, searchPath := range searchInfo.Paths {
+				searchInfo.Paths[i].Path = prependStr + searchPath.Path
+			}
+			matchParam.setInfo(searchInfo)
+		}
+	}
+	return matchParams
+}
+
+// Takes an OrParam with two or more ReferenceParam items (of type ChainedQueryReference) and returns
+// an OrParam with two or more SearchParam items from those ChainedQueryReferences.
+func buildSearchableOrFromChainedReferenceOr(referenceOr *OrParam) *OrParam {
+	newOr := &OrParam{
+		SearchParamInfo: referenceOr.SearchParamInfo,
+	}
+
+	for _, item := range referenceOr.Items {
+		refParam, _ := item.(*ReferenceParam)
+		chainedRef, _ := refParam.Reference.(ChainedQueryReference)
+		searchParam := chainedRef.ChainedQuery.Params()[0]
+		newOr.Items = append(newOr.Items, searchParam)
+	}
+	return newOr
 }
 
 func panicOnUnsupportedFeatures(p SearchParam) {
@@ -596,24 +694,10 @@ func (m *MongoSearcher) createReferenceQueryObject(r *ReferenceParam) bson.M {
 			}
 		case ExternalReference:
 			criteria["reference"] = ci(ref.URL)
+
 		case ChainedQueryReference:
-			// Since MongoDB does not support cross-collection searches, we must break this into two:
-			// (1) perform search against referenced collection using chained search Query
-			// (2) use ID results from first query to build second query
-			// TODO: Investigate if new Mongo 3.2 $lookup pipeline feature might be an improvement
-			var idObjs []struct {
-				ID string `bson:"_id"`
-			}
-			q := m.CreateQueryWithoutOptions(ref.ChainedQuery)
-			q.Select(bson.M{"_id": 1}).All(&idObjs)
-			ids := make([]string, len(idObjs))
-			for i := range idObjs {
-				ids[i] = idObjs[i].ID
-			}
-			criteria["referenceid"] = bson.M{"$in": ids}
-			if ref.Type != "" {
-				criteria["type"] = ref.Type
-			}
+			// We want to build the BSON on the reference's SearchParam, not the ReferenceParam itself
+			return m.createQueryObjectFromParams(ref.ChainedQuery.Params())
 		}
 		return buildBSON(p.Path, criteria)
 	}
