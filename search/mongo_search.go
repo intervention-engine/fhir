@@ -23,19 +23,8 @@ func NewBSONQuery(resource string) *BSONQuery {
 	return &BSONQuery{Resource: resource}
 }
 
-// UsesPipeline checks if the query contains includes, revincludes, or chained searches.
-// If so, mongo's (slower) aggregation pipeline must be used. In these instances Query is
-// nil and Pipeline contains zero or more stages.
-func (b *BSONQuery) UsesPipeline() bool {
+func (b *BSONQuery) usesPipeline() bool {
 	return b.Query == nil
-}
-
-// AddStage adds a stage to the Pipeline. If the query doesn't use
-// a pipeline AddStage fails silently.
-func (b *BSONQuery) AddStage(stage bson.M) {
-	if b.UsesPipeline() {
-		b.Pipeline = append(b.Pipeline, stage)
-	}
 }
 
 // MongoSearcher implements FHIR searches using the Mongo database.
@@ -72,7 +61,7 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	bsonQuery := m.convertToBSON(query)
 
 	// execute the query
-	if bsonQuery.UsesPipeline() {
+	if bsonQuery.usesPipeline() {
 		// The (slower) aggregation pipeline is used if the query contains includes or revincludes
 		var mgoPipe *mgo.Pipe
 		mgoPipe, total, err = m.aggregate(bsonQuery, query.Options())
@@ -97,12 +86,16 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	return results, total, nil
 }
 
+// aggregate takes a BSONQuery and runs its Pipeline through the mongo aggregation framework. Any query options
+// will be added to the end of the pipeline.
 func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (pipe *mgo.Pipe, total uint32, err error) {
 	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
 
 	// First get a count of the total results (doesn't apply any options)
-	if len(bsonQuery.Pipeline) == 0 {
-		// The pipeline has no matching so we can just count the total number of documents in the collection
+	if len(bsonQuery.Pipeline) == 1 {
+		// The pipeline is only being used for includes/revincludes, meaning the entire
+		// collection is being searched. It's faster just to get a total count from the
+		// collection.
 		intTotal, err := c.Count()
 		if err != nil {
 			return nil, 0, err
