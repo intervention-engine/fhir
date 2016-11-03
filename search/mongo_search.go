@@ -696,8 +696,8 @@ func (m *MongoSearcher) createReferenceQueryObject(r *ReferenceParam) bson.M {
 			criteria["reference"] = ci(ref.URL)
 
 		case ChainedQueryReference:
-			// We want to build the BSON on the reference's SearchParam, not the ReferenceParam itself
-			return m.createQueryObjectFromParams(ref.ChainedQuery.Params())
+			// This should be handled exclusively by the createPipelineObject
+			panic(createInternalServerError("", ""))
 		}
 		return buildBSON(p.Path, criteria)
 	}
