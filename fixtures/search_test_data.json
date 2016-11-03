@@ -747,4 +747,30 @@
       }
     }
   ]
+}, {
+	"resourceType": "Observation",
+	"id": "7045604479745586371",
+	"status": "final",
+	"code": {
+		"coding": [{
+			"system": "http://loinc.org",
+			"code": "1234-5"
+		}]
+	},
+	"subject": {
+		"reference": "Patient/4954037118555241963"
+	}
+}, {
+	"resourceType": "Observation",
+	"id": "7045604579745586371",
+	"status": "final",
+	"code": {
+	"coding": [{
+			"system": "http://loinc.org",
+			"code": "5678-9"
+		}]
+	},
+	"subject": {
+		"reference": "Patient/4954037118555579315"
+	}
 }]
