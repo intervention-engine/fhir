@@ -1,6 +1,7 @@
 package search
 
 import (
+	"fmt"
 	"time"
 
 	. "gopkg.in/check.v1"
@@ -1156,6 +1157,60 @@ func (s *SearchPTSuite) TestReferenceChainedQueryReconstitution(c *C) {
 	c.Assert(v, Equals, "Peter\\$on")
 }
 
+func (s *SearchPTSuite) TestReferenceReverseChainedQuery(c *C) {
+	// based on the query: "Patient?_has:Observation:subject:code=1234-5"
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+	revChainInfo.Modifier = "Observation:subject:code"
+	r := ParseReferenceParam("1234-5", revChainInfo)
+
+	c.Assert(r.Reference, FitsTypeOf, ReverseChainedQueryReference{})
+	rqr := r.Reference.(ReverseChainedQueryReference)
+	c.Assert(rqr.ReferenceName, Equals, "subject")
+	c.Assert(rqr.Type, Equals, "Observation")
+	q := Query{Resource: "Observation", Query: "code=1234-5"}
+	c.Assert(rqr.Query, DeepEquals, q)
+}
+
+func (s *SearchPTSuite) TestReferenceReverseChainQueryOr(c *C) {
+	// based on the query: "Patient?_has:Observation:subject:code=123,456"
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "123,456")
+	revChainInfo.Modifier = "Observation:subject:code"
+	p := revChainInfo.CreateSearchParam("123,456")
+	c.Assert(p, FitsTypeOf, &OrParam{})
+	o := p.(*OrParam)
+	c.Assert(o.Items, HasLen, 2)
+
+	values := []string{"123", "456"}
+
+	for i, item := range o.Items {
+		refParam, ok := item.(*ReferenceParam)
+		c.Assert(ok, Equals, true)
+		c.Assert(refParam.Reference, FitsTypeOf, ReverseChainedQueryReference{})
+		rqr := refParam.Reference.(ReverseChainedQueryReference)
+		c.Assert(rqr.ReferenceName, Equals, "subject")
+		c.Assert(rqr.Type, Equals, "Observation")
+		q := Query{Resource: "Observation", Query: "code=" + values[i]}
+		c.Assert(rqr.Query, DeepEquals, q)
+	}
+}
+
+func (s *SearchPTSuite) TestReferenceReverseChainedQueryMismatchedModifier(c *C) {
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+	// Normally these shouldn't be a mismatched modifier unless
+	// there's an error in info.CreateSearchParam()
+	revChainInfo.Modifier = "foo:bar"
+	c.Assert(func() { ParseReferenceParam("1234-5", revChainInfo) }, Panics, createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", revChainInfo.Name)))
+}
+
+func (s *SearchPTSuite) TestReferenceReverseChainedQueryReconstitution(c *C) {
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+	revChainInfo.Modifier = "Observation:subject:code"
+	r := ParseReferenceParam("1234-5", revChainInfo)
+	p, v := r.getQueryParamAndValue()
+	c.Assert(p, Equals, "_has:Observation:subject:code")
+	c.Assert(v, Equals, "1234-5")
+}
+
 /******************************************************************************
  * STRING
  ******************************************************************************/
@@ -1800,6 +1855,20 @@ func (s *SearchPTSuite) TestQueryUsesChainedSearchAndPipeline(c *C) {
 	c.Assert(q.UsesPipeline(), Equals, false)
 }
 
+func (s *SearchPTSuite) TestQueryUsesReverseChainedSearchAndPipeline(c *C) {
+	q := Query{"Patient", "_has:Observation:subject:code=123"}
+	c.Assert(q.UsesReverseChainedSearch(), Equals, true)
+	c.Assert(q.UsesPipeline(), Equals, true)
+
+	q = Query{"Patient", "_has:Observation:subject:code=123,456"}
+	c.Assert(q.UsesReverseChainedSearch(), Equals, true)
+	c.Assert(q.UsesPipeline(), Equals, true)
+
+	q = Query{"Patient", "gender=make"}
+	c.Assert(q.UsesReverseChainedSearch(), Equals, false)
+	c.Assert(q.UsesPipeline(), Equals, false)
+}
+
 func (s *SearchPTSuite) TestSearchParamInfoClone(c *C) {
 	original := SearchParamInfo{
 		Name:  "foo",
@@ -1812,6 +1881,32 @@ func (s *SearchPTSuite) TestSearchParamInfoClone(c *C) {
 
 	clone.Paths[0].Path = "notbar"
 	c.Assert(clone.Paths, Not(DeepEquals), original.Paths)
+}
+
+func (s *SearchPTSuite) TestCreateReverseChainedSearchInfo(c *C) {
+	// Example reverse chained search param:
+	// "Patient?_has:Observation:subject:code=1234-5"
+	info := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+
+	// The reference param this was based on
+	refInfo := SearchParameterDictionary["Observation"]["subject"]
+
+	c.Assert(info.Resource, Equals, "Patient")
+	c.Assert(info.Name, Equals, "_has")
+	c.Assert(info.Paths, DeepEquals, refInfo.Paths)
+	c.Assert(len(info.Targets), Equals, 1)
+	c.Assert(info.Targets[0], Equals, "Patient")
+	// These are not assigned by createReverseChainedQueryInfo():
+	c.Assert(info.Postfix, Equals, "")
+	c.Assert(info.Modifier, Equals, "")
+}
+
+func (s *SearchPTSuite) TestCreateReverseChainedSearchInfoPanics(c *C) {
+	// bad modifier
+	c.Assert(func() { createReverseChainedQueryInfo("Patient", "foo:bar", "123") }, Panics, createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", "_has")))
+
+	// invalid reference
+	c.Assert(func() { createReverseChainedQueryInfo("Patient", "Observation:foo:bar", "123") }, Panics, createInvalidSearchError("SEARCH_NONE", fmt.Sprintf("Error: no processable search found for %s search parameters \"%s\"", "Patient", "_has")))
 }
 
 // getAllIncludeNames obtains the names of all includes that would be included with
