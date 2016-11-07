@@ -430,8 +430,6 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	bundle.Entry = entryList
 	bundle.Total = &total
 
-	fmt.Print(total)
-
 	// Add links for paging
 	bundle.Link = generatePagingLinks(baseURL, searchQuery, total)
 
