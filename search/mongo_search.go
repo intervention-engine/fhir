@@ -95,8 +95,9 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (
 	if len(bsonQuery.Pipeline) == 1 {
 		// The pipeline is only being used for includes/revincludes, meaning the entire
 		// collection is being searched. It's faster just to get a total count from the
-		// collection.
-		intTotal, err := c.Count()
+		// collection after a find operation. The first stage in the Pipeline will
+		// always be a $match stage.
+		intTotal, err := c.Find(bsonQuery.Pipeline[0]["$match"]).Count()
 		if err != nil {
 			return nil, 0, err
 		}
@@ -107,7 +108,7 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (
 			"_id":   nil,
 			"total": bson.M{"$sum": 1},
 		}}
-		countPipeline := make([]bson.M, len(bsonQuery.Pipeline))
+		countPipeline := make([]bson.M, len(bsonQuery.Pipeline)+1)
 		copy(countPipeline, bsonQuery.Pipeline)
 		countPipeline = append(countPipeline, countStage)
 
@@ -130,6 +131,8 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (
 	return c.Pipe(searchPipeline).AllowDiskUse(), total, nil
 }
 
+// find takes a BSONQuery and runs a standard mongo search on that query. Any query options are applied
+// after the initial search is performed.
 func (m *MongoSearcher) find(bsonQuery *BSONQuery, options *QueryOptions) (query *mgo.Query, total uint32, err error) {
 	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
 

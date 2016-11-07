@@ -319,7 +319,7 @@ func (dal *mongoDataAccessLayer) ConditionalDelete(query search.Query) (count in
 		   the following approach:
 		   1. Bulk delete those resources by ID
 		   2. Search again using the SAME query, to verify that those resources were in fact deleted
-		   4. Run the interceptor(s) on all resources that ARE NOT in the second search (since they were truly deleted)
+		   3. Run the interceptor(s) on all resources that ARE NOT in the second search (since they were truly deleted)
 		*/
 
 		// get the resources that are about to be deleted
