@@ -110,7 +110,7 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (
 		}}
 		countPipeline := make([]bson.M, len(bsonQuery.Pipeline)+1)
 		copy(countPipeline, bsonQuery.Pipeline)
-		countPipeline = append(countPipeline, countStage)
+		countPipeline[len(countPipeline)-1] = countStage
 
 		result := struct {
 			Total float64 `bson:"total"`
