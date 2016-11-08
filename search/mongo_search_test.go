@@ -580,6 +580,43 @@ func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithMultipleReferenceP
 	})
 }
 
+func (m *MongoSearchSuite) TestChainedOrPipelineObjectWithMultipleReferencePathsAndOr(c *C) {
+	q := Query{"AuditEvent", "patient.gender=foo,bar"}
+
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "AuditEvent")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "agent.reference.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "entity.reference.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup1",
+		}},
+		bson.M{"$match": bson.M{
+			"$or": []bson.M{
+				bson.M{"$or": []bson.M{
+					bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+					bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+				}},
+				bson.M{"$or": []bson.M{
+					bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
+					bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
+				}},
+			},
+		}},
+	})
+}
+
 func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
 	q := Query{"Condition", "patient.gender=male"}
 	results, _, err := m.MongoSearcher.Search(q)
