@@ -1786,6 +1786,34 @@ func (s *SearchPTSuite) TestQueryOptionsURLQueryParameters(c *C) {
 	c.Assert(all[5], DeepEquals, URLQueryParameter{Key: RevIncludeParam, Value: "Encounter:patient"})
 }
 
+func (s *SearchPTSuite) TestQueryUsesChainedSearchAndPipeline(c *C) {
+	q := Query{"Condition", "patient.gender=male"}
+	c.Assert(q.UsesChainedSearch(), Equals, true)
+	c.Assert(q.UsesPipeline(), Equals, true)
+
+	q = Query{"Condition", "patient.gender=female,foo"}
+	c.Assert(q.UsesChainedSearch(), Equals, true)
+	c.Assert(q.UsesPipeline(), Equals, true)
+
+	q = Query{"Patient", "gender=male"}
+	c.Assert(q.UsesChainedSearch(), Equals, false)
+	c.Assert(q.UsesPipeline(), Equals, false)
+}
+
+func (s *SearchPTSuite) TestSearchParamInfoClone(c *C) {
+	original := SearchParamInfo{
+		Name:  "foo",
+		Type:  "number",
+		Paths: []SearchParamPath{SearchParamPath{Path: "bar", Type: "number"}},
+	}
+
+	clone := original.clone()
+	c.Assert(clone.Paths, DeepEquals, original.Paths)
+
+	clone.Paths[0].Path = "notbar"
+	c.Assert(clone.Paths, Not(DeepEquals), original.Paths)
+}
+
 // getAllIncludeNames obtains the names of all includes that would be included with
 // _include=* from the SearchParameterDictionary
 func getAllIncludeNames(resourceName string) []string {

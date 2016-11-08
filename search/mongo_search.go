@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strings"
 
+	"strconv"
+
 	"github.com/intervention-engine/fhir/models"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -110,7 +112,7 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (
 		}}
 		countPipeline := make([]bson.M, len(bsonQuery.Pipeline)+1)
 		copy(countPipeline, bsonQuery.Pipeline)
-		countPipeline = append(countPipeline, countStage)
+		countPipeline[len(countPipeline)-1] = countStage
 
 		result := struct {
 			Total float64 `bson:"total"`
@@ -175,6 +177,82 @@ func (m *MongoSearcher) convertToBSON(query Query) *BSONQuery {
 		bsonQuery.Query = m.createQueryObject(query)
 	}
 	return bsonQuery
+}
+
+func (m *MongoSearcher) createQueryObject(query Query) bson.M {
+	return m.createQueryObjectFromParams(query.Params())
+}
+
+func (m *MongoSearcher) createQueryObjectFromParams(params []SearchParam) bson.M {
+	result := bson.M{}
+	for _, p := range m.createParamObjects(params) {
+		merge(result, p)
+	}
+	return result
+}
+
+func (m *MongoSearcher) createParamObjects(params []SearchParam) []bson.M {
+	results := make([]bson.M, len(params))
+	for i, p := range params {
+		panicOnUnsupportedFeatures(p)
+		switch p := p.(type) {
+		case *CompositeParam:
+			results[i] = m.createCompositeQueryObject(p)
+		case *DateParam:
+			results[i] = m.createDateQueryObject(p)
+		case *NumberParam:
+			results[i] = m.createNumberQueryObject(p)
+		case *QuantityParam:
+			results[i] = m.createQuantityQueryObject(p)
+		case *ReferenceParam:
+			results[i] = m.createReferenceQueryObject(p)
+		case *StringParam:
+			results[i] = m.createStringQueryObject(p)
+		case *TokenParam:
+			results[i] = m.createTokenQueryObject(p)
+		case *URIParam:
+			results[i] = m.createURIQueryObject(p)
+		case *OrParam:
+			results[i] = m.createOrQueryObject(p)
+		default:
+			// Check for custom search parameter implementations
+			builder, err := GlobalMongoRegistry().LookupBSONBuilder(p.getInfo().Type)
+			if err != nil {
+				panic(createInternalServerError("MSG_PARAM_UNKNOWN", fmt.Sprintf("Parameter \"%s\" not understood", p.getInfo().Name)))
+			}
+			result, err := builder(p, m)
+			if err != nil {
+				panic(createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", p.getInfo().Name)))
+			}
+			results[i] = result
+		}
+	}
+
+	return results
+}
+
+func (m *MongoSearcher) createPipelineObject(query Query) []bson.M {
+	standardSearchParams := []SearchParam{}
+	chainedSearchParams := []SearchParam{}
+
+	// Separate out chained search parameters
+	for _, p := range query.Params() {
+		if usesChainedSearch(p) {
+			chainedSearchParams = append(chainedSearchParams, p)
+			continue
+		}
+		standardSearchParams = append(standardSearchParams, p)
+	}
+
+	// Process standard SearchParams
+	pipeline := []bson.M{{"$match": m.createQueryObjectFromParams(standardSearchParams)}}
+
+	// Process chained search parameters
+	for _, p := range chainedSearchParams {
+		pipeline = append(pipeline, m.createChainedSearchPipelineStages(p)...)
+	}
+
+	return pipeline
 }
 
 func (m *MongoSearcher) convertOptionsToPipelineStages(resource string, o *QueryOptions) []bson.M {
@@ -276,91 +354,148 @@ func (m *MongoSearcher) convertOptionsToPipelineStages(resource string, o *Query
 	return p
 }
 
-// CreateQueryWithoutOptions is deprecated and will be removed in a future version
-// (after chained search is implemented using pipelines)
-func (m *MongoSearcher) CreateQueryWithoutOptions(query Query) *mgo.Query {
-	return m.createQuery(query, false)
-}
+// The SearchParam argument should be either a ReferenceParam or an OrParam.
+func (m *MongoSearcher) createChainedSearchPipelineStages(searchParam SearchParam) []bson.M {
+	// This returns stages in the pipeline that represent a chained query reference:
+	// 1. One or more $lookup stages for the foreign Resource being referenced (one for each search path)
+	// 2. A $match on that foreign Resource
 
-func (m *MongoSearcher) createQuery(query Query, withOptions bool) *mgo.Query {
-	c := m.db.C(models.PluralizeLowerResourceName(query.Resource))
-	q := m.createQueryObject(query)
-	mgoQuery := c.Find(q)
+	// Build the $lookups. We need to get a ReferenceParam (of type ChainedQueryReference)
+	// that we can use to populate the $lookup. If it's an OR, any one of its Items
+	// should do.
+	var lookupRef *ReferenceParam
+	var ok bool
 
-	if withOptions {
-		o := query.Options()
-		removeParallelArraySorts(o)
-		if len(o.Sort) > 0 {
-			fields := make([]string, len(o.Sort))
-			for i := range o.Sort {
-				// Note: If there are multiple paths, we only look at the first one -- not ideal, but otherwise it gets tricky
-				field := convertSearchPathToMongoField(o.Sort[i].Parameter.Paths[0].Path)
-				if o.Sort[i].Descending {
-					field = "-" + field
-				}
-				fields[i] = field
-			}
-			mgoQuery = mgoQuery.Sort(fields...)
+	_, isOr := searchParam.(*OrParam)
+
+	if isOr {
+		lookupRef, ok = searchParam.(*OrParam).Items[0].(*ReferenceParam)
+		if !ok {
+			panic(createInternalServerError("", "Chained query OR has no references"))
 		}
-		if o.Offset > 0 {
-			mgoQuery = mgoQuery.Skip(o.Offset)
-		}
-		mgoQuery = mgoQuery.Limit(o.Count)
+	} else {
+		lookupRef = searchParam.(*ReferenceParam)
 	}
-	return mgoQuery
+
+	chainedRef, ok := lookupRef.Reference.(ChainedQueryReference)
+	if !ok {
+		panic(createInternalServerError("", "ReferenceParam is not of type ChainedQueryReference"))
+	}
+
+	// We need a $lookup stage for each path, followed by one $match stage
+	stages := make([]bson.M, len(lookupRef.getInfo().Paths)+1)
+	collectionName := models.PluralizeLowerResourceName(chainedRef.Type)
+
+	for i, path := range lookupRef.Paths {
+		stages[i] = bson.M{"$lookup": bson.M{
+			"from":         collectionName,
+			"localField":   convertSearchPathToMongoField(path.Path) + ".referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup" + strconv.Itoa(i),
+		}}
+	}
+
+	// Build the $match. This is based on each ReferenceParam's ChainedQuery, so we'll
+	// need to get the SearchParams from those queries first.
+	var matchableParams []SearchParam
+
+	if isOr {
+		// This gets a little tricky - this is an OR of ReferenceParams, not SearchParams.
+		// We need to re-define the OR as an OR of each ReferenceParam's searchable
+		// ChainedQuery.Param() results. So let's do that.
+		orParam, _ := searchParam.(*OrParam)
+		searchableOrParam := buildSearchableOrFromChainedReferenceOr(orParam)
+		matchableParams = prependLookupKeyToSearchPaths([]SearchParam{searchableOrParam}, len(lookupRef.Paths))
+
+	} else {
+		matchableParams = prependLookupKeyToSearchPaths(chainedRef.ChainedQuery.Params(), len(lookupRef.Paths))
+	}
+
+	stages[len(stages)-1] = bson.M{"$match": m.createQueryObjectFromParams(matchableParams)}
+
+	// TODO: Add a $project stage to remove the field after the $match (need Mongo 3.4)
+	return stages
 }
 
-func (m *MongoSearcher) createQueryObject(query Query) bson.M {
-	result := bson.M{}
-	for _, p := range m.createParamObjects(query.Params()) {
-		merge(result, p)
-	}
-	return result
-}
+// Prepends "_lookup[i]." to the search path(s), where [i] >= 0. This mutates
+// the SearchParams by altering the paths in their SearchParamInfos. To prevent
+// modifying the SearchParameterDictionary each SearchParamInfo is cloned before
+// being mutated.
+func prependLookupKeyToSearchPaths(searchParams []SearchParam, numReferencePaths int) []SearchParam {
 
-func (m *MongoSearcher) createParamObjects(params []SearchParam) []bson.M {
-	results := make([]bson.M, len(params))
-	for i, p := range params {
-		panicOnUnsupportedFeatures(p)
-		switch p := p.(type) {
-		case *CompositeParam:
-			results[i] = m.createCompositeQueryObject(p)
-		case *DateParam:
-			results[i] = m.createDateQueryObject(p)
-		case *NumberParam:
-			results[i] = m.createNumberQueryObject(p)
-		case *QuantityParam:
-			results[i] = m.createQuantityQueryObject(p)
-		case *ReferenceParam:
-			results[i] = m.createReferenceQueryObject(p)
-		case *StringParam:
-			results[i] = m.createStringQueryObject(p)
-		case *TokenParam:
-			results[i] = m.createTokenQueryObject(p)
-		case *URIParam:
-			results[i] = m.createURIQueryObject(p)
+	prependStr := "_lookup"
+
+	// Make a copy first so we can safely mutate the params
+	matchParams := make([]SearchParam, len(searchParams))
+	copy(matchParams, searchParams)
+
+	for _, matchParam := range matchParams {
+		switch param := matchParam.(type) {
+
 		case *OrParam:
-			results[i] = m.createOrQueryObject(p)
+			// Need to prepend to the OrParam's SearchParam items instead
+			for _, item := range param.Items {
+				searchInfo := item.getInfo().clone()
+
+				if numReferencePaths > 1 {
+					// If we have multiple reference paths we need to duplicate the SearchParamPaths
+					// for each matchable SearchParam so we can test against each $lookup in one $or
+					// clause.
+					duplicatePaths(&searchInfo, numReferencePaths)
+				}
+
+				for i, searchPath := range searchInfo.Paths {
+					searchInfo.Paths[i].Path = prependStr + strconv.Itoa(i%numReferencePaths) + "." + searchPath.Path
+				}
+				item.setInfo(searchInfo)
+			}
 		default:
-			// Check for custom search parameter implementations
-			builder, err := GlobalMongoRegistry().LookupBSONBuilder(p.getInfo().Type)
-			if err != nil {
-				panic(createInternalServerError("MSG_PARAM_UNKNOWN", fmt.Sprintf("Parameter \"%s\" not understood", p.getInfo().Name)))
+			searchInfo := matchParam.getInfo().clone()
+
+			if numReferencePaths > 1 {
+				duplicatePaths(&searchInfo, numReferencePaths)
 			}
-			result, err := builder(p, m)
-			if err != nil {
-				panic(createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", p.getInfo().Name)))
+
+			for i, searchPath := range searchInfo.Paths {
+				searchInfo.Paths[i].Path = prependStr + strconv.Itoa(i%numReferencePaths) + "." + searchPath.Path
 			}
-			results[i] = result
+			matchParam.setInfo(searchInfo)
+		}
+	}
+	return matchParams
+}
+
+// duplicatePaths duplicates the paths in the SearchParamInfo n times.
+// Given paths [a, b] and n = 3, this would return [a, a, a, b, b, b]
+func duplicatePaths(info *SearchParamInfo, n int) {
+
+	paths := info.Paths
+	numPaths := len(paths)
+	newPaths := make([]SearchParamPath, numPaths*n)
+
+	for i := 0; i < numPaths; i++ {
+		for j := 0; j < n; j++ {
+			newPaths[i*n+j] = paths[i]
 		}
 	}
 
-	return results
+	info.Paths = newPaths
 }
 
-func (m *MongoSearcher) createPipelineObject(query Query) []bson.M {
-	// Currently this is just a $match stage with the same query that would be used in find()
-	return []bson.M{{"$match": m.createQueryObject(query)}}
+// Takes an OrParam with two or more ReferenceParam items (of type ChainedQueryReference) and returns
+// an OrParam with two or more SearchParam items from those ChainedQueryReferences.
+func buildSearchableOrFromChainedReferenceOr(referenceOr *OrParam) *OrParam {
+	newOr := &OrParam{
+		SearchParamInfo: referenceOr.SearchParamInfo,
+	}
+
+	for _, item := range referenceOr.Items {
+		refParam, _ := item.(*ReferenceParam)
+		chainedRef, _ := refParam.Reference.(ChainedQueryReference)
+		searchParam := chainedRef.ChainedQuery.Params()[0] // There should only ever be 1 SearchParam here
+		newOr.Items = append(newOr.Items, searchParam)
+	}
+	return newOr
 }
 
 func panicOnUnsupportedFeatures(p SearchParam) {
@@ -596,24 +731,10 @@ func (m *MongoSearcher) createReferenceQueryObject(r *ReferenceParam) bson.M {
 			}
 		case ExternalReference:
 			criteria["reference"] = ci(ref.URL)
+
 		case ChainedQueryReference:
-			// Since MongoDB does not support cross-collection searches, we must break this into two:
-			// (1) perform search against referenced collection using chained search Query
-			// (2) use ID results from first query to build second query
-			// TODO: Investigate if new Mongo 3.2 $lookup pipeline feature might be an improvement
-			var idObjs []struct {
-				ID string `bson:"_id"`
-			}
-			q := m.CreateQueryWithoutOptions(ref.ChainedQuery)
-			q.Select(bson.M{"_id": 1}).All(&idObjs)
-			ids := make([]string, len(idObjs))
-			for i := range idObjs {
-				ids[i] = idObjs[i].ID
-			}
-			criteria["referenceid"] = bson.M{"$in": ids}
-			if ref.Type != "" {
-				criteria["type"] = ref.Type
-			}
+			// This should be handled exclusively by the createPipelineObject
+			panic(createInternalServerError("", "createReferenceQueryObject should not be used to create ChainedQueryReferences"))
 		}
 		return buildBSON(p.Path, criteria)
 	}

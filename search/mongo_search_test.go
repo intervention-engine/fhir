@@ -502,15 +502,118 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageId(c *C) {
 
 // TODO: Test execution of reference search on PatientURL (as above)
 
-// Test reference searches on chained queries
-
-func (m *MongoSearchSuite) TestConditionReferenceQueryObjectByPatientGender(c *C) {
+func (m *MongoSearchSuite) TestConditionChainedSearchPipelineObject(c *C) {
 	q := Query{"Condition", "patient.gender=male"}
 
-	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{
-		"subject.referenceid": bson.M{"$in": []string{"4954037118555241963"}},
-		"subject.type":        "Patient",
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "Condition")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "subject.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$match": bson.M{
+			"_lookup0.gender": bson.RegEx{Pattern: "^male$", Options: "i"},
+		}},
+	})
+}
+
+func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithOr(c *C) {
+	q := Query{"Condition", "patient.gender=foo,bar"}
+
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "Condition")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "subject.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$match": bson.M{
+			"$or": []bson.M{
+				bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+				bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
+			},
+		}},
+	})
+}
+
+func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithMultipleReferencePaths(c *C) {
+	q := Query{"AuditEvent", "patient.gender=male"}
+
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "AuditEvent")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "agent.reference.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "entity.reference.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup1",
+		}},
+		bson.M{"$match": bson.M{
+			"$or": []bson.M{
+				bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^male$", Options: "i"}},
+				bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^male$", Options: "i"}},
+			},
+		}},
+	})
+}
+
+func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithMultipleReferencePathsAndOr(c *C) {
+	q := Query{"AuditEvent", "patient.gender=foo,bar"}
+
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "AuditEvent")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "agent.reference.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$lookup": bson.M{
+			"from":         "patients",
+			"localField":   "entity.reference.referenceid",
+			"foreignField": "_id",
+			"as":           "_lookup1",
+		}},
+		bson.M{"$match": bson.M{
+			"$or": []bson.M{
+				bson.M{"$or": []bson.M{
+					bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+					bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+				}},
+				bson.M{"$or": []bson.M{
+					bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
+					bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
+				}},
+			},
+		}},
 	})
 }
 
@@ -526,6 +629,20 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGender(c *C) {
 	util.CheckErr(err)
 	resultsVal = reflect.ValueOf(results).Elem()
 	c.Assert(resultsVal.Len(), Equals, 1)
+}
+
+func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGenderOr(c *C) {
+	q := Query{"Condition", "patient.gender=male,foo"}
+	results, _, err := m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 5)
+
+	q = Query{"Condition", "patient.gender=male,female"}
+	results, _, err = m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 6)
 }
 
 // These next tests ensure that the indexer is properly converted to a mongo
@@ -1558,6 +1675,10 @@ type BroParam struct {
 
 func (b *BroParam) getInfo() SearchParamInfo {
 	return b.info
+}
+
+func (b *BroParam) setInfo(info SearchParamInfo) {
+	b.info = info
 }
 
 func (b *BroParam) getQueryParamAndValue() (string, string) {
