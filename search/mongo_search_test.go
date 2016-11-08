@@ -580,7 +580,7 @@ func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithMultipleReferenceP
 	})
 }
 
-func (m *MongoSearchSuite) TestChainedOrPipelineObjectWithMultipleReferencePathsAndOr(c *C) {
+func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithMultipleReferencePathsAndOr(c *C) {
 	q := Query{"AuditEvent", "patient.gender=foo,bar"}
 
 	bsonQuery := m.MongoSearcher.convertToBSON(q)

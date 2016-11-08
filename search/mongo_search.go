@@ -445,7 +445,7 @@ func prependLookupKeyToSearchPaths(searchParams []SearchParam, numReferencePaths
 				}
 
 				for i, searchPath := range searchInfo.Paths {
-					searchInfo.Paths[i].Path = prependStr + strconv.Itoa(i) + "." + searchPath.Path
+					searchInfo.Paths[i].Path = prependStr + strconv.Itoa(i%numReferencePaths) + "." + searchPath.Path
 				}
 				item.setInfo(searchInfo)
 			}
@@ -457,7 +457,7 @@ func prependLookupKeyToSearchPaths(searchParams []SearchParam, numReferencePaths
 			}
 
 			for i, searchPath := range searchInfo.Paths {
-				searchInfo.Paths[i].Path = prependStr + strconv.Itoa(i) + "." + searchPath.Path
+				searchInfo.Paths[i].Path = prependStr + strconv.Itoa(i%numReferencePaths) + "." + searchPath.Path
 			}
 			matchParam.setInfo(searchInfo)
 		}
@@ -466,15 +466,19 @@ func prependLookupKeyToSearchPaths(searchParams []SearchParam, numReferencePaths
 }
 
 // duplicatePaths duplicates the paths in the SearchParamInfo n times.
+// Given paths [a, b] and n = 3, this would return [a, a, a, b, b, b]
 func duplicatePaths(info *SearchParamInfo, n int) {
 
 	paths := info.Paths
 	numPaths := len(paths)
 	newPaths := make([]SearchParamPath, numPaths*n)
 
-	for i := 0; i < numPaths*n; i++ {
-		newPaths[i] = paths[i%numPaths]
+	for i := 0; i < numPaths; i++ {
+		for j := 0; j < n; j++ {
+			newPaths[i*n+j] = paths[i]
+		}
 	}
+
 	info.Paths = newPaths
 }
 
