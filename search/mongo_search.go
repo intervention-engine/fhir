@@ -435,7 +435,7 @@ func (m *MongoSearcher) createReverseChainedSearchPipelineStages(searchParam Sea
 	collectionName := models.PluralizeLowerResourceName(revChainedRef.Type)
 
 	for i, path := range lookupRef.Paths {
-		stages[0] = bson.M{"$lookup": bson.M{
+		stages[i] = bson.M{"$lookup": bson.M{
 			"from":         collectionName,
 			"localField":   "_id",
 			"foreignField": convertSearchPathToMongoField(path.Path) + ".referenceid",
@@ -476,7 +476,7 @@ func getLookupReference(searchParam SearchParam) (lookupRef *ReferenceParam, isO
 		var ok bool
 		lookupRef, ok = searchParam.(*OrParam).Items[0].(*ReferenceParam)
 		if !ok {
-			panic(createInternalServerError("", ""))
+			panic(createInternalServerError("", "Chained search OR has no valid ReferenceParam to use for the $lookup"))
 		}
 	} else {
 		lookupRef = searchParam.(*ReferenceParam)
