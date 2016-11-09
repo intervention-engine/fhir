@@ -83,7 +83,7 @@ func (q *Query) Params() []SearchParam {
 			// from SearchParamInfo found in a different resource than the one being searched.
 			// For example, in the query "Patient?_has:Observation:subject:code" we're looking in
 			// SearchParameterDictionary["Observation"], not SearchParameterDictionary["Patient"]
-			info = createReverseChainedQueryInfo(q.Resource, modifier, queryParam.Value)
+			info = createReverseChainedQueryInfo(q.Resource, modifier)
 		} else {
 			info, ok = SearchParameterDictionary[q.Resource][param]
 		}
@@ -507,7 +507,7 @@ func (s SearchParamInfo) clone() SearchParamInfo {
 	return newInfo
 }
 
-func createReverseChainedQueryInfo(resource, modifier, value string) SearchParamInfo {
+func createReverseChainedQueryInfo(resource, modifier string) SearchParamInfo {
 	// First split the modifier (e.g. "Observation:subject:code")
 	// to get the resources being referenced and a SearchParam to search.
 	// the parts are [fromResource, refField, searchField]
@@ -520,9 +520,10 @@ func createReverseChainedQueryInfo(resource, modifier, value string) SearchParam
 		panic(createInvalidSearchError("SEARCH_NONE", fmt.Sprintf("Error: no processable search found for %s search parameters \"%s\"", resource, "_has")))
 	}
 	revChainInfo := refInfo.clone()
-	revChainInfo.Resource = resource
+	revChainInfo.Resource = parts[0]
 	revChainInfo.Name = "_has"
 	revChainInfo.Targets = []string{resource} // We already know the target
+	revChainInfo.Modifier = modifier
 	return revChainInfo
 }
 
@@ -973,9 +974,9 @@ func (r *ReferenceParam) getQueryParamAndValue() (string, string) {
 		if len(searchParams) != 1 {
 			panic(createInternalServerError("MSG_PARAM_CHAINED", "Unknown chained parameter name \"\""))
 		}
-		// e.g. "gender=male"
+		// e.g. "code=1234-5"
 		qParam, qValue := searchParams[0].getQueryParamAndValue()
-		// (e.g. "_has:Observation:subject:gender", "male")
+		// (e.g. "_has:Observation:subject:code", "1234-5")
 		return fmt.Sprintf("_has:%s:%s:%s", t.Type, t.ReferenceName, qParam), qValue
 	case ChainedQueryReference:
 		// This is a weird one, so don't use the general encodedQueryParam function

@@ -1159,7 +1159,7 @@ func (s *SearchPTSuite) TestReferenceChainedQueryReconstitution(c *C) {
 
 func (s *SearchPTSuite) TestReferenceReverseChainedQuery(c *C) {
 	// based on the query: "Patient?_has:Observation:subject:code=1234-5"
-	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code")
 	revChainInfo.Modifier = "Observation:subject:code"
 	r := ParseReferenceParam("1234-5", revChainInfo)
 
@@ -1173,7 +1173,7 @@ func (s *SearchPTSuite) TestReferenceReverseChainedQuery(c *C) {
 
 func (s *SearchPTSuite) TestReferenceReverseChainQueryOr(c *C) {
 	// based on the query: "Patient?_has:Observation:subject:code=123,456"
-	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "123,456")
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code")
 	revChainInfo.Modifier = "Observation:subject:code"
 	p := revChainInfo.CreateSearchParam("123,456")
 	c.Assert(p, FitsTypeOf, &OrParam{})
@@ -1195,7 +1195,7 @@ func (s *SearchPTSuite) TestReferenceReverseChainQueryOr(c *C) {
 }
 
 func (s *SearchPTSuite) TestReferenceReverseChainedQueryMismatchedModifier(c *C) {
-	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code")
 	// Normally these shouldn't be a mismatched modifier unless
 	// there's an error in info.CreateSearchParam()
 	revChainInfo.Modifier = "foo:bar"
@@ -1203,7 +1203,7 @@ func (s *SearchPTSuite) TestReferenceReverseChainedQueryMismatchedModifier(c *C)
 }
 
 func (s *SearchPTSuite) TestReferenceReverseChainedQueryReconstitution(c *C) {
-	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+	revChainInfo := createReverseChainedQueryInfo("Patient", "Observation:subject:code")
 	revChainInfo.Modifier = "Observation:subject:code"
 	r := ParseReferenceParam("1234-5", revChainInfo)
 	p, v := r.getQueryParamAndValue()
@@ -1886,27 +1886,27 @@ func (s *SearchPTSuite) TestSearchParamInfoClone(c *C) {
 func (s *SearchPTSuite) TestCreateReverseChainedSearchInfo(c *C) {
 	// Example reverse chained search param:
 	// "Patient?_has:Observation:subject:code=1234-5"
-	info := createReverseChainedQueryInfo("Patient", "Observation:subject:code", "1234-5")
+	info := createReverseChainedQueryInfo("Patient", "Observation:subject:code")
 
 	// The reference param this was based on
 	refInfo := SearchParameterDictionary["Observation"]["subject"]
 
-	c.Assert(info.Resource, Equals, "Patient")
+	c.Assert(info.Resource, Equals, "Observation")
 	c.Assert(info.Name, Equals, "_has")
 	c.Assert(info.Paths, DeepEquals, refInfo.Paths)
 	c.Assert(len(info.Targets), Equals, 1)
 	c.Assert(info.Targets[0], Equals, "Patient")
 	// These are not assigned by createReverseChainedQueryInfo():
 	c.Assert(info.Postfix, Equals, "")
-	c.Assert(info.Modifier, Equals, "")
+	c.Assert(info.Modifier, Equals, "Observation:subject:code")
 }
 
 func (s *SearchPTSuite) TestCreateReverseChainedSearchInfoPanics(c *C) {
 	// bad modifier
-	c.Assert(func() { createReverseChainedQueryInfo("Patient", "foo:bar", "123") }, Panics, createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", "_has")))
+	c.Assert(func() { createReverseChainedQueryInfo("Patient", "foo:bar") }, Panics, createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", "_has")))
 
 	// invalid reference
-	c.Assert(func() { createReverseChainedQueryInfo("Patient", "Observation:foo:bar", "123") }, Panics, createInvalidSearchError("SEARCH_NONE", fmt.Sprintf("Error: no processable search found for %s search parameters \"%s\"", "Patient", "_has")))
+	c.Assert(func() { createReverseChainedQueryInfo("Patient", "Observation:foo:bar") }, Panics, createInvalidSearchError("SEARCH_NONE", fmt.Sprintf("Error: no processable search found for %s search parameters \"%s\"", "Patient", "_has")))
 }
 
 // getAllIncludeNames obtains the names of all includes that would be included with
