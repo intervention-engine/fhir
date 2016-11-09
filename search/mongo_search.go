@@ -234,11 +234,16 @@ func (m *MongoSearcher) createParamObjects(params []SearchParam) []bson.M {
 func (m *MongoSearcher) createPipelineObject(query Query) []bson.M {
 	standardSearchParams := []SearchParam{}
 	chainedSearchParams := []SearchParam{}
+	reverseChainedSearchParams := []SearchParam{}
 
-	// Separate out chained search parameters
+	// Separate out chained and reverse chained search parameters
 	for _, p := range query.Params() {
 		if usesChainedSearch(p) {
 			chainedSearchParams = append(chainedSearchParams, p)
+			continue
+		}
+		if usesReverseChainedSearch(p) {
+			reverseChainedSearchParams = append(reverseChainedSearchParams, p)
 			continue
 		}
 		standardSearchParams = append(standardSearchParams, p)
@@ -250,6 +255,11 @@ func (m *MongoSearcher) createPipelineObject(query Query) []bson.M {
 	// Process chained search parameters
 	for _, p := range chainedSearchParams {
 		pipeline = append(pipeline, m.createChainedSearchPipelineStages(p)...)
+	}
+
+	// Process reverse chained search parameters
+	for _, p := range reverseChainedSearchParams {
+		pipeline = append(pipeline, m.createReverseChainedSearchPipelineStages(p)...)
 	}
 
 	return pipeline
@@ -363,19 +373,7 @@ func (m *MongoSearcher) createChainedSearchPipelineStages(searchParam SearchPara
 	// Build the $lookups. We need to get a ReferenceParam (of type ChainedQueryReference)
 	// that we can use to populate the $lookup. If it's an OR, any one of its Items
 	// should do.
-	var lookupRef *ReferenceParam
-	var ok bool
-
-	_, isOr := searchParam.(*OrParam)
-
-	if isOr {
-		lookupRef, ok = searchParam.(*OrParam).Items[0].(*ReferenceParam)
-		if !ok {
-			panic(createInternalServerError("", "Chained query OR has no references"))
-		}
-	} else {
-		lookupRef = searchParam.(*ReferenceParam)
-	}
+	lookupRef, isOr := getLookupReference(searchParam)
 
 	chainedRef, ok := lookupRef.Reference.(ChainedQueryReference)
 	if !ok {
@@ -402,7 +400,7 @@ func (m *MongoSearcher) createChainedSearchPipelineStages(searchParam SearchPara
 	if isOr {
 		// This gets a little tricky - this is an OR of ReferenceParams, not SearchParams.
 		// We need to re-define the OR as an OR of each ReferenceParam's searchable
-		// ChainedQuery.Param() results. So let's do that.
+		// ChainedQuery.Params() results. So let's do that.
 		orParam, _ := searchParam.(*OrParam)
 		searchableOrParam := buildSearchableOrFromChainedReferenceOr(orParam)
 		matchableParams = prependLookupKeyToSearchPaths([]SearchParam{searchableOrParam}, len(lookupRef.Paths))
@@ -415,6 +413,75 @@ func (m *MongoSearcher) createChainedSearchPipelineStages(searchParam SearchPara
 
 	// TODO: Add a $project stage to remove the field after the $match (need Mongo 3.4)
 	return stages
+}
+
+func (m *MongoSearcher) createReverseChainedSearchPipelineStages(searchParam SearchParam) []bson.M {
+	// This returns stages in the pipeline that represent a chained query reference:
+	// 1. One or more $lookup stages for the foreign Resource being referenced (one for each search path)
+	// 2. A $match on that foreign Resource
+
+	// Build the $lookup. We need to get a ReferenceParam (of type ReverseChainedQueryReference)
+	// that we can use to populate the $lookup. If it's an OR, any one of its Items
+	// should do.
+	lookupRef, isOr := getLookupReference(searchParam)
+
+	revChainedRef, ok := lookupRef.Reference.(ReverseChainedQueryReference)
+	if !ok {
+		panic(createInternalServerError("", "ReferenceParam is not of type ReverseChainedQueryReference"))
+	}
+
+	// We need a $lookup stage for each path, followed by one $match stage
+	stages := make([]bson.M, len(lookupRef.getInfo().Paths)+1)
+	collectionName := models.PluralizeLowerResourceName(revChainedRef.Type)
+
+	for i, path := range lookupRef.Paths {
+		stages[i] = bson.M{"$lookup": bson.M{
+			"from":         collectionName,
+			"localField":   "_id",
+			"foreignField": convertSearchPathToMongoField(path.Path) + ".referenceid",
+			"as":           "_lookup" + strconv.Itoa(i),
+		}}
+	}
+
+	// Build the $match. This is based on each ReferenceParam's Query, so we'll
+	// need to get the SearchParams from those queries first.
+	var matchableParams []SearchParam
+
+	if isOr {
+		// This gets a little tricky - this is an OR of ReferenceParams, not SearchParams.
+		// We need to re-define the OR as an OR of each ReferenceParam's searchable
+		// Query.Params() results. So let's do that.
+		orParam, _ := searchParam.(*OrParam)
+		searchableOrParam := buildSearchableOrFromChainedReferenceOr(orParam)
+		matchableParams = prependLookupKeyToSearchPaths([]SearchParam{searchableOrParam}, len(lookupRef.Paths))
+
+	} else {
+		matchableParams = prependLookupKeyToSearchPaths(revChainedRef.Query.Params(), len(lookupRef.Paths))
+	}
+
+	stages[len(stages)-1] = bson.M{"$match": m.createQueryObjectFromParams(matchableParams)}
+
+	// TODO: Add a $project stage to remove the field after the $match (need Mongo 3.4)
+	return stages
+}
+
+// getLookupReference gets a ReferenceParam needed to do the $lookup stage for a chained
+// or reverse chained search in the mongo pipeline. If the reference came from an OrParam,
+// isOr is true.
+func getLookupReference(searchParam SearchParam) (lookupRef *ReferenceParam, isOr bool) {
+	_, isOr = searchParam.(*OrParam)
+
+	if isOr {
+		// If it's an OR, any one of its Items should do
+		var ok bool
+		lookupRef, ok = searchParam.(*OrParam).Items[0].(*ReferenceParam)
+		if !ok {
+			panic(createInternalServerError("", "Chained search OR has no valid ReferenceParam to use for the $lookup"))
+		}
+	} else {
+		lookupRef = searchParam.(*ReferenceParam)
+	}
+	return
 }
 
 // Prepends "_lookup[i]." to the search path(s), where [i] >= 0. This mutates
@@ -482,8 +549,9 @@ func duplicatePaths(info *SearchParamInfo, n int) {
 	info.Paths = newPaths
 }
 
-// Takes an OrParam with two or more ReferenceParam items (of type ChainedQueryReference) and returns
-// an OrParam with two or more SearchParam items from those ChainedQueryReferences.
+// Takes an OrParam with two or more ReferenceParam items (of type ChainedQueryReference
+// or ReverseChainedQueryReference) and returns an OrParam with two or more SearchParam
+// items from those references.
 func buildSearchableOrFromChainedReferenceOr(referenceOr *OrParam) *OrParam {
 	newOr := &OrParam{
 		SearchParamInfo: referenceOr.SearchParamInfo,
@@ -491,8 +559,14 @@ func buildSearchableOrFromChainedReferenceOr(referenceOr *OrParam) *OrParam {
 
 	for _, item := range referenceOr.Items {
 		refParam, _ := item.(*ReferenceParam)
-		chainedRef, _ := refParam.Reference.(ChainedQueryReference)
-		searchParam := chainedRef.ChainedQuery.Params()[0] // There should only ever be 1 SearchParam here
+		var searchParam SearchParam
+
+		switch ref := refParam.Reference.(type) {
+		case ChainedQueryReference:
+			searchParam = ref.ChainedQuery.Params()[0] // There should only ever be 1 SearchParam here
+		case ReverseChainedQueryReference:
+			searchParam = ref.Query.Params()[0]
+		}
 		newOr.Items = append(newOr.Items, searchParam)
 	}
 	return newOr
@@ -735,6 +809,10 @@ func (m *MongoSearcher) createReferenceQueryObject(r *ReferenceParam) bson.M {
 		case ChainedQueryReference:
 			// This should be handled exclusively by the createPipelineObject
 			panic(createInternalServerError("", "createReferenceQueryObject should not be used to create ChainedQueryReferences"))
+
+		case ReverseChainedQueryReference:
+			// This should be handled exclusively by the createPipelineObject
+			panic(createInternalServerError("", "createReferenceQueryObject should not be used to create ReverseChainedQueryReferences"))
 		}
 		return buildBSON(p.Path, criteria)
 	}

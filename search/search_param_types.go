@@ -21,6 +21,7 @@ const (
 	ContentParam       = "_content"
 	ListParam          = "_list"
 	QueryParam         = "_query"
+	HasParam           = "_has"
 	SortParam          = "_sort"
 	CountParam         = "_count"
 	IncludeParam       = "_include"
@@ -35,7 +36,7 @@ const (
 
 var globalSearchParams = map[string]bool{IDParam: true, LastUpdatedParam: true, TagParam: true,
 	ProfileParam: true, SecurityParam: true, TextParam: true, ContentParam: true, ListParam: true,
-	QueryParam: true}
+	QueryParam: true, HasParam: true}
 
 func isGlobalSearchParam(param string) bool {
 	_, found := globalSearchParams[param]
@@ -73,7 +74,20 @@ func (q *Query) Params() []SearchParam {
 			continue
 		}
 
-		info, ok := SearchParameterDictionary[q.Resource][param]
+		var info SearchParamInfo
+		ok := true
+
+		if param == "_has" {
+			// Reverse chained search params are not found in the SearchParameterDictionary.
+			// Instead they are a ReferenceParam of type ReverseChainedQueryReference constructed
+			// from SearchParamInfo found in a different resource than the one being searched.
+			// For example, in the query "Patient?_has:Observation:subject:code" we're looking in
+			// SearchParameterDictionary["Observation"], not SearchParameterDictionary["Patient"]
+			info = createReverseChainedQueryInfo(q.Resource, modifier)
+		} else {
+			info, ok = SearchParameterDictionary[q.Resource][param]
+		}
+
 		if ok {
 			info.Postfix = postfix
 			info.Modifier = modifier
@@ -260,9 +274,19 @@ func (q *Query) UsesChainedSearch() bool {
 	return false
 }
 
+// UsesReverseChainedSearch returns true if the query has any reverse chained search parameters
+func (q *Query) UsesReverseChainedSearch() bool {
+	for _, p := range q.Params() {
+		if usesReverseChainedSearch(p) {
+			return true
+		}
+	}
+	return false
+}
+
 // UsesPipeline returns true if the query requires a pipeline to execute
 func (q *Query) UsesPipeline() bool {
-	return q.UsesIncludes() || q.UsesRevIncludes() || q.UsesChainedSearch()
+	return q.UsesIncludes() || q.UsesRevIncludes() || q.UsesChainedSearch() || q.UsesReverseChainedSearch()
 }
 
 func getSingletonParamValue(param string, values []string) string {
@@ -420,6 +444,25 @@ func usesChainedSearch(param SearchParam) bool {
 	return false
 }
 
+// usesReverseChainedSearch tests if a SearchParam uses reverse chained search
+func usesReverseChainedSearch(param SearchParam) bool {
+	switch p := param.(type) {
+	case *ReferenceParam:
+		if p.isReverseChainedSearch() {
+			return true
+		}
+	case *OrParam:
+		for _, item := range p.Items {
+			if ref, ok := item.(*ReferenceParam); ok {
+				if ref.isReverseChainedSearch() {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
 // SearchParamData represents the data associated to an instance of a search param
 type SearchParamData struct {
 	Modifier string
@@ -462,6 +505,26 @@ func (s SearchParamInfo) clone() SearchParamInfo {
 	copy(newInfo.Composites, s.Composites)
 	copy(newInfo.Targets, s.Targets)
 	return newInfo
+}
+
+func createReverseChainedQueryInfo(resource, modifier string) SearchParamInfo {
+	// First split the modifier (e.g. "Observation:subject:code")
+	// to get the resources being referenced and a SearchParam to search.
+	// the parts are [fromResource, refField, searchField]
+	parts := strings.SplitN(modifier, ":", 3)
+	if len(parts) != 3 {
+		panic(createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", "_has")))
+	}
+	refInfo, ok := SearchParameterDictionary[parts[0]][parts[1]]
+	if !ok {
+		panic(createInvalidSearchError("SEARCH_NONE", fmt.Sprintf("Error: no processable search found for %s search parameters \"%s\"", resource, "_has")))
+	}
+	revChainInfo := refInfo.clone()
+	revChainInfo.Resource = parts[0]
+	revChainInfo.Name = "_has"
+	revChainInfo.Targets = []string{resource} // We already know the target
+	revChainInfo.Modifier = modifier
+	return revChainInfo
 }
 
 // CreateSearchParam converts a singular string query value (e.g. "2012") into
@@ -906,6 +969,15 @@ func (r *ReferenceParam) setInfo(info SearchParamInfo) {
 
 func (r *ReferenceParam) getQueryParamAndValue() (string, string) {
 	switch t := r.Reference.(type) {
+	case ReverseChainedQueryReference:
+		searchParams := t.Query.Params()
+		if len(searchParams) != 1 {
+			panic(createInternalServerError("MSG_PARAM_CHAINED", "Unknown chained parameter name \"\""))
+		}
+		// e.g. "code=1234-5"
+		qParam, qValue := searchParams[0].getQueryParamAndValue()
+		// (e.g. "_has:Observation:subject:code", "1234-5")
+		return fmt.Sprintf("_has:%s:%s:%s", t.Type, t.ReferenceName, qParam), qValue
 	case ChainedQueryReference:
 		// This is a weird one, so don't use the general encodedQueryParam function
 		// First get the chained query param (e.g., "gender=male")
@@ -950,9 +1022,27 @@ func (r *ReferenceParam) isExternalChainedSearch() bool {
 	return false
 }
 
+// isReverseChainedSearch checks if this ReferenceParam is used to perform a reverse chained search.
+func (r *ReferenceParam) isReverseChainedSearch() bool {
+	switch r.Reference.(type) {
+	case ReverseChainedQueryReference:
+		return true
+	}
+	return false
+}
+
 // ParseReferenceParam parses a reference-based query string and returns a
 // pointer to a ReferenceParam based on the query and the parameter definition.
 func ParseReferenceParam(paramStr string, info SearchParamInfo) *ReferenceParam {
+	if info.Name == "_has" {
+		// expected modifier format: "Observation:subject:code"
+		parts := strings.SplitN(info.Modifier, ":", 3)
+		if len(parts) != 3 {
+			panic(createInternalServerError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", info.Name)))
+		}
+		q := Query{Resource: parts[0], Query: parts[2] + "=" + paramStr}
+		return &ReferenceParam{info, ReverseChainedQueryReference{ReferenceName: parts[1], Type: parts[0], Query: q}}
+	}
 	if info.Postfix != "" {
 		typ := findReferencedType("", info)
 		q := Query{Resource: typ, Query: info.Postfix + "=" + paramStr}
@@ -1024,8 +1114,15 @@ type ExternalReference struct {
 
 // ChainedQueryReference represents a chained query
 type ChainedQueryReference struct {
-	Type         string
+	Type         string // The type of resource being searched
 	ChainedQuery Query
+}
+
+// ReverseChainedQueryReference represents a reverse chained query
+type ReverseChainedQueryReference struct {
+	ReferenceName string // The name of the reference param
+	Type          string // The type of resource being searched
+	Query         Query
 }
 
 // StringParam represents a string-flavored search parameter.  The

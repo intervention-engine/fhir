@@ -502,6 +502,7 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageId(c *C) {
 
 // TODO: Test execution of reference search on PatientURL (as above)
 
+// These tests validate chained search using the mongo Pipeline
 func (m *MongoSearchSuite) TestConditionChainedSearchPipelineObject(c *C) {
 	q := Query{"Condition", "patient.gender=male"}
 
@@ -643,6 +644,124 @@ func (m *MongoSearchSuite) TestConditionReferenceQueryByPatientGenderOr(c *C) {
 	util.CheckErr(err)
 	resultsVal = reflect.ValueOf(results).Elem()
 	c.Assert(resultsVal.Len(), Equals, 6)
+}
+
+// These tests validate reverse chained search using the mongo pipeline
+func (m *MongoSearchSuite) TestPatientReverseChainedSearchPipelineObject(c *C) {
+	q := Query{"Patient", "_has:Observation:subject:code=1234-5"}
+
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "Patient")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.Pipeline, HasLen, 3)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "observations",
+			"localField":   "_id",
+			"foreignField": "subject.referenceid",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$match": bson.M{
+			"$or": []bson.M{
+				bson.M{"_lookup0.component.code.coding.code": "1234-5"},
+				bson.M{"_lookup0.code.coding.code": "1234-5"},
+			},
+		}},
+	})
+}
+
+func (m *MongoSearchSuite) TestPatientReverseChainedSearchPipelineObjectWithOr(c *C) {
+	q := Query{"Patient", "_has:Observation:subject:code=1234-5,5678-9"}
+
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "Patient")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.Pipeline, HasLen, 3)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "observations",
+			"localField":   "_id",
+			"foreignField": "subject.referenceid",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$match": bson.M{
+			"$or": []bson.M{
+				bson.M{"$or": []bson.M{
+					bson.M{"_lookup0.component.code.coding.code": "1234-5"},
+					bson.M{"_lookup0.code.coding.code": "1234-5"},
+				}},
+				bson.M{"$or": []bson.M{
+					bson.M{"_lookup0.component.code.coding.code": "5678-9"},
+					bson.M{"_lookup0.code.coding.code": "5678-9"},
+				}},
+			},
+		}},
+	})
+}
+
+func (m *MongoSearchSuite) TestReverseChainedSearchPipelineObjectWithMultipleReferencePaths(c *C) {
+	q := Query{"Patient", "_has:AuditEvent:patient:outcome=foo"}
+
+	bsonQuery := m.MongoSearcher.convertToBSON(q)
+	c.Assert(bsonQuery.Resource, Equals, "Patient")
+	c.Assert(bsonQuery.Query, IsNil)
+	c.Assert(bsonQuery.Pipeline, HasLen, 4)
+	c.Assert(bsonQuery.usesPipeline(), Equals, true)
+
+	c.Assert(bsonQuery.Pipeline, DeepEquals, []bson.M{
+		bson.M{"$match": bson.M{}},
+		bson.M{"$lookup": bson.M{
+			"from":         "auditevents",
+			"localField":   "_id",
+			"foreignField": "agent.reference.referenceid",
+			"as":           "_lookup0",
+		}},
+		bson.M{"$lookup": bson.M{
+			"from":         "auditevents",
+			"localField":   "_id",
+			"foreignField": "entity.reference.referenceid",
+			"as":           "_lookup1",
+		}},
+		bson.M{"$match": bson.M{
+			"$or": []bson.M{
+				bson.M{"_lookup0.outcome": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+				bson.M{"_lookup1.outcome": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+			},
+		}},
+	})
+}
+
+func (m *MongoSearchSuite) TestPatientReferenceQueryByObservationCode(c *C) {
+	q := Query{"Patient", "_has:Observation:subject:code=1234-5"}
+	results, _, err := m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
+
+	q = Query{"Patient", "_has:Observation:subject:code=0000-0"}
+	results, _, err = m.MongoSearcher.Search(q)
+	c.Assert(err, Not(IsNil)) // not found
+	c.Assert(results, IsNil)
+}
+
+func (m *MongoSearchSuite) TestPatientReferenceQueryByObservationCodeOr(c *C) {
+	q := Query{"Patient", "_has:Observation:subject:code=1234-5,5678-9"}
+	results, _, err := m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 2)
+
+	q = Query{"Patient", "_has:Observation:subject:code=1234-5,0000-0"}
+	results, _, err = m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 }
 
 // These next tests ensure that the indexer is properly converted to a mongo
