@@ -2125,7 +2125,7 @@ func (m *MongoSearchSuite) TestPatientGenderQueryOptionsForRevInclude(c *C) {
 	// Make sure it doesn't somehow mess up the query object
 	obj := m.MongoSearcher.createQueryObject(q)
 	c.Assert(obj, DeepEquals, bson.M{
-		"gender": bson.RegEx{Pattern: "^male$", Options: "i"},
+		"gender": "male",
 	})
 
 	// Check that the options are parsed correctly
