@@ -548,7 +548,10 @@ func (m *MongoSearcher) createStringQueryObject(s *StringParam) bson.M {
 			if s.Name == "_id" {
 				return buildBSON(p.Path, s.String)
 			}
-			return buildBSON(p.Path, cisw(s.String))
+			// Default search (for example, address-city) does not use case-insensitive matching.
+			// This is in violation of the FHIR spec but is essential to performance by avoiding the
+			// use of regular expressions.
+			return buildBSON(p.Path, s.String)
 		}
 	}
 

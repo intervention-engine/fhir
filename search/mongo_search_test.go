@@ -1047,7 +1047,7 @@ func (m *MongoSearchSuite) TestDeviceStringQueryObject(c *C) {
 	q := Query{"Device", "manufacturer=Acme"}
 
 	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{"manufacturer": bson.RegEx{Pattern: "^Acme", Options: "i"}})
+	c.Assert(o, DeepEquals, bson.M{"manufacturer": "Acme"})
 }
 
 func (m *MongoSearchSuite) TestDeviceStringQuery(c *C) {
