@@ -520,7 +520,7 @@ func (m *MongoSearchSuite) TestConditionChainedSearchPipelineObject(c *C) {
 			"as":           "_lookup0",
 		}},
 		bson.M{"$match": bson.M{
-			"_lookup0.gender": bson.RegEx{Pattern: "^male$", Options: "i"},
+			"_lookup0.gender": "male",
 		}},
 	})
 }
@@ -543,8 +543,8 @@ func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithOr(c *C) {
 		}},
 		bson.M{"$match": bson.M{
 			"$or": []bson.M{
-				bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
-				bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
+				bson.M{"_lookup0.gender": "foo"},
+				bson.M{"_lookup0.gender": "bar"},
 			},
 		}},
 	})
@@ -574,8 +574,8 @@ func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithMultipleReferenceP
 		}},
 		bson.M{"$match": bson.M{
 			"$or": []bson.M{
-				bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^male$", Options: "i"}},
-				bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^male$", Options: "i"}},
+				bson.M{"_lookup0.gender": "male"},
+				bson.M{"_lookup1.gender": "male"},
 			},
 		}},
 	})
@@ -606,12 +606,12 @@ func (m *MongoSearchSuite) TestChainedSearchPipelineObjectWithMultipleReferenceP
 		bson.M{"$match": bson.M{
 			"$or": []bson.M{
 				bson.M{"$or": []bson.M{
-					bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
-					bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+					bson.M{"_lookup0.gender": "foo"},
+					bson.M{"_lookup1.gender": "foo"},
 				}},
 				bson.M{"$or": []bson.M{
-					bson.M{"_lookup0.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
-					bson.M{"_lookup1.gender": bson.RegEx{Pattern: "^bar$", Options: "i"}},
+					bson.M{"_lookup0.gender": "bar"},
+					bson.M{"_lookup1.gender": "bar"},
 				}},
 			},
 		}},
@@ -730,8 +730,8 @@ func (m *MongoSearchSuite) TestReverseChainedSearchPipelineObjectWithMultipleRef
 		}},
 		bson.M{"$match": bson.M{
 			"$or": []bson.M{
-				bson.M{"_lookup0.outcome": bson.RegEx{Pattern: "^foo$", Options: "i"}},
-				bson.M{"_lookup1.outcome": bson.RegEx{Pattern: "^foo$", Options: "i"}},
+				bson.M{"_lookup0.outcome": "foo"},
+				bson.M{"_lookup1.outcome": "foo"},
 			},
 		}},
 	})
@@ -1373,7 +1373,7 @@ func (m *MongoSearchSuite) TestDeviceStringQueryObject(c *C) {
 	q := Query{"Device", "manufacturer=Acme"}
 
 	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{"manufacturer": bson.RegEx{Pattern: "^Acme", Options: "i"}})
+	c.Assert(o, DeepEquals, bson.M{"manufacturer": "Acme"})
 }
 
 func (m *MongoSearchSuite) TestDeviceStringQuery(c *C) {
@@ -2523,7 +2523,7 @@ func (m *MongoSearchSuite) TestPatientGenderQueryOptionsForRevInclude(c *C) {
 	// Make sure it doesn't somehow mess up the query object
 	obj := m.MongoSearcher.createQueryObject(q)
 	c.Assert(obj, DeepEquals, bson.M{
-		"gender": bson.RegEx{Pattern: "^male$", Options: "i"},
+		"gender": "male",
 	})
 
 	// Check that the options are parsed correctly
