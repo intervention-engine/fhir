@@ -32,285 +32,125 @@ import (
 	"fmt"
 )
 
-type TestScript struct {
+type TestReport struct {
 	DomainResource `bson:",inline"`
-	Url            string                           `bson:"url,omitempty" json:"url,omitempty"`
 	Identifier     *Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version        string                           `bson:"version,omitempty" json:"version,omitempty"`
 	Name           string                           `bson:"name,omitempty" json:"name,omitempty"`
-	Title          string                           `bson:"title,omitempty" json:"title,omitempty"`
 	Status         string                           `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental   *bool                            `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher      string                           `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact        []ContactDetail                  `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date           *FHIRDateTime                    `bson:"date,omitempty" json:"date,omitempty"`
-	Description    string                           `bson:"description,omitempty" json:"description,omitempty"`
-	UseContext     []UsageContext                   `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Jurisdiction   []CodeableConcept                `bson:"jurisdiction,omitempty" json:"jurisdiction,omitempty"`
-	Purpose        string                           `bson:"purpose,omitempty" json:"purpose,omitempty"`
-	Copyright      string                           `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Origin         []TestScriptOriginComponent      `bson:"origin,omitempty" json:"origin,omitempty"`
-	Destination    []TestScriptDestinationComponent `bson:"destination,omitempty" json:"destination,omitempty"`
-	Metadata       *TestScriptMetadataComponent     `bson:"metadata,omitempty" json:"metadata,omitempty"`
-	Fixture        []TestScriptFixtureComponent     `bson:"fixture,omitempty" json:"fixture,omitempty"`
-	Profile        []Reference                      `bson:"profile,omitempty" json:"profile,omitempty"`
-	Variable       []TestScriptVariableComponent    `bson:"variable,omitempty" json:"variable,omitempty"`
-	Rule           []TestScriptRuleComponent        `bson:"rule,omitempty" json:"rule,omitempty"`
-	Ruleset        []TestScriptRulesetComponent     `bson:"ruleset,omitempty" json:"ruleset,omitempty"`
-	Setup          *TestScriptSetupComponent        `bson:"setup,omitempty" json:"setup,omitempty"`
-	Test           []TestScriptTestComponent        `bson:"test,omitempty" json:"test,omitempty"`
-	Teardown       *TestScriptTeardownComponent     `bson:"teardown,omitempty" json:"teardown,omitempty"`
+	Score          *float64                         `bson:"score,omitempty" json:"score,omitempty"`
+	Tester         string                           `bson:"tester,omitempty" json:"tester,omitempty"`
+	TestScript     *Reference                       `bson:"testScript,omitempty" json:"testScript,omitempty"`
+	Issued         *FHIRDateTime                    `bson:"issued,omitempty" json:"issued,omitempty"`
+	Participant    []TestReportParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	Setup          *TestReportSetupComponent        `bson:"setup,omitempty" json:"setup,omitempty"`
+	Test           []TestReportTestComponent        `bson:"test,omitempty" json:"test,omitempty"`
+	Teardown       *TestReportTeardownComponent     `bson:"teardown,omitempty" json:"teardown,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
-func (resource *TestScript) MarshalJSON() ([]byte, error) {
-	resource.ResourceType = "TestScript"
+func (resource *TestReport) MarshalJSON() ([]byte, error) {
+	resource.ResourceType = "TestReport"
 	// Dereferencing the pointer to avoid infinite recursion.
-	// Passing in plain old x (a pointer to TestScript), would cause this same
+	// Passing in plain old x (a pointer to TestReport), would cause this same
 	// MarshallJSON function to be called again
 	return json.Marshal(*resource)
 }
 
-func (x *TestScript) GetBSON() (interface{}, error) {
-	x.ResourceType = "TestScript"
+func (x *TestReport) GetBSON() (interface{}, error) {
+	x.ResourceType = "TestReport"
 	// See comment in MarshallJSON to see why we dereference
 	return *x, nil
 }
 
-// The "testScript" sub-type is needed to avoid infinite recursion in UnmarshalJSON
-type testScript TestScript
+// The "testReport" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type testReport TestReport
 
 // Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
-func (x *TestScript) UnmarshalJSON(data []byte) (err error) {
-	x2 := testScript{}
+func (x *TestReport) UnmarshalJSON(data []byte) (err error) {
+	x2 := testReport{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Contained != nil {
 			for i := range x2.Contained {
 				x2.Contained[i] = MapToResource(x2.Contained[i], true)
 			}
 		}
-		*x = TestScript(x2)
+		*x = TestReport(x2)
 		return x.checkResourceType()
 	}
 	return
 }
 
-func (x *TestScript) checkResourceType() error {
+func (x *TestReport) checkResourceType() error {
 	if x.ResourceType == "" {
-		x.ResourceType = "TestScript"
-	} else if x.ResourceType != "TestScript" {
-		return errors.New(fmt.Sprintf("Expected resourceType to be TestScript, instead received %s", x.ResourceType))
+		x.ResourceType = "TestReport"
+	} else if x.ResourceType != "TestReport" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be TestReport, instead received %s", x.ResourceType))
 	}
 	return nil
 }
 
-type TestScriptOriginComponent struct {
+type TestReportParticipantComponent struct {
 	BackboneElement `bson:",inline"`
-	Index           *int32  `bson:"index,omitempty" json:"index,omitempty"`
-	Profile         *Coding `bson:"profile,omitempty" json:"profile,omitempty"`
+	Type            string `bson:"type,omitempty" json:"type,omitempty"`
+	Uri             string `bson:"uri,omitempty" json:"uri,omitempty"`
+	Display         string `bson:"display,omitempty" json:"display,omitempty"`
 }
 
-type TestScriptDestinationComponent struct {
+type TestReportSetupComponent struct {
 	BackboneElement `bson:",inline"`
-	Index           *int32  `bson:"index,omitempty" json:"index,omitempty"`
-	Profile         *Coding `bson:"profile,omitempty" json:"profile,omitempty"`
+	Action          []TestReportSetupActionComponent `bson:"action,omitempty" json:"action,omitempty"`
 }
 
-type TestScriptMetadataComponent struct {
+type TestReportSetupActionComponent struct {
 	BackboneElement `bson:",inline"`
-	Link            []TestScriptMetadataLinkComponent       `bson:"link,omitempty" json:"link,omitempty"`
-	Capability      []TestScriptMetadataCapabilityComponent `bson:"capability,omitempty" json:"capability,omitempty"`
+	Operation       *TestReportSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+	Assert          *TestReportSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
 }
 
-type TestScriptMetadataLinkComponent struct {
+type TestReportSetupActionOperationComponent struct {
 	BackboneElement `bson:",inline"`
-	Url             string `bson:"url,omitempty" json:"url,omitempty"`
-	Description     string `bson:"description,omitempty" json:"description,omitempty"`
+	Result          string `bson:"result,omitempty" json:"result,omitempty"`
+	Message         string `bson:"message,omitempty" json:"message,omitempty"`
+	Detail          string `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
-type TestScriptMetadataCapabilityComponent struct {
+type TestReportSetupActionAssertComponent struct {
 	BackboneElement `bson:",inline"`
-	Required        *bool      `bson:"required,omitempty" json:"required,omitempty"`
-	Validated       *bool      `bson:"validated,omitempty" json:"validated,omitempty"`
-	Description     string     `bson:"description,omitempty" json:"description,omitempty"`
-	Origin          []int32    `bson:"origin,omitempty" json:"origin,omitempty"`
-	Destination     *int32     `bson:"destination,omitempty" json:"destination,omitempty"`
-	Link            []string   `bson:"link,omitempty" json:"link,omitempty"`
-	Capabilities    *Reference `bson:"capabilities,omitempty" json:"capabilities,omitempty"`
+	Result          string `bson:"result,omitempty" json:"result,omitempty"`
+	Message         string `bson:"message,omitempty" json:"message,omitempty"`
+	Detail          string `bson:"detail,omitempty" json:"detail,omitempty"`
 }
 
-type TestScriptFixtureComponent struct {
-	BackboneElement `bson:",inline"`
-	Autocreate      *bool      `bson:"autocreate,omitempty" json:"autocreate,omitempty"`
-	Autodelete      *bool      `bson:"autodelete,omitempty" json:"autodelete,omitempty"`
-	Resource        *Reference `bson:"resource,omitempty" json:"resource,omitempty"`
-}
-
-type TestScriptVariableComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string `bson:"name,omitempty" json:"name,omitempty"`
-	DefaultValue    string `bson:"defaultValue,omitempty" json:"defaultValue,omitempty"`
-	Description     string `bson:"description,omitempty" json:"description,omitempty"`
-	Expression      string `bson:"expression,omitempty" json:"expression,omitempty"`
-	HeaderField     string `bson:"headerField,omitempty" json:"headerField,omitempty"`
-	Hint            string `bson:"hint,omitempty" json:"hint,omitempty"`
-	Path            string `bson:"path,omitempty" json:"path,omitempty"`
-	SourceId        string `bson:"sourceId,omitempty" json:"sourceId,omitempty"`
-}
-
-type TestScriptRuleComponent struct {
-	BackboneElement `bson:",inline"`
-	Resource        *Reference                     `bson:"resource,omitempty" json:"resource,omitempty"`
-	Param           []TestScriptRuleParamComponent `bson:"param,omitempty" json:"param,omitempty"`
-}
-
-type TestScriptRuleParamComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string `bson:"name,omitempty" json:"name,omitempty"`
-	Value           string `bson:"value,omitempty" json:"value,omitempty"`
-}
-
-type TestScriptRulesetComponent struct {
-	BackboneElement `bson:",inline"`
-	Resource        *Reference                       `bson:"resource,omitempty" json:"resource,omitempty"`
-	Rule            []TestScriptRulesetRuleComponent `bson:"rule,omitempty" json:"rule,omitempty"`
-}
-
-type TestScriptRulesetRuleComponent struct {
-	BackboneElement `bson:",inline"`
-	RuleId          string                                `bson:"ruleId,omitempty" json:"ruleId,omitempty"`
-	Param           []TestScriptRulesetRuleParamComponent `bson:"param,omitempty" json:"param,omitempty"`
-}
-
-type TestScriptRulesetRuleParamComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string `bson:"name,omitempty" json:"name,omitempty"`
-	Value           string `bson:"value,omitempty" json:"value,omitempty"`
-}
-
-type TestScriptSetupComponent struct {
-	BackboneElement `bson:",inline"`
-	Action          []TestScriptSetupActionComponent `bson:"action,omitempty" json:"action,omitempty"`
-}
-
-type TestScriptSetupActionComponent struct {
-	BackboneElement `bson:",inline"`
-	Operation       *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
-	Assert          *TestScriptSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
-}
-
-type TestScriptSetupActionOperationComponent struct {
-	BackboneElement  `bson:",inline"`
-	Type             *Coding                                                `bson:"type,omitempty" json:"type,omitempty"`
-	Resource         string                                                 `bson:"resource,omitempty" json:"resource,omitempty"`
-	Label            string                                                 `bson:"label,omitempty" json:"label,omitempty"`
-	Description      string                                                 `bson:"description,omitempty" json:"description,omitempty"`
-	Accept           string                                                 `bson:"accept,omitempty" json:"accept,omitempty"`
-	ContentType      string                                                 `bson:"contentType,omitempty" json:"contentType,omitempty"`
-	Destination      *int32                                                 `bson:"destination,omitempty" json:"destination,omitempty"`
-	EncodeRequestUrl *bool                                                  `bson:"encodeRequestUrl,omitempty" json:"encodeRequestUrl,omitempty"`
-	Origin           *int32                                                 `bson:"origin,omitempty" json:"origin,omitempty"`
-	Params           string                                                 `bson:"params,omitempty" json:"params,omitempty"`
-	RequestHeader    []TestScriptSetupActionOperationRequestHeaderComponent `bson:"requestHeader,omitempty" json:"requestHeader,omitempty"`
-	RequestId        string                                                 `bson:"requestId,omitempty" json:"requestId,omitempty"`
-	ResponseId       string                                                 `bson:"responseId,omitempty" json:"responseId,omitempty"`
-	SourceId         string                                                 `bson:"sourceId,omitempty" json:"sourceId,omitempty"`
-	TargetId         string                                                 `bson:"targetId,omitempty" json:"targetId,omitempty"`
-	Url              string                                                 `bson:"url,omitempty" json:"url,omitempty"`
-}
-
-type TestScriptSetupActionOperationRequestHeaderComponent struct {
-	BackboneElement `bson:",inline"`
-	Field           string `bson:"field,omitempty" json:"field,omitempty"`
-	Value           string `bson:"value,omitempty" json:"value,omitempty"`
-}
-
-type TestScriptSetupActionAssertComponent struct {
-	BackboneElement           `bson:",inline"`
-	Label                     string                                  `bson:"label,omitempty" json:"label,omitempty"`
-	Description               string                                  `bson:"description,omitempty" json:"description,omitempty"`
-	Direction                 string                                  `bson:"direction,omitempty" json:"direction,omitempty"`
-	CompareToSourceId         string                                  `bson:"compareToSourceId,omitempty" json:"compareToSourceId,omitempty"`
-	CompareToSourceExpression string                                  `bson:"compareToSourceExpression,omitempty" json:"compareToSourceExpression,omitempty"`
-	CompareToSourcePath       string                                  `bson:"compareToSourcePath,omitempty" json:"compareToSourcePath,omitempty"`
-	ContentType               string                                  `bson:"contentType,omitempty" json:"contentType,omitempty"`
-	Expression                string                                  `bson:"expression,omitempty" json:"expression,omitempty"`
-	HeaderField               string                                  `bson:"headerField,omitempty" json:"headerField,omitempty"`
-	MinimumId                 string                                  `bson:"minimumId,omitempty" json:"minimumId,omitempty"`
-	NavigationLinks           *bool                                   `bson:"navigationLinks,omitempty" json:"navigationLinks,omitempty"`
-	Operator                  string                                  `bson:"operator,omitempty" json:"operator,omitempty"`
-	Path                      string                                  `bson:"path,omitempty" json:"path,omitempty"`
-	RequestURL                string                                  `bson:"requestURL,omitempty" json:"requestURL,omitempty"`
-	Resource                  string                                  `bson:"resource,omitempty" json:"resource,omitempty"`
-	Response                  string                                  `bson:"response,omitempty" json:"response,omitempty"`
-	ResponseCode              string                                  `bson:"responseCode,omitempty" json:"responseCode,omitempty"`
-	Rule                      *TestScriptActionAssertRuleComponent    `bson:"rule,omitempty" json:"rule,omitempty"`
-	Ruleset                   *TestScriptActionAssertRulesetComponent `bson:"ruleset,omitempty" json:"ruleset,omitempty"`
-	SourceId                  string                                  `bson:"sourceId,omitempty" json:"sourceId,omitempty"`
-	ValidateProfileId         string                                  `bson:"validateProfileId,omitempty" json:"validateProfileId,omitempty"`
-	Value                     string                                  `bson:"value,omitempty" json:"value,omitempty"`
-	WarningOnly               *bool                                   `bson:"warningOnly,omitempty" json:"warningOnly,omitempty"`
-}
-
-type TestScriptActionAssertRuleComponent struct {
-	BackboneElement `bson:",inline"`
-	RuleId          string                                     `bson:"ruleId,omitempty" json:"ruleId,omitempty"`
-	Param           []TestScriptActionAssertRuleParamComponent `bson:"param,omitempty" json:"param,omitempty"`
-}
-
-type TestScriptActionAssertRuleParamComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string `bson:"name,omitempty" json:"name,omitempty"`
-	Value           string `bson:"value,omitempty" json:"value,omitempty"`
-}
-
-type TestScriptActionAssertRulesetComponent struct {
-	BackboneElement `bson:",inline"`
-	RulesetId       string                                       `bson:"rulesetId,omitempty" json:"rulesetId,omitempty"`
-	Rule            []TestScriptActionAssertRulesetRuleComponent `bson:"rule,omitempty" json:"rule,omitempty"`
-}
-
-type TestScriptActionAssertRulesetRuleComponent struct {
-	BackboneElement `bson:",inline"`
-	RuleId          string                                            `bson:"ruleId,omitempty" json:"ruleId,omitempty"`
-	Param           []TestScriptActionAssertRulesetRuleParamComponent `bson:"param,omitempty" json:"param,omitempty"`
-}
-
-type TestScriptActionAssertRulesetRuleParamComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string `bson:"name,omitempty" json:"name,omitempty"`
-	Value           string `bson:"value,omitempty" json:"value,omitempty"`
-}
-
-type TestScriptTestComponent struct {
+type TestReportTestComponent struct {
 	BackboneElement `bson:",inline"`
 	Name            string                          `bson:"name,omitempty" json:"name,omitempty"`
 	Description     string                          `bson:"description,omitempty" json:"description,omitempty"`
-	Action          []TestScriptTestActionComponent `bson:"action,omitempty" json:"action,omitempty"`
+	Action          []TestReportTestActionComponent `bson:"action,omitempty" json:"action,omitempty"`
 }
 
-type TestScriptTestActionComponent struct {
+type TestReportTestActionComponent struct {
 	BackboneElement `bson:",inline"`
-	Operation       *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
-	Assert          *TestScriptSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
+	Operation       *TestReportSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+	Assert          *TestReportSetupActionAssertComponent    `bson:"assert,omitempty" json:"assert,omitempty"`
 }
 
-type TestScriptTeardownComponent struct {
+type TestReportTeardownComponent struct {
 	BackboneElement `bson:",inline"`
-	Action          []TestScriptTeardownActionComponent `bson:"action,omitempty" json:"action,omitempty"`
+	Action          []TestReportTeardownActionComponent `bson:"action,omitempty" json:"action,omitempty"`
 }
 
-type TestScriptTeardownActionComponent struct {
+type TestReportTeardownActionComponent struct {
 	BackboneElement `bson:",inline"`
-	Operation       *TestScriptSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
+	Operation       *TestReportSetupActionOperationComponent `bson:"operation,omitempty" json:"operation,omitempty"`
 }
 
-type TestScriptPlus struct {
-	TestScript                     `bson:",inline"`
-	TestScriptPlusRelatedResources `bson:",inline"`
+type TestReportPlus struct {
+	TestReport                     `bson:",inline"`
+	TestReportPlusRelatedResources `bson:",inline"`
 }
 
-type TestScriptPlusRelatedResources struct {
+type TestReportPlusRelatedResources struct {
+	IncludedTestScriptResourcesReferencedByTestscript           *[]TestScript            `bson:"_includedTestScriptResourcesReferencedByTestscript,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingContentref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingRelatedref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
 	RevIncludedConsentResourcesReferencingData                  *[]Consent               `bson:"_revIncludedConsentResourcesReferencingData,omitempty"`
@@ -336,7 +176,6 @@ type TestScriptPlusRelatedResources struct {
 	RevIncludedDeviceUseRequestResourcesReferencingBasedon      *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingBasedon,omitempty"`
 	RevIncludedDeviceUseRequestResourcesReferencingDefinition   *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingDefinition,omitempty"`
 	RevIncludedBasicResourcesReferencingSubject                 *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
-	RevIncludedTestReportResourcesReferencingTestscript         *[]TestReport            `bson:"_revIncludedTestReportResourcesReferencingTestscript,omitempty"`
 	RevIncludedAuditEventResourcesReferencingEntity             *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
 	RevIncludedCompositionResourcesReferencingSubject           *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
 	RevIncludedCompositionResourcesReferencingEntry             *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
@@ -345,7 +184,18 @@ type TestScriptPlusRelatedResources struct {
 	RevIncludedProcessResponseResourcesReferencingRequest       *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
+func (t *TestReportPlusRelatedResources) GetIncludedTestScriptResourceReferencedByTestscript() (testScript *TestScript, err error) {
+	if t.IncludedTestScriptResourcesReferencedByTestscript == nil {
+		err = errors.New("Included testscripts not requested")
+	} else if len(*t.IncludedTestScriptResourcesReferencedByTestscript) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 testScript, but found %d", len(*t.IncludedTestScriptResourcesReferencedByTestscript))
+	} else if len(*t.IncludedTestScriptResourcesReferencedByTestscript) == 1 {
+		testScript = &(*t.IncludedTestScriptResourcesReferencedByTestscript)[0]
+	}
+	return
+}
+
+func (t *TestReportPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
 	if t.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -354,7 +204,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDocumentManifestResources
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
 	if t.RevIncludedDocumentManifestResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -363,7 +213,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDocumentManifestResources
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
 	if t.RevIncludedConsentResourcesReferencingData == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
@@ -372,7 +222,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedConsentResourcesReferenci
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
 	if t.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentReferences not requested")
 	} else {
@@ -381,7 +231,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDocumentReferenceResource
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
 	if t.RevIncludedContractResourcesReferencingTtopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -390,7 +240,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedContractResourcesReferenc
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
 	if t.RevIncludedContractResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -399,7 +249,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedContractResourcesReferenc
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
 	if t.RevIncludedContractResourcesReferencingTopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -408,7 +258,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedContractResourcesReferenc
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
 	if t.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -417,7 +267,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesRef
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
 	if t.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -426,7 +276,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesRef
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
 	if t.RevIncludedImplementationGuideResourcesReferencingResource == nil {
 		err = errors.New("RevIncluded implementationGuides not requested")
 	} else {
@@ -435,7 +285,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedImplementationGuideResour
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
 	if t.RevIncludedCommunicationResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communications not requested")
 	} else {
@@ -444,7 +294,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedCommunicationResourcesRef
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
 	if t.RevIncludedMessageHeaderResourcesReferencingData == nil {
 		err = errors.New("RevIncluded messageHeaders not requested")
 	} else {
@@ -453,7 +303,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedMessageHeaderResourcesRef
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
 	if t.RevIncludedProvenanceResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -462,7 +312,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedProvenanceResourcesRefere
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if t.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -471,7 +321,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedProvenanceResourcesRefere
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
 	if t.RevIncludedTaskResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -480,7 +330,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedTaskResourcesReferencingS
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
 	if t.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -489,7 +339,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedTaskResourcesReferencingF
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
 	if t.RevIncludedTaskResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -498,7 +348,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedTaskResourcesReferencingB
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
 	if t.RevIncludedListResourcesReferencingItem == nil {
 		err = errors.New("RevIncluded lists not requested")
 	} else {
@@ -507,7 +357,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedListResourcesReferencingI
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
 	if t.RevIncludedDiagnosticRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -516,7 +366,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDiagnosticRequestResource
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
 	if t.RevIncludedDiagnosticRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -525,7 +375,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDiagnosticRequestResource
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
 	if t.RevIncludedDiagnosticRequestResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -534,7 +384,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDiagnosticRequestResource
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
 	if t.RevIncludedDeviceUseRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -543,7 +393,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDeviceUseRequestResources
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
 	if t.RevIncludedDeviceUseRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -552,7 +402,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDeviceUseRequestResources
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
 	if t.RevIncludedDeviceUseRequestResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -561,7 +411,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDeviceUseRequestResources
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
 	if t.RevIncludedBasicResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded basics not requested")
 	} else {
@@ -570,16 +420,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedBasicResourcesReferencing
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedTestReportResourcesReferencingTestscript() (testReports []TestReport, err error) {
-	if t.RevIncludedTestReportResourcesReferencingTestscript == nil {
-		err = errors.New("RevIncluded testReports not requested")
-	} else {
-		testReports = *t.RevIncludedTestReportResourcesReferencingTestscript
-	}
-	return
-}
-
-func (t *TestScriptPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
 	if t.RevIncludedAuditEventResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
@@ -588,7 +429,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedAuditEventResourcesRefere
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
 	if t.RevIncludedCompositionResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -597,7 +438,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedCompositionResourcesRefer
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
 	if t.RevIncludedCompositionResourcesReferencingEntry == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -606,7 +447,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedCompositionResourcesRefer
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
 	if t.RevIncludedDetectedIssueResourcesReferencingImplicated == nil {
 		err = errors.New("RevIncluded detectedIssues not requested")
 	} else {
@@ -615,7 +456,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedDetectedIssueResourcesRef
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
 	if t.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded questionnaireResponses not requested")
 	} else {
@@ -624,7 +465,7 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedQuestionnaireResponseReso
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+func (t *TestReportPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
 	if t.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
@@ -633,12 +474,18 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedProcessResponseResourcesR
 	return
 }
 
-func (t *TestScriptPlusRelatedResources) GetIncludedResources() map[string]interface{} {
+func (t *TestReportPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
+	if t.IncludedTestScriptResourcesReferencedByTestscript != nil {
+		for idx := range *t.IncludedTestScriptResourcesReferencedByTestscript {
+			rsc := (*t.IncludedTestScriptResourcesReferencedByTestscript)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	return resourceMap
 }
 
-func (t *TestScriptPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
+func (t *TestReportPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if t.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *t.RevIncludedDocumentManifestResourcesReferencingContentref {
@@ -787,12 +634,6 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedResources() map[string]in
 	if t.RevIncludedBasicResourcesReferencingSubject != nil {
 		for idx := range *t.RevIncludedBasicResourcesReferencingSubject {
 			rsc := (*t.RevIncludedBasicResourcesReferencingSubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if t.RevIncludedTestReportResourcesReferencingTestscript != nil {
-		for idx := range *t.RevIncludedTestReportResourcesReferencingTestscript {
-			rsc := (*t.RevIncludedTestReportResourcesReferencingTestscript)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -835,8 +676,14 @@ func (t *TestScriptPlusRelatedResources) GetRevIncludedResources() map[string]in
 	return resourceMap
 }
 
-func (t *TestScriptPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
+func (t *TestReportPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
+	if t.IncludedTestScriptResourcesReferencedByTestscript != nil {
+		for idx := range *t.IncludedTestScriptResourcesReferencedByTestscript {
+			rsc := (*t.IncludedTestScriptResourcesReferencedByTestscript)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if t.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *t.RevIncludedDocumentManifestResourcesReferencingContentref {
 			rsc := (*t.RevIncludedDocumentManifestResourcesReferencingContentref)[idx]
@@ -984,12 +831,6 @@ func (t *TestScriptPlusRelatedResources) GetIncludedAndRevIncludedResources() ma
 	if t.RevIncludedBasicResourcesReferencingSubject != nil {
 		for idx := range *t.RevIncludedBasicResourcesReferencingSubject {
 			rsc := (*t.RevIncludedBasicResourcesReferencingSubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if t.RevIncludedTestReportResourcesReferencingTestscript != nil {
-		for idx := range *t.RevIncludedTestReportResourcesReferencingTestscript {
-			rsc := (*t.RevIncludedTestReportResourcesReferencingTestscript)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

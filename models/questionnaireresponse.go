@@ -92,6 +92,7 @@ func (x *QuestionnaireResponse) checkResourceType() error {
 type QuestionnaireResponseItemComponent struct {
 	BackboneElement `bson:",inline"`
 	LinkId          string                                     `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Definition      string                                     `bson:"definition,omitempty" json:"definition,omitempty"`
 	Text            string                                     `bson:"text,omitempty" json:"text,omitempty"`
 	Subject         *Reference                                 `bson:"subject,omitempty" json:"subject,omitempty"`
 	Answer          []QuestionnaireResponseItemAnswerComponent `bson:"answer,omitempty" json:"answer,omitempty"`
@@ -146,13 +147,16 @@ type QuestionnaireResponsePlusRelatedResources struct {
 	RevIncludedContractResourcesReferencingTtopic                  *[]Contract              `bson:"_revIncludedContractResourcesReferencingTtopic,omitempty"`
 	RevIncludedContractResourcesReferencingSubject                 *[]Contract              `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
 	RevIncludedContractResourcesReferencingTopic                   *[]Contract              `bson:"_revIncludedContractResourcesReferencingTopic,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingRequestreference   *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingRequestreference,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingResponsereference  *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponsereference,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingRequest            *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingRequest,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingResponse           *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponse,omitempty"`
 	RevIncludedImplementationGuideResourcesReferencingResource     *[]ImplementationGuide   `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
 	RevIncludedCommunicationResourcesReferencingBasedon            *[]Communication         `bson:"_revIncludedCommunicationResourcesReferencingBasedon,omitempty"`
 	RevIncludedMessageHeaderResourcesReferencingData               *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
+	RevIncludedProvenanceResourcesReferencingEntity                *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingEntity,omitempty"`
 	RevIncludedProvenanceResourcesReferencingTarget                *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
+	RevIncludedTaskResourcesReferencingSubject                     *[]Task                  `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
 	RevIncludedTaskResourcesReferencingFocus                       *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
+	RevIncludedTaskResourcesReferencingBasedon                     *[]Task                  `bson:"_revIncludedTaskResourcesReferencingBasedon,omitempty"`
 	RevIncludedListResourcesReferencingItem                        *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
 	RevIncludedDiagnosticRequestResourcesReferencingReplaces       *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingReplaces,omitempty"`
 	RevIncludedDiagnosticRequestResourcesReferencingBasedon        *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingBasedon,omitempty"`
@@ -167,7 +171,7 @@ type QuestionnaireResponsePlusRelatedResources struct {
 	RevIncludedCompositionResourcesReferencingEntry                *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
 	RevIncludedDetectedIssueResourcesReferencingImplicated         *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
 	RevIncludedQuestionnaireResponseResourcesReferencingSubject    *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
-	RevIncludedProcessResponseResourcesReferencingRequestreference *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequestreference,omitempty"`
+	RevIncludedProcessResponseResourcesReferencingRequest          *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
 	RevIncludedClinicalImpressionResourcesReferencingInvestigation *[]ClinicalImpression    `bson:"_revIncludedClinicalImpressionResourcesReferencingInvestigation,omitempty"`
 }
 
@@ -409,20 +413,20 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedContractResour
 	return
 }
 
-func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequestreference() (paymentNotices []PaymentNotice, err error) {
-	if q.RevIncludedPaymentNoticeResourcesReferencingRequestreference == nil {
+func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+	if q.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
-		paymentNotices = *q.RevIncludedPaymentNoticeResourcesReferencingRequestreference
+		paymentNotices = *q.RevIncludedPaymentNoticeResourcesReferencingRequest
 	}
 	return
 }
 
-func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponsereference() (paymentNotices []PaymentNotice, err error) {
-	if q.RevIncludedPaymentNoticeResourcesReferencingResponsereference == nil {
+func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+	if q.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
-		paymentNotices = *q.RevIncludedPaymentNoticeResourcesReferencingResponsereference
+		paymentNotices = *q.RevIncludedPaymentNoticeResourcesReferencingResponse
 	}
 	return
 }
@@ -454,6 +458,15 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedMessageHeaderR
 	return
 }
 
+func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
+	if q.RevIncludedProvenanceResourcesReferencingEntity == nil {
+		err = errors.New("RevIncluded provenances not requested")
+	} else {
+		provenances = *q.RevIncludedProvenanceResourcesReferencingEntity
+	}
+	return
+}
+
 func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if q.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
@@ -463,11 +476,29 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedProvenanceReso
 	return
 }
 
+func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+	if q.RevIncludedTaskResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *q.RevIncludedTaskResourcesReferencingSubject
+	}
+	return
+}
+
 func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
 	if q.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
 		tasks = *q.RevIncludedTaskResourcesReferencingFocus
+	}
+	return
+}
+
+func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+	if q.RevIncludedTaskResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *q.RevIncludedTaskResourcesReferencingBasedon
 	}
 	return
 }
@@ -598,11 +629,11 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedQuestionnaireR
 	return
 }
 
-func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequestreference() (processResponses []ProcessResponse, err error) {
-	if q.RevIncludedProcessResponseResourcesReferencingRequestreference == nil {
+func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+	if q.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
-		processResponses = *q.RevIncludedProcessResponseResourcesReferencingRequestreference
+		processResponses = *q.RevIncludedProcessResponseResourcesReferencingRequest
 	}
 	return
 }
@@ -767,15 +798,15 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedResources() ma
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if q.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
-		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
-			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+	if q.RevIncludedPaymentNoticeResourcesReferencingRequest != nil {
+		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingRequest {
+			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if q.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+	if q.RevIncludedPaymentNoticeResourcesReferencingResponse != nil {
+		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingResponse {
+			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingResponse)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -797,15 +828,33 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedResources() ma
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if q.RevIncludedProvenanceResourcesReferencingEntity != nil {
+		for idx := range *q.RevIncludedProvenanceResourcesReferencingEntity {
+			rsc := (*q.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if q.RevIncludedProvenanceResourcesReferencingTarget != nil {
 		for idx := range *q.RevIncludedProvenanceResourcesReferencingTarget {
 			rsc := (*q.RevIncludedProvenanceResourcesReferencingTarget)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if q.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *q.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*q.RevIncludedTaskResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if q.RevIncludedTaskResourcesReferencingFocus != nil {
 		for idx := range *q.RevIncludedTaskResourcesReferencingFocus {
 			rsc := (*q.RevIncludedTaskResourcesReferencingFocus)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if q.RevIncludedTaskResourcesReferencingBasedon != nil {
+		for idx := range *q.RevIncludedTaskResourcesReferencingBasedon {
+			rsc := (*q.RevIncludedTaskResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -893,9 +942,9 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetRevIncludedResources() ma
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if q.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
-		for idx := range *q.RevIncludedProcessResponseResourcesReferencingRequestreference {
-			rsc := (*q.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
+	if q.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for idx := range *q.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*q.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1054,15 +1103,15 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetIncludedAndRevIncludedRes
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if q.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
-		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
-			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+	if q.RevIncludedPaymentNoticeResourcesReferencingRequest != nil {
+		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingRequest {
+			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if q.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+	if q.RevIncludedPaymentNoticeResourcesReferencingResponse != nil {
+		for idx := range *q.RevIncludedPaymentNoticeResourcesReferencingResponse {
+			rsc := (*q.RevIncludedPaymentNoticeResourcesReferencingResponse)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1084,15 +1133,33 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetIncludedAndRevIncludedRes
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if q.RevIncludedProvenanceResourcesReferencingEntity != nil {
+		for idx := range *q.RevIncludedProvenanceResourcesReferencingEntity {
+			rsc := (*q.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if q.RevIncludedProvenanceResourcesReferencingTarget != nil {
 		for idx := range *q.RevIncludedProvenanceResourcesReferencingTarget {
 			rsc := (*q.RevIncludedProvenanceResourcesReferencingTarget)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if q.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *q.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*q.RevIncludedTaskResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if q.RevIncludedTaskResourcesReferencingFocus != nil {
 		for idx := range *q.RevIncludedTaskResourcesReferencingFocus {
 			rsc := (*q.RevIncludedTaskResourcesReferencingFocus)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if q.RevIncludedTaskResourcesReferencingBasedon != nil {
+		for idx := range *q.RevIncludedTaskResourcesReferencingBasedon {
+			rsc := (*q.RevIncludedTaskResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1180,9 +1247,9 @@ func (q *QuestionnaireResponsePlusRelatedResources) GetIncludedAndRevIncludedRes
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if q.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
-		for idx := range *q.RevIncludedProcessResponseResourcesReferencingRequestreference {
-			rsc := (*q.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
+	if q.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for idx := range *q.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*q.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

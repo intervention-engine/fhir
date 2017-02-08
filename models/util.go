@@ -108,6 +108,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "CapabilityStatement":
+		x := CapabilityStatement{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "CarePlan":
 		x := CarePlan{}
 		json.Unmarshal(b, &x)
@@ -204,14 +212,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "Conformance":
-		x := Conformance{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
 	case "Consent":
 		x := Consent{}
 		json.Unmarshal(b, &x)
@@ -238,14 +238,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "DataElement":
 		x := DataElement{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "DecisionSupportServiceModule":
-		x := DecisionSupportServiceModule{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -572,8 +564,8 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "MedicationOrder":
-		x := MedicationOrder{}
+	case "MedicationRequest":
+		x := MedicationRequest{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -582,6 +574,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "MedicationStatement":
 		x := MedicationStatement{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "MessageDefinition":
+		x := MessageDefinition{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -780,6 +780,30 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "RequestGroup":
+		x := RequestGroup{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "ResearchStudy":
+		x := ResearchStudy{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "ResearchSubject":
+		x := ResearchSubject{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "RiskAssessment":
 		x := RiskAssessment{}
 		json.Unmarshal(b, &x)
@@ -806,6 +830,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "Sequence":
 		x := Sequence{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "ServiceDefinition":
+		x := ServiceDefinition{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -878,6 +910,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "Task":
 		x := Task{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "TestReport":
+		x := TestReport{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x

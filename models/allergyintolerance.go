@@ -33,21 +33,26 @@ import (
 )
 
 type AllergyIntolerance struct {
-	DomainResource `bson:",inline"`
-	Identifier     []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status         string                                `bson:"status,omitempty" json:"status,omitempty"`
-	Type           string                                `bson:"type,omitempty" json:"type,omitempty"`
-	Category       string                                `bson:"category,omitempty" json:"category,omitempty"`
-	Criticality    string                                `bson:"criticality,omitempty" json:"criticality,omitempty"`
-	Code           *CodeableConcept                      `bson:"code,omitempty" json:"code,omitempty"`
-	Patient        *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
-	AttestedDate   *FHIRDateTime                         `bson:"attestedDate,omitempty" json:"attestedDate,omitempty"`
-	Recorder       *Reference                            `bson:"recorder,omitempty" json:"recorder,omitempty"`
-	Reporter       *Reference                            `bson:"reporter,omitempty" json:"reporter,omitempty"`
-	Onset          *FHIRDateTime                         `bson:"onset,omitempty" json:"onset,omitempty"`
-	LastOccurrence *FHIRDateTime                         `bson:"lastOccurrence,omitempty" json:"lastOccurrence,omitempty"`
-	Note           []Annotation                          `bson:"note,omitempty" json:"note,omitempty"`
-	Reaction       []AllergyIntoleranceReactionComponent `bson:"reaction,omitempty" json:"reaction,omitempty"`
+	DomainResource     `bson:",inline"`
+	Identifier         []Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	ClinicalStatus     string                                `bson:"clinicalStatus,omitempty" json:"clinicalStatus,omitempty"`
+	VerificationStatus string                                `bson:"verificationStatus,omitempty" json:"verificationStatus,omitempty"`
+	Type               string                                `bson:"type,omitempty" json:"type,omitempty"`
+	Category           []string                              `bson:"category,omitempty" json:"category,omitempty"`
+	Criticality        string                                `bson:"criticality,omitempty" json:"criticality,omitempty"`
+	Code               *CodeableConcept                      `bson:"code,omitempty" json:"code,omitempty"`
+	Patient            *Reference                            `bson:"patient,omitempty" json:"patient,omitempty"`
+	OnsetDateTime      *FHIRDateTime                         `bson:"onsetDateTime,omitempty" json:"onsetDateTime,omitempty"`
+	OnsetAge           *Quantity                             `bson:"onsetAge,omitempty" json:"onsetAge,omitempty"`
+	OnsetPeriod        *Period                               `bson:"onsetPeriod,omitempty" json:"onsetPeriod,omitempty"`
+	OnsetRange         *Range                                `bson:"onsetRange,omitempty" json:"onsetRange,omitempty"`
+	OnsetString        string                                `bson:"onsetString,omitempty" json:"onsetString,omitempty"`
+	AssertedDate       *FHIRDateTime                         `bson:"assertedDate,omitempty" json:"assertedDate,omitempty"`
+	Recorder           *Reference                            `bson:"recorder,omitempty" json:"recorder,omitempty"`
+	Asserter           *Reference                            `bson:"asserter,omitempty" json:"asserter,omitempty"`
+	LastOccurrence     *FHIRDateTime                         `bson:"lastOccurrence,omitempty" json:"lastOccurrence,omitempty"`
+	Note               []Annotation                          `bson:"note,omitempty" json:"note,omitempty"`
+	Reaction           []AllergyIntoleranceReactionComponent `bson:"reaction,omitempty" json:"reaction,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -112,9 +117,9 @@ type AllergyIntolerancePlus struct {
 type AllergyIntolerancePlusRelatedResources struct {
 	IncludedPractitionerResourcesReferencedByRecorder                    *[]Practitioner               `bson:"_includedPractitionerResourcesReferencedByRecorder,omitempty"`
 	IncludedPatientResourcesReferencedByRecorder                         *[]Patient                    `bson:"_includedPatientResourcesReferencedByRecorder,omitempty"`
-	IncludedPractitionerResourcesReferencedByReporter                    *[]Practitioner               `bson:"_includedPractitionerResourcesReferencedByReporter,omitempty"`
-	IncludedPatientResourcesReferencedByReporter                         *[]Patient                    `bson:"_includedPatientResourcesReferencedByReporter,omitempty"`
-	IncludedRelatedPersonResourcesReferencedByReporter                   *[]RelatedPerson              `bson:"_includedRelatedPersonResourcesReferencedByReporter,omitempty"`
+	IncludedPractitionerResourcesReferencedByAsserter                    *[]Practitioner               `bson:"_includedPractitionerResourcesReferencedByAsserter,omitempty"`
+	IncludedPatientResourcesReferencedByAsserter                         *[]Patient                    `bson:"_includedPatientResourcesReferencedByAsserter,omitempty"`
+	IncludedRelatedPersonResourcesReferencedByAsserter                   *[]RelatedPerson              `bson:"_includedRelatedPersonResourcesReferencedByAsserter,omitempty"`
 	IncludedPatientResourcesReferencedByPatient                          *[]Patient                    `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingContentref            *[]DocumentManifest           `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingRelatedref            *[]DocumentManifest           `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
@@ -123,14 +128,17 @@ type AllergyIntolerancePlusRelatedResources struct {
 	RevIncludedContractResourcesReferencingTtopic                        *[]Contract                   `bson:"_revIncludedContractResourcesReferencingTtopic,omitempty"`
 	RevIncludedContractResourcesReferencingSubject                       *[]Contract                   `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
 	RevIncludedContractResourcesReferencingTopic                         *[]Contract                   `bson:"_revIncludedContractResourcesReferencingTopic,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingRequestreference         *[]PaymentNotice              `bson:"_revIncludedPaymentNoticeResourcesReferencingRequestreference,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingResponsereference        *[]PaymentNotice              `bson:"_revIncludedPaymentNoticeResourcesReferencingResponsereference,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingRequest                  *[]PaymentNotice              `bson:"_revIncludedPaymentNoticeResourcesReferencingRequest,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingResponse                 *[]PaymentNotice              `bson:"_revIncludedPaymentNoticeResourcesReferencingResponse,omitempty"`
 	RevIncludedImplementationGuideResourcesReferencingResource           *[]ImplementationGuide        `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
 	RevIncludedCommunicationResourcesReferencingBasedon                  *[]Communication              `bson:"_revIncludedCommunicationResourcesReferencingBasedon,omitempty"`
 	RevIncludedMessageHeaderResourcesReferencingData                     *[]MessageHeader              `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
 	RevIncludedImmunizationRecommendationResourcesReferencingInformation *[]ImmunizationRecommendation `bson:"_revIncludedImmunizationRecommendationResourcesReferencingInformation,omitempty"`
+	RevIncludedProvenanceResourcesReferencingEntity                      *[]Provenance                 `bson:"_revIncludedProvenanceResourcesReferencingEntity,omitempty"`
 	RevIncludedProvenanceResourcesReferencingTarget                      *[]Provenance                 `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
+	RevIncludedTaskResourcesReferencingSubject                           *[]Task                       `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
 	RevIncludedTaskResourcesReferencingFocus                             *[]Task                       `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
+	RevIncludedTaskResourcesReferencingBasedon                           *[]Task                       `bson:"_revIncludedTaskResourcesReferencingBasedon,omitempty"`
 	RevIncludedListResourcesReferencingItem                              *[]List                       `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
 	RevIncludedDiagnosticRequestResourcesReferencingReplaces             *[]DiagnosticRequest          `bson:"_revIncludedDiagnosticRequestResourcesReferencingReplaces,omitempty"`
 	RevIncludedDiagnosticRequestResourcesReferencingBasedon              *[]DiagnosticRequest          `bson:"_revIncludedDiagnosticRequestResourcesReferencingBasedon,omitempty"`
@@ -144,7 +152,7 @@ type AllergyIntolerancePlusRelatedResources struct {
 	RevIncludedCompositionResourcesReferencingEntry                      *[]Composition                `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
 	RevIncludedDetectedIssueResourcesReferencingImplicated               *[]DetectedIssue              `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
 	RevIncludedQuestionnaireResponseResourcesReferencingSubject          *[]QuestionnaireResponse      `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
-	RevIncludedProcessResponseResourcesReferencingRequestreference       *[]ProcessResponse            `bson:"_revIncludedProcessResponseResourcesReferencingRequestreference,omitempty"`
+	RevIncludedProcessResponseResourcesReferencingRequest                *[]ProcessResponse            `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
 	RevIncludedClinicalImpressionResourcesReferencingProblem             *[]ClinicalImpression         `bson:"_revIncludedClinicalImpressionResourcesReferencingProblem,omitempty"`
 }
 
@@ -170,35 +178,35 @@ func (a *AllergyIntolerancePlusRelatedResources) GetIncludedPatientResourceRefer
 	return
 }
 
-func (a *AllergyIntolerancePlusRelatedResources) GetIncludedPractitionerResourceReferencedByReporter() (practitioner *Practitioner, err error) {
-	if a.IncludedPractitionerResourcesReferencedByReporter == nil {
+func (a *AllergyIntolerancePlusRelatedResources) GetIncludedPractitionerResourceReferencedByAsserter() (practitioner *Practitioner, err error) {
+	if a.IncludedPractitionerResourcesReferencedByAsserter == nil {
 		err = errors.New("Included practitioners not requested")
-	} else if len(*a.IncludedPractitionerResourcesReferencedByReporter) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedPractitionerResourcesReferencedByReporter))
-	} else if len(*a.IncludedPractitionerResourcesReferencedByReporter) == 1 {
-		practitioner = &(*a.IncludedPractitionerResourcesReferencedByReporter)[0]
+	} else if len(*a.IncludedPractitionerResourcesReferencedByAsserter) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*a.IncludedPractitionerResourcesReferencedByAsserter))
+	} else if len(*a.IncludedPractitionerResourcesReferencedByAsserter) == 1 {
+		practitioner = &(*a.IncludedPractitionerResourcesReferencedByAsserter)[0]
 	}
 	return
 }
 
-func (a *AllergyIntolerancePlusRelatedResources) GetIncludedPatientResourceReferencedByReporter() (patient *Patient, err error) {
-	if a.IncludedPatientResourcesReferencedByReporter == nil {
+func (a *AllergyIntolerancePlusRelatedResources) GetIncludedPatientResourceReferencedByAsserter() (patient *Patient, err error) {
+	if a.IncludedPatientResourcesReferencedByAsserter == nil {
 		err = errors.New("Included patients not requested")
-	} else if len(*a.IncludedPatientResourcesReferencedByReporter) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedPatientResourcesReferencedByReporter))
-	} else if len(*a.IncludedPatientResourcesReferencedByReporter) == 1 {
-		patient = &(*a.IncludedPatientResourcesReferencedByReporter)[0]
+	} else if len(*a.IncludedPatientResourcesReferencedByAsserter) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*a.IncludedPatientResourcesReferencedByAsserter))
+	} else if len(*a.IncludedPatientResourcesReferencedByAsserter) == 1 {
+		patient = &(*a.IncludedPatientResourcesReferencedByAsserter)[0]
 	}
 	return
 }
 
-func (a *AllergyIntolerancePlusRelatedResources) GetIncludedRelatedPersonResourceReferencedByReporter() (relatedPerson *RelatedPerson, err error) {
-	if a.IncludedRelatedPersonResourcesReferencedByReporter == nil {
+func (a *AllergyIntolerancePlusRelatedResources) GetIncludedRelatedPersonResourceReferencedByAsserter() (relatedPerson *RelatedPerson, err error) {
+	if a.IncludedRelatedPersonResourcesReferencedByAsserter == nil {
 		err = errors.New("Included relatedpeople not requested")
-	} else if len(*a.IncludedRelatedPersonResourcesReferencedByReporter) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*a.IncludedRelatedPersonResourcesReferencedByReporter))
-	} else if len(*a.IncludedRelatedPersonResourcesReferencedByReporter) == 1 {
-		relatedPerson = &(*a.IncludedRelatedPersonResourcesReferencedByReporter)[0]
+	} else if len(*a.IncludedRelatedPersonResourcesReferencedByAsserter) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 relatedPerson, but found %d", len(*a.IncludedRelatedPersonResourcesReferencedByAsserter))
+	} else if len(*a.IncludedRelatedPersonResourcesReferencedByAsserter) == 1 {
+		relatedPerson = &(*a.IncludedRelatedPersonResourcesReferencedByAsserter)[0]
 	}
 	return
 }
@@ -277,20 +285,20 @@ func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedContractResources
 	return
 }
 
-func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequestreference() (paymentNotices []PaymentNotice, err error) {
-	if a.RevIncludedPaymentNoticeResourcesReferencingRequestreference == nil {
+func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+	if a.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
-		paymentNotices = *a.RevIncludedPaymentNoticeResourcesReferencingRequestreference
+		paymentNotices = *a.RevIncludedPaymentNoticeResourcesReferencingRequest
 	}
 	return
 }
 
-func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponsereference() (paymentNotices []PaymentNotice, err error) {
-	if a.RevIncludedPaymentNoticeResourcesReferencingResponsereference == nil {
+func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+	if a.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
-		paymentNotices = *a.RevIncludedPaymentNoticeResourcesReferencingResponsereference
+		paymentNotices = *a.RevIncludedPaymentNoticeResourcesReferencingResponse
 	}
 	return
 }
@@ -331,6 +339,15 @@ func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedImmunizationRecom
 	return
 }
 
+func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
+	if a.RevIncludedProvenanceResourcesReferencingEntity == nil {
+		err = errors.New("RevIncluded provenances not requested")
+	} else {
+		provenances = *a.RevIncludedProvenanceResourcesReferencingEntity
+	}
+	return
+}
+
 func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if a.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
@@ -340,11 +357,29 @@ func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedProvenanceResourc
 	return
 }
 
+func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+	if a.RevIncludedTaskResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *a.RevIncludedTaskResourcesReferencingSubject
+	}
+	return
+}
+
 func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
 	if a.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
 		tasks = *a.RevIncludedTaskResourcesReferencingFocus
+	}
+	return
+}
+
+func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+	if a.RevIncludedTaskResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *a.RevIncludedTaskResourcesReferencingBasedon
 	}
 	return
 }
@@ -466,11 +501,11 @@ func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedQuestionnaireResp
 	return
 }
 
-func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequestreference() (processResponses []ProcessResponse, err error) {
-	if a.RevIncludedProcessResponseResourcesReferencingRequestreference == nil {
+func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+	if a.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
-		processResponses = *a.RevIncludedProcessResponseResourcesReferencingRequestreference
+		processResponses = *a.RevIncludedProcessResponseResourcesReferencingRequest
 	}
 	return
 }
@@ -498,21 +533,21 @@ func (a *AllergyIntolerancePlusRelatedResources) GetIncludedResources() map[stri
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.IncludedPractitionerResourcesReferencedByReporter != nil {
-		for idx := range *a.IncludedPractitionerResourcesReferencedByReporter {
-			rsc := (*a.IncludedPractitionerResourcesReferencedByReporter)[idx]
+	if a.IncludedPractitionerResourcesReferencedByAsserter != nil {
+		for idx := range *a.IncludedPractitionerResourcesReferencedByAsserter {
+			rsc := (*a.IncludedPractitionerResourcesReferencedByAsserter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.IncludedPatientResourcesReferencedByReporter != nil {
-		for idx := range *a.IncludedPatientResourcesReferencedByReporter {
-			rsc := (*a.IncludedPatientResourcesReferencedByReporter)[idx]
+	if a.IncludedPatientResourcesReferencedByAsserter != nil {
+		for idx := range *a.IncludedPatientResourcesReferencedByAsserter {
+			rsc := (*a.IncludedPatientResourcesReferencedByAsserter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.IncludedRelatedPersonResourcesReferencedByReporter != nil {
-		for idx := range *a.IncludedRelatedPersonResourcesReferencedByReporter {
-			rsc := (*a.IncludedRelatedPersonResourcesReferencedByReporter)[idx]
+	if a.IncludedRelatedPersonResourcesReferencedByAsserter != nil {
+		for idx := range *a.IncludedRelatedPersonResourcesReferencedByAsserter {
+			rsc := (*a.IncludedRelatedPersonResourcesReferencedByAsserter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -569,15 +604,15 @@ func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedResources() map[s
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
-		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
-			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+	if a.RevIncludedPaymentNoticeResourcesReferencingRequest != nil {
+		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingRequest {
+			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+	if a.RevIncludedPaymentNoticeResourcesReferencingResponse != nil {
+		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingResponse {
+			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingResponse)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -605,15 +640,33 @@ func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedResources() map[s
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if a.RevIncludedProvenanceResourcesReferencingEntity != nil {
+		for idx := range *a.RevIncludedProvenanceResourcesReferencingEntity {
+			rsc := (*a.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if a.RevIncludedProvenanceResourcesReferencingTarget != nil {
 		for idx := range *a.RevIncludedProvenanceResourcesReferencingTarget {
 			rsc := (*a.RevIncludedProvenanceResourcesReferencingTarget)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if a.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *a.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*a.RevIncludedTaskResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if a.RevIncludedTaskResourcesReferencingFocus != nil {
 		for idx := range *a.RevIncludedTaskResourcesReferencingFocus {
 			rsc := (*a.RevIncludedTaskResourcesReferencingFocus)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if a.RevIncludedTaskResourcesReferencingBasedon != nil {
+		for idx := range *a.RevIncludedTaskResourcesReferencingBasedon {
+			rsc := (*a.RevIncludedTaskResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -695,9 +748,9 @@ func (a *AllergyIntolerancePlusRelatedResources) GetRevIncludedResources() map[s
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
-		for idx := range *a.RevIncludedProcessResponseResourcesReferencingRequestreference {
-			rsc := (*a.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
+	if a.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for idx := range *a.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*a.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -724,21 +777,21 @@ func (a *AllergyIntolerancePlusRelatedResources) GetIncludedAndRevIncludedResour
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.IncludedPractitionerResourcesReferencedByReporter != nil {
-		for idx := range *a.IncludedPractitionerResourcesReferencedByReporter {
-			rsc := (*a.IncludedPractitionerResourcesReferencedByReporter)[idx]
+	if a.IncludedPractitionerResourcesReferencedByAsserter != nil {
+		for idx := range *a.IncludedPractitionerResourcesReferencedByAsserter {
+			rsc := (*a.IncludedPractitionerResourcesReferencedByAsserter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.IncludedPatientResourcesReferencedByReporter != nil {
-		for idx := range *a.IncludedPatientResourcesReferencedByReporter {
-			rsc := (*a.IncludedPatientResourcesReferencedByReporter)[idx]
+	if a.IncludedPatientResourcesReferencedByAsserter != nil {
+		for idx := range *a.IncludedPatientResourcesReferencedByAsserter {
+			rsc := (*a.IncludedPatientResourcesReferencedByAsserter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.IncludedRelatedPersonResourcesReferencedByReporter != nil {
-		for idx := range *a.IncludedRelatedPersonResourcesReferencedByReporter {
-			rsc := (*a.IncludedRelatedPersonResourcesReferencedByReporter)[idx]
+	if a.IncludedRelatedPersonResourcesReferencedByAsserter != nil {
+		for idx := range *a.IncludedRelatedPersonResourcesReferencedByAsserter {
+			rsc := (*a.IncludedRelatedPersonResourcesReferencedByAsserter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -790,15 +843,15 @@ func (a *AllergyIntolerancePlusRelatedResources) GetIncludedAndRevIncludedResour
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
-		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
-			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+	if a.RevIncludedPaymentNoticeResourcesReferencingRequest != nil {
+		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingRequest {
+			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+	if a.RevIncludedPaymentNoticeResourcesReferencingResponse != nil {
+		for idx := range *a.RevIncludedPaymentNoticeResourcesReferencingResponse {
+			rsc := (*a.RevIncludedPaymentNoticeResourcesReferencingResponse)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -826,15 +879,33 @@ func (a *AllergyIntolerancePlusRelatedResources) GetIncludedAndRevIncludedResour
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if a.RevIncludedProvenanceResourcesReferencingEntity != nil {
+		for idx := range *a.RevIncludedProvenanceResourcesReferencingEntity {
+			rsc := (*a.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if a.RevIncludedProvenanceResourcesReferencingTarget != nil {
 		for idx := range *a.RevIncludedProvenanceResourcesReferencingTarget {
 			rsc := (*a.RevIncludedProvenanceResourcesReferencingTarget)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if a.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *a.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*a.RevIncludedTaskResourcesReferencingSubject)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if a.RevIncludedTaskResourcesReferencingFocus != nil {
 		for idx := range *a.RevIncludedTaskResourcesReferencingFocus {
 			rsc := (*a.RevIncludedTaskResourcesReferencingFocus)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if a.RevIncludedTaskResourcesReferencingBasedon != nil {
+		for idx := range *a.RevIncludedTaskResourcesReferencingBasedon {
+			rsc := (*a.RevIncludedTaskResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -916,9 +987,9 @@ func (a *AllergyIntolerancePlusRelatedResources) GetIncludedAndRevIncludedResour
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if a.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
-		for idx := range *a.RevIncludedProcessResponseResourcesReferencingRequestreference {
-			rsc := (*a.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
+	if a.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for idx := range *a.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*a.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

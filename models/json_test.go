@@ -39,8 +39,7 @@ func (s *JSONSuite) TestUnmarshalJSON(c *check.C) {
 	c.Assert(r.Contained[0], check.FitsTypeOf, &Practitioner{})
 	contained := r.Contained[0].(*Practitioner)
 	c.Assert(contained.Id, check.Equals, "pract1")
-	c.Assert(contained.Name[0].Family, check.HasLen, 1)
-	c.Assert(contained.Name[0].Family[0], check.Equals, "Doofenshmirtz")
+	c.Assert(contained.Name[0].Family, check.Equals, "Doofenshmirtz")
 	c.Assert(contained.Name[0].Given, check.HasLen, 1)
 	c.Assert(contained.Name[0].Given[0], check.Equals, "Heinz")
 	c.Assert(contained.Name[0].Suffix, check.HasLen, 1)
@@ -76,7 +75,7 @@ func (s *JSONSuite) TestMarshalJSON(c *check.C) {
 		DomainResource: DomainResource{Resource: Resource{Id: "pract1"}},
 		Name: []HumanName{
 			{
-				Family: []string{"Doofenshmirtz"},
+				Family: "Doofenshmirtz",
 				Given:  []string{"Heinz"},
 				Suffix: []string{"MD"},
 			},
@@ -111,7 +110,7 @@ func (s *JSONSuite) TestMarshalJSON(c *check.C) {
 	c.Assert(j.GetPath("text", "div").MustString(), check.Equals, "<div>HTML in JavaScript.  Wow.</div>")
 	contained := j.Get("contained").GetIndex(0)
 	c.Assert(contained.Get("resourceType").MustString(), check.Equals, "Practitioner")
-	c.Assert(contained.Get("name").GetIndex(0).Get("family").GetIndex(0).MustString(), check.Equals, "Doofenshmirtz")
+	c.Assert(contained.Get("name").GetIndex(0).Get("family").MustString(), check.Equals, "Doofenshmirtz")
 	c.Assert(contained.Get("name").GetIndex(0).Get("given").GetIndex(0).MustString(), check.Equals, "Heinz")
 	c.Assert(contained.Get("name").GetIndex(0).Get("suffix").GetIndex(0).MustString(), check.Equals, "MD")
 	c.Assert(j.GetPath("subject", "reference").MustString(), check.Equals, "https://example.com/base/Patient/4954037118555241963")

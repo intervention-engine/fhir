@@ -32,152 +32,83 @@ import (
 	"fmt"
 )
 
-type StructureMap struct {
-	DomainResource `bson:",inline"`
-	Url            string                           `bson:"url,omitempty" json:"url,omitempty"`
-	Identifier     []Identifier                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Version        string                           `bson:"version,omitempty" json:"version,omitempty"`
-	Name           string                           `bson:"name,omitempty" json:"name,omitempty"`
-	Title          string                           `bson:"title,omitempty" json:"title,omitempty"`
-	Status         string                           `bson:"status,omitempty" json:"status,omitempty"`
-	Experimental   *bool                            `bson:"experimental,omitempty" json:"experimental,omitempty"`
-	Publisher      string                           `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact        []ContactDetail                  `bson:"contact,omitempty" json:"contact,omitempty"`
-	Date           *FHIRDateTime                    `bson:"date,omitempty" json:"date,omitempty"`
-	Description    string                           `bson:"description,omitempty" json:"description,omitempty"`
-	UseContext     []UsageContext                   `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Jurisdiction   []CodeableConcept                `bson:"jurisdiction,omitempty" json:"jurisdiction,omitempty"`
-	Purpose        string                           `bson:"purpose,omitempty" json:"purpose,omitempty"`
-	Copyright      string                           `bson:"copyright,omitempty" json:"copyright,omitempty"`
-	Structure      []StructureMapStructureComponent `bson:"structure,omitempty" json:"structure,omitempty"`
-	Import         []string                         `bson:"import,omitempty" json:"import,omitempty"`
-	Group          []StructureMapGroupComponent     `bson:"group,omitempty" json:"group,omitempty"`
+type ServiceDefinition struct {
+	DomainResource      `bson:",inline"`
+	Url                 string              `bson:"url,omitempty" json:"url,omitempty"`
+	Identifier          []Identifier        `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Version             string              `bson:"version,omitempty" json:"version,omitempty"`
+	Name                string              `bson:"name,omitempty" json:"name,omitempty"`
+	Title               string              `bson:"title,omitempty" json:"title,omitempty"`
+	Status              string              `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental        *bool               `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Date                *FHIRDateTime       `bson:"date,omitempty" json:"date,omitempty"`
+	Description         string              `bson:"description,omitempty" json:"description,omitempty"`
+	Purpose             string              `bson:"purpose,omitempty" json:"purpose,omitempty"`
+	Usage               string              `bson:"usage,omitempty" json:"usage,omitempty"`
+	ApprovalDate        *FHIRDateTime       `bson:"approvalDate,omitempty" json:"approvalDate,omitempty"`
+	LastReviewDate      *FHIRDateTime       `bson:"lastReviewDate,omitempty" json:"lastReviewDate,omitempty"`
+	EffectivePeriod     *Period             `bson:"effectivePeriod,omitempty" json:"effectivePeriod,omitempty"`
+	UseContext          []UsageContext      `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Jurisdiction        []CodeableConcept   `bson:"jurisdiction,omitempty" json:"jurisdiction,omitempty"`
+	Topic               []CodeableConcept   `bson:"topic,omitempty" json:"topic,omitempty"`
+	Contributor         []Contributor       `bson:"contributor,omitempty" json:"contributor,omitempty"`
+	Publisher           string              `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact             []ContactDetail     `bson:"contact,omitempty" json:"contact,omitempty"`
+	Copyright           string              `bson:"copyright,omitempty" json:"copyright,omitempty"`
+	RelatedArtifact     []RelatedArtifact   `bson:"relatedArtifact,omitempty" json:"relatedArtifact,omitempty"`
+	Trigger             []TriggerDefinition `bson:"trigger,omitempty" json:"trigger,omitempty"`
+	DataRequirement     []DataRequirement   `bson:"dataRequirement,omitempty" json:"dataRequirement,omitempty"`
+	OperationDefinition *Reference          `bson:"operationDefinition,omitempty" json:"operationDefinition,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
-func (resource *StructureMap) MarshalJSON() ([]byte, error) {
-	resource.ResourceType = "StructureMap"
+func (resource *ServiceDefinition) MarshalJSON() ([]byte, error) {
+	resource.ResourceType = "ServiceDefinition"
 	// Dereferencing the pointer to avoid infinite recursion.
-	// Passing in plain old x (a pointer to StructureMap), would cause this same
+	// Passing in plain old x (a pointer to ServiceDefinition), would cause this same
 	// MarshallJSON function to be called again
 	return json.Marshal(*resource)
 }
 
-func (x *StructureMap) GetBSON() (interface{}, error) {
-	x.ResourceType = "StructureMap"
+func (x *ServiceDefinition) GetBSON() (interface{}, error) {
+	x.ResourceType = "ServiceDefinition"
 	// See comment in MarshallJSON to see why we dereference
 	return *x, nil
 }
 
-// The "structureMap" sub-type is needed to avoid infinite recursion in UnmarshalJSON
-type structureMap StructureMap
+// The "serviceDefinition" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type serviceDefinition ServiceDefinition
 
 // Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
-func (x *StructureMap) UnmarshalJSON(data []byte) (err error) {
-	x2 := structureMap{}
+func (x *ServiceDefinition) UnmarshalJSON(data []byte) (err error) {
+	x2 := serviceDefinition{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Contained != nil {
 			for i := range x2.Contained {
 				x2.Contained[i] = MapToResource(x2.Contained[i], true)
 			}
 		}
-		*x = StructureMap(x2)
+		*x = ServiceDefinition(x2)
 		return x.checkResourceType()
 	}
 	return
 }
 
-func (x *StructureMap) checkResourceType() error {
+func (x *ServiceDefinition) checkResourceType() error {
 	if x.ResourceType == "" {
-		x.ResourceType = "StructureMap"
-	} else if x.ResourceType != "StructureMap" {
-		return errors.New(fmt.Sprintf("Expected resourceType to be StructureMap, instead received %s", x.ResourceType))
+		x.ResourceType = "ServiceDefinition"
+	} else if x.ResourceType != "ServiceDefinition" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ServiceDefinition, instead received %s", x.ResourceType))
 	}
 	return nil
 }
 
-type StructureMapStructureComponent struct {
-	BackboneElement `bson:",inline"`
-	Url             string `bson:"url,omitempty" json:"url,omitempty"`
-	Mode            string `bson:"mode,omitempty" json:"mode,omitempty"`
-	Documentation   string `bson:"documentation,omitempty" json:"documentation,omitempty"`
+type ServiceDefinitionPlus struct {
+	ServiceDefinition                     `bson:",inline"`
+	ServiceDefinitionPlusRelatedResources `bson:",inline"`
 }
 
-type StructureMapGroupComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string                            `bson:"name,omitempty" json:"name,omitempty"`
-	Extends         string                            `bson:"extends,omitempty" json:"extends,omitempty"`
-	Documentation   string                            `bson:"documentation,omitempty" json:"documentation,omitempty"`
-	Input           []StructureMapGroupInputComponent `bson:"input,omitempty" json:"input,omitempty"`
-	Rule            []StructureMapGroupRuleComponent  `bson:"rule,omitempty" json:"rule,omitempty"`
-}
-
-type StructureMapGroupInputComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string `bson:"name,omitempty" json:"name,omitempty"`
-	Type            string `bson:"type,omitempty" json:"type,omitempty"`
-	Mode            string `bson:"mode,omitempty" json:"mode,omitempty"`
-	Documentation   string `bson:"documentation,omitempty" json:"documentation,omitempty"`
-}
-
-type StructureMapGroupRuleComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string                                    `bson:"name,omitempty" json:"name,omitempty"`
-	Source          []StructureMapGroupRuleSourceComponent    `bson:"source,omitempty" json:"source,omitempty"`
-	Target          []StructureMapGroupRuleTargetComponent    `bson:"target,omitempty" json:"target,omitempty"`
-	Rule            []StructureMapGroupRuleComponent          `bson:"rule,omitempty" json:"rule,omitempty"`
-	Dependent       []StructureMapGroupRuleDependentComponent `bson:"dependent,omitempty" json:"dependent,omitempty"`
-	Documentation   string                                    `bson:"documentation,omitempty" json:"documentation,omitempty"`
-}
-
-type StructureMapGroupRuleSourceComponent struct {
-	BackboneElement `bson:",inline"`
-	Required        *bool  `bson:"required,omitempty" json:"required,omitempty"`
-	Context         string `bson:"context,omitempty" json:"context,omitempty"`
-	ContextType     string `bson:"contextType,omitempty" json:"contextType,omitempty"`
-	Min             *int32 `bson:"min,omitempty" json:"min,omitempty"`
-	Max             string `bson:"max,omitempty" json:"max,omitempty"`
-	Type            string `bson:"type,omitempty" json:"type,omitempty"`
-	Element         string `bson:"element,omitempty" json:"element,omitempty"`
-	ListMode        string `bson:"listMode,omitempty" json:"listMode,omitempty"`
-	Variable        string `bson:"variable,omitempty" json:"variable,omitempty"`
-	Condition       string `bson:"condition,omitempty" json:"condition,omitempty"`
-	Check           string `bson:"check,omitempty" json:"check,omitempty"`
-}
-
-type StructureMapGroupRuleTargetComponent struct {
-	BackboneElement `bson:",inline"`
-	Context         string                                          `bson:"context,omitempty" json:"context,omitempty"`
-	ContextType     string                                          `bson:"contextType,omitempty" json:"contextType,omitempty"`
-	Element         string                                          `bson:"element,omitempty" json:"element,omitempty"`
-	Variable        string                                          `bson:"variable,omitempty" json:"variable,omitempty"`
-	ListMode        []string                                        `bson:"listMode,omitempty" json:"listMode,omitempty"`
-	ListRuleId      string                                          `bson:"listRuleId,omitempty" json:"listRuleId,omitempty"`
-	Transform       string                                          `bson:"transform,omitempty" json:"transform,omitempty"`
-	Parameter       []StructureMapGroupRuleTargetParameterComponent `bson:"parameter,omitempty" json:"parameter,omitempty"`
-}
-
-type StructureMapGroupRuleTargetParameterComponent struct {
-	BackboneElement `bson:",inline"`
-	ValueId         string   `bson:"valueId,omitempty" json:"valueId,omitempty"`
-	ValueString     string   `bson:"valueString,omitempty" json:"valueString,omitempty"`
-	ValueBoolean    *bool    `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
-	ValueInteger    *int32   `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
-	ValueDecimal    *float64 `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
-}
-
-type StructureMapGroupRuleDependentComponent struct {
-	BackboneElement `bson:",inline"`
-	Name            string   `bson:"name,omitempty" json:"name,omitempty"`
-	Variable        []string `bson:"variable,omitempty" json:"variable,omitempty"`
-}
-
-type StructureMapPlus struct {
-	StructureMap                     `bson:",inline"`
-	StructureMapPlusRelatedResources `bson:",inline"`
-}
-
-type StructureMapPlusRelatedResources struct {
+type ServiceDefinitionPlusRelatedResources struct {
 	RevIncludedDocumentManifestResourcesReferencingContentref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingRelatedref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
 	RevIncludedConsentResourcesReferencingData                  *[]Consent               `bson:"_revIncludedConsentResourcesReferencingData,omitempty"`
@@ -211,7 +142,7 @@ type StructureMapPlusRelatedResources struct {
 	RevIncludedProcessResponseResourcesReferencingRequest       *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
 	if s.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -220,7 +151,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDocumentManifestResourc
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
 	if s.RevIncludedDocumentManifestResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -229,7 +160,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDocumentManifestResourc
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
 	if s.RevIncludedConsentResourcesReferencingData == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
@@ -238,7 +169,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedConsentResourcesReferen
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
 	if s.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentReferences not requested")
 	} else {
@@ -247,7 +178,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDocumentReferenceResour
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
 	if s.RevIncludedContractResourcesReferencingTtopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -256,7 +187,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedContractResourcesRefere
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
 	if s.RevIncludedContractResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -265,7 +196,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedContractResourcesRefere
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
 	if s.RevIncludedContractResourcesReferencingTopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -274,7 +205,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedContractResourcesRefere
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
 	if s.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -283,7 +214,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesR
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
 	if s.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -292,7 +223,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesR
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
 	if s.RevIncludedImplementationGuideResourcesReferencingResource == nil {
 		err = errors.New("RevIncluded implementationGuides not requested")
 	} else {
@@ -301,7 +232,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedImplementationGuideReso
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
 	if s.RevIncludedCommunicationResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communications not requested")
 	} else {
@@ -310,7 +241,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedCommunicationResourcesR
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
 	if s.RevIncludedMessageHeaderResourcesReferencingData == nil {
 		err = errors.New("RevIncluded messageHeaders not requested")
 	} else {
@@ -319,7 +250,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedMessageHeaderResourcesR
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
 	if s.RevIncludedProvenanceResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -328,7 +259,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedProvenanceResourcesRefe
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if s.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -337,7 +268,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedProvenanceResourcesRefe
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
 	if s.RevIncludedTaskResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -346,7 +277,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedTaskResourcesReferencin
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
 	if s.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -355,7 +286,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedTaskResourcesReferencin
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
 	if s.RevIncludedTaskResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -364,7 +295,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedTaskResourcesReferencin
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
 	if s.RevIncludedListResourcesReferencingItem == nil {
 		err = errors.New("RevIncluded lists not requested")
 	} else {
@@ -373,7 +304,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedListResourcesReferencin
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
 	if s.RevIncludedDiagnosticRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -382,7 +313,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDiagnosticRequestResour
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
 	if s.RevIncludedDiagnosticRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -391,7 +322,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDiagnosticRequestResour
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
 	if s.RevIncludedDiagnosticRequestResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -400,7 +331,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDiagnosticRequestResour
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
 	if s.RevIncludedDeviceUseRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -409,7 +340,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDeviceUseRequestResourc
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
 	if s.RevIncludedDeviceUseRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -418,7 +349,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDeviceUseRequestResourc
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
 	if s.RevIncludedDeviceUseRequestResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -427,7 +358,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDeviceUseRequestResourc
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
 	if s.RevIncludedBasicResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded basics not requested")
 	} else {
@@ -436,7 +367,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedBasicResourcesReferenci
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
 	if s.RevIncludedAuditEventResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
@@ -445,7 +376,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedAuditEventResourcesRefe
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
 	if s.RevIncludedCompositionResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -454,7 +385,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedCompositionResourcesRef
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
 	if s.RevIncludedCompositionResourcesReferencingEntry == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -463,7 +394,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedCompositionResourcesRef
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
 	if s.RevIncludedDetectedIssueResourcesReferencingImplicated == nil {
 		err = errors.New("RevIncluded detectedIssues not requested")
 	} else {
@@ -472,7 +403,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedDetectedIssueResourcesR
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
 	if s.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded questionnaireResponses not requested")
 	} else {
@@ -481,7 +412,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedQuestionnaireResponseRe
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
 	if s.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
@@ -490,12 +421,12 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedProcessResponseResource
 	return
 }
 
-func (s *StructureMapPlusRelatedResources) GetIncludedResources() map[string]interface{} {
+func (s *ServiceDefinitionPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	return resourceMap
 }
 
-func (s *StructureMapPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
+func (s *ServiceDefinitionPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if s.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *s.RevIncludedDocumentManifestResourcesReferencingContentref {
@@ -686,7 +617,7 @@ func (s *StructureMapPlusRelatedResources) GetRevIncludedResources() map[string]
 	return resourceMap
 }
 
-func (s *StructureMapPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
+func (s *ServiceDefinitionPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if s.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *s.RevIncludedDocumentManifestResourcesReferencingContentref {

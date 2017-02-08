@@ -33,48 +33,37 @@ import (
 )
 
 type Claim struct {
-	DomainResource                 `bson:",inline"`
-	Identifier                     []Identifier                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status                         string                           `bson:"status,omitempty" json:"status,omitempty"`
-	Type                           *Coding                          `bson:"type,omitempty" json:"type,omitempty"`
-	SubType                        []Coding                         `bson:"subType,omitempty" json:"subType,omitempty"`
-	Ruleset                        *Coding                          `bson:"ruleset,omitempty" json:"ruleset,omitempty"`
-	OriginalRuleset                *Coding                          `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`
-	Created                        *FHIRDateTime                    `bson:"created,omitempty" json:"created,omitempty"`
-	BillablePeriod                 *Period                          `bson:"billablePeriod,omitempty" json:"billablePeriod,omitempty"`
-	InsurerIdentifier              *Identifier                      `bson:"insurerIdentifier,omitempty" json:"insurerIdentifier,omitempty"`
-	InsurerReference               *Reference                       `bson:"insurerReference,omitempty" json:"insurerReference,omitempty"`
-	ProviderIdentifier             *Identifier                      `bson:"providerIdentifier,omitempty" json:"providerIdentifier,omitempty"`
-	ProviderReference              *Reference                       `bson:"providerReference,omitempty" json:"providerReference,omitempty"`
-	OrganizationIdentifier         *Identifier                      `bson:"organizationIdentifier,omitempty" json:"organizationIdentifier,omitempty"`
-	OrganizationReference          *Reference                       `bson:"organizationReference,omitempty" json:"organizationReference,omitempty"`
-	Use                            string                           `bson:"use,omitempty" json:"use,omitempty"`
-	Priority                       *Coding                          `bson:"priority,omitempty" json:"priority,omitempty"`
-	FundsReserve                   *Coding                          `bson:"fundsReserve,omitempty" json:"fundsReserve,omitempty"`
-	EntererIdentifier              *Identifier                      `bson:"entererIdentifier,omitempty" json:"entererIdentifier,omitempty"`
-	EntererReference               *Reference                       `bson:"entererReference,omitempty" json:"entererReference,omitempty"`
-	FacilityIdentifier             *Identifier                      `bson:"facilityIdentifier,omitempty" json:"facilityIdentifier,omitempty"`
-	FacilityReference              *Reference                       `bson:"facilityReference,omitempty" json:"facilityReference,omitempty"`
-	Related                        []ClaimRelatedClaimComponent     `bson:"related,omitempty" json:"related,omitempty"`
-	PrescriptionIdentifier         *Identifier                      `bson:"prescriptionIdentifier,omitempty" json:"prescriptionIdentifier,omitempty"`
-	PrescriptionReference          *Reference                       `bson:"prescriptionReference,omitempty" json:"prescriptionReference,omitempty"`
-	OriginalPrescriptionIdentifier *Identifier                      `bson:"originalPrescriptionIdentifier,omitempty" json:"originalPrescriptionIdentifier,omitempty"`
-	OriginalPrescriptionReference  *Reference                       `bson:"originalPrescriptionReference,omitempty" json:"originalPrescriptionReference,omitempty"`
-	Payee                          *ClaimPayeeComponent             `bson:"payee,omitempty" json:"payee,omitempty"`
-	ReferralIdentifier             *Identifier                      `bson:"referralIdentifier,omitempty" json:"referralIdentifier,omitempty"`
-	ReferralReference              *Reference                       `bson:"referralReference,omitempty" json:"referralReference,omitempty"`
-	Information                    []ClaimSpecialConditionComponent `bson:"information,omitempty" json:"information,omitempty"`
-	Diagnosis                      []ClaimDiagnosisComponent        `bson:"diagnosis,omitempty" json:"diagnosis,omitempty"`
-	Procedure                      []ClaimProcedureComponent        `bson:"procedure,omitempty" json:"procedure,omitempty"`
-	PatientIdentifier              *Identifier                      `bson:"patientIdentifier,omitempty" json:"patientIdentifier,omitempty"`
-	PatientReference               *Reference                       `bson:"patientReference,omitempty" json:"patientReference,omitempty"`
-	Coverage                       []ClaimCoverageComponent         `bson:"coverage,omitempty" json:"coverage,omitempty"`
-	Accident                       *ClaimAccidentComponent          `bson:"accident,omitempty" json:"accident,omitempty"`
-	EmploymentImpacted             *Period                          `bson:"employmentImpacted,omitempty" json:"employmentImpacted,omitempty"`
-	Hospitalization                *Period                          `bson:"hospitalization,omitempty" json:"hospitalization,omitempty"`
-	Item                           []ClaimItemComponent             `bson:"item,omitempty" json:"item,omitempty"`
-	Total                          *Quantity                        `bson:"total,omitempty" json:"total,omitempty"`
-	MissingTeeth                   []ClaimMissingTeethComponent     `bson:"missingTeeth,omitempty" json:"missingTeeth,omitempty"`
+	DomainResource       `bson:",inline"`
+	Identifier           []Identifier                     `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status               string                           `bson:"status,omitempty" json:"status,omitempty"`
+	Type                 *CodeableConcept                 `bson:"type,omitempty" json:"type,omitempty"`
+	SubType              []CodeableConcept                `bson:"subType,omitempty" json:"subType,omitempty"`
+	Use                  string                           `bson:"use,omitempty" json:"use,omitempty"`
+	Patient              *Reference                       `bson:"patient,omitempty" json:"patient,omitempty"`
+	BillablePeriod       *Period                          `bson:"billablePeriod,omitempty" json:"billablePeriod,omitempty"`
+	Created              *FHIRDateTime                    `bson:"created,omitempty" json:"created,omitempty"`
+	Enterer              *Reference                       `bson:"enterer,omitempty" json:"enterer,omitempty"`
+	Insurer              *Reference                       `bson:"insurer,omitempty" json:"insurer,omitempty"`
+	Provider             *Reference                       `bson:"provider,omitempty" json:"provider,omitempty"`
+	Organization         *Reference                       `bson:"organization,omitempty" json:"organization,omitempty"`
+	Priority             *CodeableConcept                 `bson:"priority,omitempty" json:"priority,omitempty"`
+	FundsReserve         *CodeableConcept                 `bson:"fundsReserve,omitempty" json:"fundsReserve,omitempty"`
+	Related              []ClaimRelatedClaimComponent     `bson:"related,omitempty" json:"related,omitempty"`
+	Prescription         *Reference                       `bson:"prescription,omitempty" json:"prescription,omitempty"`
+	OriginalPrescription *Reference                       `bson:"originalPrescription,omitempty" json:"originalPrescription,omitempty"`
+	Payee                *ClaimPayeeComponent             `bson:"payee,omitempty" json:"payee,omitempty"`
+	Referral             *Reference                       `bson:"referral,omitempty" json:"referral,omitempty"`
+	Facility             *Reference                       `bson:"facility,omitempty" json:"facility,omitempty"`
+	CareTeam             []ClaimCareTeamComponent         `bson:"careTeam,omitempty" json:"careTeam,omitempty"`
+	Information          []ClaimSpecialConditionComponent `bson:"information,omitempty" json:"information,omitempty"`
+	Diagnosis            []ClaimDiagnosisComponent        `bson:"diagnosis,omitempty" json:"diagnosis,omitempty"`
+	Procedure            []ClaimProcedureComponent        `bson:"procedure,omitempty" json:"procedure,omitempty"`
+	Insurance            []ClaimInsuranceComponent        `bson:"insurance,omitempty" json:"insurance,omitempty"`
+	Accident             *ClaimAccidentComponent          `bson:"accident,omitempty" json:"accident,omitempty"`
+	EmploymentImpacted   *Period                          `bson:"employmentImpacted,omitempty" json:"employmentImpacted,omitempty"`
+	Hospitalization      *Period                          `bson:"hospitalization,omitempty" json:"hospitalization,omitempty"`
+	Item                 []ClaimItemComponent             `bson:"item,omitempty" json:"item,omitempty"`
+	Total                *Quantity                        `bson:"total,omitempty" json:"total,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -121,114 +110,114 @@ func (x *Claim) checkResourceType() error {
 
 type ClaimRelatedClaimComponent struct {
 	BackboneElement `bson:",inline"`
-	ClaimIdentifier *Identifier `bson:"claimIdentifier,omitempty" json:"claimIdentifier,omitempty"`
-	ClaimReference  *Reference  `bson:"claimReference,omitempty" json:"claimReference,omitempty"`
-	Relationship    *Coding     `bson:"relationship,omitempty" json:"relationship,omitempty"`
-	Reference       *Identifier `bson:"reference,omitempty" json:"reference,omitempty"`
+	Claim           *Reference       `bson:"claim,omitempty" json:"claim,omitempty"`
+	Relationship    *CodeableConcept `bson:"relationship,omitempty" json:"relationship,omitempty"`
+	Reference       *Identifier      `bson:"reference,omitempty" json:"reference,omitempty"`
 }
 
 type ClaimPayeeComponent struct {
 	BackboneElement `bson:",inline"`
-	Type            *Coding     `bson:"type,omitempty" json:"type,omitempty"`
-	ResourceType    *Coding     `bson:"resourceType,omitempty" json:"resourceType,omitempty"`
-	PartyIdentifier *Identifier `bson:"partyIdentifier,omitempty" json:"partyIdentifier,omitempty"`
-	PartyReference  *Reference  `bson:"partyReference,omitempty" json:"partyReference,omitempty"`
+	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	ResourceType    *Coding          `bson:"resourceType,omitempty" json:"resourceType,omitempty"`
+	Party           *Reference       `bson:"party,omitempty" json:"party,omitempty"`
+}
+
+type ClaimCareTeamComponent struct {
+	BackboneElement `bson:",inline"`
+	Sequence        *uint32          `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Provider        *Reference       `bson:"provider,omitempty" json:"provider,omitempty"`
+	Responsible     *bool            `bson:"responsible,omitempty" json:"responsible,omitempty"`
+	Role            *CodeableConcept `bson:"role,omitempty" json:"role,omitempty"`
+	Qualification   *CodeableConcept `bson:"qualification,omitempty" json:"qualification,omitempty"`
 }
 
 type ClaimSpecialConditionComponent struct {
 	BackboneElement `bson:",inline"`
-	Category        *Coding       `bson:"category,omitempty" json:"category,omitempty"`
-	Code            *Coding       `bson:"code,omitempty" json:"code,omitempty"`
-	TimingDate      *FHIRDateTime `bson:"timingDate,omitempty" json:"timingDate,omitempty"`
-	TimingPeriod    *Period       `bson:"timingPeriod,omitempty" json:"timingPeriod,omitempty"`
-	ValueString     string        `bson:"valueString,omitempty" json:"valueString,omitempty"`
-	ValueQuantity   *Quantity     `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
+	Category        *CodeableConcept `bson:"category,omitempty" json:"category,omitempty"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	TimingDate      *FHIRDateTime    `bson:"timingDate,omitempty" json:"timingDate,omitempty"`
+	TimingPeriod    *Period          `bson:"timingPeriod,omitempty" json:"timingPeriod,omitempty"`
+	ValueString     string           `bson:"valueString,omitempty" json:"valueString,omitempty"`
+	ValueQuantity   *Quantity        `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
+	ValueAttachment *Attachment      `bson:"valueAttachment,omitempty" json:"valueAttachment,omitempty"`
+	ValueReference  *Reference       `bson:"valueReference,omitempty" json:"valueReference,omitempty"`
+	Reason          *CodeableConcept `bson:"reason,omitempty" json:"reason,omitempty"`
 }
 
 type ClaimDiagnosisComponent struct {
-	BackboneElement `bson:",inline"`
-	Sequence        *uint32  `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Diagnosis       *Coding  `bson:"diagnosis,omitempty" json:"diagnosis,omitempty"`
-	Type            []Coding `bson:"type,omitempty" json:"type,omitempty"`
-	Drg             *Coding  `bson:"drg,omitempty" json:"drg,omitempty"`
+	BackboneElement          `bson:",inline"`
+	Sequence                 *uint32           `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	DiagnosisCodeableConcept *CodeableConcept  `bson:"diagnosisCodeableConcept,omitempty" json:"diagnosisCodeableConcept,omitempty"`
+	DiagnosisReference       *Reference        `bson:"diagnosisReference,omitempty" json:"diagnosisReference,omitempty"`
+	Type                     []CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	PackageCode              *CodeableConcept  `bson:"packageCode,omitempty" json:"packageCode,omitempty"`
 }
 
 type ClaimProcedureComponent struct {
-	BackboneElement    `bson:",inline"`
-	Sequence           *uint32       `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Date               *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
-	ProcedureCoding    *Coding       `bson:"procedureCoding,omitempty" json:"procedureCoding,omitempty"`
-	ProcedureReference *Reference    `bson:"procedureReference,omitempty" json:"procedureReference,omitempty"`
+	BackboneElement          `bson:",inline"`
+	Sequence                 *uint32          `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Date                     *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
+	ProcedureCodeableConcept *CodeableConcept `bson:"procedureCodeableConcept,omitempty" json:"procedureCodeableConcept,omitempty"`
+	ProcedureReference       *Reference       `bson:"procedureReference,omitempty" json:"procedureReference,omitempty"`
 }
 
-type ClaimCoverageComponent struct {
+type ClaimInsuranceComponent struct {
 	BackboneElement     `bson:",inline"`
-	Sequence            *uint32     `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Focal               *bool       `bson:"focal,omitempty" json:"focal,omitempty"`
-	CoverageIdentifier  *Identifier `bson:"coverageIdentifier,omitempty" json:"coverageIdentifier,omitempty"`
-	CoverageReference   *Reference  `bson:"coverageReference,omitempty" json:"coverageReference,omitempty"`
-	BusinessArrangement string      `bson:"businessArrangement,omitempty" json:"businessArrangement,omitempty"`
-	PreAuthRef          []string    `bson:"preAuthRef,omitempty" json:"preAuthRef,omitempty"`
-	ClaimResponse       *Reference  `bson:"claimResponse,omitempty" json:"claimResponse,omitempty"`
-	OriginalRuleset     *Coding     `bson:"originalRuleset,omitempty" json:"originalRuleset,omitempty"`
+	Sequence            *uint32    `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Focal               *bool      `bson:"focal,omitempty" json:"focal,omitempty"`
+	Coverage            *Reference `bson:"coverage,omitempty" json:"coverage,omitempty"`
+	BusinessArrangement string     `bson:"businessArrangement,omitempty" json:"businessArrangement,omitempty"`
+	PreAuthRef          []string   `bson:"preAuthRef,omitempty" json:"preAuthRef,omitempty"`
+	ClaimResponse       *Reference `bson:"claimResponse,omitempty" json:"claimResponse,omitempty"`
 }
 
 type ClaimAccidentComponent struct {
 	BackboneElement   `bson:",inline"`
-	Date              *FHIRDateTime `bson:"date,omitempty" json:"date,omitempty"`
-	Type              *Coding       `bson:"type,omitempty" json:"type,omitempty"`
-	LocationAddress   *Address      `bson:"locationAddress,omitempty" json:"locationAddress,omitempty"`
-	LocationReference *Reference    `bson:"locationReference,omitempty" json:"locationReference,omitempty"`
+	Date              *FHIRDateTime    `bson:"date,omitempty" json:"date,omitempty"`
+	Type              *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	LocationAddress   *Address         `bson:"locationAddress,omitempty" json:"locationAddress,omitempty"`
+	LocationReference *Reference       `bson:"locationReference,omitempty" json:"locationReference,omitempty"`
 }
 
 type ClaimItemComponent struct {
-	BackboneElement   `bson:",inline"`
-	Sequence          *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	CareTeam          []ClaimCareTeamComponent  `bson:"careTeam,omitempty" json:"careTeam,omitempty"`
-	DiagnosisLinkId   []uint32                  `bson:"diagnosisLinkId,omitempty" json:"diagnosisLinkId,omitempty"`
-	Revenue           *Coding                   `bson:"revenue,omitempty" json:"revenue,omitempty"`
-	Category          *Coding                   `bson:"category,omitempty" json:"category,omitempty"`
-	Service           *Coding                   `bson:"service,omitempty" json:"service,omitempty"`
-	Modifier          []Coding                  `bson:"modifier,omitempty" json:"modifier,omitempty"`
-	ProgramCode       []Coding                  `bson:"programCode,omitempty" json:"programCode,omitempty"`
-	ServicedDate      *FHIRDateTime             `bson:"servicedDate,omitempty" json:"servicedDate,omitempty"`
-	ServicedPeriod    *Period                   `bson:"servicedPeriod,omitempty" json:"servicedPeriod,omitempty"`
-	LocationCoding    *Coding                   `bson:"locationCoding,omitempty" json:"locationCoding,omitempty"`
-	LocationAddress   *Address                  `bson:"locationAddress,omitempty" json:"locationAddress,omitempty"`
-	LocationReference *Reference                `bson:"locationReference,omitempty" json:"locationReference,omitempty"`
-	Quantity          *Quantity                 `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	UnitPrice         *Quantity                 `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
-	Factor            *float64                  `bson:"factor,omitempty" json:"factor,omitempty"`
-	Points            *float64                  `bson:"points,omitempty" json:"points,omitempty"`
-	Net               *Quantity                 `bson:"net,omitempty" json:"net,omitempty"`
-	Udi               []Reference               `bson:"udi,omitempty" json:"udi,omitempty"`
-	BodySite          *Coding                   `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
-	SubSite           []Coding                  `bson:"subSite,omitempty" json:"subSite,omitempty"`
-	Detail            []ClaimDetailComponent    `bson:"detail,omitempty" json:"detail,omitempty"`
-	Prosthesis        *ClaimProsthesisComponent `bson:"prosthesis,omitempty" json:"prosthesis,omitempty"`
-}
-
-type ClaimCareTeamComponent struct {
-	BackboneElement    `bson:",inline"`
-	ProviderIdentifier *Identifier `bson:"providerIdentifier,omitempty" json:"providerIdentifier,omitempty"`
-	ProviderReference  *Reference  `bson:"providerReference,omitempty" json:"providerReference,omitempty"`
-	Responsible        *bool       `bson:"responsible,omitempty" json:"responsible,omitempty"`
-	Role               *Coding     `bson:"role,omitempty" json:"role,omitempty"`
-	Qualification      *Coding     `bson:"qualification,omitempty" json:"qualification,omitempty"`
+	BackboneElement         `bson:",inline"`
+	Sequence                *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	CareTeamLinkId          []uint32                  `bson:"careTeamLinkId,omitempty" json:"careTeamLinkId,omitempty"`
+	DiagnosisLinkId         []uint32                  `bson:"diagnosisLinkId,omitempty" json:"diagnosisLinkId,omitempty"`
+	ProcedureLinkId         []uint32                  `bson:"procedureLinkId,omitempty" json:"procedureLinkId,omitempty"`
+	InformationLinkId       []uint32                  `bson:"informationLinkId,omitempty" json:"informationLinkId,omitempty"`
+	Revenue                 *CodeableConcept          `bson:"revenue,omitempty" json:"revenue,omitempty"`
+	Category                *CodeableConcept          `bson:"category,omitempty" json:"category,omitempty"`
+	Service                 *CodeableConcept          `bson:"service,omitempty" json:"service,omitempty"`
+	Modifier                []CodeableConcept         `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	ProgramCode             []CodeableConcept         `bson:"programCode,omitempty" json:"programCode,omitempty"`
+	ServicedDate            *FHIRDateTime             `bson:"servicedDate,omitempty" json:"servicedDate,omitempty"`
+	ServicedPeriod          *Period                   `bson:"servicedPeriod,omitempty" json:"servicedPeriod,omitempty"`
+	LocationCodeableConcept *CodeableConcept          `bson:"locationCodeableConcept,omitempty" json:"locationCodeableConcept,omitempty"`
+	LocationAddress         *Address                  `bson:"locationAddress,omitempty" json:"locationAddress,omitempty"`
+	LocationReference       *Reference                `bson:"locationReference,omitempty" json:"locationReference,omitempty"`
+	Quantity                *Quantity                 `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	UnitPrice               *Quantity                 `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
+	Factor                  *float64                  `bson:"factor,omitempty" json:"factor,omitempty"`
+	Net                     *Quantity                 `bson:"net,omitempty" json:"net,omitempty"`
+	Udi                     []Reference               `bson:"udi,omitempty" json:"udi,omitempty"`
+	BodySite                *CodeableConcept          `bson:"bodySite,omitempty" json:"bodySite,omitempty"`
+	SubSite                 []CodeableConcept         `bson:"subSite,omitempty" json:"subSite,omitempty"`
+	Detail                  []ClaimDetailComponent    `bson:"detail,omitempty" json:"detail,omitempty"`
+	Prosthesis              *ClaimProsthesisComponent `bson:"prosthesis,omitempty" json:"prosthesis,omitempty"`
 }
 
 type ClaimDetailComponent struct {
 	BackboneElement `bson:",inline"`
 	Sequence        *uint32                   `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Revenue         *Coding                   `bson:"revenue,omitempty" json:"revenue,omitempty"`
-	Category        *Coding                   `bson:"category,omitempty" json:"category,omitempty"`
-	Service         *Coding                   `bson:"service,omitempty" json:"service,omitempty"`
-	Modifier        []Coding                  `bson:"modifier,omitempty" json:"modifier,omitempty"`
-	ProgramCode     []Coding                  `bson:"programCode,omitempty" json:"programCode,omitempty"`
+	Revenue         *CodeableConcept          `bson:"revenue,omitempty" json:"revenue,omitempty"`
+	Category        *CodeableConcept          `bson:"category,omitempty" json:"category,omitempty"`
+	Service         *CodeableConcept          `bson:"service,omitempty" json:"service,omitempty"`
+	Modifier        []CodeableConcept         `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	ProgramCode     []CodeableConcept         `bson:"programCode,omitempty" json:"programCode,omitempty"`
 	Quantity        *Quantity                 `bson:"quantity,omitempty" json:"quantity,omitempty"`
 	UnitPrice       *Quantity                 `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
 	Factor          *float64                  `bson:"factor,omitempty" json:"factor,omitempty"`
-	Points          *float64                  `bson:"points,omitempty" json:"points,omitempty"`
 	Net             *Quantity                 `bson:"net,omitempty" json:"net,omitempty"`
 	Udi             []Reference               `bson:"udi,omitempty" json:"udi,omitempty"`
 	SubDetail       []ClaimSubDetailComponent `bson:"subDetail,omitempty" json:"subDetail,omitempty"`
@@ -236,32 +225,24 @@ type ClaimDetailComponent struct {
 
 type ClaimSubDetailComponent struct {
 	BackboneElement `bson:",inline"`
-	Sequence        *uint32     `bson:"sequence,omitempty" json:"sequence,omitempty"`
-	Revenue         *Coding     `bson:"revenue,omitempty" json:"revenue,omitempty"`
-	Category        *Coding     `bson:"category,omitempty" json:"category,omitempty"`
-	Service         *Coding     `bson:"service,omitempty" json:"service,omitempty"`
-	Modifier        []Coding    `bson:"modifier,omitempty" json:"modifier,omitempty"`
-	ProgramCode     []Coding    `bson:"programCode,omitempty" json:"programCode,omitempty"`
-	Quantity        *Quantity   `bson:"quantity,omitempty" json:"quantity,omitempty"`
-	UnitPrice       *Quantity   `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
-	Factor          *float64    `bson:"factor,omitempty" json:"factor,omitempty"`
-	Points          *float64    `bson:"points,omitempty" json:"points,omitempty"`
-	Net             *Quantity   `bson:"net,omitempty" json:"net,omitempty"`
-	Udi             []Reference `bson:"udi,omitempty" json:"udi,omitempty"`
+	Sequence        *uint32           `bson:"sequence,omitempty" json:"sequence,omitempty"`
+	Revenue         *CodeableConcept  `bson:"revenue,omitempty" json:"revenue,omitempty"`
+	Category        *CodeableConcept  `bson:"category,omitempty" json:"category,omitempty"`
+	Service         *CodeableConcept  `bson:"service,omitempty" json:"service,omitempty"`
+	Modifier        []CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	ProgramCode     []CodeableConcept `bson:"programCode,omitempty" json:"programCode,omitempty"`
+	Quantity        *Quantity         `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	UnitPrice       *Quantity         `bson:"unitPrice,omitempty" json:"unitPrice,omitempty"`
+	Factor          *float64          `bson:"factor,omitempty" json:"factor,omitempty"`
+	Net             *Quantity         `bson:"net,omitempty" json:"net,omitempty"`
+	Udi             []Reference       `bson:"udi,omitempty" json:"udi,omitempty"`
 }
 
 type ClaimProsthesisComponent struct {
 	BackboneElement `bson:",inline"`
-	Initial         *bool         `bson:"initial,omitempty" json:"initial,omitempty"`
-	PriorDate       *FHIRDateTime `bson:"priorDate,omitempty" json:"priorDate,omitempty"`
-	PriorMaterial   *Coding       `bson:"priorMaterial,omitempty" json:"priorMaterial,omitempty"`
-}
-
-type ClaimMissingTeethComponent struct {
-	BackboneElement `bson:",inline"`
-	Tooth           *Coding       `bson:"tooth,omitempty" json:"tooth,omitempty"`
-	Reason          *Coding       `bson:"reason,omitempty" json:"reason,omitempty"`
-	ExtractionDate  *FHIRDateTime `bson:"extractionDate,omitempty" json:"extractionDate,omitempty"`
+	Initial         *bool            `bson:"initial,omitempty" json:"initial,omitempty"`
+	PriorDate       *FHIRDateTime    `bson:"priorDate,omitempty" json:"priorDate,omitempty"`
+	PriorMaterial   *CodeableConcept `bson:"priorMaterial,omitempty" json:"priorMaterial,omitempty"`
 }
 
 type ClaimPlus struct {
@@ -270,94 +251,97 @@ type ClaimPlus struct {
 }
 
 type ClaimPlusRelatedResources struct {
-	IncludedOrganizationResourcesReferencedByInsurerreference         *[]Organization          `bson:"_includedOrganizationResourcesReferencedByInsurerreference,omitempty"`
-	IncludedOrganizationResourcesReferencedByOrganizationreference    *[]Organization          `bson:"_includedOrganizationResourcesReferencedByOrganizationreference,omitempty"`
-	IncludedPatientResourcesReferencedByPatientreference              *[]Patient               `bson:"_includedPatientResourcesReferencedByPatientreference,omitempty"`
-	IncludedLocationResourcesReferencedByFacilityreference            *[]Location              `bson:"_includedLocationResourcesReferencedByFacilityreference,omitempty"`
-	IncludedPractitionerResourcesReferencedByProviderreference        *[]Practitioner          `bson:"_includedPractitionerResourcesReferencedByProviderreference,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingContentref         *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingRelatedref         *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
-	RevIncludedConsentResourcesReferencingData                        *[]Consent               `bson:"_revIncludedConsentResourcesReferencingData,omitempty"`
-	RevIncludedDocumentReferenceResourcesReferencingRelatedref        *[]DocumentReference     `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
-	RevIncludedContractResourcesReferencingTtopic                     *[]Contract              `bson:"_revIncludedContractResourcesReferencingTtopic,omitempty"`
-	RevIncludedContractResourcesReferencingSubject                    *[]Contract              `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
-	RevIncludedContractResourcesReferencingTopic                      *[]Contract              `bson:"_revIncludedContractResourcesReferencingTopic,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingRequestreference      *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingRequestreference,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingResponsereference     *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponsereference,omitempty"`
-	RevIncludedImplementationGuideResourcesReferencingResource        *[]ImplementationGuide   `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
-	RevIncludedCommunicationResourcesReferencingBasedon               *[]Communication         `bson:"_revIncludedCommunicationResourcesReferencingBasedon,omitempty"`
-	RevIncludedMessageHeaderResourcesReferencingData                  *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
-	RevIncludedProvenanceResourcesReferencingTarget                   *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
-	RevIncludedTaskResourcesReferencingFocus                          *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
-	RevIncludedExplanationOfBenefitResourcesReferencingClaimreference *[]ExplanationOfBenefit  `bson:"_revIncludedExplanationOfBenefitResourcesReferencingClaimreference,omitempty"`
-	RevIncludedListResourcesReferencingItem                           *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
-	RevIncludedDiagnosticRequestResourcesReferencingReplaces          *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingReplaces,omitempty"`
-	RevIncludedDiagnosticRequestResourcesReferencingBasedon           *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingBasedon,omitempty"`
-	RevIncludedDiagnosticRequestResourcesReferencingDefinition        *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingDefinition,omitempty"`
-	RevIncludedDeviceUseRequestResourcesReferencingReplaces           *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingReplaces,omitempty"`
-	RevIncludedDeviceUseRequestResourcesReferencingBasedon            *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingBasedon,omitempty"`
-	RevIncludedDeviceUseRequestResourcesReferencingDefinition         *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingDefinition,omitempty"`
-	RevIncludedBasicResourcesReferencingSubject                       *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
-	RevIncludedClaimResponseResourcesReferencingRequestreference      *[]ClaimResponse         `bson:"_revIncludedClaimResponseResourcesReferencingRequestreference,omitempty"`
-	RevIncludedAuditEventResourcesReferencingEntity                   *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
-	RevIncludedCompositionResourcesReferencingSubject                 *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
-	RevIncludedCompositionResourcesReferencingEntry                   *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
-	RevIncludedDetectedIssueResourcesReferencingImplicated            *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
-	RevIncludedQuestionnaireResponseResourcesReferencingSubject       *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
-	RevIncludedProcessResponseResourcesReferencingRequestreference    *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequestreference,omitempty"`
+	IncludedPractitionerResourcesReferencedByProvider           *[]Practitioner          `bson:"_includedPractitionerResourcesReferencedByProvider,omitempty"`
+	IncludedPatientResourcesReferencedByPatient                 *[]Patient               `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
+	IncludedOrganizationResourcesReferencedByInsurer            *[]Organization          `bson:"_includedOrganizationResourcesReferencedByInsurer,omitempty"`
+	IncludedOrganizationResourcesReferencedByOrganization       *[]Organization          `bson:"_includedOrganizationResourcesReferencedByOrganization,omitempty"`
+	IncludedLocationResourcesReferencedByFacility               *[]Location              `bson:"_includedLocationResourcesReferencedByFacility,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingContentref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingRelatedref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
+	RevIncludedConsentResourcesReferencingData                  *[]Consent               `bson:"_revIncludedConsentResourcesReferencingData,omitempty"`
+	RevIncludedDocumentReferenceResourcesReferencingRelatedref  *[]DocumentReference     `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
+	RevIncludedContractResourcesReferencingTtopic               *[]Contract              `bson:"_revIncludedContractResourcesReferencingTtopic,omitempty"`
+	RevIncludedContractResourcesReferencingSubject              *[]Contract              `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
+	RevIncludedContractResourcesReferencingTopic                *[]Contract              `bson:"_revIncludedContractResourcesReferencingTopic,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingRequest         *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingRequest,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingResponse        *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponse,omitempty"`
+	RevIncludedImplementationGuideResourcesReferencingResource  *[]ImplementationGuide   `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
+	RevIncludedCommunicationResourcesReferencingBasedon         *[]Communication         `bson:"_revIncludedCommunicationResourcesReferencingBasedon,omitempty"`
+	RevIncludedMessageHeaderResourcesReferencingData            *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
+	RevIncludedProvenanceResourcesReferencingEntity             *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingEntity,omitempty"`
+	RevIncludedProvenanceResourcesReferencingTarget             *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
+	RevIncludedTaskResourcesReferencingSubject                  *[]Task                  `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
+	RevIncludedTaskResourcesReferencingFocus                    *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
+	RevIncludedTaskResourcesReferencingBasedon                  *[]Task                  `bson:"_revIncludedTaskResourcesReferencingBasedon,omitempty"`
+	RevIncludedExplanationOfBenefitResourcesReferencingClaim    *[]ExplanationOfBenefit  `bson:"_revIncludedExplanationOfBenefitResourcesReferencingClaim,omitempty"`
+	RevIncludedListResourcesReferencingItem                     *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
+	RevIncludedDiagnosticRequestResourcesReferencingReplaces    *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingReplaces,omitempty"`
+	RevIncludedDiagnosticRequestResourcesReferencingBasedon     *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedDiagnosticRequestResourcesReferencingDefinition  *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingDefinition,omitempty"`
+	RevIncludedDeviceUseRequestResourcesReferencingReplaces     *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingReplaces,omitempty"`
+	RevIncludedDeviceUseRequestResourcesReferencingBasedon      *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedDeviceUseRequestResourcesReferencingDefinition   *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingDefinition,omitempty"`
+	RevIncludedBasicResourcesReferencingSubject                 *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
+	RevIncludedClaimResponseResourcesReferencingRequest         *[]ClaimResponse         `bson:"_revIncludedClaimResponseResourcesReferencingRequest,omitempty"`
+	RevIncludedAuditEventResourcesReferencingEntity             *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
+	RevIncludedCompositionResourcesReferencingSubject           *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
+	RevIncludedCompositionResourcesReferencingEntry             *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
+	RevIncludedDetectedIssueResourcesReferencingImplicated      *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
+	RevIncludedQuestionnaireResponseResourcesReferencingSubject *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
+	RevIncludedProcessResponseResourcesReferencingRequest       *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
 }
 
-func (c *ClaimPlusRelatedResources) GetIncludedOrganizationResourceReferencedByInsurerreference() (organization *Organization, err error) {
-	if c.IncludedOrganizationResourcesReferencedByInsurerreference == nil {
-		err = errors.New("Included organizations not requested")
-	} else if len(*c.IncludedOrganizationResourcesReferencedByInsurerreference) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*c.IncludedOrganizationResourcesReferencedByInsurerreference))
-	} else if len(*c.IncludedOrganizationResourcesReferencedByInsurerreference) == 1 {
-		organization = &(*c.IncludedOrganizationResourcesReferencedByInsurerreference)[0]
-	}
-	return
-}
-
-func (c *ClaimPlusRelatedResources) GetIncludedOrganizationResourceReferencedByOrganizationreference() (organization *Organization, err error) {
-	if c.IncludedOrganizationResourcesReferencedByOrganizationreference == nil {
-		err = errors.New("Included organizations not requested")
-	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference))
-	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganizationreference) == 1 {
-		organization = &(*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[0]
-	}
-	return
-}
-
-func (c *ClaimPlusRelatedResources) GetIncludedPatientResourceReferencedByPatientreference() (patient *Patient, err error) {
-	if c.IncludedPatientResourcesReferencedByPatientreference == nil {
-		err = errors.New("Included patients not requested")
-	} else if len(*c.IncludedPatientResourcesReferencedByPatientreference) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*c.IncludedPatientResourcesReferencedByPatientreference))
-	} else if len(*c.IncludedPatientResourcesReferencedByPatientreference) == 1 {
-		patient = &(*c.IncludedPatientResourcesReferencedByPatientreference)[0]
-	}
-	return
-}
-
-func (c *ClaimPlusRelatedResources) GetIncludedLocationResourceReferencedByFacilityreference() (location *Location, err error) {
-	if c.IncludedLocationResourcesReferencedByFacilityreference == nil {
-		err = errors.New("Included locations not requested")
-	} else if len(*c.IncludedLocationResourcesReferencedByFacilityreference) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*c.IncludedLocationResourcesReferencedByFacilityreference))
-	} else if len(*c.IncludedLocationResourcesReferencedByFacilityreference) == 1 {
-		location = &(*c.IncludedLocationResourcesReferencedByFacilityreference)[0]
-	}
-	return
-}
-
-func (c *ClaimPlusRelatedResources) GetIncludedPractitionerResourceReferencedByProviderreference() (practitioner *Practitioner, err error) {
-	if c.IncludedPractitionerResourcesReferencedByProviderreference == nil {
+func (c *ClaimPlusRelatedResources) GetIncludedPractitionerResourceReferencedByProvider() (practitioner *Practitioner, err error) {
+	if c.IncludedPractitionerResourcesReferencedByProvider == nil {
 		err = errors.New("Included practitioners not requested")
-	} else if len(*c.IncludedPractitionerResourcesReferencedByProviderreference) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*c.IncludedPractitionerResourcesReferencedByProviderreference))
-	} else if len(*c.IncludedPractitionerResourcesReferencedByProviderreference) == 1 {
-		practitioner = &(*c.IncludedPractitionerResourcesReferencedByProviderreference)[0]
+	} else if len(*c.IncludedPractitionerResourcesReferencedByProvider) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*c.IncludedPractitionerResourcesReferencedByProvider))
+	} else if len(*c.IncludedPractitionerResourcesReferencedByProvider) == 1 {
+		practitioner = &(*c.IncludedPractitionerResourcesReferencedByProvider)[0]
+	}
+	return
+}
+
+func (c *ClaimPlusRelatedResources) GetIncludedPatientResourceReferencedByPatient() (patient *Patient, err error) {
+	if c.IncludedPatientResourcesReferencedByPatient == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*c.IncludedPatientResourcesReferencedByPatient) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*c.IncludedPatientResourcesReferencedByPatient))
+	} else if len(*c.IncludedPatientResourcesReferencedByPatient) == 1 {
+		patient = &(*c.IncludedPatientResourcesReferencedByPatient)[0]
+	}
+	return
+}
+
+func (c *ClaimPlusRelatedResources) GetIncludedOrganizationResourceReferencedByInsurer() (organization *Organization, err error) {
+	if c.IncludedOrganizationResourcesReferencedByInsurer == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*c.IncludedOrganizationResourcesReferencedByInsurer) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*c.IncludedOrganizationResourcesReferencedByInsurer))
+	} else if len(*c.IncludedOrganizationResourcesReferencedByInsurer) == 1 {
+		organization = &(*c.IncludedOrganizationResourcesReferencedByInsurer)[0]
+	}
+	return
+}
+
+func (c *ClaimPlusRelatedResources) GetIncludedOrganizationResourceReferencedByOrganization() (organization *Organization, err error) {
+	if c.IncludedOrganizationResourcesReferencedByOrganization == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganization) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*c.IncludedOrganizationResourcesReferencedByOrganization))
+	} else if len(*c.IncludedOrganizationResourcesReferencedByOrganization) == 1 {
+		organization = &(*c.IncludedOrganizationResourcesReferencedByOrganization)[0]
+	}
+	return
+}
+
+func (c *ClaimPlusRelatedResources) GetIncludedLocationResourceReferencedByFacility() (location *Location, err error) {
+	if c.IncludedLocationResourcesReferencedByFacility == nil {
+		err = errors.New("Included locations not requested")
+	} else if len(*c.IncludedLocationResourcesReferencedByFacility) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 location, but found %d", len(*c.IncludedLocationResourcesReferencedByFacility))
+	} else if len(*c.IncludedLocationResourcesReferencedByFacility) == 1 {
+		location = &(*c.IncludedLocationResourcesReferencedByFacility)[0]
 	}
 	return
 }
@@ -425,20 +409,20 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedContractResourcesReferencingTo
 	return
 }
 
-func (c *ClaimPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequestreference() (paymentNotices []PaymentNotice, err error) {
-	if c.RevIncludedPaymentNoticeResourcesReferencingRequestreference == nil {
+func (c *ClaimPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+	if c.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
-		paymentNotices = *c.RevIncludedPaymentNoticeResourcesReferencingRequestreference
+		paymentNotices = *c.RevIncludedPaymentNoticeResourcesReferencingRequest
 	}
 	return
 }
 
-func (c *ClaimPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponsereference() (paymentNotices []PaymentNotice, err error) {
-	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference == nil {
+func (c *ClaimPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+	if c.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
-		paymentNotices = *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference
+		paymentNotices = *c.RevIncludedPaymentNoticeResourcesReferencingResponse
 	}
 	return
 }
@@ -470,11 +454,29 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferenc
 	return
 }
 
+func (c *ClaimPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
+	if c.RevIncludedProvenanceResourcesReferencingEntity == nil {
+		err = errors.New("RevIncluded provenances not requested")
+	} else {
+		provenances = *c.RevIncludedProvenanceResourcesReferencingEntity
+	}
+	return
+}
+
 func (c *ClaimPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if c.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
 		provenances = *c.RevIncludedProvenanceResourcesReferencingTarget
+	}
+	return
+}
+
+func (c *ClaimPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+	if c.RevIncludedTaskResourcesReferencingSubject == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *c.RevIncludedTaskResourcesReferencingSubject
 	}
 	return
 }
@@ -488,11 +490,20 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus(
 	return
 }
 
-func (c *ClaimPlusRelatedResources) GetRevIncludedExplanationOfBenefitResourcesReferencingClaimreference() (explanationOfBenefits []ExplanationOfBenefit, err error) {
-	if c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference == nil {
+func (c *ClaimPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+	if c.RevIncludedTaskResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded tasks not requested")
+	} else {
+		tasks = *c.RevIncludedTaskResourcesReferencingBasedon
+	}
+	return
+}
+
+func (c *ClaimPlusRelatedResources) GetRevIncludedExplanationOfBenefitResourcesReferencingClaim() (explanationOfBenefits []ExplanationOfBenefit, err error) {
+	if c.RevIncludedExplanationOfBenefitResourcesReferencingClaim == nil {
 		err = errors.New("RevIncluded explanationOfBenefits not requested")
 	} else {
-		explanationOfBenefits = *c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference
+		explanationOfBenefits = *c.RevIncludedExplanationOfBenefitResourcesReferencingClaim
 	}
 	return
 }
@@ -569,11 +580,11 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubje
 	return
 }
 
-func (c *ClaimPlusRelatedResources) GetRevIncludedClaimResponseResourcesReferencingRequestreference() (claimResponses []ClaimResponse, err error) {
-	if c.RevIncludedClaimResponseResourcesReferencingRequestreference == nil {
+func (c *ClaimPlusRelatedResources) GetRevIncludedClaimResponseResourcesReferencingRequest() (claimResponses []ClaimResponse, err error) {
+	if c.RevIncludedClaimResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded claimResponses not requested")
 	} else {
-		claimResponses = *c.RevIncludedClaimResponseResourcesReferencingRequestreference
+		claimResponses = *c.RevIncludedClaimResponseResourcesReferencingRequest
 	}
 	return
 }
@@ -623,44 +634,44 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedQuestionnaireResponseResources
 	return
 }
 
-func (c *ClaimPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequestreference() (processResponses []ProcessResponse, err error) {
-	if c.RevIncludedProcessResponseResourcesReferencingRequestreference == nil {
+func (c *ClaimPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+	if c.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
-		processResponses = *c.RevIncludedProcessResponseResourcesReferencingRequestreference
+		processResponses = *c.RevIncludedProcessResponseResourcesReferencingRequest
 	}
 	return
 }
 
 func (c *ClaimPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if c.IncludedOrganizationResourcesReferencedByInsurerreference != nil {
-		for idx := range *c.IncludedOrganizationResourcesReferencedByInsurerreference {
-			rsc := (*c.IncludedOrganizationResourcesReferencedByInsurerreference)[idx]
+	if c.IncludedPractitionerResourcesReferencedByProvider != nil {
+		for idx := range *c.IncludedPractitionerResourcesReferencedByProvider {
+			rsc := (*c.IncludedPractitionerResourcesReferencedByProvider)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedOrganizationResourcesReferencedByOrganizationreference != nil {
-		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganizationreference {
-			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[idx]
+	if c.IncludedPatientResourcesReferencedByPatient != nil {
+		for idx := range *c.IncludedPatientResourcesReferencedByPatient {
+			rsc := (*c.IncludedPatientResourcesReferencedByPatient)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedPatientResourcesReferencedByPatientreference != nil {
-		for idx := range *c.IncludedPatientResourcesReferencedByPatientreference {
-			rsc := (*c.IncludedPatientResourcesReferencedByPatientreference)[idx]
+	if c.IncludedOrganizationResourcesReferencedByInsurer != nil {
+		for idx := range *c.IncludedOrganizationResourcesReferencedByInsurer {
+			rsc := (*c.IncludedOrganizationResourcesReferencedByInsurer)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedLocationResourcesReferencedByFacilityreference != nil {
-		for idx := range *c.IncludedLocationResourcesReferencedByFacilityreference {
-			rsc := (*c.IncludedLocationResourcesReferencedByFacilityreference)[idx]
+	if c.IncludedOrganizationResourcesReferencedByOrganization != nil {
+		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganization {
+			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganization)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedPractitionerResourcesReferencedByProviderreference != nil {
-		for idx := range *c.IncludedPractitionerResourcesReferencedByProviderreference {
-			rsc := (*c.IncludedPractitionerResourcesReferencedByProviderreference)[idx]
+	if c.IncludedLocationResourcesReferencedByFacility != nil {
+		for idx := range *c.IncludedLocationResourcesReferencedByFacility {
+			rsc := (*c.IncludedLocationResourcesReferencedByFacility)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -711,15 +722,15 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedResources() map[string]interfa
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
-		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
-			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+	if c.RevIncludedPaymentNoticeResourcesReferencingRequest != nil {
+		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingRequest {
+			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+	if c.RevIncludedPaymentNoticeResourcesReferencingResponse != nil {
+		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponse {
+			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponse)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -741,9 +752,21 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedResources() map[string]interfa
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if c.RevIncludedProvenanceResourcesReferencingEntity != nil {
+		for idx := range *c.RevIncludedProvenanceResourcesReferencingEntity {
+			rsc := (*c.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if c.RevIncludedProvenanceResourcesReferencingTarget != nil {
 		for idx := range *c.RevIncludedProvenanceResourcesReferencingTarget {
 			rsc := (*c.RevIncludedProvenanceResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *c.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*c.RevIncludedTaskResourcesReferencingSubject)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -753,9 +776,15 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedResources() map[string]interfa
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference != nil {
-		for idx := range *c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference {
-			rsc := (*c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference)[idx]
+	if c.RevIncludedTaskResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedTaskResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedTaskResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedExplanationOfBenefitResourcesReferencingClaim != nil {
+		for idx := range *c.RevIncludedExplanationOfBenefitResourcesReferencingClaim {
+			rsc := (*c.RevIncludedExplanationOfBenefitResourcesReferencingClaim)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -807,9 +836,9 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedResources() map[string]interfa
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedClaimResponseResourcesReferencingRequestreference != nil {
-		for idx := range *c.RevIncludedClaimResponseResourcesReferencingRequestreference {
-			rsc := (*c.RevIncludedClaimResponseResourcesReferencingRequestreference)[idx]
+	if c.RevIncludedClaimResponseResourcesReferencingRequest != nil {
+		for idx := range *c.RevIncludedClaimResponseResourcesReferencingRequest {
+			rsc := (*c.RevIncludedClaimResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -843,9 +872,9 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedResources() map[string]interfa
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
-		for idx := range *c.RevIncludedProcessResponseResourcesReferencingRequestreference {
-			rsc := (*c.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
+	if c.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for idx := range *c.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*c.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -854,33 +883,33 @@ func (c *ClaimPlusRelatedResources) GetRevIncludedResources() map[string]interfa
 
 func (c *ClaimPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if c.IncludedOrganizationResourcesReferencedByInsurerreference != nil {
-		for idx := range *c.IncludedOrganizationResourcesReferencedByInsurerreference {
-			rsc := (*c.IncludedOrganizationResourcesReferencedByInsurerreference)[idx]
+	if c.IncludedPractitionerResourcesReferencedByProvider != nil {
+		for idx := range *c.IncludedPractitionerResourcesReferencedByProvider {
+			rsc := (*c.IncludedPractitionerResourcesReferencedByProvider)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedOrganizationResourcesReferencedByOrganizationreference != nil {
-		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganizationreference {
-			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganizationreference)[idx]
+	if c.IncludedPatientResourcesReferencedByPatient != nil {
+		for idx := range *c.IncludedPatientResourcesReferencedByPatient {
+			rsc := (*c.IncludedPatientResourcesReferencedByPatient)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedPatientResourcesReferencedByPatientreference != nil {
-		for idx := range *c.IncludedPatientResourcesReferencedByPatientreference {
-			rsc := (*c.IncludedPatientResourcesReferencedByPatientreference)[idx]
+	if c.IncludedOrganizationResourcesReferencedByInsurer != nil {
+		for idx := range *c.IncludedOrganizationResourcesReferencedByInsurer {
+			rsc := (*c.IncludedOrganizationResourcesReferencedByInsurer)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedLocationResourcesReferencedByFacilityreference != nil {
-		for idx := range *c.IncludedLocationResourcesReferencedByFacilityreference {
-			rsc := (*c.IncludedLocationResourcesReferencedByFacilityreference)[idx]
+	if c.IncludedOrganizationResourcesReferencedByOrganization != nil {
+		for idx := range *c.IncludedOrganizationResourcesReferencedByOrganization {
+			rsc := (*c.IncludedOrganizationResourcesReferencedByOrganization)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.IncludedPractitionerResourcesReferencedByProviderreference != nil {
-		for idx := range *c.IncludedPractitionerResourcesReferencedByProviderreference {
-			rsc := (*c.IncludedPractitionerResourcesReferencedByProviderreference)[idx]
+	if c.IncludedLocationResourcesReferencedByFacility != nil {
+		for idx := range *c.IncludedLocationResourcesReferencedByFacility {
+			rsc := (*c.IncludedLocationResourcesReferencedByFacility)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -926,15 +955,15 @@ func (c *ClaimPlusRelatedResources) GetIncludedAndRevIncludedResources() map[str
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedPaymentNoticeResourcesReferencingRequestreference != nil {
-		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingRequestreference {
-			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingRequestreference)[idx]
+	if c.RevIncludedPaymentNoticeResourcesReferencingRequest != nil {
+		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingRequest {
+			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedPaymentNoticeResourcesReferencingResponsereference != nil {
-		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponsereference {
-			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponsereference)[idx]
+	if c.RevIncludedPaymentNoticeResourcesReferencingResponse != nil {
+		for idx := range *c.RevIncludedPaymentNoticeResourcesReferencingResponse {
+			rsc := (*c.RevIncludedPaymentNoticeResourcesReferencingResponse)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -956,9 +985,21 @@ func (c *ClaimPlusRelatedResources) GetIncludedAndRevIncludedResources() map[str
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if c.RevIncludedProvenanceResourcesReferencingEntity != nil {
+		for idx := range *c.RevIncludedProvenanceResourcesReferencingEntity {
+			rsc := (*c.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if c.RevIncludedProvenanceResourcesReferencingTarget != nil {
 		for idx := range *c.RevIncludedProvenanceResourcesReferencingTarget {
 			rsc := (*c.RevIncludedProvenanceResourcesReferencingTarget)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedTaskResourcesReferencingSubject != nil {
+		for idx := range *c.RevIncludedTaskResourcesReferencingSubject {
+			rsc := (*c.RevIncludedTaskResourcesReferencingSubject)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -968,9 +1009,15 @@ func (c *ClaimPlusRelatedResources) GetIncludedAndRevIncludedResources() map[str
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference != nil {
-		for idx := range *c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference {
-			rsc := (*c.RevIncludedExplanationOfBenefitResourcesReferencingClaimreference)[idx]
+	if c.RevIncludedTaskResourcesReferencingBasedon != nil {
+		for idx := range *c.RevIncludedTaskResourcesReferencingBasedon {
+			rsc := (*c.RevIncludedTaskResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if c.RevIncludedExplanationOfBenefitResourcesReferencingClaim != nil {
+		for idx := range *c.RevIncludedExplanationOfBenefitResourcesReferencingClaim {
+			rsc := (*c.RevIncludedExplanationOfBenefitResourcesReferencingClaim)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1022,9 +1069,9 @@ func (c *ClaimPlusRelatedResources) GetIncludedAndRevIncludedResources() map[str
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedClaimResponseResourcesReferencingRequestreference != nil {
-		for idx := range *c.RevIncludedClaimResponseResourcesReferencingRequestreference {
-			rsc := (*c.RevIncludedClaimResponseResourcesReferencingRequestreference)[idx]
+	if c.RevIncludedClaimResponseResourcesReferencingRequest != nil {
+		for idx := range *c.RevIncludedClaimResponseResourcesReferencingRequest {
+			rsc := (*c.RevIncludedClaimResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1058,9 +1105,9 @@ func (c *ClaimPlusRelatedResources) GetIncludedAndRevIncludedResources() map[str
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if c.RevIncludedProcessResponseResourcesReferencingRequestreference != nil {
-		for idx := range *c.RevIncludedProcessResponseResourcesReferencingRequestreference {
-			rsc := (*c.RevIncludedProcessResponseResourcesReferencingRequestreference)[idx]
+	if c.RevIncludedProcessResponseResourcesReferencingRequest != nil {
+		for idx := range *c.RevIncludedProcessResponseResourcesReferencingRequest {
+			rsc := (*c.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

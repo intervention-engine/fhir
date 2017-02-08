@@ -32,95 +32,90 @@ import (
 	"fmt"
 )
 
-type RiskAssessment struct {
+type ResearchStudy struct {
 	DomainResource        `bson:",inline"`
-	Identifier            *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	BasedOn               *Reference                          `bson:"basedOn,omitempty" json:"basedOn,omitempty"`
-	Parent                *Reference                          `bson:"parent,omitempty" json:"parent,omitempty"`
-	Status                string                              `bson:"status,omitempty" json:"status,omitempty"`
-	Code                  *CodeableConcept                    `bson:"code,omitempty" json:"code,omitempty"`
-	Subject               *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
-	Context               *Reference                          `bson:"context,omitempty" json:"context,omitempty"`
-	OccurrenceDateTime    *FHIRDateTime                       `bson:"occurrenceDateTime,omitempty" json:"occurrenceDateTime,omitempty"`
-	OccurrencePeriod      *Period                             `bson:"occurrencePeriod,omitempty" json:"occurrencePeriod,omitempty"`
-	Condition             *Reference                          `bson:"condition,omitempty" json:"condition,omitempty"`
-	Performer             *Reference                          `bson:"performer,omitempty" json:"performer,omitempty"`
-	ReasonCodeableConcept *CodeableConcept                    `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
-	ReasonReference       *Reference                          `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
-	Method                *CodeableConcept                    `bson:"method,omitempty" json:"method,omitempty"`
-	Basis                 []Reference                         `bson:"basis,omitempty" json:"basis,omitempty"`
-	Prediction            []RiskAssessmentPredictionComponent `bson:"prediction,omitempty" json:"prediction,omitempty"`
-	Mitigation            string                              `bson:"mitigation,omitempty" json:"mitigation,omitempty"`
-	Note                  *Annotation                         `bson:"note,omitempty" json:"note,omitempty"`
+	Identifier            []Identifier                `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Title                 string                      `bson:"title,omitempty" json:"title,omitempty"`
+	Protocol              []Reference                 `bson:"protocol,omitempty" json:"protocol,omitempty"`
+	PartOf                []Reference                 `bson:"partOf,omitempty" json:"partOf,omitempty"`
+	Status                string                      `bson:"status,omitempty" json:"status,omitempty"`
+	Category              []CodeableConcept           `bson:"category,omitempty" json:"category,omitempty"`
+	Focus                 []CodeableConcept           `bson:"focus,omitempty" json:"focus,omitempty"`
+	Contact               []ContactDetail             `bson:"contact,omitempty" json:"contact,omitempty"`
+	RelatedArtifact       []RelatedArtifact           `bson:"relatedArtifact,omitempty" json:"relatedArtifact,omitempty"`
+	Keyword               []CodeableConcept           `bson:"keyword,omitempty" json:"keyword,omitempty"`
+	Jurisdiction          []CodeableConcept           `bson:"jurisdiction,omitempty" json:"jurisdiction,omitempty"`
+	Description           string                      `bson:"description,omitempty" json:"description,omitempty"`
+	Enrollment            []Reference                 `bson:"enrollment,omitempty" json:"enrollment,omitempty"`
+	Period                *Period                     `bson:"period,omitempty" json:"period,omitempty"`
+	Sponsor               *Reference                  `bson:"sponsor,omitempty" json:"sponsor,omitempty"`
+	PrincipalInvestigator *Reference                  `bson:"principalInvestigator,omitempty" json:"principalInvestigator,omitempty"`
+	Site                  []Reference                 `bson:"site,omitempty" json:"site,omitempty"`
+	ReasonStopped         *CodeableConcept            `bson:"reasonStopped,omitempty" json:"reasonStopped,omitempty"`
+	Note                  []Annotation                `bson:"note,omitempty" json:"note,omitempty"`
+	Arm                   []ResearchStudyArmComponent `bson:"arm,omitempty" json:"arm,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
-func (resource *RiskAssessment) MarshalJSON() ([]byte, error) {
-	resource.ResourceType = "RiskAssessment"
+func (resource *ResearchStudy) MarshalJSON() ([]byte, error) {
+	resource.ResourceType = "ResearchStudy"
 	// Dereferencing the pointer to avoid infinite recursion.
-	// Passing in plain old x (a pointer to RiskAssessment), would cause this same
+	// Passing in plain old x (a pointer to ResearchStudy), would cause this same
 	// MarshallJSON function to be called again
 	return json.Marshal(*resource)
 }
 
-func (x *RiskAssessment) GetBSON() (interface{}, error) {
-	x.ResourceType = "RiskAssessment"
+func (x *ResearchStudy) GetBSON() (interface{}, error) {
+	x.ResourceType = "ResearchStudy"
 	// See comment in MarshallJSON to see why we dereference
 	return *x, nil
 }
 
-// The "riskAssessment" sub-type is needed to avoid infinite recursion in UnmarshalJSON
-type riskAssessment RiskAssessment
+// The "researchStudy" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type researchStudy ResearchStudy
 
 // Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
-func (x *RiskAssessment) UnmarshalJSON(data []byte) (err error) {
-	x2 := riskAssessment{}
+func (x *ResearchStudy) UnmarshalJSON(data []byte) (err error) {
+	x2 := researchStudy{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Contained != nil {
 			for i := range x2.Contained {
 				x2.Contained[i] = MapToResource(x2.Contained[i], true)
 			}
 		}
-		*x = RiskAssessment(x2)
+		*x = ResearchStudy(x2)
 		return x.checkResourceType()
 	}
 	return
 }
 
-func (x *RiskAssessment) checkResourceType() error {
+func (x *ResearchStudy) checkResourceType() error {
 	if x.ResourceType == "" {
-		x.ResourceType = "RiskAssessment"
-	} else if x.ResourceType != "RiskAssessment" {
-		return errors.New(fmt.Sprintf("Expected resourceType to be RiskAssessment, instead received %s", x.ResourceType))
+		x.ResourceType = "ResearchStudy"
+	} else if x.ResourceType != "ResearchStudy" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be ResearchStudy, instead received %s", x.ResourceType))
 	}
 	return nil
 }
 
-type RiskAssessmentPredictionComponent struct {
-	BackboneElement            `bson:",inline"`
-	Outcome                    *CodeableConcept `bson:"outcome,omitempty" json:"outcome,omitempty"`
-	ProbabilityDecimal         *float64         `bson:"probabilityDecimal,omitempty" json:"probabilityDecimal,omitempty"`
-	ProbabilityRange           *Range           `bson:"probabilityRange,omitempty" json:"probabilityRange,omitempty"`
-	ProbabilityCodeableConcept *CodeableConcept `bson:"probabilityCodeableConcept,omitempty" json:"probabilityCodeableConcept,omitempty"`
-	RelativeRisk               *float64         `bson:"relativeRisk,omitempty" json:"relativeRisk,omitempty"`
-	WhenPeriod                 *Period          `bson:"whenPeriod,omitempty" json:"whenPeriod,omitempty"`
-	WhenRange                  *Range           `bson:"whenRange,omitempty" json:"whenRange,omitempty"`
-	Rationale                  string           `bson:"rationale,omitempty" json:"rationale,omitempty"`
+type ResearchStudyArmComponent struct {
+	BackboneElement `bson:",inline"`
+	Name            string           `bson:"name,omitempty" json:"name,omitempty"`
+	Code            *CodeableConcept `bson:"code,omitempty" json:"code,omitempty"`
+	Description     string           `bson:"description,omitempty" json:"description,omitempty"`
 }
 
-type RiskAssessmentPlus struct {
-	RiskAssessment                     `bson:",inline"`
-	RiskAssessmentPlusRelatedResources `bson:",inline"`
+type ResearchStudyPlus struct {
+	ResearchStudy                     `bson:",inline"`
+	ResearchStudyPlusRelatedResources `bson:",inline"`
 }
 
-type RiskAssessmentPlusRelatedResources struct {
-	IncludedConditionResourcesReferencedByCondition                *[]Condition             `bson:"_includedConditionResourcesReferencedByCondition,omitempty"`
-	IncludedPractitionerResourcesReferencedByPerformer             *[]Practitioner          `bson:"_includedPractitionerResourcesReferencedByPerformer,omitempty"`
-	IncludedDeviceResourcesReferencedByPerformer                   *[]Device                `bson:"_includedDeviceResourcesReferencedByPerformer,omitempty"`
-	IncludedGroupResourcesReferencedBySubject                      *[]Group                 `bson:"_includedGroupResourcesReferencedBySubject,omitempty"`
-	IncludedPatientResourcesReferencedBySubject                    *[]Patient               `bson:"_includedPatientResourcesReferencedBySubject,omitempty"`
-	IncludedPatientResourcesReferencedByPatient                    *[]Patient               `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
-	IncludedEncounterResourcesReferencedByEncounter                *[]Encounter             `bson:"_includedEncounterResourcesReferencedByEncounter,omitempty"`
+type ResearchStudyPlusRelatedResources struct {
+	IncludedResearchStudyResourcesReferencedByPartof               *[]ResearchStudy         `bson:"_includedResearchStudyResourcesReferencedByPartof,omitempty"`
+	IncludedOrganizationResourcesReferencedBySponsor               *[]Organization          `bson:"_includedOrganizationResourcesReferencedBySponsor,omitempty"`
+	IncludedPractitionerResourcesReferencedByPrincipalinvestigator *[]Practitioner          `bson:"_includedPractitionerResourcesReferencedByPrincipalinvestigator,omitempty"`
+	IncludedPlanDefinitionResourcesReferencedByProtocol            *[]PlanDefinition        `bson:"_includedPlanDefinitionResourcesReferencedByProtocol,omitempty"`
+	IncludedLocationResourcesReferencedBySite                      *[]Location              `bson:"_includedLocationResourcesReferencedBySite,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingContentref      *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingRelatedref      *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
 	RevIncludedConsentResourcesReferencingData                     *[]Consent               `bson:"_revIncludedConsentResourcesReferencingData,omitempty"`
@@ -138,6 +133,7 @@ type RiskAssessmentPlusRelatedResources struct {
 	RevIncludedTaskResourcesReferencingSubject                     *[]Task                  `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
 	RevIncludedTaskResourcesReferencingFocus                       *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
 	RevIncludedTaskResourcesReferencingBasedon                     *[]Task                  `bson:"_revIncludedTaskResourcesReferencingBasedon,omitempty"`
+	RevIncludedResearchStudyResourcesReferencingPartof             *[]ResearchStudy         `bson:"_revIncludedResearchStudyResourcesReferencingPartof,omitempty"`
 	RevIncludedListResourcesReferencingItem                        *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
 	RevIncludedDiagnosticRequestResourcesReferencingReplaces       *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingReplaces,omitempty"`
 	RevIncludedDiagnosticRequestResourcesReferencingBasedon        *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingBasedon,omitempty"`
@@ -152,87 +148,58 @@ type RiskAssessmentPlusRelatedResources struct {
 	RevIncludedDetectedIssueResourcesReferencingImplicated         *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
 	RevIncludedQuestionnaireResponseResourcesReferencingSubject    *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
 	RevIncludedProcessResponseResourcesReferencingRequest          *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
-	RevIncludedClinicalImpressionResourcesReferencingInvestigation *[]ClinicalImpression    `bson:"_revIncludedClinicalImpressionResourcesReferencingInvestigation,omitempty"`
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedConditionResourceReferencedByCondition() (condition *Condition, err error) {
-	if r.IncludedConditionResourcesReferencedByCondition == nil {
-		err = errors.New("Included conditions not requested")
-	} else if len(*r.IncludedConditionResourcesReferencedByCondition) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 condition, but found %d", len(*r.IncludedConditionResourcesReferencedByCondition))
-	} else if len(*r.IncludedConditionResourcesReferencedByCondition) == 1 {
-		condition = &(*r.IncludedConditionResourcesReferencedByCondition)[0]
+func (r *ResearchStudyPlusRelatedResources) GetIncludedResearchStudyResourcesReferencedByPartof() (researchStudies []ResearchStudy, err error) {
+	if r.IncludedResearchStudyResourcesReferencedByPartof == nil {
+		err = errors.New("Included researchStudies not requested")
+	} else {
+		researchStudies = *r.IncludedResearchStudyResourcesReferencedByPartof
 	}
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedPractitionerResourceReferencedByPerformer() (practitioner *Practitioner, err error) {
-	if r.IncludedPractitionerResourcesReferencedByPerformer == nil {
+func (r *ResearchStudyPlusRelatedResources) GetIncludedOrganizationResourceReferencedBySponsor() (organization *Organization, err error) {
+	if r.IncludedOrganizationResourcesReferencedBySponsor == nil {
+		err = errors.New("Included organizations not requested")
+	} else if len(*r.IncludedOrganizationResourcesReferencedBySponsor) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 organization, but found %d", len(*r.IncludedOrganizationResourcesReferencedBySponsor))
+	} else if len(*r.IncludedOrganizationResourcesReferencedBySponsor) == 1 {
+		organization = &(*r.IncludedOrganizationResourcesReferencedBySponsor)[0]
+	}
+	return
+}
+
+func (r *ResearchStudyPlusRelatedResources) GetIncludedPractitionerResourceReferencedByPrincipalinvestigator() (practitioner *Practitioner, err error) {
+	if r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator == nil {
 		err = errors.New("Included practitioners not requested")
-	} else if len(*r.IncludedPractitionerResourcesReferencedByPerformer) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*r.IncludedPractitionerResourcesReferencedByPerformer))
-	} else if len(*r.IncludedPractitionerResourcesReferencedByPerformer) == 1 {
-		practitioner = &(*r.IncludedPractitionerResourcesReferencedByPerformer)[0]
+	} else if len(*r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator))
+	} else if len(*r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator) == 1 {
+		practitioner = &(*r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator)[0]
 	}
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedDeviceResourceReferencedByPerformer() (device *Device, err error) {
-	if r.IncludedDeviceResourcesReferencedByPerformer == nil {
-		err = errors.New("Included devices not requested")
-	} else if len(*r.IncludedDeviceResourcesReferencedByPerformer) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 device, but found %d", len(*r.IncludedDeviceResourcesReferencedByPerformer))
-	} else if len(*r.IncludedDeviceResourcesReferencedByPerformer) == 1 {
-		device = &(*r.IncludedDeviceResourcesReferencedByPerformer)[0]
+func (r *ResearchStudyPlusRelatedResources) GetIncludedPlanDefinitionResourcesReferencedByProtocol() (planDefinitions []PlanDefinition, err error) {
+	if r.IncludedPlanDefinitionResourcesReferencedByProtocol == nil {
+		err = errors.New("Included planDefinitions not requested")
+	} else {
+		planDefinitions = *r.IncludedPlanDefinitionResourcesReferencedByProtocol
 	}
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedGroupResourceReferencedBySubject() (group *Group, err error) {
-	if r.IncludedGroupResourcesReferencedBySubject == nil {
-		err = errors.New("Included groups not requested")
-	} else if len(*r.IncludedGroupResourcesReferencedBySubject) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*r.IncludedGroupResourcesReferencedBySubject))
-	} else if len(*r.IncludedGroupResourcesReferencedBySubject) == 1 {
-		group = &(*r.IncludedGroupResourcesReferencedBySubject)[0]
+func (r *ResearchStudyPlusRelatedResources) GetIncludedLocationResourcesReferencedBySite() (locations []Location, err error) {
+	if r.IncludedLocationResourcesReferencedBySite == nil {
+		err = errors.New("Included locations not requested")
+	} else {
+		locations = *r.IncludedLocationResourcesReferencedBySite
 	}
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedPatientResourceReferencedBySubject() (patient *Patient, err error) {
-	if r.IncludedPatientResourcesReferencedBySubject == nil {
-		err = errors.New("Included patients not requested")
-	} else if len(*r.IncludedPatientResourcesReferencedBySubject) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*r.IncludedPatientResourcesReferencedBySubject))
-	} else if len(*r.IncludedPatientResourcesReferencedBySubject) == 1 {
-		patient = &(*r.IncludedPatientResourcesReferencedBySubject)[0]
-	}
-	return
-}
-
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedPatientResourceReferencedByPatient() (patient *Patient, err error) {
-	if r.IncludedPatientResourcesReferencedByPatient == nil {
-		err = errors.New("Included patients not requested")
-	} else if len(*r.IncludedPatientResourcesReferencedByPatient) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*r.IncludedPatientResourcesReferencedByPatient))
-	} else if len(*r.IncludedPatientResourcesReferencedByPatient) == 1 {
-		patient = &(*r.IncludedPatientResourcesReferencedByPatient)[0]
-	}
-	return
-}
-
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedEncounterResourceReferencedByEncounter() (encounter *Encounter, err error) {
-	if r.IncludedEncounterResourcesReferencedByEncounter == nil {
-		err = errors.New("Included encounters not requested")
-	} else if len(*r.IncludedEncounterResourcesReferencedByEncounter) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*r.IncludedEncounterResourcesReferencedByEncounter))
-	} else if len(*r.IncludedEncounterResourcesReferencedByEncounter) == 1 {
-		encounter = &(*r.IncludedEncounterResourcesReferencedByEncounter)[0]
-	}
-	return
-}
-
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
 	if r.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -241,7 +208,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDocumentManifestResou
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
 	if r.RevIncludedDocumentManifestResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -250,7 +217,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDocumentManifestResou
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
 	if r.RevIncludedConsentResourcesReferencingData == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
@@ -259,7 +226,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedConsentResourcesRefer
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
 	if r.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentReferences not requested")
 	} else {
@@ -268,7 +235,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDocumentReferenceReso
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
 	if r.RevIncludedContractResourcesReferencingTtopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -277,7 +244,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedContractResourcesRefe
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
 	if r.RevIncludedContractResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -286,7 +253,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedContractResourcesRefe
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
 	if r.RevIncludedContractResourcesReferencingTopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -295,7 +262,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedContractResourcesRefe
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
 	if r.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -304,7 +271,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedPaymentNoticeResource
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
 	if r.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -313,7 +280,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedPaymentNoticeResource
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
 	if r.RevIncludedImplementationGuideResourcesReferencingResource == nil {
 		err = errors.New("RevIncluded implementationGuides not requested")
 	} else {
@@ -322,7 +289,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedImplementationGuideRe
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
 	if r.RevIncludedCommunicationResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communications not requested")
 	} else {
@@ -331,7 +298,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedCommunicationResource
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
 	if r.RevIncludedMessageHeaderResourcesReferencingData == nil {
 		err = errors.New("RevIncluded messageHeaders not requested")
 	} else {
@@ -340,7 +307,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedMessageHeaderResource
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
 	if r.RevIncludedProvenanceResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -349,7 +316,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedProvenanceResourcesRe
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if r.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -358,7 +325,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedProvenanceResourcesRe
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
 	if r.RevIncludedTaskResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -367,7 +334,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedTaskResourcesReferenc
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
 	if r.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -376,7 +343,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedTaskResourcesReferenc
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
 	if r.RevIncludedTaskResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -385,7 +352,16 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedTaskResourcesReferenc
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedResearchStudyResourcesReferencingPartof() (researchStudies []ResearchStudy, err error) {
+	if r.RevIncludedResearchStudyResourcesReferencingPartof == nil {
+		err = errors.New("RevIncluded researchStudies not requested")
+	} else {
+		researchStudies = *r.RevIncludedResearchStudyResourcesReferencingPartof
+	}
+	return
+}
+
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
 	if r.RevIncludedListResourcesReferencingItem == nil {
 		err = errors.New("RevIncluded lists not requested")
 	} else {
@@ -394,7 +370,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedListResourcesReferenc
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
 	if r.RevIncludedDiagnosticRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -403,7 +379,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDiagnosticRequestReso
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
 	if r.RevIncludedDiagnosticRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -412,7 +388,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDiagnosticRequestReso
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
 	if r.RevIncludedDiagnosticRequestResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded diagnosticRequests not requested")
 	} else {
@@ -421,7 +397,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDiagnosticRequestReso
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
 	if r.RevIncludedDeviceUseRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -430,7 +406,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDeviceUseRequestResou
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
 	if r.RevIncludedDeviceUseRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -439,7 +415,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDeviceUseRequestResou
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
 	if r.RevIncludedDeviceUseRequestResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded deviceUseRequests not requested")
 	} else {
@@ -448,7 +424,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDeviceUseRequestResou
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
 	if r.RevIncludedBasicResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded basics not requested")
 	} else {
@@ -457,7 +433,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedBasicResourcesReferen
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
 	if r.RevIncludedAuditEventResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
@@ -466,7 +442,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedAuditEventResourcesRe
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
 	if r.RevIncludedCompositionResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -475,7 +451,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedCompositionResourcesR
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
 	if r.RevIncludedCompositionResourcesReferencingEntry == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -484,7 +460,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedCompositionResourcesR
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
 	if r.RevIncludedDetectedIssueResourcesReferencingImplicated == nil {
 		err = errors.New("RevIncluded detectedIssues not requested")
 	} else {
@@ -493,7 +469,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedDetectedIssueResource
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
 	if r.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded questionnaireResponses not requested")
 	} else {
@@ -502,7 +478,7 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedQuestionnaireResponse
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
 	if r.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
@@ -511,63 +487,42 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedProcessResponseResour
 	return
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedClinicalImpressionResourcesReferencingInvestigation() (clinicalImpressions []ClinicalImpression, err error) {
-	if r.RevIncludedClinicalImpressionResourcesReferencingInvestigation == nil {
-		err = errors.New("RevIncluded clinicalImpressions not requested")
-	} else {
-		clinicalImpressions = *r.RevIncludedClinicalImpressionResourcesReferencingInvestigation
-	}
-	return
-}
-
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedResources() map[string]interface{} {
+func (r *ResearchStudyPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if r.IncludedConditionResourcesReferencedByCondition != nil {
-		for idx := range *r.IncludedConditionResourcesReferencedByCondition {
-			rsc := (*r.IncludedConditionResourcesReferencedByCondition)[idx]
+	if r.IncludedResearchStudyResourcesReferencedByPartof != nil {
+		for idx := range *r.IncludedResearchStudyResourcesReferencedByPartof {
+			rsc := (*r.IncludedResearchStudyResourcesReferencedByPartof)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedPractitionerResourcesReferencedByPerformer != nil {
-		for idx := range *r.IncludedPractitionerResourcesReferencedByPerformer {
-			rsc := (*r.IncludedPractitionerResourcesReferencedByPerformer)[idx]
+	if r.IncludedOrganizationResourcesReferencedBySponsor != nil {
+		for idx := range *r.IncludedOrganizationResourcesReferencedBySponsor {
+			rsc := (*r.IncludedOrganizationResourcesReferencedBySponsor)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedDeviceResourcesReferencedByPerformer != nil {
-		for idx := range *r.IncludedDeviceResourcesReferencedByPerformer {
-			rsc := (*r.IncludedDeviceResourcesReferencedByPerformer)[idx]
+	if r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator != nil {
+		for idx := range *r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator {
+			rsc := (*r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedGroupResourcesReferencedBySubject != nil {
-		for idx := range *r.IncludedGroupResourcesReferencedBySubject {
-			rsc := (*r.IncludedGroupResourcesReferencedBySubject)[idx]
+	if r.IncludedPlanDefinitionResourcesReferencedByProtocol != nil {
+		for idx := range *r.IncludedPlanDefinitionResourcesReferencedByProtocol {
+			rsc := (*r.IncludedPlanDefinitionResourcesReferencedByProtocol)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedPatientResourcesReferencedBySubject != nil {
-		for idx := range *r.IncludedPatientResourcesReferencedBySubject {
-			rsc := (*r.IncludedPatientResourcesReferencedBySubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if r.IncludedPatientResourcesReferencedByPatient != nil {
-		for idx := range *r.IncludedPatientResourcesReferencedByPatient {
-			rsc := (*r.IncludedPatientResourcesReferencedByPatient)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if r.IncludedEncounterResourcesReferencedByEncounter != nil {
-		for idx := range *r.IncludedEncounterResourcesReferencedByEncounter {
-			rsc := (*r.IncludedEncounterResourcesReferencedByEncounter)[idx]
+	if r.IncludedLocationResourcesReferencedBySite != nil {
+		for idx := range *r.IncludedLocationResourcesReferencedBySite {
+			rsc := (*r.IncludedLocationResourcesReferencedBySite)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	return resourceMap
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
+func (r *ResearchStudyPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if r.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *r.RevIncludedDocumentManifestResourcesReferencingContentref {
@@ -671,6 +626,12 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedResources() map[strin
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if r.RevIncludedResearchStudyResourcesReferencingPartof != nil {
+		for idx := range *r.RevIncludedResearchStudyResourcesReferencingPartof {
+			rsc := (*r.RevIncludedResearchStudyResourcesReferencingPartof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if r.RevIncludedListResourcesReferencingItem != nil {
 		for idx := range *r.RevIncludedListResourcesReferencingItem {
 			rsc := (*r.RevIncludedListResourcesReferencingItem)[idx]
@@ -755,56 +716,38 @@ func (r *RiskAssessmentPlusRelatedResources) GetRevIncludedResources() map[strin
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.RevIncludedClinicalImpressionResourcesReferencingInvestigation != nil {
-		for idx := range *r.RevIncludedClinicalImpressionResourcesReferencingInvestigation {
-			rsc := (*r.RevIncludedClinicalImpressionResourcesReferencingInvestigation)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	return resourceMap
 }
 
-func (r *RiskAssessmentPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
+func (r *ResearchStudyPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if r.IncludedConditionResourcesReferencedByCondition != nil {
-		for idx := range *r.IncludedConditionResourcesReferencedByCondition {
-			rsc := (*r.IncludedConditionResourcesReferencedByCondition)[idx]
+	if r.IncludedResearchStudyResourcesReferencedByPartof != nil {
+		for idx := range *r.IncludedResearchStudyResourcesReferencedByPartof {
+			rsc := (*r.IncludedResearchStudyResourcesReferencedByPartof)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedPractitionerResourcesReferencedByPerformer != nil {
-		for idx := range *r.IncludedPractitionerResourcesReferencedByPerformer {
-			rsc := (*r.IncludedPractitionerResourcesReferencedByPerformer)[idx]
+	if r.IncludedOrganizationResourcesReferencedBySponsor != nil {
+		for idx := range *r.IncludedOrganizationResourcesReferencedBySponsor {
+			rsc := (*r.IncludedOrganizationResourcesReferencedBySponsor)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedDeviceResourcesReferencedByPerformer != nil {
-		for idx := range *r.IncludedDeviceResourcesReferencedByPerformer {
-			rsc := (*r.IncludedDeviceResourcesReferencedByPerformer)[idx]
+	if r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator != nil {
+		for idx := range *r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator {
+			rsc := (*r.IncludedPractitionerResourcesReferencedByPrincipalinvestigator)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedGroupResourcesReferencedBySubject != nil {
-		for idx := range *r.IncludedGroupResourcesReferencedBySubject {
-			rsc := (*r.IncludedGroupResourcesReferencedBySubject)[idx]
+	if r.IncludedPlanDefinitionResourcesReferencedByProtocol != nil {
+		for idx := range *r.IncludedPlanDefinitionResourcesReferencedByProtocol {
+			rsc := (*r.IncludedPlanDefinitionResourcesReferencedByProtocol)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if r.IncludedPatientResourcesReferencedBySubject != nil {
-		for idx := range *r.IncludedPatientResourcesReferencedBySubject {
-			rsc := (*r.IncludedPatientResourcesReferencedBySubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if r.IncludedPatientResourcesReferencedByPatient != nil {
-		for idx := range *r.IncludedPatientResourcesReferencedByPatient {
-			rsc := (*r.IncludedPatientResourcesReferencedByPatient)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if r.IncludedEncounterResourcesReferencedByEncounter != nil {
-		for idx := range *r.IncludedEncounterResourcesReferencedByEncounter {
-			rsc := (*r.IncludedEncounterResourcesReferencedByEncounter)[idx]
+	if r.IncludedLocationResourcesReferencedBySite != nil {
+		for idx := range *r.IncludedLocationResourcesReferencedBySite {
+			rsc := (*r.IncludedLocationResourcesReferencedBySite)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -910,6 +853,12 @@ func (r *RiskAssessmentPlusRelatedResources) GetIncludedAndRevIncludedResources(
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if r.RevIncludedResearchStudyResourcesReferencingPartof != nil {
+		for idx := range *r.RevIncludedResearchStudyResourcesReferencingPartof {
+			rsc := (*r.RevIncludedResearchStudyResourcesReferencingPartof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if r.RevIncludedListResourcesReferencingItem != nil {
 		for idx := range *r.RevIncludedListResourcesReferencingItem {
 			rsc := (*r.RevIncludedListResourcesReferencingItem)[idx]
@@ -991,12 +940,6 @@ func (r *RiskAssessmentPlusRelatedResources) GetIncludedAndRevIncludedResources(
 	if r.RevIncludedProcessResponseResourcesReferencingRequest != nil {
 		for idx := range *r.RevIncludedProcessResponseResourcesReferencingRequest {
 			rsc := (*r.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if r.RevIncludedClinicalImpressionResourcesReferencingInvestigation != nil {
-		for idx := range *r.RevIncludedClinicalImpressionResourcesReferencingInvestigation {
-			rsc := (*r.RevIncludedClinicalImpressionResourcesReferencingInvestigation)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

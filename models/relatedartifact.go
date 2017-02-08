@@ -26,7 +26,7 @@
 
 package models
 
-type RelatedResource struct {
+type RelatedArtifact struct {
 	Type     string      `bson:"type,omitempty" json:"type,omitempty"`
 	Display  string      `bson:"display,omitempty" json:"display,omitempty"`
 	Citation string      `bson:"citation,omitempty" json:"citation,omitempty"`

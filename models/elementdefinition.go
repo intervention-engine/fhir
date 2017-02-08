@@ -29,7 +29,7 @@ package models
 type ElementDefinition struct {
 	Path                        string                                 `bson:"path,omitempty" json:"path,omitempty"`
 	Representation              []string                               `bson:"representation,omitempty" json:"representation,omitempty"`
-	Name                        string                                 `bson:"name,omitempty" json:"name,omitempty"`
+	SliceName                   string                                 `bson:"sliceName,omitempty" json:"sliceName,omitempty"`
 	Label                       string                                 `bson:"label,omitempty" json:"label,omitempty"`
 	Code                        []Coding                               `bson:"code,omitempty" json:"code,omitempty"`
 	Slicing                     *ElementDefinitionSlicingComponent     `bson:"slicing,omitempty" json:"slicing,omitempty"`
@@ -143,39 +143,7 @@ type ElementDefinition struct {
 	PatternTiming               *Timing                                `bson:"patternTiming,omitempty" json:"patternTiming,omitempty"`
 	PatternUnsignedInt          *uint32                                `bson:"patternUnsignedInt,omitempty" json:"patternUnsignedInt,omitempty"`
 	PatternUri                  string                                 `bson:"patternUri,omitempty" json:"patternUri,omitempty"`
-	ExampleAddress              *Address                               `bson:"exampleAddress,omitempty" json:"exampleAddress,omitempty"`
-	ExampleAnnotation           *Annotation                            `bson:"exampleAnnotation,omitempty" json:"exampleAnnotation,omitempty"`
-	ExampleAttachment           *Attachment                            `bson:"exampleAttachment,omitempty" json:"exampleAttachment,omitempty"`
-	ExampleBase64Binary         string                                 `bson:"exampleBase64Binary,omitempty" json:"exampleBase64Binary,omitempty"`
-	ExampleBoolean              *bool                                  `bson:"exampleBoolean,omitempty" json:"exampleBoolean,omitempty"`
-	ExampleCode                 string                                 `bson:"exampleCode,omitempty" json:"exampleCode,omitempty"`
-	ExampleCodeableConcept      *CodeableConcept                       `bson:"exampleCodeableConcept,omitempty" json:"exampleCodeableConcept,omitempty"`
-	ExampleCoding               *Coding                                `bson:"exampleCoding,omitempty" json:"exampleCoding,omitempty"`
-	ExampleContactPoint         *ContactPoint                          `bson:"exampleContactPoint,omitempty" json:"exampleContactPoint,omitempty"`
-	ExampleDate                 *FHIRDateTime                          `bson:"exampleDate,omitempty" json:"exampleDate,omitempty"`
-	ExampleDateTime             *FHIRDateTime                          `bson:"exampleDateTime,omitempty" json:"exampleDateTime,omitempty"`
-	ExampleDecimal              *float64                               `bson:"exampleDecimal,omitempty" json:"exampleDecimal,omitempty"`
-	ExampleHumanName            *HumanName                             `bson:"exampleHumanName,omitempty" json:"exampleHumanName,omitempty"`
-	ExampleId                   string                                 `bson:"exampleId,omitempty" json:"exampleId,omitempty"`
-	ExampleIdentifier           *Identifier                            `bson:"exampleIdentifier,omitempty" json:"exampleIdentifier,omitempty"`
-	ExampleInstant              *FHIRDateTime                          `bson:"exampleInstant,omitempty" json:"exampleInstant,omitempty"`
-	ExampleInteger              *int32                                 `bson:"exampleInteger,omitempty" json:"exampleInteger,omitempty"`
-	ExampleMarkdown             string                                 `bson:"exampleMarkdown,omitempty" json:"exampleMarkdown,omitempty"`
-	ExampleMeta                 *Meta                                  `bson:"exampleMeta,omitempty" json:"exampleMeta,omitempty"`
-	ExampleOid                  string                                 `bson:"exampleOid,omitempty" json:"exampleOid,omitempty"`
-	ExamplePeriod               *Period                                `bson:"examplePeriod,omitempty" json:"examplePeriod,omitempty"`
-	ExamplePositiveInt          *uint32                                `bson:"examplePositiveInt,omitempty" json:"examplePositiveInt,omitempty"`
-	ExampleQuantity             *Quantity                              `bson:"exampleQuantity,omitempty" json:"exampleQuantity,omitempty"`
-	ExampleRange                *Range                                 `bson:"exampleRange,omitempty" json:"exampleRange,omitempty"`
-	ExampleRatio                *Ratio                                 `bson:"exampleRatio,omitempty" json:"exampleRatio,omitempty"`
-	ExampleReference            *Reference                             `bson:"exampleReference,omitempty" json:"exampleReference,omitempty"`
-	ExampleSampledData          *SampledData                           `bson:"exampleSampledData,omitempty" json:"exampleSampledData,omitempty"`
-	ExampleSignature            *Signature                             `bson:"exampleSignature,omitempty" json:"exampleSignature,omitempty"`
-	ExampleString               string                                 `bson:"exampleString,omitempty" json:"exampleString,omitempty"`
-	ExampleTime                 *FHIRDateTime                          `bson:"exampleTime,omitempty" json:"exampleTime,omitempty"`
-	ExampleTiming               *Timing                                `bson:"exampleTiming,omitempty" json:"exampleTiming,omitempty"`
-	ExampleUnsignedInt          *uint32                                `bson:"exampleUnsignedInt,omitempty" json:"exampleUnsignedInt,omitempty"`
-	ExampleUri                  string                                 `bson:"exampleUri,omitempty" json:"exampleUri,omitempty"`
+	Example                     []ElementDefinitionExampleComponent    `bson:"example,omitempty" json:"example,omitempty"`
 	MinValueDate                *FHIRDateTime                          `bson:"minValueDate,omitempty" json:"minValueDate,omitempty"`
 	MinValueDateTime            *FHIRDateTime                          `bson:"minValueDateTime,omitempty" json:"minValueDateTime,omitempty"`
 	MinValueInstant             *FHIRDateTime                          `bson:"minValueInstant,omitempty" json:"minValueInstant,omitempty"`
@@ -228,6 +196,44 @@ type ElementDefinitionTypeRefComponent struct {
 	Versioning      string   `bson:"versioning,omitempty" json:"versioning,omitempty"`
 }
 
+type ElementDefinitionExampleComponent struct {
+	BackboneElement      `bson:",inline"`
+	Label                string           `bson:"label,omitempty" json:"label,omitempty"`
+	ValueAddress         *Address         `bson:"valueAddress,omitempty" json:"valueAddress,omitempty"`
+	ValueAnnotation      *Annotation      `bson:"valueAnnotation,omitempty" json:"valueAnnotation,omitempty"`
+	ValueAttachment      *Attachment      `bson:"valueAttachment,omitempty" json:"valueAttachment,omitempty"`
+	ValueBase64Binary    string           `bson:"valueBase64Binary,omitempty" json:"valueBase64Binary,omitempty"`
+	ValueBoolean         *bool            `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
+	ValueCode            string           `bson:"valueCode,omitempty" json:"valueCode,omitempty"`
+	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
+	ValueCoding          *Coding          `bson:"valueCoding,omitempty" json:"valueCoding,omitempty"`
+	ValueContactPoint    *ContactPoint    `bson:"valueContactPoint,omitempty" json:"valueContactPoint,omitempty"`
+	ValueDate            *FHIRDateTime    `bson:"valueDate,omitempty" json:"valueDate,omitempty"`
+	ValueDateTime        *FHIRDateTime    `bson:"valueDateTime,omitempty" json:"valueDateTime,omitempty"`
+	ValueDecimal         *float64         `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
+	ValueHumanName       *HumanName       `bson:"valueHumanName,omitempty" json:"valueHumanName,omitempty"`
+	ValueId              string           `bson:"valueId,omitempty" json:"valueId,omitempty"`
+	ValueIdentifier      *Identifier      `bson:"valueIdentifier,omitempty" json:"valueIdentifier,omitempty"`
+	ValueInstant         *FHIRDateTime    `bson:"valueInstant,omitempty" json:"valueInstant,omitempty"`
+	ValueInteger         *int32           `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
+	ValueMarkdown        string           `bson:"valueMarkdown,omitempty" json:"valueMarkdown,omitempty"`
+	ValueMeta            *Meta            `bson:"valueMeta,omitempty" json:"valueMeta,omitempty"`
+	ValueOid             string           `bson:"valueOid,omitempty" json:"valueOid,omitempty"`
+	ValuePeriod          *Period          `bson:"valuePeriod,omitempty" json:"valuePeriod,omitempty"`
+	ValuePositiveInt     *uint32          `bson:"valuePositiveInt,omitempty" json:"valuePositiveInt,omitempty"`
+	ValueQuantity        *Quantity        `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
+	ValueRange           *Range           `bson:"valueRange,omitempty" json:"valueRange,omitempty"`
+	ValueRatio           *Ratio           `bson:"valueRatio,omitempty" json:"valueRatio,omitempty"`
+	ValueReference       *Reference       `bson:"valueReference,omitempty" json:"valueReference,omitempty"`
+	ValueSampledData     *SampledData     `bson:"valueSampledData,omitempty" json:"valueSampledData,omitempty"`
+	ValueSignature       *Signature       `bson:"valueSignature,omitempty" json:"valueSignature,omitempty"`
+	ValueString          string           `bson:"valueString,omitempty" json:"valueString,omitempty"`
+	ValueTime            *FHIRDateTime    `bson:"valueTime,omitempty" json:"valueTime,omitempty"`
+	ValueTiming          *Timing          `bson:"valueTiming,omitempty" json:"valueTiming,omitempty"`
+	ValueUnsignedInt     *uint32          `bson:"valueUnsignedInt,omitempty" json:"valueUnsignedInt,omitempty"`
+	ValueUri             string           `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
+}
+
 type ElementDefinitionConstraintComponent struct {
 	BackboneElement `bson:",inline"`
 	Key             string `bson:"key,omitempty" json:"key,omitempty"`
@@ -236,6 +242,7 @@ type ElementDefinitionConstraintComponent struct {
 	Human           string `bson:"human,omitempty" json:"human,omitempty"`
 	Expression      string `bson:"expression,omitempty" json:"expression,omitempty"`
 	Xpath           string `bson:"xpath,omitempty" json:"xpath,omitempty"`
+	Source          string `bson:"source,omitempty" json:"source,omitempty"`
 }
 
 type ElementDefinitionBindingComponent struct {

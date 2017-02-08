@@ -27,12 +27,8 @@
 package models
 
 type UsageContext struct {
-	PatientGender   []CodeableConcept `bson:"patientGender,omitempty" json:"patientGender,omitempty"`
-	PatientAgeGroup []CodeableConcept `bson:"patientAgeGroup,omitempty" json:"patientAgeGroup,omitempty"`
-	ClinicalFocus   []CodeableConcept `bson:"clinicalFocus,omitempty" json:"clinicalFocus,omitempty"`
-	TargetUser      []CodeableConcept `bson:"targetUser,omitempty" json:"targetUser,omitempty"`
-	WorkflowSetting []CodeableConcept `bson:"workflowSetting,omitempty" json:"workflowSetting,omitempty"`
-	WorkflowTask    []CodeableConcept `bson:"workflowTask,omitempty" json:"workflowTask,omitempty"`
-	ClinicalVenue   []CodeableConcept `bson:"clinicalVenue,omitempty" json:"clinicalVenue,omitempty"`
-	Jurisdiction    []CodeableConcept `bson:"jurisdiction,omitempty" json:"jurisdiction,omitempty"`
+	Code                 *Coding          `bson:"code,omitempty" json:"code,omitempty"`
+	ValueCodeableConcept *CodeableConcept `bson:"valueCodeableConcept,omitempty" json:"valueCodeableConcept,omitempty"`
+	ValueQuantity        *Quantity        `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
+	ValueRange           *Range           `bson:"valueRange,omitempty" json:"valueRange,omitempty"`
 }

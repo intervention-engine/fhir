@@ -45,6 +45,8 @@ func StructForResourceName(name string) interface{} {
 		return BodySite{}
 	case "Bundle":
 		return Bundle{}
+	case "CapabilityStatement":
+		return CapabilityStatement{}
 	case "CarePlan":
 		return CarePlan{}
 	case "CareTeam":
@@ -69,8 +71,6 @@ func StructForResourceName(name string) interface{} {
 		return ConceptMap{}
 	case "Condition":
 		return Condition{}
-	case "Conformance":
-		return Conformance{}
 	case "Consent":
 		return Consent{}
 	case "Contract":
@@ -79,8 +79,6 @@ func StructForResourceName(name string) interface{} {
 		return Coverage{}
 	case "DataElement":
 		return DataElement{}
-	case "DecisionSupportServiceModule":
-		return DecisionSupportServiceModule{}
 	case "DetectedIssue":
 		return DetectedIssue{}
 	case "Device":
@@ -161,10 +159,12 @@ func StructForResourceName(name string) interface{} {
 		return MedicationAdministration{}
 	case "MedicationDispense":
 		return MedicationDispense{}
-	case "MedicationOrder":
-		return MedicationOrder{}
+	case "MedicationRequest":
+		return MedicationRequest{}
 	case "MedicationStatement":
 		return MedicationStatement{}
+	case "MessageDefinition":
+		return MessageDefinition{}
 	case "MessageHeader":
 		return MessageHeader{}
 	case "NamingSystem":
@@ -211,6 +211,12 @@ func StructForResourceName(name string) interface{} {
 		return ReferralRequest{}
 	case "RelatedPerson":
 		return RelatedPerson{}
+	case "RequestGroup":
+		return RequestGroup{}
+	case "ResearchStudy":
+		return ResearchStudy{}
+	case "ResearchSubject":
+		return ResearchSubject{}
 	case "RiskAssessment":
 		return RiskAssessment{}
 	case "Schedule":
@@ -219,6 +225,8 @@ func StructForResourceName(name string) interface{} {
 		return SearchParameter{}
 	case "Sequence":
 		return Sequence{}
+	case "ServiceDefinition":
+		return ServiceDefinition{}
 	case "Slot":
 		return Slot{}
 	case "Specimen":
@@ -237,6 +245,8 @@ func StructForResourceName(name string) interface{} {
 		return SupplyRequest{}
 	case "Task":
 		return Task{}
+	case "TestReport":
+		return TestReport{}
 	case "TestScript":
 		return TestScript{}
 	case "ValueSet":
@@ -283,6 +293,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return BodySitePlus{}
 	case "Bundle":
 		return BundlePlus{}
+	case "CapabilityStatement":
+		return CapabilityStatementPlus{}
 	case "CarePlan":
 		return CarePlanPlus{}
 	case "CareTeam":
@@ -307,8 +319,6 @@ func StructPlusForResourceName(name string) interface{} {
 		return ConceptMapPlus{}
 	case "Condition":
 		return ConditionPlus{}
-	case "Conformance":
-		return ConformancePlus{}
 	case "Consent":
 		return ConsentPlus{}
 	case "Contract":
@@ -317,8 +327,6 @@ func StructPlusForResourceName(name string) interface{} {
 		return CoveragePlus{}
 	case "DataElement":
 		return DataElementPlus{}
-	case "DecisionSupportServiceModule":
-		return DecisionSupportServiceModulePlus{}
 	case "DetectedIssue":
 		return DetectedIssuePlus{}
 	case "Device":
@@ -399,10 +407,12 @@ func StructPlusForResourceName(name string) interface{} {
 		return MedicationAdministrationPlus{}
 	case "MedicationDispense":
 		return MedicationDispensePlus{}
-	case "MedicationOrder":
-		return MedicationOrderPlus{}
+	case "MedicationRequest":
+		return MedicationRequestPlus{}
 	case "MedicationStatement":
 		return MedicationStatementPlus{}
+	case "MessageDefinition":
+		return MessageDefinitionPlus{}
 	case "MessageHeader":
 		return MessageHeaderPlus{}
 	case "NamingSystem":
@@ -449,6 +459,12 @@ func StructPlusForResourceName(name string) interface{} {
 		return ReferralRequestPlus{}
 	case "RelatedPerson":
 		return RelatedPersonPlus{}
+	case "RequestGroup":
+		return RequestGroupPlus{}
+	case "ResearchStudy":
+		return ResearchStudyPlus{}
+	case "ResearchSubject":
+		return ResearchSubjectPlus{}
 	case "RiskAssessment":
 		return RiskAssessmentPlus{}
 	case "Schedule":
@@ -457,6 +473,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return SearchParameterPlus{}
 	case "Sequence":
 		return SequencePlus{}
+	case "ServiceDefinition":
+		return ServiceDefinitionPlus{}
 	case "Slot":
 		return SlotPlus{}
 	case "Specimen":
@@ -475,6 +493,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return SupplyRequestPlus{}
 	case "Task":
 		return TaskPlus{}
+	case "TestReport":
+		return TestReportPlus{}
 	case "TestScript":
 		return TestScriptPlus{}
 	case "ValueSet":
@@ -509,6 +529,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "bodysites"
 	case "Bundle":
 		return "bundles"
+	case "CapabilityStatement":
+		return "capabilitystatements"
 	case "CarePlan":
 		return "careplans"
 	case "CareTeam":
@@ -533,8 +555,6 @@ func PluralizeLowerResourceName(name string) string {
 		return "conceptmaps"
 	case "Condition":
 		return "conditions"
-	case "Conformance":
-		return "conformances"
 	case "Consent":
 		return "consents"
 	case "Contract":
@@ -543,8 +563,6 @@ func PluralizeLowerResourceName(name string) string {
 		return "coverages"
 	case "DataElement":
 		return "dataelements"
-	case "DecisionSupportServiceModule":
-		return "decisionsupportservicemodules"
 	case "DetectedIssue":
 		return "detectedissues"
 	case "Device":
@@ -625,10 +643,12 @@ func PluralizeLowerResourceName(name string) string {
 		return "medicationadministrations"
 	case "MedicationDispense":
 		return "medicationdispenses"
-	case "MedicationOrder":
-		return "medicationorders"
+	case "MedicationRequest":
+		return "medicationrequests"
 	case "MedicationStatement":
 		return "medicationstatements"
+	case "MessageDefinition":
+		return "messagedefinitions"
 	case "MessageHeader":
 		return "messageheaders"
 	case "NamingSystem":
@@ -675,6 +695,12 @@ func PluralizeLowerResourceName(name string) string {
 		return "referralrequests"
 	case "RelatedPerson":
 		return "relatedpeople"
+	case "RequestGroup":
+		return "requestgroups"
+	case "ResearchStudy":
+		return "researchstudies"
+	case "ResearchSubject":
+		return "researchsubjects"
 	case "RiskAssessment":
 		return "riskassessments"
 	case "Schedule":
@@ -683,6 +709,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "searchparameters"
 	case "Sequence":
 		return "sequences"
+	case "ServiceDefinition":
+		return "servicedefinitions"
 	case "Slot":
 		return "slots"
 	case "Specimen":
@@ -701,6 +729,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "supplyrequests"
 	case "Task":
 		return "tasks"
+	case "TestReport":
+		return "testreports"
 	case "TestScript":
 		return "testscripts"
 	case "ValueSet":
