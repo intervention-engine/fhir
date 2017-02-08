@@ -2,7 +2,7 @@
 	"resourceType": "Patient",
 	"id": "4954037118555241963",
 	"name": [{
-		"family": ["Peters"],
+		"family": "Peters",
 		"given": ["John"]
 	}],
 	"gender": "male",
@@ -277,7 +277,6 @@
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
-	"status": "final",
 	"subject": {
 		"reference": "cid:4954037118555241963"
 	}
@@ -303,7 +302,6 @@
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
-	"status": "final",
 	"subject": {
 		"reference": "cid:4954037118555241963"
 	}
@@ -329,7 +327,6 @@
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
-	"status": "final",
 	"subject": {
 		"reference": "cid:4954037118555241963"
 	}
@@ -364,7 +361,7 @@
 	"resourceType": "MedicationStatement",
 	"id": "3284098338643216325",
 	"status": "completed",
-	"patient": {
+	"subject": {
 		"reference": "cid:4954037118555241963"
 	},
 	"effectivePeriod": {
