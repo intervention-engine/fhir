@@ -21,7 +21,7 @@
     "resourceType": "Practitioner",
     "id": "pract1",
     "name": [{
-      "family": ["Doofenshmirtz"],
+      "family": "Doofenshmirtz",
       "given": ["Heinz"],
       "suffix": ["MD"]
     }]
