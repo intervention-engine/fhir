@@ -578,7 +578,7 @@
       },
       "request":{
         "method":"PUT",
-        "url":"MedicationStatement?code=http%3A%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm%2F%7C1000048\u0026effective=sa2012-10-01T07%3A59%3A59-04%3A00\u0026effective=lt2012-10-01T08%3A00%3A01-04%3A00\u0026patient=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
+        "url":"MedicationStatement?code=http%3A%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm%2F%7C1000048\u0026effective=sa2012-10-01T07%3A59%3A59-04%3A00\u0026effective=lt2012-10-01T08%3A00%3A01-04%3A00\u0026subject=urn%3Auuid%3Ae3c242ee-0f2a-4921-90bf-895c2c4da1f0"
       }
     },
     {

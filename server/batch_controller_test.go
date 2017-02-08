@@ -358,7 +358,7 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 	s.checkReference(c, responseBundle.Entry[14].Resource.(*models.Observation).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[15].Resource.(*models.Observation).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[16].Resource.(*models.Procedure).Subject, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[17].Resource.(*models.MedicationStatement).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[17].Resource.(*models.MedicationStatement).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[18].Resource.(*models.Immunization).Patient, patientID, "Patient")
 
 	// Check encounter references
@@ -395,7 +395,7 @@ func (s *BatchControllerSuite) TestPutEntriesBundle(c *C) {
 			{System: "http://test.org/simple", Value: "doejohn"},
 		},
 		Name: []models.HumanName{
-			{Given: []string{"John"}, Family: []string{"Doe"}},
+			{Given: []string{"John"}, Family: "Doe"},
 		},
 	}
 	patient.Id = "56afe6b85cdc7ec329dfe6a0"
