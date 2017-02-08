@@ -9,7 +9,7 @@
       	"resourceType": "Patient",
       	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f2a",
       	"name": [{
-      		"family": ["Abbott"],
+      		"family": "Abbott",
       		"given": ["Clint"]
       	}],
       	"gender": "male",
@@ -184,7 +184,7 @@
       	"resourceType": "MedicationStatement",
       	"id": "61ebe359-bfdc-4613-8bf2-c5e300945f3b",
       	"status": "active",
-      	"patient": {
+      	"subject": {
       		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
       	},
       	"effectivePeriod": {

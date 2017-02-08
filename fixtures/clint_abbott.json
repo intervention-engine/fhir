@@ -2,7 +2,7 @@
 	"resourceType": "Patient",
 	"id": "8374637118556222846",
 	"name": [{
-		"family": ["Abbott"],
+		"family": "Abbott",
 		"given": ["Clint"]
 	}],
 	"gender": "male",
@@ -87,7 +87,7 @@
 	"resourceType": "MedicationStatement",
 	"id": "3284098338643295123",
 	"status": "active",
-	"patient": {
+	"subject": {
 		"reference": "cid:8374637118556222846"
 	},
 	"effectivePeriod": {

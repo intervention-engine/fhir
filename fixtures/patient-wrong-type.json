@@ -11,9 +11,7 @@
   "name": [
     {
       "use": "official",
-      "family": [
-        "Daffy"
-      ],
+      "family": "Daffy",
       "given": [
         "Duck"
       ]

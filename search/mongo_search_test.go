@@ -1545,7 +1545,7 @@ func getHumanNamesComparisonValue(nSlice []models.HumanName, descending bool) st
 func getHumanNameComparisonValue(n models.HumanName) string {
 	var last string
 	if len(n.Family) > 0 {
-		last = n.Family[0]
+		last = n.Family
 	}
 	var first string
 	if len(n.Given) > 0 {
@@ -2422,7 +2422,7 @@ func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
 	util.CheckErr(err)
 	c.Assert(patient.Id, Equals, "4954037118555241963")
 	c.Assert(patient.Name[0].Given[0], Equals, "John")
-	c.Assert(patient.Name[0].Family[0], Equals, "Peters")
+	c.Assert(patient.Name[0].Family, Equals, "Peters")
 
 	encounter, err := obs.GetIncludedEncounterResourceReferencedByEncounter()
 	util.CheckErr(err)
@@ -2546,7 +2546,7 @@ func (m *MongoSearchSuite) TestPatientGenderQueryForRevInclude(c *C) {
 	patient := resultsVal.Index(0).Interface().(models.PatientPlus)
 	c.Assert(patient.Id, Equals, "4954037118555241963")
 	c.Assert(patient.Name[0].Given[0], Equals, "John")
-	c.Assert(patient.Name[0].Family[0], Equals, "Peters")
+	c.Assert(patient.Name[0].Family, Equals, "Peters")
 
 	inclRevIncl := patient.GetIncludedAndRevIncludedResources()
 	c.Assert(inclRevIncl, HasLen, 9)

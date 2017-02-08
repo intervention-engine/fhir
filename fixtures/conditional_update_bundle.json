@@ -24,9 +24,7 @@
         ],
         "name":[
           {
-            "family":[
-              "Peters"
-            ],
+            "family": "Peters",
             "given":[
               "John"
             ]
@@ -560,7 +558,7 @@
       "resource":{
         "resourceType":"MedicationStatement",
         "id":"3e766221-d86c-4a15-9f39-d7a7fb343b3d",
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "status":"intended",

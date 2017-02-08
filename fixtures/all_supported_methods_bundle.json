@@ -20,7 +20,7 @@
       "resource": {
 				"resourceType": "Patient",
 				"name": [{
-					"family": ["Peters"],
+					"family": "Peters",
 					"given": ["John"]
 				}],
 				"gender": "male",
