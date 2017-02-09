@@ -1,8 +1,13 @@
 Intervention Engine FHIR Server [![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=master)](https://travis-ci.org/intervention-engine/fhir)[![GoDoc](https://godoc.org/github.com/intervention-engine/fhir?status.svg)](https://godoc.org/github.com/intervention-engine/fhir)
 ===================================================================================================================================================================
 
-This project provides [HL7 FHIR DSTU2](http://hl7.org/fhir/DSTU2/index.html) models and server components implemented in Go and using MongoDB as storage. This is a
-library that can be embedded into other server applications. The library is not a complete implementation of FHIR, as features that are selected are driven by the
+This project provides [HL7 FHIR DSTU2](http://hl7.org/fhir/DSTU2/index.html) models and server components implemented in Go and using MongoDB as storage. Other versions of FHIR are also supported on other branches within this repository:
+
+* [`stu3_jan2017`](https://github.com/intervention-engine/fhir/tree/stu3_jan2017) - FHIR 1.8 (San Antonio)
+* [`stu3_aug2016`](https://github.com/intervention-engine/fhir/tree/stu3_aug2016) - FHIR 1.6 (Baltimore)
+* [`stu3_mar2016`](https://github.com/intervention-engine/fhir/tree/stu3_mar2016) - FHIR 1.4 (Montreal)
+
+This is a library that can be embedded into other server applications. The library is not a complete implementation of FHIR, as features that are selected are driven by the
 [Intervention Engine](https://github.com/intervention-engine/ie), [eCQM Engine](https://github.com/mitre/ecqm), [Patient Matching Test Harness](https://github.com/mitre/ptmatch)
 and [Synthetic Mass](https://github.com/synthetichealth/syntheticmass) projects.
 
@@ -56,7 +61,7 @@ Examples of usage can be found in the [server set up of the eCQM Engine](https:/
 License
 -------
 
-Copyright 2016 The MITRE Corporation
+Copyright 2017 The MITRE Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
