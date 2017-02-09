@@ -94,10 +94,9 @@ func RegisterRoutes(e *gin.Engine, config map[string][]gin.HandlerFunc, dal Data
 	e.POST("/", batchHandlers...)
 
 	// Conformance Statement
-	e.StaticFile("metadata", "conformance/conformance_statement.json")
+	e.StaticFile("metadata", "conformance/capability_statement.json")
 
 	// Resources
-
 	RegisterController("Account", e, config["Account"], dal, serverConfig)
 	RegisterController("ActivityDefinition", e, config["ActivityDefinition"], dal, serverConfig)
 	RegisterController("AllergyIntolerance", e, config["AllergyIntolerance"], dal, serverConfig)
@@ -212,5 +211,4 @@ func RegisterRoutes(e *gin.Engine, config map[string][]gin.HandlerFunc, dal Data
 	RegisterController("TestScript", e, config["TestScript"], dal, serverConfig)
 	RegisterController("ValueSet", e, config["ValueSet"], dal, serverConfig)
 	RegisterController("VisionPrescription", e, config["VisionPrescription"], dal, serverConfig)
-
 }
