@@ -1,7 +1,7 @@
 Intervention Engine FHIR Server [![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=stu3_jan2017)](https://travis-ci.org/intervention-engine/fhir) [![GoDoc](https://godoc.org/github.com/intervention-engine/fhir?status.svg)](https://godoc.org/github.com/intervention-engine/fhir)
 ===================================================================================================================================================================
 
-This project provides [HL7 FHIR STU3](http://hl7.org/fhir/2017Jan/index.html) models and server components implemented in Go and using MongoDB as storage. This is a
+This project provides [HL7 FHIR STU3 v1.8](http://hl7.org/fhir/2017Jan/index.html) models and server components implemented in Go and using MongoDB as storage. This is a
 library that can be embedded into other server applications. The library is not a complete implementation of FHIR, as features that are selected are driven by the
 [Intervention Engine](https://github.com/intervention-engine/ie), [eCQM Engine](https://github.com/mitre/ecqm), [Patient Matching Test Harness](https://github.com/mitre/ptmatch)
 and [Synthetic Mass](https://github.com/synthetichealth/syntheticmass) projects.
