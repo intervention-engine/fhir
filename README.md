@@ -1,7 +1,7 @@
 Intervention Engine FHIR Server [![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=stu3_mar2016)](https://travis-ci.org/intervention-engine/fhir)
 ===================================================================================================================================================================
 
-This project provides [HL7 FHIR STU3](http://hl7.org/fhir/2016May/index.html) models and a generic FHIR server implemented in Go and using MongoDB as storage. This is not a complete implementation, as it is tuned toward the primary use cases of the [Intervention Engine](https://github.com/intervention-engine/ie) project.
+This project provides [HL7 FHIR STU3 v1.4](http://hl7.org/fhir/2016May/index.html) models and a generic FHIR server implemented in Go and using MongoDB as storage. This is not a complete implementation, as it is tuned toward the primary use cases of the [Intervention Engine](https://github.com/intervention-engine/ie) project.
 
 Currently, this server supports:
 
