@@ -14,7 +14,9 @@ addons:
 branches:
   only:
   - master
+  - stu3_mar2016
   - stu3_aug2016
+  - stu3_jan2017
 notifications:
   slack:
     secure: Sz0HRgIE23pnsneB/jfKP01E2mRLgPUO72bIiCpTkeRZs3GeMso+eijCDSNwiR+429jK0/LlJhMS2c6CqQDuluMk+GvmQuRgqmj7kB0FDGqCqPpPeU7SsotOt27NRa73nyz8wj1ffmSitvL5emjrZsSIS4nIQF6GEobRI1p3xbY=
