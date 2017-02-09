@@ -1,7 +1,7 @@
-Intervention Engine FHIR Server [![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=master)](https://travis-ci.org/intervention-engine/fhir) [![GoDoc](https://godoc.org/github.com/intervention-engine/fhir?status.svg)](https://godoc.org/github.com/intervention-engine/fhir)
+Intervention Engine FHIR Server [![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=stu3_aug2016)](https://travis-ci.org/intervention-engine/fhir) [![GoDoc](https://godoc.org/github.com/intervention-engine/fhir?status.svg)](https://godoc.org/github.com/intervention-engine/fhir)
 ===================================================================================================================================================================
 
-This project provides [HL7 FHIR STU2](http://hl7.org/fhir/2016Sep/index.html) models and server components implemented in Go and using MongoDB as storage. This is a
+This project provides [HL7 FHIR STU3 v1.6](http://hl7.org/fhir/2016Sep/index.html) models and server components implemented in Go and using MongoDB as storage. This is a
 library that can be embedded into other server applications. The library is not a complete implementation of FHIR, as features that are selected are driven by the
 [Intervention Engine](https://github.com/intervention-engine/ie), [eCQM Engine](https://github.com/mitre/ecqm), [Patient Matching Test Harness](https://github.com/mitre/ptmatch)
 and [Synthetic Mass](https://github.com/synthetichealth/syntheticmass) projects.
@@ -14,6 +14,7 @@ Currently, this server library supports:
 -	Some but not all search features
 	-	All defined resource-specific search parameters except composite types and contact (email/phone) searches
 	-	Chained searches
+	-	Reverse chained searches using \_has
 	-	\_include and \_revinclude searches (*without* \_recurse)
 -	Batch bundle uploads (POST, PUT, and DELETE entries)
 
