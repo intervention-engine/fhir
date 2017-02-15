@@ -739,27 +739,31 @@ func (m *MongoSearchSuite) TestReverseChainedSearchPipelineObjectWithMultipleRef
 
 func (m *MongoSearchSuite) TestPatientReferenceQueryByObservationCode(c *C) {
 	q := Query{"Patient", "_has:Observation:subject:code=1234-5"}
-	results, _, err := m.MongoSearcher.Search(q)
+	results, total, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
+	c.Assert(total, Equals, uint32(1))
 	resultsVal := reflect.ValueOf(results).Elem()
 	c.Assert(resultsVal.Len(), Equals, 1)
 
 	q = Query{"Patient", "_has:Observation:subject:code=0000-0"}
-	results, _, err = m.MongoSearcher.Search(q)
-	c.Assert(err, Not(IsNil)) // not found
+	results, total, err = m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	c.Assert(total, Equals, uint32(0))
 	c.Assert(results, IsNil)
 }
 
 func (m *MongoSearchSuite) TestPatientReferenceQueryByObservationCodeOr(c *C) {
 	q := Query{"Patient", "_has:Observation:subject:code=1234-5,5678-9"}
-	results, _, err := m.MongoSearcher.Search(q)
+	results, total, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
+	c.Assert(total, Equals, uint32(2))
 	resultsVal := reflect.ValueOf(results).Elem()
 	c.Assert(resultsVal.Len(), Equals, 2)
 
 	q = Query{"Patient", "_has:Observation:subject:code=1234-5,0000-0"}
-	results, _, err = m.MongoSearcher.Search(q)
+	results, total, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
+	c.Assert(total, Equals, uint32(1))
 	resultsVal = reflect.ValueOf(results).Elem()
 	c.Assert(resultsVal.Len(), Equals, 1)
 }
