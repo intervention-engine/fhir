@@ -1,8 +1,10 @@
 package server
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -563,6 +565,42 @@ func (s *ServerSuite) TestRejectXML(c *C) {
 	req.Header.Add("Accept", "application/xml")
 	resp, err := http.DefaultClient.Do(req)
 	c.Assert(resp.StatusCode, Equals, http.StatusNotAcceptable)
+}
+
+func (s *ServerSuite) TestUnescapedLinksInJSONResponse(c *C) {
+	req, err := http.NewRequest("GET", s.Server.URL+"/Bundle", nil)
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+
+	body, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+
+	// There should be none of these escape characters in the response
+	c.Assert(bytes.Contains(body, []byte("\\u003c")), Equals, false)
+	c.Assert(bytes.Contains(body, []byte("\\u003e")), Equals, false)
+	c.Assert(bytes.Contains(body, []byte("\\u0026")), Equals, false)
+}
+
+func (s *ServerSuite) TestEmbbeddedResourceIDsGetRetrievedCorrectly(c *C) {
+	req, err := http.NewRequest("GET", s.Server.URL+"/Patient", nil)
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+
+	body, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+
+	var jsonBundle map[string]interface{}
+	err = json.Unmarshal(body, &jsonBundle)
+	util.CheckErr(err)
+
+	// Check that you can get a patient's "id", not "_id"
+	entry := jsonBundle["entry"].([]interface{})[0]
+	entryMap := entry.(map[string]interface{})
+	resource := entryMap["resource"].(map[string]interface{})
+	c.Assert(len(resource["id"].(string)), Equals, 24)
+	c.Assert(resource["_id"], IsNil)
 }
 
 func performSearch(c *C, url string) *models.Bundle {
