@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2017, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -30,6 +30,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type Bundle struct {
@@ -110,6 +111,20 @@ func (x *BundleEntryComponent) UnmarshalJSON(data []byte) (err error) {
 	return
 }
 
+// Custom SetBSON implementation to properly deserialize embedded resources
+// otherwise represented as interface{} into resource-specific structs as they
+// are retrieved from the database.
+func (x *BundleEntryComponent) SetBSON(raw bson.Raw) (err error) {
+	x2 := bundleEntryComponent{}
+	if err = raw.Unmarshal(&x2); err == nil {
+		if x2.Resource != nil {
+			x2.Resource = BSONMapToResource(x2.Resource.(bson.M), true)
+		}
+		*x = BundleEntryComponent(x2)
+	}
+	return
+}
+
 type BundleEntrySearchComponent struct {
 	BackboneElement `bson:",inline"`
 	Mode            string   `bson:"mode,omitempty" json:"mode,omitempty"`
@@ -144,6 +159,20 @@ func (x *BundleEntryResponseComponent) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Outcome != nil {
 			x2.Outcome = MapToResource(x2.Outcome, true)
+		}
+		*x = BundleEntryResponseComponent(x2)
+	}
+	return
+}
+
+// Custom SetBSON implementation to properly deserialize embedded resources
+// otherwise represented as interface{} into resource-specific structs as they
+// are retrieved from the database.
+func (x *BundleEntryResponseComponent) SetBSON(raw bson.Raw) (err error) {
+	x2 := bundleEntryResponseComponent{}
+	if err = raw.Unmarshal(&x2); err == nil {
+		if x2.Outcome != nil {
+			x2.Outcome = BSONMapToResource(x2.Outcome.(bson.M), true)
 		}
 		*x = BundleEntryResponseComponent(x2)
 	}
