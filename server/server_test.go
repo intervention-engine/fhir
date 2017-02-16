@@ -534,7 +534,8 @@ func (s *ServerSuite) TestConditionalDelete(c *C) {
 	// Add 39 more patients (with total 32 male and 8 female)
 	patientCollection := worker.DB().C("patients")
 	for i := 0; i < 39; i++ {
-		patient := loadPatientFromFixture("../fixtures/patient-example-a.json")
+		fix := loadFixture("Patient", "../fixtures/patient-example-a.json")
+		patient := fix.(*models.Patient)
 		patient.Id = bson.NewObjectId().Hex()
 		if i%5 == 0 {
 			patient.Gender = "female"
@@ -583,14 +584,22 @@ func (s *ServerSuite) TestUnescapedLinksInJSONResponse(c *C) {
 }
 
 func (s *ServerSuite) TestEmbbeddedResourceIDsGetRetrievedCorrectly(c *C) {
-	req, err := http.NewRequest("GET", s.Server.URL+"/Patient", nil)
-	util.CheckErr(err)
-	res, err := http.DefaultClient.Do(req)
+	res, err := postFixture(s.Server.URL, "Bundle", "../fixtures/clint_abbott_bundle.json")
 	util.CheckErr(err)
 
 	body, err := ioutil.ReadAll(res.Body)
 	util.CheckErr(err)
+	postedBundle := &models.Bundle{}
+	err = json.Unmarshal(body, postedBundle)
+	util.CheckErr(err)
 
+	req, err := http.NewRequest("GET", s.Server.URL+"/Bundle/"+postedBundle.Resource.Id, nil)
+	util.CheckErr(err)
+	res, err = http.DefaultClient.Do(req)
+	util.CheckErr(err)
+
+	body, err = ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
 	var jsonBundle map[string]interface{}
 	err = json.Unmarshal(body, &jsonBundle)
 	util.CheckErr(err)
@@ -599,7 +608,7 @@ func (s *ServerSuite) TestEmbbeddedResourceIDsGetRetrievedCorrectly(c *C) {
 	entry := jsonBundle["entry"].([]interface{})[0]
 	entryMap := entry.(map[string]interface{})
 	resource := entryMap["resource"].(map[string]interface{})
-	c.Assert(len(resource["id"].(string)), Equals, 24)
+	c.Assert(len(resource["id"].(string)), Equals, 36)
 	c.Assert(resource["_id"], IsNil)
 }
 
@@ -647,27 +656,53 @@ func assertPagingLinkWithParams(c *C, link models.BundleLinkComponent, relation 
 	c.Assert(v.Get(search.OffsetParam), Equals, fmt.Sprint(offset))
 }
 
-func (s *ServerSuite) insertPatientFromFixture(filePath string) *models.Patient {
+func postFixture(fhirHost, resourceName, fixturePath string) (res *http.Response, err error) {
+	data, err := os.Open(fixturePath)
+	if err != nil {
+		return nil, err
+	}
+	defer data.Close()
+	res, err = http.Post(fhirHost+"/"+resourceName, "application/json", data)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
 
+func (s *ServerSuite) insertBundleFromFixture(filePath string) *models.Bundle {
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	bundleCollection := worker.DB().C("bundles")
+	fix := loadFixture("Bundle", filePath)
+	bundle := fix.(*models.Bundle)
+	bundle.Id = bson.NewObjectId().Hex()
+	err := bundleCollection.Insert(bundle)
+	util.CheckErr(err)
+	return bundle
+}
+
+func (s *ServerSuite) insertPatientFromFixture(filePath string) *models.Patient {
 	worker := s.MasterSession.GetWorkerSession()
 	defer worker.Close()
 
 	patientCollection := worker.DB().C("patients")
-	patient := loadPatientFromFixture(filePath)
+	fix := loadFixture("Patient", filePath)
+	patient := fix.(*models.Patient)
 	patient.Id = bson.NewObjectId().Hex()
 	err := patientCollection.Insert(patient)
 	util.CheckErr(err)
 	return patient
 }
 
-func loadPatientFromFixture(fileName string) *models.Patient {
+func loadFixture(resourceName, fileName string) interface{} {
 	data, err := os.Open(fileName)
 	util.CheckErr(err)
 	defer data.Close()
 
 	decoder := json.NewDecoder(data)
-	patient := &models.Patient{}
-	err = decoder.Decode(patient)
+	resource := models.NewStructForResourceName(resourceName)
+	err = decoder.Decode(&resource)
 	util.CheckErr(err)
-	return patient
+	return resource
 }
