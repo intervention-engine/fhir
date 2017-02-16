@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015, HL7, Inc & The MITRE Corporation
+// Copyright (c) 2011-2017, HL7, Inc & The MITRE Corporation
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -30,6 +30,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type Parameters struct {
@@ -123,6 +124,20 @@ func (x *ParametersParameterComponent) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Resource != nil {
 			x2.Resource = MapToResource(x2.Resource, true)
+		}
+		*x = ParametersParameterComponent(x2)
+	}
+	return
+}
+
+// Custom SetBSON implementation to properly deserialize embedded resources
+// otherwise represented as interface{} into resource-specific structs as they
+// are retrieved from the database.
+func (x *ParametersParameterComponent) SetBSON(raw bson.Raw) (err error) {
+	x2 := parametersParameterComponent{}
+	if err = raw.Unmarshal(&x2); err == nil {
+		if x2.Resource != nil {
+			x2.Resource = BSONMapToResource(x2.Resource.(bson.M), true)
 		}
 		*x = ParametersParameterComponent(x2)
 	}
