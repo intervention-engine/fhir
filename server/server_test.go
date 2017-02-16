@@ -612,6 +612,45 @@ func (s *ServerSuite) TestEmbbeddedResourceIDsGetRetrievedCorrectly(c *C) {
 	c.Assert(resource["_id"], IsNil)
 }
 
+func (s *ServerSuite) TestContainedResourcesIDsAreCorrectButExtensionIsNot(c *C) {
+	res, err := postFixture(s.Server.URL, "Condition", "../fixtures/condition_with_contained_patient.json")
+	util.CheckErr(err)
+
+	body, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+	postedCondition := &models.Condition{}
+	err = json.Unmarshal(body, postedCondition)
+	util.CheckErr(err)
+
+	req, err := http.NewRequest("GET", s.Server.URL+"/Condition/"+postedCondition.Resource.Id, nil)
+	util.CheckErr(err)
+	res, err = http.DefaultClient.Do(req)
+	util.CheckErr(err)
+
+	body, err = ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+	var jsonCondition map[string]interface{}
+	err = json.Unmarshal(body, &jsonCondition)
+	util.CheckErr(err)
+
+	// Check that the contained resources's ID is correct
+	contained := jsonCondition["contained"].([]interface{})[0]
+	containedMap := contained.(map[string]interface{})
+	c.Assert(len(containedMap["id"].(string)), Equals, 19)
+	c.Assert(containedMap["_id"], IsNil)
+
+	// But sadly, the extension in the patient is not
+	extension := containedMap["extension"].([]interface{})[0]
+	extensionMap := extension.(map[string]interface{})
+	c.Assert(extensionMap["@context"], Not(IsNil))
+
+	// Delete this entry
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+	err = worker.DB().C("conditions").RemoveId(postedCondition.Resource.Id)
+	util.CheckErr(err)
+}
+
 func performSearch(c *C, url string) *models.Bundle {
 	res, err := http.Get(url)
 	util.CheckErr(err)

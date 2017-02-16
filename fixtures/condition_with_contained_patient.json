@@ -1,0 +1,49 @@
+{
+  "resourceType": "Condition",
+  "id": "8664777288161060790",
+  "verificationStatus": "confirmed",
+  "subject": {
+    "reference": "https://example.com/base/Patient/4954037118555241963"
+  },
+  "contained": [
+    {
+      "resourceType": "Patient",
+      "id": "4954037118555241963",
+      "name": [{
+        "family": "Abbott",
+        "given": ["Clint"]
+      }],
+      "gender": "male",
+      "birthDate": "1950-09-02",
+      "extension":[
+        {
+           "url":"http://hl7.org/fhir/StructureDefinition/us-core-race",
+           "valueCodeableConcept":{
+              "coding":[
+                 {
+                    "system":"http://hl7.org/fhir/v3/Race",
+                    "code":"2029-7",
+                    "display":"Asian_indian"
+                 }
+              ],
+              "text":"race"
+           }
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [{
+      "system": "http://snomed.info/sct",
+      "code": "10091002"
+    }, {
+      "system": "http://hl7.org/fhir/sid/icd-9",
+      "code": "428.0"
+    }, {
+      "system": "http://hl7.org/fhir/sid/icd-10",
+      "code": "I50.1"
+    }],
+    "text": "Heart failure"
+  },
+  "onsetDateTime": "2012-03-01T07:00:00-05:00"
+}
