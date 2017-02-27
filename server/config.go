@@ -11,10 +11,11 @@ var Database *mgo.Database
 
 // DefaultConfig is the default server configuration
 var DefaultConfig = Config{
-	ServerURL:       "",
-	IndexConfigPath: "config/indexes.conf",
-	DatabaseName:    "fhir",
-	Auth:            auth.None(),
+	ServerURL:        "",
+	IndexConfigPath:  "config/indexes.conf",
+	DatabaseName:     "fhir",
+	Auth:             auth.None(),
+	EnableCISearches: true,
 }
 
 // Config is used to hold information about the configuration of the FHIR
@@ -32,4 +33,7 @@ type Config struct {
 	// DatabaseName is the name of the mongo database used for the fhir database.
 	// Typically this will be the DefaultDatabaseName
 	DatabaseName string
+	// EnableCISearches toggles whether the mongo searches uses regexes to maintain
+	// case-insesitivity when performing searches on string fields, codes, etc.
+	EnableCISearches bool
 }

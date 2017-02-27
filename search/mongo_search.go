@@ -31,13 +31,17 @@ func (b *BSONQuery) usesPipeline() bool {
 
 // MongoSearcher implements FHIR searches using the Mongo database.
 type MongoSearcher struct {
-	db *mgo.Database
+	db               *mgo.Database
+	enableCISearches bool
 }
 
 // NewMongoSearcher creates a new instance of a MongoSearcher, given a pointer
 // to an mgo.Database.
-func NewMongoSearcher(db *mgo.Database) *MongoSearcher {
-	return &MongoSearcher{db}
+func NewMongoSearcher(db *mgo.Database, enableCISearches bool) *MongoSearcher {
+	return &MongoSearcher{
+		db:               db,
+		enableCISearches: enableCISearches,
+	}
 }
 
 // GetDB returns a pointer to the Mongo database.  This is helpful for custom search
@@ -786,12 +790,12 @@ func (m *MongoSearcher) createQuantityQueryObject(q *QuantityParam) bson.M {
 		}
 		if q.System == "" {
 			criteria["$or"] = []bson.M{
-				bson.M{"code": ci(q.Code)},
-				bson.M{"unit": ci(q.Code)},
+				bson.M{"code": m.ci(q.Code)},
+				bson.M{"unit": m.ci(q.Code)},
 			}
 		} else {
-			criteria["code"] = q.Code
-			criteria["system"] = ci(q.System)
+			criteria["code"] = m.ci(q.Code)
+			criteria["system"] = m.ci(q.System)
 		}
 		return buildBSON(p.Path, criteria)
 	}
@@ -812,7 +816,7 @@ func (m *MongoSearcher) createReferenceQueryObject(r *ReferenceParam) bson.M {
 				criteria["type"] = ref.Type
 			}
 		case ExternalReference:
-			criteria["reference"] = ci(ref.URL)
+			criteria["reference"] = m.ci(ref.URL)
 
 		case ChainedQueryReference:
 			// This should be handled exclusively by the createPipelineObject
@@ -853,20 +857,20 @@ func (m *MongoSearcher) createStringQueryObject(s *StringParam) bson.M {
 		case "HumanName":
 			return buildBSON(p.Path, bson.M{
 				"$or": []bson.M{
-					bson.M{"text": cisw(s.String)},
-					bson.M{"family": cisw(s.String)},
-					bson.M{"given": cisw(s.String)},
+					bson.M{"text": m.cisw(s.String)},
+					bson.M{"family": m.cisw(s.String)},
+					bson.M{"given": m.cisw(s.String)},
 				},
 			})
 		case "Address":
 			return buildBSON(p.Path, bson.M{
 				"$or": []bson.M{
-					bson.M{"text": cisw(s.String)},
-					bson.M{"line": cisw(s.String)},
-					bson.M{"city": cisw(s.String)},
-					bson.M{"state": cisw(s.String)},
-					bson.M{"postalCode": cisw(s.String)},
-					bson.M{"country": cisw(s.String)},
+					bson.M{"text": m.cisw(s.String)},
+					bson.M{"line": m.cisw(s.String)},
+					bson.M{"city": m.cisw(s.String)},
+					bson.M{"state": m.cisw(s.String)},
+					bson.M{"postalCode": m.cisw(s.String)},
+					bson.M{"country": m.cisw(s.String)},
 				},
 			})
 		default:
@@ -891,23 +895,23 @@ func (m *MongoSearcher) createTokenQueryObject(t *TokenParam) bson.M {
 			criteria = bson.M{}
 			criteria["code"] = t.Code
 			if !t.AnySystem {
-				criteria["system"] = ci(t.System)
+				criteria["system"] = m.ci(t.System)
 			}
 		case "CodeableConcept":
 			if t.AnySystem {
-				criteria["coding.code"] = t.Code
+				criteria["coding.code"] = m.ci(t.Code)
 			} else {
-				criteria["coding"] = bson.M{"$elemMatch": bson.M{"system": ci(t.System), "code": t.Code}}
+				criteria["coding"] = bson.M{"$elemMatch": bson.M{"system": m.ci(t.System), "code": m.ci(t.Code)}}
 			}
 		case "Identifier":
-			criteria["value"] = t.Code
+			criteria["value"] = m.ci(t.Code)
 			if !t.AnySystem {
-				criteria["system"] = ci(t.System)
+				criteria["system"] = m.ci(t.System)
 			}
 		case "ContactPoint":
-			criteria["value"] = t.Code
+			criteria["value"] = m.ci(t.Code)
 			if !t.AnySystem {
-				criteria["use"] = ci(t.System)
+				criteria["use"] = m.ci(t.System)
 			}
 		case "boolean":
 			switch t.Code {
@@ -919,9 +923,7 @@ func (m *MongoSearcher) createTokenQueryObject(t *TokenParam) bson.M {
 				panic(createInvalidSearchError("MSG_PARAM_INVALID", fmt.Sprintf("Parameter \"%s\" content is invalid", t.Name)))
 			}
 		case "code", "string":
-			// We do case-sensitive matching for any code or string parameter. For example, gender and address-city fall into this category.
-			// Case-sensitivity is in violation of the FHIR spec but is a necessary performance tradeoff to avoid the use of regular expressions.
-			return buildBSON(p.Path, t.Code)
+			return buildBSON(p.Path, m.ci(t.Code))
 
 		case "id":
 			// IDs do not need the case-insensitive match.
@@ -1144,13 +1146,19 @@ func processOrCriteria(path string, orValue interface{}, result bson.M) {
 }
 
 // Case-insensitive match
-func ci(s string) bson.RegEx {
-	return bson.RegEx{Pattern: fmt.Sprintf("^%s$", regexp.QuoteMeta(s)), Options: "i"}
+func (m *MongoSearcher) ci(s string) interface{} {
+	if m.enableCISearches {
+		return bson.RegEx{Pattern: fmt.Sprintf("^%s$", regexp.QuoteMeta(s)), Options: "i"}
+	}
+	return s
 }
 
 // Case-insensitive starts-with
-func cisw(s string) bson.RegEx {
-	return bson.RegEx{Pattern: fmt.Sprintf("^%s", regexp.QuoteMeta(s)), Options: "i"}
+func (m *MongoSearcher) cisw(s string) interface{} {
+	if m.enableCISearches {
+		return bson.RegEx{Pattern: fmt.Sprintf("^%s", regexp.QuoteMeta(s)), Options: "i"}
+	}
+	return s
 }
 
 // When multiple paths are present, they should be represented as an OR.

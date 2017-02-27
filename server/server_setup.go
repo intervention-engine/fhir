@@ -84,7 +84,7 @@ func (f *FHIRServer) Run(config Config) {
 	// Establish master session
 	masterSession := NewMasterSession(session, config.DatabaseName)
 
-	RegisterRoutes(f.Engine, f.MiddlewareConfig, NewMongoDataAccessLayer(masterSession, f.Interceptors), config)
+	RegisterRoutes(f.Engine, f.MiddlewareConfig, NewMongoDataAccessLayer(masterSession, f.Interceptors, config.EnableCISearches), config)
 	ConfigureIndexes(masterSession, config)
 
 	for _, ar := range f.AfterRoutes {
