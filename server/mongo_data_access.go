@@ -80,16 +80,18 @@ func (ws *WorkerSession) Close() {
 }
 
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
-func NewMongoDataAccessLayer(ms *MasterSession, interceptors map[string]InterceptorList) DataAccessLayer {
+func NewMongoDataAccessLayer(ms *MasterSession, interceptors map[string]InterceptorList, enableCISearches bool) DataAccessLayer {
 	return &mongoDataAccessLayer{
-		MasterSession: ms,
-		Interceptors:  interceptors,
+		MasterSession:    ms,
+		Interceptors:     interceptors,
+		enableCISearches: enableCISearches,
 	}
 }
 
 type mongoDataAccessLayer struct {
-	MasterSession *MasterSession
-	Interceptors  map[string]InterceptorList
+	MasterSession    *MasterSession
+	Interceptors     map[string]InterceptorList
+	enableCISearches bool
 }
 
 // InterceptorList is a list of interceptors registered for a given database operation
@@ -391,7 +393,7 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	worker := dal.MasterSession.GetWorkerSession()
 	defer worker.Close()
 
-	searcher := search.NewMongoSearcher(worker.DB())
+	searcher := search.NewMongoSearcher(worker.DB(), dal.enableCISearches)
 
 	result, total, err := searcher.Search(searchQuery)
 	if err != nil {
@@ -456,7 +458,7 @@ func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string
 	newQuery := search.Query{Resource: searchQuery.Resource, Query: newParams.Encode()}
 
 	// Now search on that query, unmarshaling to a temporary struct and converting results to []string
-	searcher := search.NewMongoSearcher(worker.DB())
+	searcher := search.NewMongoSearcher(worker.DB(), dal.enableCISearches)
 	results, _, err := searcher.Search(newQuery)
 	if err != nil {
 		return nil, convertMongoErr(err)

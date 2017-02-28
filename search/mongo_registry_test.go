@@ -18,7 +18,7 @@ func (s *MongoRegistrySuite) TestRegisterAndLookupBSONBuilder(c *C) {
 	GlobalMongoRegistry().RegisterBSONBuilder("test", build)
 	obtained, err := GlobalMongoRegistry().LookupBSONBuilder("test")
 	util.CheckErr(err)
-	bmap, err := obtained(&StringParam{String: "bar"}, NewMongoSearcher(nil))
+	bmap, err := obtained(&StringParam{String: "bar"}, NewMongoSearcher(nil, true))
 	util.CheckErr(err)
 	c.Assert(bmap, HasLen, 1)
 	c.Assert(bmap["foo"], Equals, "bar")
