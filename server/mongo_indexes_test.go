@@ -66,7 +66,7 @@ func (s *MongoIndexesTestSuite) SetupSuite() {
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.MasterSession, s.Interceptors, true), s.Config)
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.MasterSession, s.Interceptors, s.Config), s.Config)
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)
