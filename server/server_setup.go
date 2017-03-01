@@ -74,12 +74,13 @@ func (f *FHIRServer) Run() {
 
 	// Establish initial connection to mongo
 	session, err := mgo.Dial(f.Config.DatabaseHost)
-
 	if err != nil {
 		panic(err)
 	}
-
 	defer session.Close()
+
+	session.SetSocketTimeout(f.Config.DatabaseTimeout)
+
 	Database = session.DB(f.Config.DatabaseName)
 	log.Println("Connected to mongodb")
 

@@ -1,6 +1,8 @@
 package server
 
 import (
+	"time"
+
 	"github.com/intervention-engine/fhir/auth"
 	"gopkg.in/mgo.v2"
 )
@@ -25,6 +27,9 @@ type Config struct {
 	// DatabaseName is the name of the mongo database used for the fhir database.
 	// Typically this will be the default DatabaseName "fhir".
 	DatabaseName string
+	// DatabaseTimeout is the amount of time the mgo driver will wait for a response
+	// from mongo before timing out.
+	DatabaseTimeout time.Duration
 	// EnableCISearches toggles whether the mongo searches uses regexes to maintain
 	// case-insesitivity when performing searches on string fields, codes, etc.
 	EnableCISearches bool
@@ -39,6 +44,7 @@ var DefaultConfig = Config{
 	IndexConfigPath:  "config/indexes.conf",
 	DatabaseHost:     "localhost:27017",
 	DatabaseName:     "fhir",
+	DatabaseTimeout:  1 * time.Minute,
 	Auth:             auth.None(),
 	EnableCISearches: true,
 	ReadOnly:         false,
