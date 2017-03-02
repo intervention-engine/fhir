@@ -1378,7 +1378,7 @@ func (m *MongoSearchSuite) TestDeviceStringQueryObject(c *C) {
 	q := Query{"Device", "manufacturer=Acme"}
 
 	o := m.MongoSearcher.createQueryObject(q)
-	c.Assert(o, DeepEquals, bson.M{"manufacturer": "Acme"})
+	c.Assert(o, DeepEquals, bson.M{"manufacturer": bson.RegEx{Pattern: "^Acme$", Options: "i"}})
 }
 
 func (m *MongoSearchSuite) TestDeviceStringQuery(c *C) {
@@ -2661,7 +2661,7 @@ func (m *MongoSearchSuite) TestCacheSearchCount(c *C) {
 	db := m.Session.DB("fhir-test")
 	searcher := NewMongoSearcher(db, true, true) // enableCISearches = true, readonly = true
 
-	q := Query{"Patient", "gender=male"}
+	q := Query{"Device", "manufacturer=Acme"}
 	expectedHash := fmt.Sprintf("%x", md5.Sum([]byte(q.Query)))
 
 	results, total, err := searcher.Search(q)
