@@ -52,8 +52,7 @@ func (s *ServerSuite) SetUpSuite(c *C) {
 
 	// Build routes for testing
 	s.Engine = gin.New()
-	s.Engine.Use(AbortNonJSONRequests)
-	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.MasterSession, s.Interceptors, true), config)
+	RegisterRoutes(s.Engine, make(map[string][]gin.HandlerFunc), NewMongoDataAccessLayer(s.MasterSession, s.Interceptors, DefaultConfig), DefaultConfig)
 
 	// Create httptest server
 	s.Server = httptest.NewServer(s.Engine)
@@ -558,14 +557,6 @@ func (s *ServerSuite) TestConditionalDelete(c *C) {
 	// Only the 8 females should be left
 	count, err = patientCollection.Count()
 	c.Assert(count, Equals, 8)
-}
-
-func (s *ServerSuite) TestRejectXML(c *C) {
-	req, err := http.NewRequest("GET", s.Server.URL+"/Patient", nil)
-	util.CheckErr(err)
-	req.Header.Add("Accept", "application/xml")
-	resp, err := http.DefaultClient.Do(req)
-	c.Assert(resp.StatusCode, Equals, http.StatusNotAcceptable)
 }
 
 func (s *ServerSuite) TestUnescapedLinksInJSONResponse(c *C) {

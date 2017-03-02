@@ -4,21 +4,19 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/intervention-engine/fhir/auth"
 	"github.com/intervention-engine/fhir/server"
 )
 
 func main() {
 	noint := flag.Bool("noint", false, "Run the test server without interceptors")
 	flag.Parse()
-	s := server.NewServer("localhost")
+	s := server.NewServer(server.DefaultConfig)
 
 	if !*noint {
 		setupTestInterceptors(s)
 	}
 
-	config := server.Config{Auth: auth.None()}
-	s.Run(config)
+	s.Run()
 }
 
 // With this test server running, verfiy the following (by viewing server log):

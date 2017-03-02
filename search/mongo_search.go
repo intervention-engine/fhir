@@ -1,6 +1,7 @@
 package search
 
 import (
+	"crypto/md5"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -29,18 +30,27 @@ func (b *BSONQuery) usesPipeline() bool {
 	return b.Query == nil
 }
 
+// CountCache is used to cache the total count of results for a specific query.
+// The Id is the md5 hash of the query string.
+type CountCache struct {
+	Id    string `bson:"_id"`
+	Count uint32 `bson:"count"`
+}
+
 // MongoSearcher implements FHIR searches using the Mongo database.
 type MongoSearcher struct {
 	db               *mgo.Database
 	enableCISearches bool
+	readonly         bool
 }
 
 // NewMongoSearcher creates a new instance of a MongoSearcher, given a pointer
 // to an mgo.Database.
-func NewMongoSearcher(db *mgo.Database, enableCISearches bool) *MongoSearcher {
+func NewMongoSearcher(db *mgo.Database, enableCISearches bool, readonly bool) *MongoSearcher {
 	return &MongoSearcher{
 		db:               db,
 		enableCISearches: enableCISearches,
+		readonly:         readonly,
 	}
 }
 
@@ -66,11 +76,27 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	// build the BSON query (without any options)
 	bsonQuery := m.convertToBSON(query)
 
+	// Check to see if we already have a count cached for this query. If so, use it
+	// and tell the searcher to skip doing the count. This can only be done reliably if
+	// the server is in -readonly mode.
+	doCount := true
+	var queryHash string
+
+	if m.readonly {
+		queryHash = fmt.Sprintf("%x", md5.Sum([]byte(query.Query)))
+		countcache := &CountCache{}
+		err = m.db.C("countcache").FindId(queryHash).One(countcache)
+		if err == nil {
+			total = countcache.Count
+			doCount = false
+		}
+	}
+
 	// execute the query
 	if bsonQuery.usesPipeline() {
 		// The (slower) aggregation pipeline is used if the query contains includes or revincludes
 		var mgoPipe *mgo.Pipe
-		mgoPipe, total, err = m.aggregate(bsonQuery, query.Options())
+		mgoPipe, total, err = m.aggregate(bsonQuery, query.Options(), doCount)
 		if err != nil {
 			if err == mgo.ErrNotFound {
 				// This was a valid search that returned zero results
@@ -82,7 +108,7 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	} else {
 		// Otherwise, the (faster) standard query is used
 		var mgoQuery *mgo.Query
-		mgoQuery, total, err = m.find(bsonQuery, query.Options())
+		mgoQuery, total, err = m.find(bsonQuery, query.Options(), doCount)
 		if err != nil {
 			if err == mgo.ErrNotFound {
 				// This was a valid search that returned zero results
@@ -97,44 +123,56 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 		return nil, 0, err
 	}
 
+	// If the count wasn't already in cache, add it to cache.
+	if m.readonly && doCount {
+		countcache := &CountCache{
+			Id:    queryHash,
+			Count: total,
+		}
+		// Don't collect the error here since this should fail silently.
+		m.db.C("countcache").Insert(countcache)
+	}
+
 	return results, total, nil
 }
 
 // aggregate takes a BSONQuery and runs its Pipeline through the mongo aggregation framework. Any query options
 // will be added to the end of the pipeline.
-func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (pipe *mgo.Pipe, total uint32, err error) {
+func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions, doCount bool) (pipe *mgo.Pipe, total uint32, err error) {
 	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
 
 	// First get a count of the total results (doesn't apply any options)
-	if len(bsonQuery.Pipeline) == 1 {
-		// The pipeline is only being used for includes/revincludes, meaning the entire
-		// collection is being searched. It's faster just to get a total count from the
-		// collection after a find operation. The first stage in the Pipeline will
-		// always be a $match stage.
-		intTotal, err := c.Find(bsonQuery.Pipeline[0]["$match"]).Count()
-		if err != nil {
-			return nil, 0, err
-		}
-		total = uint32(intTotal)
-	} else {
-		// Do the count in the aggregation framework
-		countStage := bson.M{"$group": bson.M{
-			"_id":   nil,
-			"total": bson.M{"$sum": 1},
-		}}
-		countPipeline := make([]bson.M, len(bsonQuery.Pipeline)+1)
-		copy(countPipeline, bsonQuery.Pipeline)
-		countPipeline[len(countPipeline)-1] = countStage
+	if doCount {
+		if len(bsonQuery.Pipeline) == 1 {
+			// The pipeline is only being used for includes/revincludes, meaning the entire
+			// collection is being searched. It's faster just to get a total count from the
+			// collection after a find operation. The first stage in the Pipeline will
+			// always be a $match stage.
+			intTotal, err := c.Find(bsonQuery.Pipeline[0]["$match"]).Count()
+			if err != nil {
+				return nil, 0, err
+			}
+			total = uint32(intTotal)
+		} else {
+			// Do the count in the aggregation framework
+			countStage := bson.M{"$group": bson.M{
+				"_id":   nil,
+				"total": bson.M{"$sum": 1},
+			}}
+			countPipeline := make([]bson.M, len(bsonQuery.Pipeline)+1)
+			copy(countPipeline, bsonQuery.Pipeline)
+			countPipeline[len(countPipeline)-1] = countStage
 
-		result := struct {
-			Total float64 `bson:"total"`
-		}{}
+			result := struct {
+				Total float64 `bson:"total"`
+			}{}
 
-		err = c.Pipe(countPipeline).One(&result)
-		if err != nil {
-			return nil, 0, err
+			err = c.Pipe(countPipeline).One(&result)
+			if err != nil {
+				return nil, 0, err
+			}
+			total = uint32(result.Total)
 		}
-		total = uint32(result.Total)
 	}
 
 	// Now setup the search pipeline (applying options, if any)
@@ -147,15 +185,17 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions) (
 
 // find takes a BSONQuery and runs a standard mongo search on that query. Any query options are applied
 // after the initial search is performed.
-func (m *MongoSearcher) find(bsonQuery *BSONQuery, options *QueryOptions) (query *mgo.Query, total uint32, err error) {
+func (m *MongoSearcher) find(bsonQuery *BSONQuery, options *QueryOptions, doCount bool) (query *mgo.Query, total uint32, err error) {
 	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
 
 	// First get a count of the total results (doesn't apply any options)
-	intTotal, err := c.Find(bsonQuery.Query).Count()
-	if err != nil {
-		return nil, 0, err
+	if doCount {
+		intTotal, err := c.Find(bsonQuery.Query).Count()
+		if err != nil {
+			return nil, 0, err
+		}
+		total = uint32(intTotal)
 	}
-	total = uint32(intTotal)
 
 	searchQuery := c.Find(bsonQuery.Query)
 	if options != nil {

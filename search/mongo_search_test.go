@@ -1,6 +1,7 @@
 package search
 
 import (
+	"crypto/md5"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -46,7 +47,7 @@ func (m *MongoSearchSuite) SetUpSuite(c *C) {
 
 	m.Session = m.DBServer.Session()
 	db := m.Session.DB("fhir-test")
-	m.MongoSearcher = NewMongoSearcher(db, true)
+	m.MongoSearcher = NewMongoSearcher(db, true, false) // enableCISearches = true, readonly = false
 
 	// Read in the data in FHIR format
 	data, err := ioutil.ReadFile("../fixtures/search_test_data.json")
@@ -2624,7 +2625,7 @@ func (m *MongoSearchSuite) TestUsupportedGlobalSearchParameterPanics(c *C) {
 
 func (m *MongoSearchSuite) TestDisableCISearch(c *C) {
 	db := m.Session.DB("fhir-test")
-	searcher := NewMongoSearcher(db, false)
+	searcher := NewMongoSearcher(db, false, false) // enableCISearches = false, readonly = false
 
 	q := Query{"Condition", "code=http://hl7.org/fhir/sid/icd-9|428.0,http://snomed.info/sct|981000124106,http://hl7.org/fhir/sid/icd-10|I20.0"}
 
@@ -2654,6 +2655,26 @@ func (m *MongoSearchSuite) TestDisableCISearch(c *C) {
 			},
 		},
 	})
+}
+
+func (m *MongoSearchSuite) TestCacheSearchCount(c *C) {
+	db := m.Session.DB("fhir-test")
+	searcher := NewMongoSearcher(db, true, true) // enableCISearches = true, readonly = true
+
+	q := Query{"Patient", "gender=male"}
+	expectedHash := fmt.Sprintf("%x", md5.Sum([]byte(q.Query)))
+
+	results, total, err := searcher.Search(q)
+	util.CheckErr(err)
+	c.Assert(total, Equals, uint32(1))
+	c.Assert(results, NotNil)
+
+	// Check that the total was cached.
+	cc := &CountCache{}
+	err = db.C("countcache").FindId(expectedHash).One(cc)
+	util.CheckErr(err)
+	c.Assert(cc.Id, Equals, expectedHash)
+	c.Assert(cc.Count, Equals, uint32(1))
 }
 
 // Test internally used functions
