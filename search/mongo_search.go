@@ -107,7 +107,7 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 		if err != nil {
 			if err == mgo.ErrNotFound {
 				// This was a valid search that returned zero results
-				return nil, 0, nil
+				return results, 0, nil
 			}
 			return nil, 0, err
 		}
@@ -119,7 +119,7 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 		if err != nil {
 			if err == mgo.ErrNotFound {
 				// This was a valid search that returned zero results
-				return nil, 0, nil
+				return results, 0, nil
 			}
 			return nil, 0, err
 		}
