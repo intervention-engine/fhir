@@ -750,7 +750,9 @@ func (m *MongoSearchSuite) TestPatientReferenceQueryByObservationCode(c *C) {
 	results, total, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
 	c.Assert(total, Equals, uint32(0))
-	c.Assert(results, IsNil)
+	c.Assert(results, NotNil)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 func (m *MongoSearchSuite) TestPatientReferenceQueryByObservationCodeOr(c *C) {
