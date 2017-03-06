@@ -2664,7 +2664,7 @@ func (m *MongoSearchSuite) TestCacheSearchCount(c *C) {
 	searcher := NewMongoSearcher(db, true, true) // enableCISearches = true, readonly = true
 
 	q := Query{"Device", "manufacturer=Acme"}
-	expectedHash := fmt.Sprintf("%x", md5.Sum([]byte(q.Query)))
+	expectedHash := fmt.Sprintf("%x", md5.Sum([]byte("Device?manufacturer=Acme")))
 
 	results, total, err := searcher.Search(q)
 	util.CheckErr(err)
