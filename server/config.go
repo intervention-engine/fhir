@@ -30,6 +30,10 @@ type Config struct {
 	// DatabaseTimeout is the amount of time the mgo driver will wait for a response
 	// from mongo before timing out.
 	DatabaseTimeout time.Duration
+	// CountTotalResults toggles whether the searcher should also get a total
+	// count of the total results of a search. In practice this is a performance hit
+	// for large datasets.
+	CountTotalResults bool
 	// EnableCISearches toggles whether the mongo searches uses regexes to maintain
 	// case-insesitivity when performing searches on string fields, codes, etc.
 	EnableCISearches bool
@@ -40,12 +44,13 @@ type Config struct {
 
 // DefaultConfig is the default server configuration
 var DefaultConfig = Config{
-	ServerURL:        "",
-	IndexConfigPath:  "config/indexes.conf",
-	DatabaseHost:     "localhost:27017",
-	DatabaseName:     "fhir",
-	DatabaseTimeout:  1 * time.Minute,
-	Auth:             auth.None(),
-	EnableCISearches: true,
-	ReadOnly:         false,
+	ServerURL:         "",
+	IndexConfigPath:   "config/indexes.conf",
+	DatabaseHost:      "localhost:27017",
+	DatabaseName:      "fhir",
+	DatabaseTimeout:   1 * time.Minute,
+	Auth:              auth.None(),
+	EnableCISearches:  true,
+	CountTotalResults: true,
+	ReadOnly:          false,
 }
