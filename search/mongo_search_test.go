@@ -47,7 +47,7 @@ func (m *MongoSearchSuite) SetUpSuite(c *C) {
 
 	m.Session = m.DBServer.Session()
 	db := m.Session.DB("fhir-test")
-	m.MongoSearcher = NewMongoSearcher(db, true, false) // enableCISearches = true, readonly = false
+	m.MongoSearcher = NewMongoSearcher(db, true, true, false) // enableCISearches = true, readonly = false
 
 	// Read in the data in FHIR format
 	data, err := ioutil.ReadFile("../fixtures/search_test_data.json")
@@ -2625,9 +2625,26 @@ func (m *MongoSearchSuite) TestUsupportedGlobalSearchParameterPanics(c *C) {
 	c.Assert(func() { m.MongoSearcher.Search(q) }, Panics, createUnsupportedSearchError("MSG_PARAM_UNKNOWN", "Parameter \"_text\" not understood"))
 }
 
+func (m *MongoSearchSuite) TestDisableTotalCount(c *C) {
+	db := m.Session.DB("fhir-test")
+	searcher := NewMongoSearcher(db, false, true, false) // countTotalResults = false, enableCISearches = true, readonly = false
+	q := Query{"Patient", ""}
+
+	// Get the total we expect for this search.
+	_, expectedTotal, err := m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+
+	results, total, err := searcher.Search(q)
+	c.Assert(err, Equals, nil)
+	c.Assert(total, Equals, uint32(0))
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(uint32(resultsVal.Len()), Equals, expectedTotal)
+
+}
+
 func (m *MongoSearchSuite) TestDisableCISearch(c *C) {
 	db := m.Session.DB("fhir-test")
-	searcher := NewMongoSearcher(db, false, false) // enableCISearches = false, readonly = false
+	searcher := NewMongoSearcher(db, true, false, false) // countTotalResults = true, enableCISearches = false, readonly = false
 
 	q := Query{"Condition", "code=http://hl7.org/fhir/sid/icd-9|428.0,http://snomed.info/sct|981000124106,http://hl7.org/fhir/sid/icd-10|I20.0"}
 
@@ -2661,7 +2678,7 @@ func (m *MongoSearchSuite) TestDisableCISearch(c *C) {
 
 func (m *MongoSearchSuite) TestCacheSearchCount(c *C) {
 	db := m.Session.DB("fhir-test")
-	searcher := NewMongoSearcher(db, true, true) // enableCISearches = true, readonly = true
+	searcher := NewMongoSearcher(db, true, true, true) // countTotalResults = true, enableCISearches = true, readonly = true
 
 	q := Query{"Device", "manufacturer=Acme"}
 	expectedHash := fmt.Sprintf("%x", md5.Sum([]byte("Device?manufacturer=Acme")))

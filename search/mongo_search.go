@@ -39,18 +39,20 @@ type CountCache struct {
 
 // MongoSearcher implements FHIR searches using the Mongo database.
 type MongoSearcher struct {
-	db               *mgo.Database
-	enableCISearches bool
-	readonly         bool
+	db                *mgo.Database
+	countTotalResults bool
+	enableCISearches  bool
+	readonly          bool
 }
 
 // NewMongoSearcher creates a new instance of a MongoSearcher, given a pointer
 // to an mgo.Database.
-func NewMongoSearcher(db *mgo.Database, enableCISearches bool, readonly bool) *MongoSearcher {
+func NewMongoSearcher(db *mgo.Database, countTotalResults, enableCISearches, readonly bool) *MongoSearcher {
 	return &MongoSearcher{
-		db:               db,
-		enableCISearches: enableCISearches,
-		readonly:         readonly,
+		db:                db,
+		countTotalResults: countTotalResults,
+		enableCISearches:  enableCISearches,
+		readonly:          readonly,
 	}
 }
 
@@ -96,6 +98,11 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	// There's no point in running the query if we already know it will return 0 results.
 	if m.readonly && !doCount && total == 0 {
 		return results, 0, nil
+	}
+
+	// Don't do the count at all if m.countTotalResults is disabled.
+	if !m.countTotalResults {
+		doCount = false
 	}
 
 	// execute the query

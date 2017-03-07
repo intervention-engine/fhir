@@ -82,18 +82,20 @@ func (ws *WorkerSession) Close() {
 // NewMongoDataAccessLayer returns an implementation of DataAccessLayer that is backed by a Mongo database
 func NewMongoDataAccessLayer(ms *MasterSession, interceptors map[string]InterceptorList, config Config) DataAccessLayer {
 	return &mongoDataAccessLayer{
-		MasterSession:    ms,
-		Interceptors:     interceptors,
-		enableCISearches: config.EnableCISearches,
-		readonly:         config.ReadOnly,
+		MasterSession:     ms,
+		Interceptors:      interceptors,
+		countTotalResults: config.CountTotalResults,
+		enableCISearches:  config.EnableCISearches,
+		readonly:          config.ReadOnly,
 	}
 }
 
 type mongoDataAccessLayer struct {
-	MasterSession    *MasterSession
-	Interceptors     map[string]InterceptorList
-	enableCISearches bool
-	readonly         bool
+	MasterSession     *MasterSession
+	Interceptors      map[string]InterceptorList
+	countTotalResults bool
+	enableCISearches  bool
+	readonly          bool
 }
 
 // InterceptorList is a list of interceptors registered for a given database operation
@@ -395,7 +397,7 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	worker := dal.MasterSession.GetWorkerSession()
 	defer worker.Close()
 
-	searcher := search.NewMongoSearcher(worker.DB(), dal.enableCISearches, dal.readonly)
+	searcher := search.NewMongoSearcher(worker.DB(), dal.countTotalResults, dal.enableCISearches, dal.readonly)
 
 	result, total, err := searcher.Search(searchQuery)
 	if err != nil {
@@ -432,7 +434,11 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	bundle.Id = bson.NewObjectId().Hex()
 	bundle.Type = "searchset"
 	bundle.Entry = entryList
-	bundle.Total = &total
+
+	// Omit the total if 0, since it may never have been computed at all.
+	if total != 0 {
+		bundle.Total = &total
+	}
 
 	// Add links for paging
 	bundle.Link = generatePagingLinks(baseURL, searchQuery, total)
@@ -460,7 +466,7 @@ func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string
 	newQuery := search.Query{Resource: searchQuery.Resource, Query: newParams.Encode()}
 
 	// Now search on that query, unmarshaling to a temporary struct and converting results to []string
-	searcher := search.NewMongoSearcher(worker.DB(), dal.enableCISearches, dal.readonly)
+	searcher := search.NewMongoSearcher(worker.DB(), dal.countTotalResults, dal.enableCISearches, dal.readonly)
 	results, _, err := searcher.Search(newQuery)
 	if err != nil {
 		return nil, convertMongoErr(err)
