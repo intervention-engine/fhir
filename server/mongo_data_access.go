@@ -407,9 +407,9 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	includesMap := make(map[string]interface{})
 	var entryList []models.BundleEntryComponent
 	resultVal := reflect.ValueOf(result).Elem()
-	numResults := uint32(resultVal.Len())
+	numResults := resultVal.Len()
 
-	for i := 0; i < int(numResults); i++ {
+	for i := 0; i < numResults; i++ {
 		var entry models.BundleEntryComponent
 		entry.Resource = resultVal.Index(i).Addr().Interface()
 		entry.Search = &models.BundleEntrySearchComponent{Mode: "match"}
@@ -442,7 +442,7 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 		bundle.Total = &total
 	}
 
-	bundle.Link = dal.generatePagingLinks(baseURL, searchQuery, total, numResults)
+	bundle.Link = dal.generatePagingLinks(baseURL, searchQuery, total, uint32(numResults))
 
 	return &bundle, nil
 }
@@ -518,8 +518,6 @@ func (dal *mongoDataAccessLayer) generatePagingLinks(baseURL url.URL, query sear
 		prevCount := offset - prevOffset
 		links = append(links, newLink("previous", baseURL, params, prevOffset, prevCount))
 	}
-
-	fmt.Println("num: ", numResults)
 
 	// If counts are enabled, the total is accurate and can be used to compute the links.
 	if dal.countTotalResults {

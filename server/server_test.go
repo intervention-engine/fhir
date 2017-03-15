@@ -201,7 +201,7 @@ func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
 }
 
-func (s *ServerSuite) TestPatientPaginingWithCountsDisabled(c *C) {
+func (s *ServerSuite) TestPatientPagingWithCountsDisabled(c *C) {
 	config := DefaultConfig
 	config.CountTotalResults = false
 	dal, ok := NewMongoDataAccessLayer(s.MasterSession, nil, config).(*mongoDataAccessLayer)
