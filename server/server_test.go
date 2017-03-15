@@ -201,6 +201,35 @@ func (s *ServerSuite) TestGetPatientsPaging(c *C) {
 	assertPagingLink(c, bundle.Link[2], "last", 100, 0)
 }
 
+func (s *ServerSuite) TestPatientPaginingWithCountsDisabled(c *C) {
+	config := DefaultConfig
+	config.CountTotalResults = false
+	dal, ok := NewMongoDataAccessLayer(s.MasterSession, nil, config).(*mongoDataAccessLayer)
+	c.Assert(ok, Equals, true)
+
+	// numResults is equal to the default query count of 100, so we should get a next link here
+	u := url.URL{
+		Scheme: "https",
+		Host:   "fhir.example.com",
+		Path:   "fhir/Patient",
+	}
+	links := dal.generatePagingLinks(u, search.Query{Resource: "Patient"}, 0, 100)
+	c.Assert(len(links), Equals, 3)
+	c.Assert(links[0].Relation, Equals, "self")
+	c.Assert(links[1].Relation, Equals, "first")
+
+	// The next link:
+	next := links[2]
+	c.Assert(next.Relation, Equals, "next")
+	c.Assert(next.Url, Equals, "https://fhir.example.com/fhir/Patient?_offset=100&_count=100")
+
+	// There should be no next link if numResults < count
+	links = dal.generatePagingLinks(u, search.Query{Resource: "Patient"}, 0, 75)
+	c.Assert(len(links), Equals, 2)
+	c.Assert(links[0].Relation, Equals, "self")
+	c.Assert(links[1].Relation, Equals, "first")
+}
+
 func (s *ServerSuite) TestGetPatientSearchPagingPreservesSearchParams(c *C) {
 	// Add 39 more patients
 	for i := 0; i < 39; i++ {

@@ -84,7 +84,7 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	doCount := true
 	var queryHash string
 
-	if m.readonly {
+	if m.readonly && m.countTotalResults {
 		queryHash = fmt.Sprintf("%x", md5.Sum([]byte(query.Resource+"?"+query.Query)))
 		countcache := &CountCache{}
 		err = m.db.C("countcache").FindId(queryHash).One(countcache)
@@ -138,7 +138,7 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	}
 
 	// If the count wasn't already in cache, add it to cache.
-	if m.readonly && doCount {
+	if m.readonly && m.countTotalResults && doCount {
 		countcache := &CountCache{
 			Id:    queryHash,
 			Count: computedTotal,
@@ -147,6 +147,8 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 		m.db.C("countcache").Insert(countcache)
 	}
 
+	// The computed total will only be used if the server had no cached
+	// count for this search and countTotalResults is true.
 	if doCount {
 		total = computedTotal
 	}

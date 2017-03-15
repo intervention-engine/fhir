@@ -407,7 +407,9 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	includesMap := make(map[string]interface{})
 	var entryList []models.BundleEntryComponent
 	resultVal := reflect.ValueOf(result).Elem()
-	for i := 0; i < resultVal.Len(); i++ {
+	numResults := uint32(resultVal.Len())
+
+	for i := 0; i < int(numResults); i++ {
 		var entry models.BundleEntryComponent
 		entry.Resource = resultVal.Index(i).Addr().Interface()
 		entry.Search = &models.BundleEntrySearchComponent{Mode: "match"}
@@ -440,8 +442,7 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 		bundle.Total = &total
 	}
 
-	// Add links for paging
-	bundle.Link = generatePagingLinks(baseURL, searchQuery, total)
+	bundle.Link = dal.generatePagingLinks(baseURL, searchQuery, total, numResults)
 
 	return &bundle, nil
 }
@@ -482,15 +483,8 @@ func (dal *mongoDataAccessLayer) FindIDs(searchQuery search.Query) (IDs []string
 	return IDs, nil
 }
 
-// ResourcePlusRelatedResources is an interface to capture those structs that implement the functions for
-// getting included and rev-included resources
-type ResourcePlusRelatedResources interface {
-	GetIncludedAndRevIncludedResources() map[string]interface{}
-	GetIncludedResources() map[string]interface{}
-	GetRevIncludedResources() map[string]interface{}
-}
+func (dal *mongoDataAccessLayer) generatePagingLinks(baseURL url.URL, query search.Query, total uint32, numResults uint32) []models.BundleLinkComponent {
 
-func generatePagingLinks(baseURL url.URL, query search.Query, total uint32) []models.BundleLinkComponent {
 	links := make([]models.BundleLinkComponent, 0, 5)
 	params := query.URLQueryParameters(true)
 	offset := 0
@@ -525,24 +519,51 @@ func generatePagingLinks(baseURL url.URL, query search.Query, total uint32) []mo
 		links = append(links, newLink("previous", baseURL, params, prevOffset, prevCount))
 	}
 
-	// Next Link
-	if total > uint32(offset+count) {
-		nextOffset := offset + count
-		links = append(links, newLink("next", baseURL, params, nextOffset, count))
-	}
+	fmt.Println("num: ", numResults)
 
-	// Last Link
-	remainder := (int(total) - offset) % count
-	if int(total) < offset {
-		remainder = 0
+	// If counts are enabled, the total is accurate and can be used to compute the links.
+	if dal.countTotalResults {
+		// Next Link
+		if total > uint32(offset+count) {
+			nextOffset := offset + count
+			links = append(links, newLink("next", baseURL, params, nextOffset, count))
+		}
+
+		// Last Link
+		remainder := (int(total) - offset) % count
+		if int(total) < offset {
+			remainder = 0
+		}
+		newOffset := int(total) - remainder
+		if remainder == 0 && int(total) > count {
+			newOffset = int(total) - count
+		}
+		links = append(links, newLink("last", baseURL, params, newOffset, count))
+
+	} else {
+		// Otherwise, we can only use the number of results returned by the search, and compare
+		// it to the expected paging count to determine if we've exhaused the search results or not.
+
+		// Next Link
+		if int(numResults) == count {
+			nextOffset := offset + count
+			links = append(links, newLink("next", baseURL, params, nextOffset, count))
+		}
+
+		// Last Link
+		// Without a total there is no way to compute the Last link. However, this still conforms
+		// to RFC 5005 (https://tools.ietf.org/html/rfc5005).
 	}
-	newOffset := int(total) - remainder
-	if remainder == 0 && int(total) > count {
-		newOffset = int(total) - count
-	}
-	links = append(links, newLink("last", baseURL, params, newOffset, count))
 
 	return links
+}
+
+// ResourcePlusRelatedResources is an interface to capture those structs that implement the functions for
+// getting included and rev-included resources
+type ResourcePlusRelatedResources interface {
+	GetIncludedAndRevIncludedResources() map[string]interface{}
+	GetIncludedResources() map[string]interface{}
+	GetRevIncludedResources() map[string]interface{}
 }
 
 func newLink(relation string, baseURL url.URL, params search.URLQueryParameters, offset int, count int) models.BundleLinkComponent {
