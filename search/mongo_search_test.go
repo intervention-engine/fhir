@@ -1422,7 +1422,7 @@ func (m *MongoSearchSuite) TestNumberQueryLE(c *C) {
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
 		"vaccinationProtocol.doseSequence": bson.M{
-			"$lte": float64(2),
+			"$lte": float64(2.5),
 		},
 	})
 
@@ -1444,7 +1444,7 @@ func (m *MongoSearchSuite) TestNumberQueryGE(c *C) {
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
 		"vaccinationProtocol.doseSequence": bson.M{
-			"$gte": float64(0),
+			"$gte": float64(-0.5),
 		},
 	})
 
@@ -1872,7 +1872,7 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitLE(c *C) {
 			bson.M{
 				"component": bson.M{
 					"$elemMatch": bson.M{
-						"valueQuantity.value": bson.M{"$lte": float64(186)},
+						"valueQuantity.value": bson.M{"$lte": float64(186.5)},
 						"$or": []bson.M{
 							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
@@ -1881,7 +1881,7 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitLE(c *C) {
 				},
 			},
 			bson.M{
-				"valueQuantity.value": bson.M{"$lte": float64(186)},
+				"valueQuantity.value": bson.M{"$lte": float64(186.5)},
 				"$or": []bson.M{
 					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
@@ -1909,7 +1909,7 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitGE(c *C) {
 			bson.M{
 				"component": bson.M{
 					"$elemMatch": bson.M{
-						"valueQuantity.value": bson.M{"$gte": float64(184)},
+						"valueQuantity.value": bson.M{"$gte": float64(183.5)},
 						"$or": []bson.M{
 							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
@@ -1918,7 +1918,7 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitGE(c *C) {
 				},
 			},
 			bson.M{
-				"valueQuantity.value": bson.M{"$gte": float64(184)},
+				"valueQuantity.value": bson.M{"$gte": float64(183.5)},
 				"$or": []bson.M{
 					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
