@@ -861,11 +861,11 @@ func (m *MongoSearcher) createNumberQueryObject(n *NumberParam) bson.M {
 			}
 		case GE:
 			criteria = bson.M{
-				"$gte": exact,
+				"$gte": l,
 			}
 		case LE:
 			criteria = bson.M{
-				"$lte": exact,
+				"$lte": h,
 			}
 		default:
 			// SA, EB are not supported for Number queries
@@ -905,11 +905,11 @@ func (m *MongoSearcher) createQuantityQueryObject(q *QuantityParam) bson.M {
 			}
 		case GE:
 			criteria = bson.M{
-				"value": bson.M{"$gte": exact},
+				"value": bson.M{"$gte": l},
 			}
 		case LE:
 			criteria = bson.M{
-				"value": bson.M{"$lte": exact},
+				"value": bson.M{"$lte": h},
 			}
 		default:
 			// NE, SA, EB are not supported for Quantity queries
