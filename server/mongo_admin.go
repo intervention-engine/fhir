@@ -47,6 +47,10 @@ type Reply struct {
 // the main server thread. killLongRunningOps periodically checks the admin
 // database for long-running client-initiated operations (e.g. a slow pipeline)
 // and kills those operations after the set Config.DatabaseOpTimeout.
+//
+// This is a common approach, similarly applied here:
+// 1. https://blog.mlab.com/2014/02/mongodb-currentop-killop
+// 2. https://dzone.com/articles/finding-and-terminating-long
 func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, config Config) {
 	logKLRO(nil, fmt.Sprintf("Monitoring database %s for long-running operations", config.DatabaseName))
 	workerSession := masterAdminSession.GetWorkerSession()

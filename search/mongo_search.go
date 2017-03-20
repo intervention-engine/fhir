@@ -14,6 +14,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// This is a MongoDB internal error code for an interrupted operation, see:
+// https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err#L217
 var opInterruptedCode = 11601
 
 // BSONQuery is a BSON document constructed from the original string search query.
