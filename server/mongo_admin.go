@@ -58,10 +58,9 @@ func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, 
 		ops := CurrentOps{}
 		t := &now
 
-		logKLRO(t, "Scanning for long-running operations...")
-
 		// This will return a set of client-initiated currentOps ONLY. There are numerous
 		// more server operations that are returned when passed {"$all": true}.
+		// see: https://docs.mongodb.com/manual/reference/command/currentOp/
 		err = adminDB.Run("currentOp", &ops)
 
 		if err != nil {
@@ -84,7 +83,7 @@ func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, 
 				continue
 			}
 
-			// Only interfere with our database operations.
+			// Only interfere with operations on our database (e.g. "fhir").
 			if !strings.Contains(op.Namespace, config.DatabaseName) {
 				continue
 			}
@@ -98,6 +97,9 @@ func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, 
 			// 1. Have a runtime exceeding the current config.DatabaseOpTimeout
 			// 2. Are in the config.DatabaseName namespace.
 			switch op.OpType {
+			// To protect data integrity, only kill these types of operations.
+			// For a full list of command types, see:
+			// https://docs.mongodb.com/manual/reference/command/currentOp/#currentOp.op
 			case "command", "query", "getMore":
 				if len(op.Query) == 0 {
 					continue
@@ -112,10 +114,11 @@ func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, 
 					err = killOp(adminDB, op.OpID)
 					if err != nil {
 						logKLRO(t, err.Error())
+						continue
 					}
 
 					// Successfully killed the operation.
-					msg := fmt.Sprintf("killed op[%d] %s %s\n", op.OpID, queryDoc.Name, op.Namespace)
+					msg := fmt.Sprintf("killed op[%d] %s %s", op.OpID, queryDoc.Name, op.Namespace)
 					logKLRO(t, msg)
 				}
 			}
@@ -126,9 +129,13 @@ func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, 
 func killOp(adminDB *mgo.Database, opID uint32) error {
 	var err error
 	reply := Reply{}
-	err = adminDB.Run(bson.D{{"killOp", opID}}, &reply)
+	// see: https://docs.mongodb.com/manual/reference/command/killOp/
+	err = adminDB.Run(bson.D{{"killOp", 1}, {"op", opID}}, &reply)
 	if reply.Ok != OK {
-		return errors.New(reply.Info)
+		if reply.Info != "" {
+			return errors.New(reply.Info)
+		}
+		return fmt.Errorf("Failed to kill op[%d]", opID)
 	}
 	return err
 }
