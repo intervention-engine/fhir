@@ -237,7 +237,7 @@ func (s *MongoIndexesTestSuite) TestParseIndexBadCompoundKeySubKeyFormat() {
 
 func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 	// Configure test indexes
-	ConfigureIndexes(s.MasterSession, s.Config)
+	NewIndexer(s.Config).ConfigureIndexes(s.MasterSession)
 
 	// get the "testcollection" collection. This should have been auto-magically
 	// created by ConfigureIndexes
@@ -260,7 +260,7 @@ func (s *MongoIndexesTestSuite) TestConfigureIndexes() {
 func (s *MongoIndexesTestSuite) TestConfigureIndexesNoConfigFile() {
 
 	s.Config.IndexConfigPath = "./does_not_exist.conf"
-	s.NotPanics(func() { ConfigureIndexes(s.MasterSession, s.Config) }, "Should not panic if no config file is found")
+	s.NotPanics(func() { NewIndexer(s.Config).ConfigureIndexes(s.MasterSession) }, "Should not panic if no config file is found")
 }
 
 func (s *MongoIndexesTestSuite) compareIndexes(expected, actual []mgo.Index) {

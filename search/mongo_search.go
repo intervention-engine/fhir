@@ -14,6 +14,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// This is a MongoDB internal error code for an interrupted operation, see:
+// https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err#L217
+var opInterruptedCode = 11601
+
 // BSONQuery is a BSON document constructed from the original string search query.
 type BSONQuery struct {
 	Resource string
@@ -105,31 +109,44 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 		doCount = false
 	}
 
-	// execute the query
 	var computedTotal uint32
-	if bsonQuery.usesPipeline() {
+	var mgoPipe *mgo.Pipe
+	var mgoQuery *mgo.Query
+	usesPipeline := bsonQuery.usesPipeline()
+
+	// Execute the query
+	if usesPipeline {
 		// The (slower) aggregation pipeline is used if the query contains includes or revincludes
-		var mgoPipe *mgo.Pipe
 		mgoPipe, computedTotal, err = m.aggregate(bsonQuery, query.Options(), doCount)
-		if err != nil {
-			if err == mgo.ErrNotFound {
-				// This was a valid search that returned zero results
-				return results, 0, nil
-			}
-			return nil, 0, err
-		}
-		err = mgoPipe.All(results)
 	} else {
 		// Otherwise, the (faster) standard query is used
-		var mgoQuery *mgo.Query
 		mgoQuery, computedTotal, err = m.find(bsonQuery, query.Options(), doCount)
-		if err != nil {
-			if err == mgo.ErrNotFound {
-				// This was a valid search that returned zero results
-				return results, 0, nil
-			}
+	}
+
+	// Check if the query returned any errors
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			// This was a valid search that returned zero results
+			return results, 0, nil
+		}
+
+		e, ok := err.(*mgo.QueryError)
+		if !ok {
+			// This was not a mgo error
 			return nil, 0, err
 		}
+
+		if e.Code == opInterruptedCode {
+			// This query operation was interrupted
+			panic(createOpInterruptedError("Long-running operation interrupted"))
+		}
+		return nil, 0, err
+	}
+
+	// Collect the results
+	if usesPipeline {
+		err = mgoPipe.All(results)
+	} else {
 		err = mgoQuery.All(results)
 	}
 
@@ -1098,6 +1115,16 @@ func createOpOutcome(severity, code, detailsCode, detailsDisplay string) *models
 		}
 	}
 
+	if detailsCode == "" && detailsDisplay != "" {
+		outcome.Issue[0].Details = &models.CodeableConcept{
+			Coding: []models.Coding{
+				models.Coding{
+					Display: detailsDisplay},
+			},
+			Text: detailsDisplay,
+		}
+	}
+
 	return outcome
 }
 
@@ -1132,6 +1159,13 @@ func createInternalServerError(code, display string) *Error {
 	return &Error{
 		HTTPStatus:       http.StatusInternalServerError,
 		OperationOutcome: createOpOutcome("fatal", "exception", code, display),
+	}
+}
+
+func createOpInterruptedError(display string) *Error {
+	return &Error{
+		HTTPStatus:       http.StatusInternalServerError,
+		OperationOutcome: createOpOutcome("error", "too-costly", "", display),
 	}
 }
 
