@@ -87,6 +87,11 @@ func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, 
 				continue
 			}
 
+			// Don't retry kills.
+			if op.KillPending {
+				continue
+			}
+
 			// Only interfere with operations on our database (e.g. "fhir").
 			if !strings.Contains(op.Namespace, config.DatabaseName) {
 				continue
