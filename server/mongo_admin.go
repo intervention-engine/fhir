@@ -106,21 +106,15 @@ func killLongRunningOps(ticker *time.Ticker, masterAdminSession *MasterSession, 
 				}
 
 				queryDoc := op.Query[0]
-				switch queryDoc.Name {
-				case "$msg", "find", "aggregate":
-					// Only these select op types are eligible for termination.
-					// $msg occurs if the query was too big to fit in the response,
-					// which almost always means it's an aggregation pipeline.
-					err = killOp(adminDB, op.OpID)
-					if err != nil {
-						logKLRO(t, err.Error())
-						continue
-					}
-
-					// Successfully killed the operation.
-					msg := fmt.Sprintf("killed op[%d] %s %s", op.OpID, queryDoc.Name, op.Namespace)
-					logKLRO(t, msg)
+				err = killOp(adminDB, op.OpID)
+				if err != nil {
+					logKLRO(t, err.Error())
+					continue
 				}
+
+				// Successfully killed the operation.
+				msg := fmt.Sprintf("killed op[%d] %s %s", op.OpID, queryDoc.Name, op.Namespace)
+				logKLRO(t, msg)
 			}
 		}
 	}
