@@ -437,8 +437,8 @@ func (dal *mongoDataAccessLayer) Search(baseURL url.URL, searchQuery search.Quer
 	bundle.Type = "searchset"
 	bundle.Entry = entryList
 
-	// Omit the total if 0, since it may never have been computed at all.
-	if total != 0 {
+	// Only include the total if counts are enabled, or if _summary=count was applied.
+	if dal.countTotalResults || searchQuery.Options().Summary == "count" {
 		bundle.Total = &total
 	}
 
@@ -502,6 +502,12 @@ func (dal *mongoDataAccessLayer) generatePagingLinks(baseURL url.URL, query sear
 		}
 	}
 
+	// For queries that don't support paging, only return the "self" link created directly from the original query.
+	if !query.SupportsPaging() {
+		links = append(links, newRawSelfLink(baseURL, query))
+		return links
+	}
+
 	// Self link
 	links = append(links, newLink("self", baseURL, params, offset, count))
 
@@ -562,6 +568,18 @@ type ResourcePlusRelatedResources interface {
 	GetIncludedAndRevIncludedResources() map[string]interface{}
 	GetIncludedResources() map[string]interface{}
 	GetRevIncludedResources() map[string]interface{}
+}
+
+func newRawSelfLink(baseURL url.URL, query search.Query) models.BundleLinkComponent {
+	queryString := ""
+	if len(query.Query) > 0 {
+		queryString = "?" + query.Query
+	}
+
+	return models.BundleLinkComponent{
+		Relation: "self",
+		Url:      baseURL.String() + queryString,
+	}
 }
 
 func newLink(relation string, baseURL url.URL, params search.URLQueryParameters, offset int, count int) models.BundleLinkComponent {

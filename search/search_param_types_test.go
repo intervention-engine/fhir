@@ -1869,6 +1869,30 @@ func (s *SearchPTSuite) TestQueryUsesReverseChainedSearchAndPipeline(c *C) {
 	c.Assert(q.UsesPipeline(), Equals, false)
 }
 
+func (s *SearchPTSuite) TestQuerySupportsPaging(c *C) {
+	// Supported for common searches
+	q := Query{"Patient", "gender=male"}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	q = Query{"Observation", "code=1234-5"}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	q = Query{"Encounter", ""}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	// Not supported for $everything...
+	q = Query{"Patient", "_id=123&_include=*&_revinclude=*"}
+	c.Assert(q.SupportsPaging(), Equals, false)
+
+	// ... but supported for any old _include=*&_revinclude=*
+	q = Query{"MedicationRequest", "_include=*&_revinclude=*"}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	// Not supported for _summary=count
+	q = Query{"Observation", "_summary=count"}
+	c.Assert(q.SupportsPaging(), Equals, false)
+}
+
 func (s *SearchPTSuite) TestSearchParamInfoClone(c *C) {
 	original := SearchParamInfo{
 		Name:  "foo",

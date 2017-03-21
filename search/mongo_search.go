@@ -70,6 +70,7 @@ func (m *MongoSearcher) GetDB() *mgo.Database {
 // If an error occurs during the search the corresponding mongo error
 // is returned and results will be nil.
 func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, err error) {
+	options := query.Options()
 
 	// Check if the search uses _include or _revinclude. If so, we'll need to
 	// return a slice of Resources PLUS related Resources.
@@ -117,10 +118,10 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 	// Execute the query
 	if usesPipeline {
 		// The (slower) aggregation pipeline is used if the query contains includes or revincludes
-		mgoPipe, computedTotal, err = m.aggregate(bsonQuery, query.Options(), doCount)
+		mgoPipe, computedTotal, err = m.aggregate(bsonQuery, options, doCount)
 	} else {
 		// Otherwise, the (faster) standard query is used
-		mgoQuery, computedTotal, err = m.find(bsonQuery, query.Options(), doCount)
+		mgoQuery, computedTotal, err = m.find(bsonQuery, options, doCount)
 	}
 
 	// Check if the query returned any errors
@@ -141,6 +142,13 @@ func (m *MongoSearcher) Search(query Query) (results interface{}, total uint32, 
 			panic(createOpInterruptedError("Long-running operation interrupted"))
 		}
 		return nil, 0, err
+	}
+
+	// If the search was for _summary=count, don't collect the results
+	// and just return the total.
+	if options.Summary == "count" {
+		// results should be an empty slice
+		return results, computedTotal, nil
 	}
 
 	// Collect the results
@@ -179,7 +187,7 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions, d
 	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
 
 	// First get a count of the total results (doesn't apply any options)
-	if doCount {
+	if doCount || options.Summary == "count" {
 		if len(bsonQuery.Pipeline) == 1 {
 			// The pipeline is only being used for includes/revincludes, meaning the entire
 			// collection is being searched. It's faster just to get a total count from the
@@ -212,6 +220,11 @@ func (m *MongoSearcher) aggregate(bsonQuery *BSONQuery, options *QueryOptions, d
 		}
 	}
 
+	if options.Summary == "count" {
+		// Just return the count and don't do the search.
+		return nil, total, nil
+	}
+
 	// Now setup the search pipeline (applying options, if any)
 	searchPipeline := bsonQuery.Pipeline
 	if options != nil {
@@ -226,12 +239,17 @@ func (m *MongoSearcher) find(bsonQuery *BSONQuery, options *QueryOptions, doCoun
 	c := m.db.C(models.PluralizeLowerResourceName(bsonQuery.Resource))
 
 	// First get a count of the total results (doesn't apply any options)
-	if doCount {
+	if doCount || options.Summary == "count" {
 		intTotal, err := c.Find(bsonQuery.Query).Count()
 		if err != nil {
 			return nil, 0, err
 		}
 		total = uint32(intTotal)
+	}
+
+	if options.Summary == "count" {
+		// Just return the count and don't do the search.
+		return nil, total, nil
 	}
 
 	searchQuery := c.Find(bsonQuery.Query)

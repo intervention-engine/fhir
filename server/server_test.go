@@ -671,6 +671,68 @@ func (s *ServerSuite) TestContainedResourcesIDsAreCorrectButExtensionIsNot(c *C)
 	util.CheckErr(err)
 }
 
+func (s *ServerSuite) TestSummaryCount(c *C) {
+	req, err := http.NewRequest("GET", s.Server.URL+"/Patient?_summary=count", nil)
+	util.CheckErr(err)
+
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+	defer res.Body.Close()
+
+	// Response should be a bundle with a total, a raw self link, and no entries
+	bundle := &models.Bundle{}
+	body, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+
+	err = json.Unmarshal(body, bundle)
+	util.CheckErr(err)
+
+	c.Assert(*bundle.Total, Equals, uint32(1))
+	c.Assert(len(bundle.Entry), Equals, 0)
+
+	c.Assert(len(bundle.Link), Equals, 1)
+	self := bundle.Link[0]
+	c.Assert(self.Relation, Equals, "self")
+	c.Assert(self.Url, Equals, s.Server.URL+"/Patient?_summary=count")
+}
+
+func (s *ServerSuite) TestPatientEverything(c *C) {
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	data, err := os.Open("../fixtures/patient-example-d.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
+	util.CheckErr(err)
+
+	splitLocation := strings.Split(res.Header["Location"][0], "/")
+	createdPatientID := splitLocation[len(splitLocation)-1]
+
+	// Do the $everything query
+	res, err = http.Get(s.Server.URL + "/Patient/" + createdPatientID + "/$everything")
+	util.CheckErr(err)
+
+	// Response should be a bundle with a total of 1, a raw self link, and some entries
+	bundle := &models.Bundle{}
+	body, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+
+	err = json.Unmarshal(body, bundle)
+	util.CheckErr(err)
+
+	c.Assert(*bundle.Total, Equals, uint32(1))
+	// The only resource referring to this patient is the Patient resource itself, so we expect only 1 entry
+	c.Assert(len(bundle.Entry), Equals, 1)
+
+	c.Assert(len(bundle.Link), Equals, 1)
+	self := bundle.Link[0]
+	c.Assert(self.Relation, Equals, "self")
+	// The self link should correctly show $everything as it's defined: _id=<id>&_include=*&_revinclude=*
+	c.Assert(self.Url, Equals, s.Server.URL+"/Patient?_id="+createdPatientID+"&_include=*&_revinclude=*")
+}
+
 func performSearch(c *C, url string) *models.Bundle {
 	res, err := http.Get(url)
 	util.CheckErr(err)

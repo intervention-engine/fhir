@@ -2957,6 +2957,28 @@ func (m *MongoSearchSuite) TestCacheSearchCount(c *C) {
 	c.Assert(cc.Count, Equals, uint32(1))
 }
 
+func (m *MongoSearchSuite) TestSummaryCount(c *C) {
+	q := Query{"Patient", "_summary=count"}
+	results, total, err := m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
+	c.Assert(total, Equals, uint32(2))
+}
+
+func (m *MongoSearchSuite) TestSummaryCountWithCountsDisabled(c *C) {
+	// The count should still be returned when requesting _summary=count, even if counts are disabled.
+	db := m.Session.DB("fhir-test")
+	searcher := NewMongoSearcher(db, false, true, false) // countTotalResults = false, enableCISearches = true, readonly = false
+
+	q := Query{"Patient", "_summary=count"}
+	results, total, err := searcher.Search(q)
+	util.CheckErr(err)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
+	c.Assert(total, Equals, uint32(2))
+}
+
 // Test internally used functions
 
 func (m *MongoSearchSuite) TestBuildBsonForCompositeCriteriaAndPathWithArrayAncestor(c *C) {
