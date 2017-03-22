@@ -1869,6 +1869,46 @@ func (s *SearchPTSuite) TestQueryUsesReverseChainedSearchAndPipeline(c *C) {
 	c.Assert(q.UsesPipeline(), Equals, false)
 }
 
+func (s *SearchPTSuite) TestQuerySupportsPaging(c *C) {
+	// Supported for common searches
+	q := Query{"Patient", "gender=male"}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	q = Query{"Observation", "code=1234-5"}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	q = Query{"Encounter", ""}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	// Not supported for $everything...
+	q = Query{"Patient", "_id=58b3663e3425def0f0f69505&_include=*&_revinclude=*"}
+	c.Assert(q.SupportsPaging(), Equals, false)
+
+	// ... but supported for any old _include=*&_revinclude=*
+	q = Query{"MedicationRequest", "_include=*&_revinclude=*"}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	// ... and supported for an OR on _id
+	q = Query{"Patient", "_id=58b3663e3425def0f0f69505,58b3663e3425def0f0f69506,58b3663e3425def0f0f69507&_include=*&_revinclude=*"}
+	c.Assert(q.SupportsPaging(), Equals, true)
+
+	// Not supported for _summary=count
+	q = Query{"Observation", "_summary=count"}
+	c.Assert(q.SupportsPaging(), Equals, false)
+}
+
+func (s *SearchPTSuite) TestIsDollarEverything(c *C) {
+	q := Query{"Patient", "_id=58b3663e3425def0f0f69505&_include=*&_revinclude=*"}
+	c.Assert(q.isDollarEverything(), Equals, true)
+
+	q = Query{"Observation", "code=1234-5"}
+	c.Assert(q.isDollarEverything(), Equals, false)
+
+	// Specifically, an OR on _id violates $everything
+	q = Query{"Patient", "_id=58b3663e3425def0f0f69505,58b3663e3425def0f0f69506,58b3663e3425def0f0f69507&_include=*&_revinclude=*"}
+	c.Assert(q.isDollarEverything(), Equals, false)
+}
+
 func (s *SearchPTSuite) TestSearchParamInfoClone(c *C) {
 	original := SearchParamInfo{
 		Name:  "foo",
