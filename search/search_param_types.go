@@ -302,7 +302,7 @@ func (q *Query) SupportsPaging() bool {
 	options := q.Options()
 
 	// not for $everything. $everything is defined as _id=<id>&_include=*&_revinclude=*
-	if options.IsIncludeAll && options.IsRevincludeAll && strings.Contains(q.Query, "_id") {
+	if q.isDollarEverything() {
 		return false
 	}
 
@@ -312,6 +312,11 @@ func (q *Query) SupportsPaging() bool {
 	}
 
 	return true
+}
+
+func (q *Query) isDollarEverything() bool {
+	de := regexp.MustCompile("_id=[0-9a-f]{24}&_include=\\*&_revinclude=\\*")
+	return de.MatchString(q.Query)
 }
 
 func getSingletonParamValue(param string, values []string) string {
