@@ -1875,6 +1875,52 @@ func (m *MongoSearchSuite) TestValueQuantityQueryByValueAndSystemAndWrongCode(c 
 	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
+func (m *MongoSearchSuite) TestComponentValueQuantityQueryObjectByValueAndUnit(c *C) {
+	// New in STU3 - Searches component.value ONLY. This didn't exist prior to STU3 3.0.0.
+	q := Query{"Observation", "component-value-quantity=185||lbs"}
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"component": bson.M{
+			"$elemMatch": bson.M{
+				"valueQuantity.value": bson.M{"$gte": 184.5, "$lt": 185.5},
+				"$or": []bson.M{
+					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+				},
+			},
+		},
+	})
+}
+
+func (m *MongoSearchSuite) TestComboValueQuantityQueryObjectByValueAndUnit(c *C) {
+	// New in STU3 - Searches component.value and value. This was the previous default behavior
+	// before STU3 (3.0.0) was released.
+	q := Query{"Observation", "combo-value-quantity=185||lbs"}
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"$or": []bson.M{
+			bson.M{
+				"component": bson.M{
+					"$elemMatch": bson.M{
+						"valueQuantity.value": bson.M{"$gte": 184.5, "$lt": 185.5},
+						"$or": []bson.M{
+							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+						},
+					},
+				},
+			},
+			bson.M{
+				"valueQuantity.value": bson.M{"$gte": 184.5, "$lt": 185.5},
+				"$or": []bson.M{
+					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+				},
+			},
+		},
+	})
+}
+
 func (m *MongoSearchSuite) TestObservationSortByValueQuantityAscending(c *C) {
 	c.Skip("Sorting by parameters that resolve to multiple paths is not supported")
 	q := Query{"Observation", "_sort=value-quantity"}
