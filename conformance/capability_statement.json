@@ -1,6 +1,6 @@
 {
     "acceptUnknown": "extensions",
-    "date": "2017-02-16T14:15:14-05:00",
+    "date": "2017-04-04T14:17:15-04:00",
     "description": "GoFHIR capability statement",
     "fhirVersion": "1.8.0",
     "format": [
@@ -133,6 +133,11 @@
                         }
                     ],
                     "searchInclude": [
+                        "ActivityDefinition:composed-of",
+                        "ActivityDefinition:depends-on",
+                        "ActivityDefinition:derived-from",
+                        "ActivityDefinition:predecessor",
+                        "ActivityDefinition:successor",
                         "*"
                     ],
                     "searchParam": [
@@ -157,8 +162,30 @@
                             "type": "token"
                         },
                         {
+                            "name": "composed-of",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "depends-on",
+                            "target": [
+                                "Any",
+                                "Library"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "derived-from",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "description",
@@ -181,12 +208,26 @@
                             "type": "string"
                         },
                         {
+                            "name": "predecessor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "publisher",
                             "type": "string"
                         },
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "successor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "title",
@@ -207,6 +248,126 @@
                     ],
                     "transactionMode": "both",
                     "type": "ActivityDefinition",
+                    "versioning": "no-version"
+                },
+                {
+                    "conditionalCreate": true,
+                    "conditionalDelete": "multiple",
+                    "conditionalUpdate": true,
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "update"
+                        },
+                        {
+                            "code": "delete"
+                        }
+                    ],
+                    "searchInclude": [
+                        "AdverseEvent:location",
+                        "AdverseEvent:reaction",
+                        "AdverseEvent:recorder",
+                        "AdverseEvent:study",
+                        "AdverseEvent:subject",
+                        "AdverseEvent:substance",
+                        "*"
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "type": "date"
+                        },
+                        {
+                            "name": "_profile",
+                            "type": "uri"
+                        },
+                        {
+                            "name": "_security",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_tag",
+                            "type": "token"
+                        },
+                        {
+                            "name": "category",
+                            "type": "token"
+                        },
+                        {
+                            "name": "date",
+                            "type": "date"
+                        },
+                        {
+                            "name": "location",
+                            "target": [
+                                "Location"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "reaction",
+                            "target": [
+                                "Condition"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "recorder",
+                            "target": [
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "seriousness",
+                            "type": "token"
+                        },
+                        {
+                            "name": "study",
+                            "target": [
+                                "ResearchStudy"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "subject",
+                            "target": [
+                                "Device",
+                                "Medication",
+                                "Patient",
+                                "ResearchSubject"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "substance",
+                            "target": [
+                                "Device",
+                                "Medication",
+                                "MedicationAdministration",
+                                "MedicationStatement",
+                                "Substance"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "type",
+                            "type": "token"
+                        }
+                    ],
+                    "transactionMode": "both",
+                    "type": "AdverseEvent",
                     "versioning": "no-version"
                 },
                 {
@@ -355,6 +516,7 @@
                     ],
                     "searchInclude": [
                         "Appointment:actor",
+                        "Appointment:incomingreferral",
                         "Appointment:location",
                         "Appointment:patient",
                         "Appointment:practitioner",
@@ -404,6 +566,13 @@
                         {
                             "name": "identifier",
                             "type": "token"
+                        },
+                        {
+                            "name": "incomingreferral",
+                            "target": [
+                                "ReferralRequest"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "location",
@@ -612,6 +781,10 @@
                             "type": "string"
                         },
                         {
+                            "name": "agent-role",
+                            "type": "token"
+                        },
+                        {
                             "name": "altid",
                             "type": "token"
                         },
@@ -635,6 +808,10 @@
                             "type": "string"
                         },
                         {
+                            "name": "entity-role",
+                            "type": "token"
+                        },
+                        {
                             "name": "entity-type",
                             "type": "token"
                         },
@@ -652,10 +829,6 @@
                         {
                             "name": "policy",
                             "type": "uri"
-                        },
-                        {
-                            "name": "role",
-                            "type": "token"
                         },
                         {
                             "name": "site",
@@ -971,7 +1144,7 @@
                         }
                     ],
                     "searchInclude": [
-                        "CapabilityStatement:resourceprofile",
+                        "CapabilityStatement:resource-profile",
                         "CapabilityStatement:supported-profile",
                         "*"
                     ],
@@ -1041,14 +1214,14 @@
                             "type": "token"
                         },
                         {
-                            "name": "resourceprofile",
+                            "name": "resource-profile",
                             "target": [
                                 "StructureDefinition"
                             ],
                             "type": "reference"
                         },
                         {
-                            "name": "securityservice",
+                            "name": "security-service",
                             "type": "token"
                         },
                         {
@@ -1102,13 +1275,18 @@
                         }
                     ],
                     "searchInclude": [
-                        "CarePlan:activityreference",
-                        "CarePlan:careteam",
+                        "CarePlan:activity-reference",
+                        "CarePlan:based-on",
+                        "CarePlan:care-team",
                         "CarePlan:condition",
+                        "CarePlan:context",
+                        "CarePlan:definition",
+                        "CarePlan:encounter",
                         "CarePlan:goal",
+                        "CarePlan:part-of",
                         "CarePlan:patient",
                         "CarePlan:performer",
-                        "CarePlan:relatedplan",
+                        "CarePlan:replaces",
                         "CarePlan:subject",
                         "*"
                     ],
@@ -1134,31 +1312,38 @@
                             "type": "token"
                         },
                         {
-                            "name": "activitycode",
+                            "name": "activity-code",
                             "type": "token"
                         },
                         {
-                            "name": "activitydate",
+                            "name": "activity-date",
                             "type": "date"
                         },
                         {
-                            "name": "activityreference",
+                            "name": "activity-reference",
                             "target": [
                                 "Appointment",
                                 "CommunicationRequest",
-                                "DeviceUseRequest",
-                                "DiagnosticRequest",
+                                "DeviceRequest",
                                 "MedicationRequest",
-                                "NutritionRequest",
+                                "NutritionOrder",
                                 "ProcedureRequest",
-                                "ProcessRequest",
                                 "ReferralRequest",
+                                "RequestGroup",
+                                "Task",
                                 "VisionPrescription"
                             ],
                             "type": "reference"
                         },
                         {
-                            "name": "careteam",
+                            "name": "based-on",
+                            "target": [
+                                "CarePlan"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "care-team",
                             "target": [
                                 "CareTeam"
                             ],
@@ -1176,8 +1361,31 @@
                             "type": "reference"
                         },
                         {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "definition",
+                            "target": [
+                                "PlanDefinition",
+                                "Questionnaire"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "goal",
@@ -1191,6 +1399,17 @@
                             "type": "token"
                         },
                         {
+                            "name": "intent",
+                            "type": "token"
+                        },
+                        {
+                            "name": "part-of",
+                            "target": [
+                                "CarePlan"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "patient",
                             "target": [
                                 "Patient"
@@ -1200,6 +1419,7 @@
                         {
                             "name": "performer",
                             "target": [
+                                "CareTeam",
                                 "Organization",
                                 "Patient",
                                 "Practitioner",
@@ -1208,15 +1428,15 @@
                             "type": "reference"
                         },
                         {
-                            "name": "relatedcode",
-                            "type": "token"
-                        },
-                        {
-                            "name": "relatedplan",
+                            "name": "replaces",
                             "target": [
                                 "CarePlan"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "status",
+                            "type": "token"
                         },
                         {
                             "name": "subject",
@@ -1250,6 +1470,8 @@
                         }
                     ],
                     "searchInclude": [
+                        "CareTeam:context",
+                        "CareTeam:encounter",
                         "CareTeam:participant",
                         "CareTeam:patient",
                         "CareTeam:subject",
@@ -1281,8 +1503,23 @@
                             "type": "token"
                         },
                         {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "identifier",
@@ -1291,6 +1528,7 @@
                         {
                             "name": "participant",
                             "target": [
+                                "CareTeam",
                                 "Organization",
                                 "Patient",
                                 "Practitioner",
@@ -1341,10 +1579,182 @@
                         }
                     ],
                     "searchInclude": [
+                        "ChargeItem:account",
+                        "ChargeItem:context",
+                        "ChargeItem:enterer",
+                        "ChargeItem:participant-actor",
+                        "ChargeItem:patient",
+                        "ChargeItem:performing-organization",
+                        "ChargeItem:requesting-organization",
+                        "ChargeItem:service",
+                        "ChargeItem:subject",
+                        "*"
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "type": "date"
+                        },
+                        {
+                            "name": "_profile",
+                            "type": "uri"
+                        },
+                        {
+                            "name": "_security",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_tag",
+                            "type": "token"
+                        },
+                        {
+                            "name": "account",
+                            "target": [
+                                "Account"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "code",
+                            "type": "token"
+                        },
+                        {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "entered-date",
+                            "type": "date"
+                        },
+                        {
+                            "name": "enterer",
+                            "target": [
+                                "Device",
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "factor-override",
+                            "type": "number"
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
+                            "name": "occurrence",
+                            "type": "date"
+                        },
+                        {
+                            "name": "participant-actor",
+                            "target": [
+                                "Device",
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "participant-role",
+                            "type": "token"
+                        },
+                        {
+                            "name": "patient",
+                            "target": [
+                                "Patient"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "performing-organization",
+                            "target": [
+                                "Organization"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "price-override",
+                            "type": "quantity"
+                        },
+                        {
+                            "name": "quantity",
+                            "type": "quantity"
+                        },
+                        {
+                            "name": "requesting-organization",
+                            "target": [
+                                "Organization"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "service",
+                            "target": [
+                                "DiagnosticReport",
+                                "ImagingStudy",
+                                "Immunization",
+                                "MedicationAdministration",
+                                "MedicationDispense",
+                                "Observation",
+                                "Procedure",
+                                "SupplyDelivery"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "subject",
+                            "target": [
+                                "Group",
+                                "Patient"
+                            ],
+                            "type": "reference"
+                        }
+                    ],
+                    "transactionMode": "both",
+                    "type": "ChargeItem",
+                    "versioning": "no-version"
+                },
+                {
+                    "conditionalCreate": true,
+                    "conditionalDelete": "multiple",
+                    "conditionalUpdate": true,
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "update"
+                        },
+                        {
+                            "code": "delete"
+                        }
+                    ],
+                    "searchInclude": [
+                        "Claim:care-team",
+                        "Claim:encounter",
+                        "Claim:enterer",
                         "Claim:facility",
                         "Claim:insurer",
                         "Claim:organization",
                         "Claim:patient",
+                        "Claim:payee",
                         "Claim:provider",
                         "*"
                     ],
@@ -1370,8 +1780,30 @@
                             "type": "token"
                         },
                         {
+                            "name": "care-team",
+                            "target": [
+                                "Organization",
+                                "Practitioner"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "created",
                             "type": "date"
+                        },
+                        {
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "enterer",
+                            "target": [
+                                "Practitioner"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "facility",
@@ -1402,6 +1834,16 @@
                             "name": "patient",
                             "target": [
                                 "Patient"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "payee",
+                            "target": [
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
                             ],
                             "type": "reference"
                         },
@@ -1445,7 +1887,9 @@
                     ],
                     "searchInclude": [
                         "ClaimResponse:insurer",
+                        "ClaimResponse:patient",
                         "ClaimResponse:request",
+                        "ClaimResponse:request-provider",
                         "*"
                     ],
                     "searchParam": [
@@ -1493,6 +1937,13 @@
                             "type": "token"
                         },
                         {
+                            "name": "patient",
+                            "target": [
+                                "Patient"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "payment-date",
                             "type": "date"
                         },
@@ -1500,6 +1951,13 @@
                             "name": "request",
                             "target": [
                                 "Claim"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "request-provider",
+                            "target": [
+                                "Practitioner"
                             ],
                             "type": "reference"
                         }
@@ -1563,7 +2021,6 @@
                             "name": "action",
                             "target": [
                                 "Appointment",
-                                "DiagnosticRequest",
                                 "MedicationRequest",
                                 "Procedure",
                                 "ProcedureRequest",
@@ -1601,6 +2058,10 @@
                                 "Observation"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token"
                         },
                         {
                             "name": "investigation",
@@ -1700,7 +2161,7 @@
                             "type": "token"
                         },
                         {
-                            "name": "content",
+                            "name": "content-mode",
                             "type": "token"
                         },
                         {
@@ -1777,6 +2238,9 @@
                     "searchInclude": [
                         "Communication:based-on",
                         "Communication:context",
+                        "Communication:definition",
+                        "Communication:encounter",
+                        "Communication:part-of",
                         "Communication:patient",
                         "Communication:recipient",
                         "Communication:sender",
@@ -1824,12 +2288,34 @@
                             "type": "reference"
                         },
                         {
+                            "name": "definition",
+                            "target": [
+                                "ActivityDefinition",
+                                "PlanDefinition"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "identifier",
                             "type": "token"
                         },
                         {
                             "name": "medium",
                             "type": "token"
+                        },
+                        {
+                            "name": "part-of",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "patient",
@@ -1905,9 +2391,12 @@
                         }
                     ],
                     "searchInclude": [
+                        "CommunicationRequest:based-on",
                         "CommunicationRequest:context",
+                        "CommunicationRequest:encounter",
                         "CommunicationRequest:patient",
                         "CommunicationRequest:recipient",
+                        "CommunicationRequest:replaces",
                         "CommunicationRequest:requester",
                         "CommunicationRequest:sender",
                         "CommunicationRequest:subject",
@@ -1935,6 +2424,17 @@
                             "type": "token"
                         },
                         {
+                            "name": "authored",
+                            "type": "date"
+                        },
+                        {
+                            "name": "based-on",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "category",
                             "type": "token"
                         },
@@ -1947,12 +2447,27 @@
                             "type": "reference"
                         },
                         {
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "group-identifier",
+                            "type": "token"
+                        },
+                        {
                             "name": "identifier",
                             "type": "token"
                         },
                         {
                             "name": "medium",
                             "type": "token"
+                        },
+                        {
+                            "name": "occurrence",
+                            "type": "date"
                         },
                         {
                             "name": "patient",
@@ -1979,12 +2494,17 @@
                             "type": "reference"
                         },
                         {
-                            "name": "requested",
-                            "type": "date"
+                            "name": "replaces",
+                            "target": [
+                                "CommunicationRequest"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "requester",
                             "target": [
+                                "Device",
+                                "Organization",
                                 "Patient",
                                 "Practitioner",
                                 "RelatedPerson"
@@ -2009,13 +2529,10 @@
                         {
                             "name": "subject",
                             "target": [
+                                "Group",
                                 "Patient"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "time",
-                            "type": "date"
                         }
                     ],
                     "transactionMode": "both",
@@ -2133,6 +2650,7 @@
                         "Composition:encounter",
                         "Composition:entry",
                         "Composition:patient",
+                        "Composition:related-ref",
                         "Composition:subject",
                         "*"
                     ],
@@ -2220,6 +2738,17 @@
                         {
                             "name": "period",
                             "type": "date"
+                        },
+                        {
+                            "name": "related-id",
+                            "type": "token"
+                        },
+                        {
+                            "name": "related-ref",
+                            "target": [
+                                "Composition"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "section",
@@ -2320,6 +2849,10 @@
                             "type": "string"
                         },
                         {
+                            "name": "other",
+                            "type": "uri"
+                        },
+                        {
                             "name": "product",
                             "type": "uri"
                         },
@@ -2413,6 +2946,8 @@
                     "searchInclude": [
                         "Condition:asserter",
                         "Condition:context",
+                        "Condition:encounter",
+                        "Condition:evidence-detail",
                         "Condition:patient",
                         "Condition:subject",
                         "*"
@@ -2476,7 +3011,7 @@
                             "type": "token"
                         },
                         {
-                            "name": "clinicalstatus",
+                            "name": "clinical-status",
                             "type": "token"
                         },
                         {
@@ -2492,8 +3027,22 @@
                             "type": "reference"
                         },
                         {
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "evidence",
                             "type": "token"
+                        },
+                        {
+                            "name": "evidence-detail",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "identifier",
@@ -2533,6 +3082,10 @@
                                 "Patient"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "verification-status",
+                            "type": "token"
                         }
                     ],
                     "transactionMode": "both",
@@ -2563,7 +3116,6 @@
                         "Consent:data",
                         "Consent:organization",
                         "Consent:patient",
-                        "Consent:recipient",
                         "Consent:source",
                         "*"
                     ],
@@ -2657,20 +3209,7 @@
                             "type": "token"
                         },
                         {
-                            "name": "recipient",
-                            "target": [
-                                "CareTeam",
-                                "Device",
-                                "Group",
-                                "Organization",
-                                "Patient",
-                                "Practitioner",
-                                "RelatedPerson"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "security",
+                            "name": "securitylabel",
                             "type": "token"
                         },
                         {
@@ -2717,8 +3256,7 @@
                         "Contract:patient",
                         "Contract:signer",
                         "Contract:subject",
-                        "Contract:topic",
-                        "Contract:ttopic",
+                        "Contract:term-topic",
                         "*"
                     ],
                     "searchParam": [
@@ -2804,14 +3342,7 @@
                             "type": "reference"
                         },
                         {
-                            "name": "topic",
-                            "target": [
-                                "Any"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "ttopic",
+                            "name": "term-topic",
                             "target": [
                                 "Any"
                             ],
@@ -2843,7 +3374,7 @@
                     "searchInclude": [
                         "Coverage:beneficiary",
                         "Coverage:payor",
-                        "Coverage:policyholder",
+                        "Coverage:policy-holder",
                         "Coverage:subscriber",
                         "*"
                     ],
@@ -2905,7 +3436,7 @@
                             "type": "string"
                         },
                         {
-                            "name": "policyholder",
+                            "name": "policy-holder",
                             "target": [
                                 "Organization",
                                 "Patient",
@@ -3171,6 +3702,10 @@
                             "type": "token"
                         },
                         {
+                            "name": "device-name",
+                            "type": "string"
+                        },
+                        {
                             "name": "identifier",
                             "type": "token"
                         },
@@ -3204,12 +3739,20 @@
                             "type": "reference"
                         },
                         {
+                            "name": "status",
+                            "type": "token"
+                        },
+                        {
                             "name": "type",
                             "type": "token"
                         },
                         {
-                            "name": "udicarrier",
-                            "type": "token"
+                            "name": "udi-carrier",
+                            "type": "string"
+                        },
+                        {
+                            "name": "udi-di",
+                            "type": "string"
                         },
                         {
                             "name": "url",
@@ -3262,6 +3805,10 @@
                         },
                         {
                             "name": "_tag",
+                            "type": "token"
+                        },
+                        {
+                            "name": "identifier",
                             "type": "token"
                         },
                         {
@@ -3381,15 +3928,15 @@
                         }
                     ],
                     "searchInclude": [
-                        "DeviceUseRequest:based-on",
-                        "DeviceUseRequest:definition",
-                        "DeviceUseRequest:device",
-                        "DeviceUseRequest:encounter",
-                        "DeviceUseRequest:filler",
-                        "DeviceUseRequest:patient",
-                        "DeviceUseRequest:replaces",
-                        "DeviceUseRequest:requester",
-                        "DeviceUseRequest:subject",
+                        "DeviceRequest:based-on",
+                        "DeviceRequest:definition",
+                        "DeviceRequest:device",
+                        "DeviceRequest:encounter",
+                        "DeviceRequest:patient",
+                        "DeviceRequest:performer",
+                        "DeviceRequest:priorrequest",
+                        "DeviceRequest:requester",
+                        "DeviceRequest:subject",
                         "*"
                     ],
                     "searchParam": [
@@ -3414,7 +3961,7 @@
                             "type": "token"
                         },
                         {
-                            "name": "author-date",
+                            "name": "authored-on",
                             "type": "date"
                         },
                         {
@@ -3431,7 +3978,8 @@
                         {
                             "name": "definition",
                             "target": [
-                                "Any"
+                                "ActivityDefinition",
+                                "PlanDefinition"
                             ],
                             "type": "reference"
                         },
@@ -3455,18 +4003,15 @@
                             "type": "date"
                         },
                         {
-                            "name": "filler",
-                            "target": [
-                                "Device",
-                                "Organization",
-                                "Patient",
-                                "Practitioner",
-                                "RelatedPerson"
-                            ],
-                            "type": "reference"
+                            "name": "group-identifier",
+                            "type": "token"
                         },
                         {
                             "name": "identifier",
+                            "type": "token"
+                        },
+                        {
+                            "name": "intent",
                             "type": "token"
                         },
                         {
@@ -3477,7 +4022,19 @@
                             "type": "reference"
                         },
                         {
-                            "name": "replaces",
+                            "name": "performer",
+                            "target": [
+                                "Device",
+                                "HealthcareService",
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "priorrequest",
                             "target": [
                                 "Any"
                             ],
@@ -3491,14 +4048,6 @@
                                 "Practitioner"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "requisition",
-                            "type": "token"
-                        },
-                        {
-                            "name": "stage",
-                            "type": "token"
                         },
                         {
                             "name": "status",
@@ -3516,7 +4065,7 @@
                         }
                     ],
                     "transactionMode": "both",
-                    "type": "DeviceUseRequest",
+                    "type": "DeviceRequest",
                     "versioning": "no-version"
                 },
                 {
@@ -3572,8 +4121,13 @@
                             "type": "reference"
                         },
                         {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
                             "name": "patient",
                             "target": [
+                                "Group",
                                 "Patient"
                             ],
                             "type": "reference"
@@ -3581,6 +4135,7 @@
                         {
                             "name": "subject",
                             "target": [
+                                "Group",
                                 "Patient"
                             ],
                             "type": "reference"
@@ -3609,11 +4164,12 @@
                         }
                     ],
                     "searchInclude": [
+                        "DiagnosticReport:based-on",
+                        "DiagnosticReport:context",
                         "DiagnosticReport:encounter",
                         "DiagnosticReport:image",
                         "DiagnosticReport:patient",
                         "DiagnosticReport:performer",
-                        "DiagnosticReport:request",
                         "DiagnosticReport:result",
                         "DiagnosticReport:specimen",
                         "DiagnosticReport:subject",
@@ -3641,12 +4197,32 @@
                             "type": "token"
                         },
                         {
+                            "name": "based-on",
+                            "target": [
+                                "CarePlan",
+                                "ImmunizationRecommendation",
+                                "MedicationRequest",
+                                "NutritionOrder",
+                                "ProcedureRequest",
+                                "ReferralRequest"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "category",
                             "type": "token"
                         },
                         {
                             "name": "code",
                             "type": "token"
+                        },
+                        {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "date",
@@ -3694,15 +4270,6 @@
                             "type": "reference"
                         },
                         {
-                            "name": "request",
-                            "target": [
-                                "DiagnosticRequest",
-                                "ProcedureRequest",
-                                "ReferralRequest"
-                            ],
-                            "type": "reference"
-                        },
-                        {
                             "name": "result",
                             "target": [
                                 "Observation"
@@ -3733,159 +4300,6 @@
                     ],
                     "transactionMode": "both",
                     "type": "DiagnosticReport",
-                    "versioning": "no-version"
-                },
-                {
-                    "conditionalCreate": true,
-                    "conditionalDelete": "multiple",
-                    "conditionalUpdate": true,
-                    "interaction": [
-                        {
-                            "code": "create"
-                        },
-                        {
-                            "code": "read"
-                        },
-                        {
-                            "code": "update"
-                        },
-                        {
-                            "code": "delete"
-                        }
-                    ],
-                    "searchInclude": [
-                        "DiagnosticRequest:based-on",
-                        "DiagnosticRequest:definition",
-                        "DiagnosticRequest:encounter",
-                        "DiagnosticRequest:filler",
-                        "DiagnosticRequest:patient",
-                        "DiagnosticRequest:replaces",
-                        "DiagnosticRequest:requester",
-                        "DiagnosticRequest:subject",
-                        "*"
-                    ],
-                    "searchParam": [
-                        {
-                            "name": "_id",
-                            "type": "token"
-                        },
-                        {
-                            "name": "_lastUpdated",
-                            "type": "date"
-                        },
-                        {
-                            "name": "_profile",
-                            "type": "uri"
-                        },
-                        {
-                            "name": "_security",
-                            "type": "token"
-                        },
-                        {
-                            "name": "_tag",
-                            "type": "token"
-                        },
-                        {
-                            "name": "author-date",
-                            "type": "date"
-                        },
-                        {
-                            "name": "based-on",
-                            "target": [
-                                "Any"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "code",
-                            "type": "token"
-                        },
-                        {
-                            "name": "definition",
-                            "target": [
-                                "Any"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "encounter",
-                            "target": [
-                                "Encounter",
-                                "EpisodeOfCare"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "event-date",
-                            "type": "date"
-                        },
-                        {
-                            "name": "filler",
-                            "target": [
-                                "Device",
-                                "Organization",
-                                "Patient",
-                                "Practitioner",
-                                "RelatedPerson"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "identifier",
-                            "type": "token"
-                        },
-                        {
-                            "name": "intent",
-                            "type": "token"
-                        },
-                        {
-                            "name": "patient",
-                            "target": [
-                                "Patient"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "priority",
-                            "type": "token"
-                        },
-                        {
-                            "name": "replaces",
-                            "target": [
-                                "Any"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "requester",
-                            "target": [
-                                "Device",
-                                "Organization",
-                                "Practitioner"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "requisition",
-                            "type": "token"
-                        },
-                        {
-                            "name": "status",
-                            "type": "token"
-                        },
-                        {
-                            "name": "subject",
-                            "target": [
-                                "Device",
-                                "Group",
-                                "Location",
-                                "Patient"
-                            ],
-                            "type": "reference"
-                        }
-                    ],
-                    "transactionMode": "both",
-                    "type": "DiagnosticRequest",
                     "versioning": "no-version"
                 },
                 {
@@ -4227,6 +4641,7 @@
                         }
                     ],
                     "searchInclude": [
+                        "EligibilityRequest:enterer",
                         "EligibilityRequest:facility",
                         "EligibilityRequest:organization",
                         "EligibilityRequest:patient",
@@ -4257,6 +4672,13 @@
                         {
                             "name": "created",
                             "type": "date"
+                        },
+                        {
+                            "name": "enterer",
+                            "target": [
+                                "Practitioner"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "facility",
@@ -4410,17 +4832,16 @@
                     ],
                     "searchInclude": [
                         "Encounter:appointment",
-                        "Encounter:condition",
+                        "Encounter:diagnosis",
                         "Encounter:episodeofcare",
                         "Encounter:incomingreferral",
-                        "Encounter:indication",
                         "Encounter:location",
                         "Encounter:part-of",
                         "Encounter:participant",
                         "Encounter:patient",
                         "Encounter:practitioner",
-                        "Encounter:procedure",
                         "Encounter:service-provider",
+                        "Encounter:subject",
                         "*"
                     ],
                     "searchParam": [
@@ -4456,15 +4877,16 @@
                             "type": "token"
                         },
                         {
-                            "name": "condition",
-                            "target": [
-                                "Condition"
-                            ],
-                            "type": "reference"
-                        },
-                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "diagnosis",
+                            "target": [
+                                "Condition",
+                                "Procedure"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "episodeofcare",
@@ -4481,14 +4903,6 @@
                             "name": "incomingreferral",
                             "target": [
                                 "ReferralRequest"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "indication",
-                            "target": [
-                                "Condition",
-                                "Procedure"
                             ],
                             "type": "reference"
                         },
@@ -4541,13 +4955,6 @@
                             "type": "reference"
                         },
                         {
-                            "name": "procedure",
-                            "target": [
-                                "Procedure"
-                            ],
-                            "type": "reference"
-                        },
-                        {
                             "name": "reason",
                             "type": "token"
                         },
@@ -4565,6 +4972,14 @@
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "subject",
+                            "target": [
+                                "Group",
+                                "Patient"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "type",
@@ -4997,11 +5412,15 @@
                         }
                     ],
                     "searchInclude": [
+                        "ExplanationOfBenefit:care-team",
                         "ExplanationOfBenefit:claim",
                         "ExplanationOfBenefit:coverage",
+                        "ExplanationOfBenefit:encounter",
+                        "ExplanationOfBenefit:enterer",
                         "ExplanationOfBenefit:facility",
                         "ExplanationOfBenefit:organization",
                         "ExplanationOfBenefit:patient",
+                        "ExplanationOfBenefit:payee",
                         "ExplanationOfBenefit:provider",
                         "*"
                     ],
@@ -5027,6 +5446,14 @@
                             "type": "token"
                         },
                         {
+                            "name": "care-team",
+                            "target": [
+                                "Organization",
+                                "Practitioner"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "claim",
                             "target": [
                                 "Claim"
@@ -5047,6 +5474,20 @@
                         {
                             "name": "disposition",
                             "type": "string"
+                        },
+                        {
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "enterer",
+                            "target": [
+                                "Practitioner"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "facility",
@@ -5070,6 +5511,16 @@
                             "name": "patient",
                             "target": [
                                 "Patient"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "payee",
+                            "target": [
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
                             ],
                             "type": "reference"
                         },
@@ -5104,6 +5555,7 @@
                         }
                     ],
                     "searchInclude": [
+                        "FamilyMemberHistory:definition",
                         "FamilyMemberHistory:patient",
                         "*"
                     ],
@@ -5137,6 +5589,14 @@
                             "type": "date"
                         },
                         {
+                            "name": "definition",
+                            "target": [
+                                "PlanDefinition",
+                                "Questionnaire"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "gender",
                             "type": "token"
                         },
@@ -5153,6 +5613,10 @@
                         },
                         {
                             "name": "relationship",
+                            "type": "token"
+                        },
+                        {
+                            "name": "status",
                             "type": "token"
                         }
                     ],
@@ -5226,6 +5690,10 @@
                                 "Encounter"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token"
                         },
                         {
                             "name": "patient",
@@ -5313,6 +5781,10 @@
                             "type": "reference"
                         },
                         {
+                            "name": "start-date",
+                            "type": "date"
+                        },
+                        {
                             "name": "status",
                             "type": "token"
                         },
@@ -5326,12 +5798,95 @@
                             "type": "reference"
                         },
                         {
-                            "name": "targetdate",
+                            "name": "target-date",
                             "type": "date"
                         }
                     ],
                     "transactionMode": "both",
                     "type": "Goal",
+                    "versioning": "no-version"
+                },
+                {
+                    "conditionalCreate": true,
+                    "conditionalDelete": "multiple",
+                    "conditionalUpdate": true,
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "update"
+                        },
+                        {
+                            "code": "delete"
+                        }
+                    ],
+                    "searchInclude": [
+                        "*"
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "type": "date"
+                        },
+                        {
+                            "name": "_profile",
+                            "type": "uri"
+                        },
+                        {
+                            "name": "_security",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_tag",
+                            "type": "token"
+                        },
+                        {
+                            "name": "date",
+                            "type": "date"
+                        },
+                        {
+                            "name": "description",
+                            "type": "string"
+                        },
+                        {
+                            "name": "jurisdiction",
+                            "type": "token"
+                        },
+                        {
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "name": "publisher",
+                            "type": "string"
+                        },
+                        {
+                            "name": "start",
+                            "type": "token"
+                        },
+                        {
+                            "name": "status",
+                            "type": "token"
+                        },
+                        {
+                            "name": "url",
+                            "type": "uri"
+                        },
+                        {
+                            "name": "version",
+                            "type": "token"
+                        }
+                    ],
+                    "transactionMode": "both",
+                    "type": "GraphDefinition",
                     "versioning": "no-version"
                 },
                 {
@@ -5466,11 +6021,19 @@
                             "type": "token"
                         },
                         {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
                             "name": "patient",
                             "target": [
                                 "Patient"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "request",
+                            "type": "token"
                         },
                         {
                             "name": "subject",
@@ -5535,6 +6098,10 @@
                             "type": "token"
                         },
                         {
+                            "name": "category",
+                            "type": "token"
+                        },
+                        {
                             "name": "characteristic",
                             "type": "token"
                         },
@@ -5572,11 +6139,7 @@
                             "type": "string"
                         },
                         {
-                            "name": "servicecategory",
-                            "type": "token"
-                        },
-                        {
-                            "name": "servicetype",
+                            "name": "type",
                             "type": "token"
                         }
                     ],
@@ -5604,6 +6167,8 @@
                     ],
                     "searchInclude": [
                         "ImagingManifest:author",
+                        "ImagingManifest:endpoint",
+                        "ImagingManifest:imaging-study",
                         "ImagingManifest:patient",
                         "*"
                     ],
@@ -5644,8 +6209,22 @@
                             "type": "date"
                         },
                         {
+                            "name": "endpoint",
+                            "target": [
+                                "Endpoint"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "identifier",
-                            "type": "uri"
+                            "type": "token"
+                        },
+                        {
+                            "name": "imaging-study",
+                            "target": [
+                                "ImagingStudy"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "patient",
@@ -5657,10 +6236,6 @@
                         {
                             "name": "selected-study",
                             "type": "uri"
-                        },
-                        {
-                            "name": "title",
-                            "type": "token"
                         }
                     ],
                     "transactionMode": "both",
@@ -5688,7 +6263,9 @@
                     "searchInclude": [
                         "ImagingStudy:basedon",
                         "ImagingStudy:context",
+                        "ImagingStudy:endpoint",
                         "ImagingStudy:patient",
+                        "ImagingStudy:performer",
                         "*"
                     ],
                     "searchParam": [
@@ -5720,7 +6297,6 @@
                             "name": "basedon",
                             "target": [
                                 "CarePlan",
-                                "DiagnosticRequest",
                                 "ProcedureRequest",
                                 "ReferralRequest"
                             ],
@@ -5743,6 +6319,13 @@
                             "type": "uri"
                         },
                         {
+                            "name": "endpoint",
+                            "target": [
+                                "Endpoint"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "identifier",
                             "type": "token"
                         },
@@ -5754,6 +6337,13 @@
                             "name": "patient",
                             "target": [
                                 "Patient"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "performer",
+                            "target": [
+                                "Practitioner"
                             ],
                             "type": "reference"
                         },
@@ -5804,9 +6394,8 @@
                         "Immunization:location",
                         "Immunization:manufacturer",
                         "Immunization:patient",
-                        "Immunization:performer",
+                        "Immunization:practitioner",
                         "Immunization:reaction",
-                        "Immunization:requester",
                         "*"
                     ],
                     "searchParam": [
@@ -5872,7 +6461,7 @@
                             "type": "reference"
                         },
                         {
-                            "name": "performer",
+                            "name": "practitioner",
                             "target": [
                                 "Practitioner"
                             ],
@@ -5896,13 +6485,6 @@
                         {
                             "name": "reason-not-given",
                             "type": "token"
-                        },
-                        {
-                            "name": "requester",
-                            "target": [
-                                "Practitioner"
-                            ],
-                            "type": "reference"
                         },
                         {
                             "name": "status",
@@ -6003,6 +6585,10 @@
                                 "Immunization"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "target-disease",
+                            "type": "token"
                         },
                         {
                             "name": "vaccine-type",
@@ -6127,6 +6713,11 @@
                         }
                     ],
                     "searchInclude": [
+                        "Library:composed-of",
+                        "Library:depends-on",
+                        "Library:derived-from",
+                        "Library:predecessor",
+                        "Library:successor",
                         "*"
                     ],
                     "searchParam": [
@@ -6151,8 +6742,29 @@
                             "type": "token"
                         },
                         {
+                            "name": "composed-of",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "depends-on",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "derived-from",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "description",
@@ -6175,12 +6787,26 @@
                             "type": "string"
                         },
                         {
+                            "name": "predecessor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "publisher",
                             "type": "string"
                         },
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "successor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "title",
@@ -6480,6 +7106,10 @@
                             "type": "quantity"
                         },
                         {
+                            "name": "operational-status",
+                            "type": "token"
+                        },
+                        {
                             "name": "organization",
                             "target": [
                                 "Organization"
@@ -6525,6 +7155,11 @@
                         }
                     ],
                     "searchInclude": [
+                        "Measure:composed-of",
+                        "Measure:depends-on",
+                        "Measure:derived-from",
+                        "Measure:predecessor",
+                        "Measure:successor",
                         "*"
                     ],
                     "searchParam": [
@@ -6549,8 +7184,30 @@
                             "type": "token"
                         },
                         {
+                            "name": "composed-of",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "depends-on",
+                            "target": [
+                                "Any",
+                                "Library"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "derived-from",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "description",
@@ -6573,12 +7230,26 @@
                             "type": "string"
                         },
                         {
+                            "name": "predecessor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "publisher",
                             "type": "string"
                         },
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "successor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "title",
@@ -6645,11 +7316,19 @@
                             "type": "token"
                         },
                         {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
                             "name": "patient",
                             "target": [
                                 "Patient"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "status",
+                            "type": "token"
                         }
                     ],
                     "transactionMode": "both",
@@ -6675,6 +7354,9 @@
                         }
                     ],
                     "searchInclude": [
+                        "Media:based-on",
+                        "Media:context",
+                        "Media:device",
                         "Media:operator",
                         "Media:patient",
                         "Media:subject",
@@ -6702,8 +7384,35 @@
                             "type": "token"
                         },
                         {
+                            "name": "based-on",
+                            "target": [
+                                "ProcedureRequest"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "created",
                             "type": "date"
+                        },
+                        {
+                            "name": "date",
+                            "type": "date"
+                        },
+                        {
+                            "name": "device",
+                            "target": [
+                                "Device",
+                                "DeviceMetric"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "identifier",
@@ -6722,6 +7431,10 @@
                                 "Patient"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "site",
+                            "type": "token"
                         },
                         {
                             "name": "subject",
@@ -6828,6 +7541,10 @@
                             "type": "reference"
                         },
                         {
+                            "name": "over-the-counter",
+                            "type": "token"
+                        },
+                        {
                             "name": "package-item",
                             "target": [
                                 "Medication"
@@ -6836,6 +7553,10 @@
                         },
                         {
                             "name": "package-item-code",
+                            "type": "token"
+                        },
+                        {
+                            "name": "status",
                             "type": "token"
                         }
                     ],
@@ -6862,12 +7583,13 @@
                         }
                     ],
                     "searchInclude": [
+                        "MedicationAdministration:context",
                         "MedicationAdministration:device",
-                        "MedicationAdministration:encounter",
                         "MedicationAdministration:medication",
                         "MedicationAdministration:patient",
                         "MedicationAdministration:performer",
                         "MedicationAdministration:prescription",
+                        "MedicationAdministration:subject",
                         "*"
                     ],
                     "searchParam": [
@@ -6896,6 +7618,14 @@
                             "type": "token"
                         },
                         {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "device",
                             "target": [
                                 "Device"
@@ -6905,13 +7635,6 @@
                         {
                             "name": "effective-time",
                             "type": "date"
-                        },
-                        {
-                            "name": "encounter",
-                            "target": [
-                                "Encounter"
-                            ],
-                            "type": "reference"
                         },
                         {
                             "name": "identifier",
@@ -6938,6 +7661,7 @@
                         {
                             "name": "performer",
                             "target": [
+                                "Device",
                                 "Patient",
                                 "Practitioner",
                                 "RelatedPerson"
@@ -6962,6 +7686,14 @@
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "subject",
+                            "target": [
+                                "Group",
+                                "Patient"
+                            ],
+                            "type": "reference"
                         }
                     ],
                     "transactionMode": "both",
@@ -6987,13 +7719,15 @@
                         }
                     ],
                     "searchInclude": [
+                        "MedicationDispense:context",
                         "MedicationDispense:destination",
-                        "MedicationDispense:dispenser",
                         "MedicationDispense:medication",
                         "MedicationDispense:patient",
+                        "MedicationDispense:performer",
                         "MedicationDispense:prescription",
                         "MedicationDispense:receiver",
                         "MedicationDispense:responsibleparty",
+                        "MedicationDispense:subject",
                         "*"
                     ],
                     "searchParam": [
@@ -7022,16 +7756,17 @@
                             "type": "token"
                         },
                         {
-                            "name": "destination",
+                            "name": "context",
                             "target": [
-                                "Location"
+                                "Encounter",
+                                "EpisodeOfCare"
                             ],
                             "type": "reference"
                         },
                         {
-                            "name": "dispenser",
+                            "name": "destination",
                             "target": [
-                                "Practitioner"
+                                "Location"
                             ],
                             "type": "reference"
                         },
@@ -7050,6 +7785,17 @@
                             "name": "patient",
                             "target": [
                                 "Patient"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "performer",
+                            "target": [
+                                "Device",
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
                             ],
                             "type": "reference"
                         },
@@ -7078,6 +7824,14 @@
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "subject",
+                            "target": [
+                                "Group",
+                                "Patient"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "type",
@@ -7120,6 +7874,140 @@
                         "MedicationRequest:medication",
                         "MedicationRequest:patient",
                         "MedicationRequest:requester",
+                        "MedicationRequest:subject",
+                        "*"
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "type": "date"
+                        },
+                        {
+                            "name": "_profile",
+                            "type": "uri"
+                        },
+                        {
+                            "name": "_security",
+                            "type": "token"
+                        },
+                        {
+                            "name": "_tag",
+                            "type": "token"
+                        },
+                        {
+                            "name": "authoredon",
+                            "type": "date"
+                        },
+                        {
+                            "name": "category",
+                            "type": "token"
+                        },
+                        {
+                            "name": "code",
+                            "type": "token"
+                        },
+                        {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "date",
+                            "type": "date"
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
+                            "name": "intended-dispenser",
+                            "target": [
+                                "Organization"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "intent",
+                            "type": "token"
+                        },
+                        {
+                            "name": "medication",
+                            "target": [
+                                "Medication"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "patient",
+                            "target": [
+                                "Patient"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "priority",
+                            "type": "token"
+                        },
+                        {
+                            "name": "requester",
+                            "target": [
+                                "Device",
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "status",
+                            "type": "token"
+                        },
+                        {
+                            "name": "subject",
+                            "target": [
+                                "Group",
+                                "Patient"
+                            ],
+                            "type": "reference"
+                        }
+                    ],
+                    "transactionMode": "both",
+                    "type": "MedicationRequest",
+                    "versioning": "no-version"
+                },
+                {
+                    "conditionalCreate": true,
+                    "conditionalDelete": "multiple",
+                    "conditionalUpdate": true,
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "update"
+                        },
+                        {
+                            "code": "delete"
+                        }
+                    ],
+                    "searchInclude": [
+                        "MedicationStatement:context",
+                        "MedicationStatement:medication",
+                        "MedicationStatement:part-of",
+                        "MedicationStatement:patient",
+                        "MedicationStatement:source",
+                        "MedicationStatement:subject",
                         "*"
                     ],
                     "searchParam": [
@@ -7160,108 +8048,6 @@
                             "type": "reference"
                         },
                         {
-                            "name": "datewritten",
-                            "type": "date"
-                        },
-                        {
-                            "name": "identifier",
-                            "type": "token"
-                        },
-                        {
-                            "name": "intended-dispenser",
-                            "target": [
-                                "Organization"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "medication",
-                            "target": [
-                                "Medication"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "patient",
-                            "target": [
-                                "Patient"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "requester",
-                            "target": [
-                                "Device",
-                                "Organization",
-                                "Patient",
-                                "Practitioner",
-                                "RelatedPerson"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "status",
-                            "type": "token"
-                        }
-                    ],
-                    "transactionMode": "both",
-                    "type": "MedicationRequest",
-                    "versioning": "no-version"
-                },
-                {
-                    "conditionalCreate": true,
-                    "conditionalDelete": "multiple",
-                    "conditionalUpdate": true,
-                    "interaction": [
-                        {
-                            "code": "create"
-                        },
-                        {
-                            "code": "read"
-                        },
-                        {
-                            "code": "update"
-                        },
-                        {
-                            "code": "delete"
-                        }
-                    ],
-                    "searchInclude": [
-                        "MedicationStatement:medication",
-                        "MedicationStatement:source",
-                        "MedicationStatement:subject",
-                        "*"
-                    ],
-                    "searchParam": [
-                        {
-                            "name": "_id",
-                            "type": "token"
-                        },
-                        {
-                            "name": "_lastUpdated",
-                            "type": "date"
-                        },
-                        {
-                            "name": "_profile",
-                            "type": "uri"
-                        },
-                        {
-                            "name": "_security",
-                            "type": "token"
-                        },
-                        {
-                            "name": "_tag",
-                            "type": "token"
-                        },
-                        {
-                            "name": "category",
-                            "type": "token"
-                        },
-                        {
-                            "name": "code",
-                            "type": "token"
-                        },
-                        {
                             "name": "effective",
                             "type": "date"
                         },
@@ -7273,6 +8059,24 @@
                             "name": "medication",
                             "target": [
                                 "Medication"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "part-of",
+                            "target": [
+                                "MedicationAdministration",
+                                "MedicationDispense",
+                                "MedicationStatement",
+                                "Observation",
+                                "Procedure"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "patient",
+                            "target": [
+                                "Patient"
                             ],
                             "type": "reference"
                         },
@@ -7366,6 +8170,10 @@
                             "type": "token"
                         },
                         {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
                             "name": "jurisdiction",
                             "type": "token"
                         },
@@ -7418,10 +8226,11 @@
                     ],
                     "searchInclude": [
                         "MessageHeader:author",
-                        "MessageHeader:data",
                         "MessageHeader:enterer",
+                        "MessageHeader:focus",
                         "MessageHeader:receiver",
                         "MessageHeader:responsible",
+                        "MessageHeader:sender",
                         "MessageHeader:target",
                         "*"
                     ],
@@ -7458,13 +8267,6 @@
                             "type": "token"
                         },
                         {
-                            "name": "data",
-                            "target": [
-                                "Any"
-                            ],
-                            "type": "reference"
-                        },
-                        {
                             "name": "destination",
                             "type": "string"
                         },
@@ -7484,6 +8286,13 @@
                             "type": "token"
                         },
                         {
+                            "name": "focus",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "receiver",
                             "target": [
                                 "Organization",
@@ -7497,6 +8306,14 @@
                         },
                         {
                             "name": "responsible",
+                            "target": [
+                                "Organization",
+                                "Practitioner"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "sender",
                             "target": [
                                 "Organization",
                                 "Practitioner"
@@ -7657,9 +8474,9 @@
                         }
                     ],
                     "searchInclude": [
-                        "NutritionRequest:encounter",
-                        "NutritionRequest:patient",
-                        "NutritionRequest:provider",
+                        "NutritionOrder:encounter",
+                        "NutritionOrder:patient",
+                        "NutritionOrder:provider",
                         "*"
                     ],
                     "searchParam": [
@@ -7734,7 +8551,7 @@
                         }
                     ],
                     "transactionMode": "both",
-                    "type": "NutritionRequest",
+                    "type": "NutritionOrder",
                     "versioning": "no-version"
                 },
                 {
@@ -7756,6 +8573,8 @@
                         }
                     ],
                     "searchInclude": [
+                        "Observation:based-on",
+                        "Observation:context",
                         "Observation:device",
                         "Observation:encounter",
                         "Observation:patient",
@@ -7787,12 +8606,65 @@
                             "type": "token"
                         },
                         {
+                            "name": "based-on",
+                            "target": [
+                                "CarePlan",
+                                "DeviceRequest",
+                                "ImmunizationRecommendation",
+                                "MedicationRequest",
+                                "NutritionOrder",
+                                "ProcedureRequest",
+                                "ReferralRequest"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "category",
                             "type": "token"
                         },
                         {
                             "name": "code",
                             "type": "token"
+                        },
+                        {
+                            "name": "combo-code",
+                            "type": "token"
+                        },
+                        {
+                            "name": "combo-data-absent-reason",
+                            "type": "token"
+                        },
+                        {
+                            "name": "combo-value-concept",
+                            "type": "token"
+                        },
+                        {
+                            "name": "combo-value-quantity",
+                            "type": "quantity"
+                        },
+                        {
+                            "name": "component-code",
+                            "type": "token"
+                        },
+                        {
+                            "name": "component-data-absent-reason",
+                            "type": "token"
+                        },
+                        {
+                            "name": "component-value-concept",
+                            "type": "token"
+                        },
+                        {
+                            "name": "component-value-quantity",
+                            "type": "quantity"
+                        },
+                        {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "data-absent-reason",
@@ -7917,7 +8789,7 @@
                     ],
                     "searchInclude": [
                         "OperationDefinition:base",
-                        "OperationDefinition:paramprofile",
+                        "OperationDefinition:param-profile",
                         "*"
                     ],
                     "searchParam": [
@@ -7977,7 +8849,7 @@
                             "type": "string"
                         },
                         {
-                            "name": "paramprofile",
+                            "name": "param-profile",
                             "target": [
                                 "StructureDefinition"
                             ],
@@ -8666,6 +9538,11 @@
                         }
                     ],
                     "searchInclude": [
+                        "PlanDefinition:composed-of",
+                        "PlanDefinition:depends-on",
+                        "PlanDefinition:derived-from",
+                        "PlanDefinition:predecessor",
+                        "PlanDefinition:successor",
                         "*"
                     ],
                     "searchParam": [
@@ -8690,8 +9567,30 @@
                             "type": "token"
                         },
                         {
+                            "name": "composed-of",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "depends-on",
+                            "target": [
+                                "Any",
+                                "Library"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "derived-from",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "description",
@@ -8714,12 +9613,26 @@
                             "type": "string"
                         },
                         {
+                            "name": "predecessor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "publisher",
                             "type": "string"
                         },
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "successor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "title",
@@ -8761,9 +9674,6 @@
                         }
                     ],
                     "searchInclude": [
-                        "Practitioner:endpoint",
-                        "Practitioner:location",
-                        "Practitioner:organization",
                         "*"
                     ],
                     "searchParam": [
@@ -8820,13 +9730,6 @@
                             "type": "token"
                         },
                         {
-                            "name": "endpoint",
-                            "target": [
-                                "Endpoint"
-                            ],
-                            "type": "reference"
-                        },
-                        {
                             "name": "family",
                             "type": "string"
                         },
@@ -8843,34 +9746,12 @@
                             "type": "token"
                         },
                         {
-                            "name": "location",
-                            "target": [
-                                "Location"
-                            ],
-                            "type": "reference"
-                        },
-                        {
                             "name": "name",
                             "type": "string"
                         },
                         {
-                            "name": "organization",
-                            "target": [
-                                "Organization"
-                            ],
-                            "type": "reference"
-                        },
-                        {
                             "name": "phonetic",
                             "type": "string"
-                        },
-                        {
-                            "name": "role",
-                            "type": "token"
-                        },
-                        {
-                            "name": "specialty",
-                            "type": "token"
                         },
                         {
                             "name": "telecom",
@@ -8904,6 +9785,7 @@
                         "PractitionerRole:location",
                         "PractitionerRole:organization",
                         "PractitionerRole:practitioner",
+                        "PractitionerRole:service",
                         "*"
                     ],
                     "searchParam": [
@@ -8926,6 +9808,14 @@
                         {
                             "name": "_tag",
                             "type": "token"
+                        },
+                        {
+                            "name": "active",
+                            "type": "token"
+                        },
+                        {
+                            "name": "date",
+                            "type": "date"
                         },
                         {
                             "name": "endpoint",
@@ -8964,6 +9854,13 @@
                             "type": "token"
                         },
                         {
+                            "name": "service",
+                            "target": [
+                                "HealthcareService"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "specialty",
                             "type": "token"
                         },
@@ -8995,8 +9892,12 @@
                         }
                     ],
                     "searchInclude": [
+                        "Procedure:based-on",
+                        "Procedure:context",
+                        "Procedure:definition",
                         "Procedure:encounter",
                         "Procedure:location",
+                        "Procedure:part-of",
                         "Procedure:patient",
                         "Procedure:performer",
                         "Procedure:subject",
@@ -9024,6 +9925,15 @@
                             "type": "token"
                         },
                         {
+                            "name": "based-on",
+                            "target": [
+                                "CarePlan",
+                                "ProcedureRequest",
+                                "ReferralRequest"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "category",
                             "type": "token"
                         },
@@ -9032,8 +9942,25 @@
                             "type": "token"
                         },
                         {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "definition",
+                            "target": [
+                                "ActivityDefinition",
+                                "HealthcareService",
+                                "PlanDefinition"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "encounter",
@@ -9054,6 +9981,15 @@
                             "type": "reference"
                         },
                         {
+                            "name": "part-of",
+                            "target": [
+                                "MedicationAdministration",
+                                "Observation",
+                                "Procedure"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "patient",
                             "target": [
                                 "Patient"
@@ -9063,12 +9999,17 @@
                         {
                             "name": "performer",
                             "target": [
+                                "Device",
                                 "Organization",
                                 "Patient",
                                 "Practitioner",
                                 "RelatedPerson"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "status",
+                            "type": "token"
                         },
                         {
                             "name": "subject",
@@ -9102,10 +10043,15 @@
                         }
                     ],
                     "searchInclude": [
+                        "ProcedureRequest:based-on",
+                        "ProcedureRequest:context",
+                        "ProcedureRequest:definition",
                         "ProcedureRequest:encounter",
-                        "ProcedureRequest:orderer",
                         "ProcedureRequest:patient",
                         "ProcedureRequest:performer",
+                        "ProcedureRequest:replaces",
+                        "ProcedureRequest:requester",
+                        "ProcedureRequest:specimen",
                         "ProcedureRequest:subject",
                         "*"
                     ],
@@ -9131,12 +10077,39 @@
                             "type": "token"
                         },
                         {
+                            "name": "authored",
+                            "type": "date"
+                        },
+                        {
+                            "name": "based-on",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "body-site",
                             "type": "token"
                         },
                         {
                             "name": "code",
                             "type": "token"
+                        },
+                        {
+                            "name": "context",
+                            "target": [
+                                "Encounter",
+                                "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "definition",
+                            "target": [
+                                "ActivityDefinition",
+                                "PlanDefinition"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "encounter",
@@ -9150,14 +10123,12 @@
                             "type": "token"
                         },
                         {
-                            "name": "orderer",
-                            "target": [
-                                "Device",
-                                "Patient",
-                                "Practitioner",
-                                "RelatedPerson"
-                            ],
-                            "type": "reference"
+                            "name": "intent",
+                            "type": "token"
+                        },
+                        {
+                            "name": "occurrence",
+                            "type": "date"
                         },
                         {
                             "name": "patient",
@@ -9169,10 +10140,47 @@
                         {
                             "name": "performer",
                             "target": [
+                                "Device",
+                                "HealthcareService",
                                 "Organization",
                                 "Patient",
                                 "Practitioner",
                                 "RelatedPerson"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "performer-type",
+                            "type": "token"
+                        },
+                        {
+                            "name": "priority",
+                            "type": "token"
+                        },
+                        {
+                            "name": "replaces",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "requester",
+                            "target": [
+                                "Device",
+                                "Organization",
+                                "Practitioner"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "requisition",
+                            "type": "token"
+                        },
+                        {
+                            "name": "specimen",
+                            "target": [
+                                "Specimen"
                             ],
                             "type": "reference"
                         },
@@ -9183,7 +10191,9 @@
                         {
                             "name": "subject",
                             "target": [
+                                "Device",
                                 "Group",
+                                "Location",
                                 "Patient"
                             ],
                             "type": "reference"
@@ -9367,7 +10377,7 @@
                     ],
                     "searchInclude": [
                         "Provenance:agent",
-                        "Provenance:entity",
+                        "Provenance:entity-ref",
                         "Provenance:location",
                         "Provenance:patient",
                         "Provenance:target",
@@ -9406,11 +10416,19 @@
                             "type": "reference"
                         },
                         {
+                            "name": "agent-role",
+                            "type": "token"
+                        },
+                        {
                             "name": "end",
                             "type": "date"
                         },
                         {
-                            "name": "entity",
+                            "name": "entity-id",
+                            "type": "token"
+                        },
+                        {
+                            "name": "entity-ref",
                             "target": [
                                 "Any"
                             ],
@@ -9431,7 +10449,11 @@
                             "type": "reference"
                         },
                         {
-                            "name": "sig",
+                            "name": "recorded",
+                            "type": "date"
+                        },
+                        {
+                            "name": "signature-type",
                             "type": "token"
                         },
                         {
@@ -9497,16 +10519,28 @@
                             "type": "token"
                         },
                         {
-                            "name": "context",
-                            "type": "token"
+                            "name": "date",
+                            "type": "date"
                         },
                         {
-                            "name": "date",
+                            "name": "description",
+                            "type": "string"
+                        },
+                        {
+                            "name": "effective",
                             "type": "date"
                         },
                         {
                             "name": "identifier",
                             "type": "token"
+                        },
+                        {
+                            "name": "jurisdiction",
+                            "type": "token"
+                        },
+                        {
+                            "name": "name",
+                            "type": "string"
                         },
                         {
                             "name": "publisher",
@@ -9521,8 +10555,12 @@
                             "type": "string"
                         },
                         {
+                            "name": "url",
+                            "type": "uri"
+                        },
+                        {
                             "name": "version",
-                            "type": "string"
+                            "type": "token"
                         }
                     ],
                     "transactionMode": "both",
@@ -9597,7 +10635,7 @@
                             "name": "based-on",
                             "target": [
                                 "CarePlan",
-                                "DiagnosticRequest",
+                                "ProcedureRequest",
                                 "ReferralRequest"
                             ],
                             "type": "reference"
@@ -9680,11 +10718,15 @@
                         }
                     ],
                     "searchInclude": [
-                        "ReferralRequest:basedon",
+                        "ReferralRequest:based-on",
                         "ReferralRequest:context",
+                        "ReferralRequest:definition",
+                        "ReferralRequest:encounter",
                         "ReferralRequest:patient",
                         "ReferralRequest:recipient",
+                        "ReferralRequest:replaces",
                         "ReferralRequest:requester",
+                        "ReferralRequest:subject",
                         "*"
                     ],
                     "searchParam": [
@@ -9709,18 +10751,17 @@
                             "type": "token"
                         },
                         {
-                            "name": "basedon",
+                            "name": "authored-on",
+                            "type": "date"
+                        },
+                        {
+                            "name": "based-on",
                             "target": [
                                 "CarePlan",
-                                "DiagnosticRequest",
                                 "ProcedureRequest",
                                 "ReferralRequest"
                             ],
                             "type": "reference"
-                        },
-                        {
-                            "name": "category",
-                            "type": "token"
                         },
                         {
                             "name": "context",
@@ -9731,12 +10772,35 @@
                             "type": "reference"
                         },
                         {
-                            "name": "date",
-                            "type": "date"
+                            "name": "definition",
+                            "target": [
+                                "ActivityDefinition",
+                                "PlanDefinition"
+                            ],
+                            "type": "reference"
                         },
                         {
-                            "name": "parent",
+                            "name": "encounter",
+                            "target": [
+                                "Encounter"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "group-identifier",
                             "type": "token"
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
+                            "name": "intent",
+                            "type": "token"
+                        },
+                        {
+                            "name": "occurrence-date",
+                            "type": "date"
                         },
                         {
                             "name": "patient",
@@ -9752,19 +10816,33 @@
                         {
                             "name": "recipient",
                             "target": [
+                                "HealthcareService",
                                 "Organization",
                                 "Practitioner"
                             ],
                             "type": "reference"
                         },
                         {
-                            "name": "requester",
+                            "name": "replaces",
                             "target": [
-                                "Organization",
-                                "Patient",
-                                "Practitioner"
+                                "ReferralRequest"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "requester",
+                            "target": [
+                                "Device",
+                                "Organization",
+                                "Patient",
+                                "Practitioner",
+                                "RelatedPerson"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "service",
+                            "type": "token"
                         },
                         {
                             "name": "specialty",
@@ -9773,6 +10851,14 @@
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "subject",
+                            "target": [
+                                "Group",
+                                "Patient"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "type",
@@ -9911,6 +10997,7 @@
                     "searchInclude": [
                         "RequestGroup:author",
                         "RequestGroup:context",
+                        "RequestGroup:definition",
                         "RequestGroup:encounter",
                         "RequestGroup:participant",
                         "RequestGroup:patient",
@@ -9947,10 +11034,21 @@
                             "type": "reference"
                         },
                         {
+                            "name": "authored",
+                            "type": "date"
+                        },
+                        {
                             "name": "context",
                             "target": [
                                 "Encounter",
                                 "EpisodeOfCare"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "definition",
+                            "target": [
+                                "Any"
                             ],
                             "type": "reference"
                         },
@@ -9960,6 +11058,18 @@
                                 "Encounter"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "group-identifier",
+                            "type": "token"
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token"
+                        },
+                        {
+                            "name": "intent",
+                            "type": "token"
                         },
                         {
                             "name": "participant",
@@ -9977,6 +11087,14 @@
                                 "Patient"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "priority",
+                            "type": "token"
+                        },
+                        {
+                            "name": "status",
+                            "type": "token"
                         },
                         {
                             "name": "subject",
@@ -10274,6 +11392,14 @@
                             "type": "reference"
                         },
                         {
+                            "name": "probability",
+                            "type": "number"
+                        },
+                        {
+                            "name": "risk",
+                            "type": "token"
+                        },
+                        {
                             "name": "subject",
                             "target": [
                                 "Group",
@@ -10341,6 +11467,7 @@
                                 "Location",
                                 "Patient",
                                 "Practitioner",
+                                "PractitionerRole",
                                 "RelatedPerson"
                             ],
                             "type": "reference"
@@ -10563,6 +11690,11 @@
                         }
                     ],
                     "searchInclude": [
+                        "ServiceDefinition:composed-of",
+                        "ServiceDefinition:depends-on",
+                        "ServiceDefinition:derived-from",
+                        "ServiceDefinition:predecessor",
+                        "ServiceDefinition:successor",
                         "*"
                     ],
                     "searchParam": [
@@ -10587,8 +11719,29 @@
                             "type": "token"
                         },
                         {
+                            "name": "composed-of",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
+                        },
+                        {
+                            "name": "depends-on",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
+                            "name": "derived-from",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "description",
@@ -10611,12 +11764,26 @@
                             "type": "string"
                         },
                         {
+                            "name": "predecessor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
+                        },
+                        {
                             "name": "publisher",
                             "type": "string"
                         },
                         {
                             "name": "status",
                             "type": "token"
+                        },
+                        {
+                            "name": "successor",
+                            "target": [
+                                "Any"
+                            ],
+                            "type": "reference"
                         },
                         {
                             "name": "title",
@@ -10800,6 +11967,10 @@
                                 "Patient"
                             ],
                             "type": "reference"
+                        },
+                        {
+                            "name": "status",
+                            "type": "token"
                         },
                         {
                             "name": "subject",
@@ -11089,6 +12260,10 @@
                             "type": "token"
                         },
                         {
+                            "name": "add-tag",
+                            "type": "token"
+                        },
+                        {
                             "name": "contact",
                             "type": "token"
                         },
@@ -11102,10 +12277,6 @@
                         },
                         {
                             "name": "status",
-                            "type": "token"
-                        },
-                        {
-                            "name": "tag",
                             "type": "token"
                         },
                         {
@@ -11189,6 +12360,10 @@
                             "type": "quantity"
                         },
                         {
+                            "name": "status",
+                            "type": "token"
+                        },
+                        {
                             "name": "substance-reference",
                             "target": [
                                 "Substance"
@@ -11270,6 +12445,7 @@
                         {
                             "name": "supplier",
                             "target": [
+                                "Organization",
                                 "Practitioner"
                             ],
                             "type": "reference"
@@ -11298,8 +12474,7 @@
                         }
                     ],
                     "searchInclude": [
-                        "SupplyRequest:patient",
-                        "SupplyRequest:source",
+                        "SupplyRequest:requester",
                         "SupplyRequest:supplier",
                         "*"
                     ],
@@ -11325,6 +12500,10 @@
                             "type": "token"
                         },
                         {
+                            "name": "category",
+                            "type": "token"
+                        },
+                        {
                             "name": "date",
                             "type": "date"
                         },
@@ -11333,22 +12512,13 @@
                             "type": "token"
                         },
                         {
-                            "name": "kind",
-                            "type": "token"
-                        },
-                        {
-                            "name": "patient",
+                            "name": "requester",
                             "target": [
-                                "Patient"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "source",
-                            "target": [
+                                "Device",
                                 "Organization",
                                 "Patient",
-                                "Practitioner"
+                                "Practitioner",
+                                "RelatedPerson"
                             ],
                             "type": "reference"
                         },
@@ -11389,7 +12559,6 @@
                     "searchInclude": [
                         "Task:based-on",
                         "Task:context",
-                        "Task:definition-ref",
                         "Task:focus",
                         "Task:organization",
                         "Task:owner",
@@ -11444,13 +12613,6 @@
                             "target": [
                                 "Encounter",
                                 "EpisodeOfCare"
-                            ],
-                            "type": "reference"
-                        },
-                        {
-                            "name": "definition-ref",
-                            "target": [
-                                "ActivityDefinition"
                             ],
                             "type": "reference"
                         },
@@ -11537,10 +12699,6 @@
                             "type": "token"
                         },
                         {
-                            "name": "statusreason",
-                            "type": "token"
-                        },
-                        {
                             "name": "subject",
                             "target": [
                                 "Any"
@@ -11604,12 +12762,12 @@
                             "type": "date"
                         },
                         {
-                            "name": "name",
-                            "type": "string"
-                        },
-                        {
                             "name": "participant",
                             "type": "uri"
+                        },
+                        {
+                            "name": "result",
+                            "type": "token"
                         },
                         {
                             "name": "tester",

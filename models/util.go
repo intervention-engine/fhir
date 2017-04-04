@@ -45,6 +45,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "AdverseEvent":
+		x := AdverseEvent{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "AllergyIntolerance":
 		x := AllergyIntolerance{}
 		json.Unmarshal(b, &x)
@@ -127,6 +135,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "CareTeam":
 		x := CareTeam{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "ChargeItem":
+		x := ChargeItem{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -277,8 +293,8 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "DeviceUseRequest":
-		x := DeviceUseRequest{}
+	case "DeviceRequest":
+		x := DeviceRequest{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -295,14 +311,6 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "DiagnosticReport":
 		x := DiagnosticReport{}
-		json.Unmarshal(b, &x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "DiagnosticRequest":
-		x := DiagnosticRequest{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -415,6 +423,14 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		}
 	case "Goal":
 		x := Goal{}
+		json.Unmarshal(b, &x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "GraphDefinition":
+		x := GraphDefinition{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -605,8 +621,8 @@ func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "NutritionRequest":
-		x := NutritionRequest{}
+	case "NutritionOrder":
+		x := NutritionOrder{}
 		json.Unmarshal(b, &x)
 		if asPointer {
 			return &x
@@ -978,6 +994,14 @@ func BSONMapToResource(bsonMap bson.M, asPointer bool) interface{} {
 		} else {
 			return x
 		}
+	case "AdverseEvent":
+		x := AdverseEvent{}
+		raw.Unmarshal(&x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
 	case "AllergyIntolerance":
 		x := AllergyIntolerance{}
 		raw.Unmarshal(&x)
@@ -1060,6 +1084,14 @@ func BSONMapToResource(bsonMap bson.M, asPointer bool) interface{} {
 		}
 	case "CareTeam":
 		x := CareTeam{}
+		raw.Unmarshal(&x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "ChargeItem":
+		x := ChargeItem{}
 		raw.Unmarshal(&x)
 		if asPointer {
 			return &x
@@ -1210,8 +1242,8 @@ func BSONMapToResource(bsonMap bson.M, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "DeviceUseRequest":
-		x := DeviceUseRequest{}
+	case "DeviceRequest":
+		x := DeviceRequest{}
 		raw.Unmarshal(&x)
 		if asPointer {
 			return &x
@@ -1228,14 +1260,6 @@ func BSONMapToResource(bsonMap bson.M, asPointer bool) interface{} {
 		}
 	case "DiagnosticReport":
 		x := DiagnosticReport{}
-		raw.Unmarshal(&x)
-		if asPointer {
-			return &x
-		} else {
-			return x
-		}
-	case "DiagnosticRequest":
-		x := DiagnosticRequest{}
 		raw.Unmarshal(&x)
 		if asPointer {
 			return &x
@@ -1348,6 +1372,14 @@ func BSONMapToResource(bsonMap bson.M, asPointer bool) interface{} {
 		}
 	case "Goal":
 		x := Goal{}
+		raw.Unmarshal(&x)
+		if asPointer {
+			return &x
+		} else {
+			return x
+		}
+	case "GraphDefinition":
+		x := GraphDefinition{}
 		raw.Unmarshal(&x)
 		if asPointer {
 			return &x
@@ -1538,8 +1570,8 @@ func BSONMapToResource(bsonMap bson.M, asPointer bool) interface{} {
 		} else {
 			return x
 		}
-	case "NutritionRequest":
-		x := NutritionRequest{}
+	case "NutritionOrder":
+		x := NutritionOrder{}
 		raw.Unmarshal(&x)
 		if asPointer {
 			return &x

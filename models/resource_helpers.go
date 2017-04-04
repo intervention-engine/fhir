@@ -29,6 +29,8 @@ func StructForResourceName(name string) interface{} {
 		return Account{}
 	case "ActivityDefinition":
 		return ActivityDefinition{}
+	case "AdverseEvent":
+		return AdverseEvent{}
 	case "AllergyIntolerance":
 		return AllergyIntolerance{}
 	case "Appointment":
@@ -51,6 +53,8 @@ func StructForResourceName(name string) interface{} {
 		return CarePlan{}
 	case "CareTeam":
 		return CareTeam{}
+	case "ChargeItem":
+		return ChargeItem{}
 	case "Claim":
 		return Claim{}
 	case "ClaimResponse":
@@ -87,14 +91,12 @@ func StructForResourceName(name string) interface{} {
 		return DeviceComponent{}
 	case "DeviceMetric":
 		return DeviceMetric{}
-	case "DeviceUseRequest":
-		return DeviceUseRequest{}
+	case "DeviceRequest":
+		return DeviceRequest{}
 	case "DeviceUseStatement":
 		return DeviceUseStatement{}
 	case "DiagnosticReport":
 		return DiagnosticReport{}
-	case "DiagnosticRequest":
-		return DiagnosticRequest{}
 	case "DocumentManifest":
 		return DocumentManifest{}
 	case "DocumentReference":
@@ -123,6 +125,8 @@ func StructForResourceName(name string) interface{} {
 		return Flag{}
 	case "Goal":
 		return Goal{}
+	case "GraphDefinition":
+		return GraphDefinition{}
 	case "Group":
 		return Group{}
 	case "GuidanceResponse":
@@ -169,8 +173,8 @@ func StructForResourceName(name string) interface{} {
 		return MessageHeader{}
 	case "NamingSystem":
 		return NamingSystem{}
-	case "NutritionRequest":
-		return NutritionRequest{}
+	case "NutritionOrder":
+		return NutritionOrder{}
 	case "Observation":
 		return Observation{}
 	case "OperationDefinition":
@@ -277,6 +281,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return AccountPlus{}
 	case "ActivityDefinition":
 		return ActivityDefinitionPlus{}
+	case "AdverseEvent":
+		return AdverseEventPlus{}
 	case "AllergyIntolerance":
 		return AllergyIntolerancePlus{}
 	case "Appointment":
@@ -299,6 +305,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return CarePlanPlus{}
 	case "CareTeam":
 		return CareTeamPlus{}
+	case "ChargeItem":
+		return ChargeItemPlus{}
 	case "Claim":
 		return ClaimPlus{}
 	case "ClaimResponse":
@@ -335,14 +343,12 @@ func StructPlusForResourceName(name string) interface{} {
 		return DeviceComponentPlus{}
 	case "DeviceMetric":
 		return DeviceMetricPlus{}
-	case "DeviceUseRequest":
-		return DeviceUseRequestPlus{}
+	case "DeviceRequest":
+		return DeviceRequestPlus{}
 	case "DeviceUseStatement":
 		return DeviceUseStatementPlus{}
 	case "DiagnosticReport":
 		return DiagnosticReportPlus{}
-	case "DiagnosticRequest":
-		return DiagnosticRequestPlus{}
 	case "DocumentManifest":
 		return DocumentManifestPlus{}
 	case "DocumentReference":
@@ -371,6 +377,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return FlagPlus{}
 	case "Goal":
 		return GoalPlus{}
+	case "GraphDefinition":
+		return GraphDefinitionPlus{}
 	case "Group":
 		return GroupPlus{}
 	case "GuidanceResponse":
@@ -417,8 +425,8 @@ func StructPlusForResourceName(name string) interface{} {
 		return MessageHeaderPlus{}
 	case "NamingSystem":
 		return NamingSystemPlus{}
-	case "NutritionRequest":
-		return NutritionRequestPlus{}
+	case "NutritionOrder":
+		return NutritionOrderPlus{}
 	case "Observation":
 		return ObservationPlus{}
 	case "OperationDefinition":
@@ -513,6 +521,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "accounts"
 	case "ActivityDefinition":
 		return "activitydefinitions"
+	case "AdverseEvent":
+		return "adverseevents"
 	case "AllergyIntolerance":
 		return "allergyintolerances"
 	case "Appointment":
@@ -535,6 +545,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "careplans"
 	case "CareTeam":
 		return "careteams"
+	case "ChargeItem":
+		return "chargeitems"
 	case "Claim":
 		return "claims"
 	case "ClaimResponse":
@@ -571,14 +583,12 @@ func PluralizeLowerResourceName(name string) string {
 		return "devicecomponents"
 	case "DeviceMetric":
 		return "devicemetrics"
-	case "DeviceUseRequest":
-		return "deviceuserequests"
+	case "DeviceRequest":
+		return "devicerequests"
 	case "DeviceUseStatement":
 		return "deviceusestatements"
 	case "DiagnosticReport":
 		return "diagnosticreports"
-	case "DiagnosticRequest":
-		return "diagnosticrequests"
 	case "DocumentManifest":
 		return "documentmanifests"
 	case "DocumentReference":
@@ -607,6 +617,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "flags"
 	case "Goal":
 		return "goals"
+	case "GraphDefinition":
+		return "graphdefinitions"
 	case "Group":
 		return "groups"
 	case "GuidanceResponse":
@@ -653,8 +665,8 @@ func PluralizeLowerResourceName(name string) string {
 		return "messageheaders"
 	case "NamingSystem":
 		return "namingsystems"
-	case "NutritionRequest":
-		return "nutritionrequests"
+	case "NutritionOrder":
+		return "nutritionorders"
 	case "Observation":
 		return "observations"
 	case "OperationDefinition":

@@ -32,76 +32,99 @@ import (
 	"fmt"
 )
 
-type GuidanceResponse struct {
-	DomainResource        `bson:",inline"`
-	RequestId             string            `bson:"requestId,omitempty" json:"requestId,omitempty"`
-	Identifier            *Identifier       `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Module                *Reference        `bson:"module,omitempty" json:"module,omitempty"`
-	Status                string            `bson:"status,omitempty" json:"status,omitempty"`
-	Subject               *Reference        `bson:"subject,omitempty" json:"subject,omitempty"`
-	Context               *Reference        `bson:"context,omitempty" json:"context,omitempty"`
-	OccurrenceDateTime    *FHIRDateTime     `bson:"occurrenceDateTime,omitempty" json:"occurrenceDateTime,omitempty"`
-	Performer             *Reference        `bson:"performer,omitempty" json:"performer,omitempty"`
-	ReasonCodeableConcept *CodeableConcept  `bson:"reasonCodeableConcept,omitempty" json:"reasonCodeableConcept,omitempty"`
-	ReasonReference       *Reference        `bson:"reasonReference,omitempty" json:"reasonReference,omitempty"`
-	Note                  []Annotation      `bson:"note,omitempty" json:"note,omitempty"`
-	EvaluationMessage     []Reference       `bson:"evaluationMessage,omitempty" json:"evaluationMessage,omitempty"`
-	OutputParameters      *Reference        `bson:"outputParameters,omitempty" json:"outputParameters,omitempty"`
-	Result                *Reference        `bson:"result,omitempty" json:"result,omitempty"`
-	DataRequirement       []DataRequirement `bson:"dataRequirement,omitempty" json:"dataRequirement,omitempty"`
+type GraphDefinition struct {
+	DomainResource `bson:",inline"`
+	Url            string                         `bson:"url,omitempty" json:"url,omitempty"`
+	Version        string                         `bson:"version,omitempty" json:"version,omitempty"`
+	Name           string                         `bson:"name,omitempty" json:"name,omitempty"`
+	Status         string                         `bson:"status,omitempty" json:"status,omitempty"`
+	Experimental   *bool                          `bson:"experimental,omitempty" json:"experimental,omitempty"`
+	Date           *FHIRDateTime                  `bson:"date,omitempty" json:"date,omitempty"`
+	Publisher      string                         `bson:"publisher,omitempty" json:"publisher,omitempty"`
+	Contact        []ContactDetail                `bson:"contact,omitempty" json:"contact,omitempty"`
+	Description    string                         `bson:"description,omitempty" json:"description,omitempty"`
+	UseContext     []UsageContext                 `bson:"useContext,omitempty" json:"useContext,omitempty"`
+	Jurisdiction   []CodeableConcept              `bson:"jurisdiction,omitempty" json:"jurisdiction,omitempty"`
+	Purpose        string                         `bson:"purpose,omitempty" json:"purpose,omitempty"`
+	Start          string                         `bson:"start,omitempty" json:"start,omitempty"`
+	Profile        string                         `bson:"profile,omitempty" json:"profile,omitempty"`
+	Link           []GraphDefinitionLinkComponent `bson:"link,omitempty" json:"link,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
-func (resource *GuidanceResponse) MarshalJSON() ([]byte, error) {
-	resource.ResourceType = "GuidanceResponse"
+func (resource *GraphDefinition) MarshalJSON() ([]byte, error) {
+	resource.ResourceType = "GraphDefinition"
 	// Dereferencing the pointer to avoid infinite recursion.
-	// Passing in plain old x (a pointer to GuidanceResponse), would cause this same
+	// Passing in plain old x (a pointer to GraphDefinition), would cause this same
 	// MarshallJSON function to be called again
 	return json.Marshal(*resource)
 }
 
-func (x *GuidanceResponse) GetBSON() (interface{}, error) {
-	x.ResourceType = "GuidanceResponse"
+func (x *GraphDefinition) GetBSON() (interface{}, error) {
+	x.ResourceType = "GraphDefinition"
 	// See comment in MarshallJSON to see why we dereference
 	return *x, nil
 }
 
-// The "guidanceResponse" sub-type is needed to avoid infinite recursion in UnmarshalJSON
-type guidanceResponse GuidanceResponse
+// The "graphDefinition" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type graphDefinition GraphDefinition
 
 // Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
-func (x *GuidanceResponse) UnmarshalJSON(data []byte) (err error) {
-	x2 := guidanceResponse{}
+func (x *GraphDefinition) UnmarshalJSON(data []byte) (err error) {
+	x2 := graphDefinition{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Contained != nil {
 			for i := range x2.Contained {
 				x2.Contained[i] = MapToResource(x2.Contained[i], true)
 			}
 		}
-		*x = GuidanceResponse(x2)
+		*x = GraphDefinition(x2)
 		return x.checkResourceType()
 	}
 	return
 }
 
-func (x *GuidanceResponse) checkResourceType() error {
+func (x *GraphDefinition) checkResourceType() error {
 	if x.ResourceType == "" {
-		x.ResourceType = "GuidanceResponse"
-	} else if x.ResourceType != "GuidanceResponse" {
-		return errors.New(fmt.Sprintf("Expected resourceType to be GuidanceResponse, instead received %s", x.ResourceType))
+		x.ResourceType = "GraphDefinition"
+	} else if x.ResourceType != "GraphDefinition" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be GraphDefinition, instead received %s", x.ResourceType))
 	}
 	return nil
 }
 
-type GuidanceResponsePlus struct {
-	GuidanceResponse                     `bson:",inline"`
-	GuidanceResponsePlusRelatedResources `bson:",inline"`
+type GraphDefinitionLinkComponent struct {
+	BackboneElement `bson:",inline"`
+	Path            string                               `bson:"path,omitempty" json:"path,omitempty"`
+	SliceName       string                               `bson:"sliceName,omitempty" json:"sliceName,omitempty"`
+	Min             *int32                               `bson:"min,omitempty" json:"min,omitempty"`
+	Max             string                               `bson:"max,omitempty" json:"max,omitempty"`
+	Description     string                               `bson:"description,omitempty" json:"description,omitempty"`
+	Target          []GraphDefinitionLinkTargetComponent `bson:"target,omitempty" json:"target,omitempty"`
 }
 
-type GuidanceResponsePlusRelatedResources struct {
-	IncludedPatientResourcesReferencedByPatient                     *[]Patient               `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
-	IncludedGroupResourcesReferencedBySubject                       *[]Group                 `bson:"_includedGroupResourcesReferencedBySubject,omitempty"`
-	IncludedPatientResourcesReferencedBySubject                     *[]Patient               `bson:"_includedPatientResourcesReferencedBySubject,omitempty"`
+type GraphDefinitionLinkTargetComponent struct {
+	BackboneElement `bson:",inline"`
+	Type            string                                          `bson:"type,omitempty" json:"type,omitempty"`
+	Profile         string                                          `bson:"profile,omitempty" json:"profile,omitempty"`
+	Compartment     []GraphDefinitionLinkTargetCompartmentComponent `bson:"compartment,omitempty" json:"compartment,omitempty"`
+	Link            []GraphDefinitionLinkComponent                  `bson:"link,omitempty" json:"link,omitempty"`
+}
+
+type GraphDefinitionLinkTargetCompartmentComponent struct {
+	BackboneElement `bson:",inline"`
+	Code            string `bson:"code,omitempty" json:"code,omitempty"`
+	Rule            string `bson:"rule,omitempty" json:"rule,omitempty"`
+	Expression      string `bson:"expression,omitempty" json:"expression,omitempty"`
+	Description     string `bson:"description,omitempty" json:"description,omitempty"`
+}
+
+type GraphDefinitionPlus struct {
+	GraphDefinition                     `bson:",inline"`
+	GraphDefinitionPlusRelatedResources `bson:",inline"`
+}
+
+type GraphDefinitionPlusRelatedResources struct {
 	RevIncludedDocumentManifestResourcesReferencingContentref       *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingRelatedref       *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
 	RevIncludedConsentResourcesReferencingDataPath1                 *[]Consent               `bson:"_revIncludedConsentResourcesReferencingDataPath1,omitempty"`
@@ -165,40 +188,7 @@ type GuidanceResponsePlusRelatedResources struct {
 	RevIncludedPlanDefinitionResourcesReferencingDependsonPath2     *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingDependsonPath2,omitempty"`
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetIncludedPatientResourceReferencedByPatient() (patient *Patient, err error) {
-	if g.IncludedPatientResourcesReferencedByPatient == nil {
-		err = errors.New("Included patients not requested")
-	} else if len(*g.IncludedPatientResourcesReferencedByPatient) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*g.IncludedPatientResourcesReferencedByPatient))
-	} else if len(*g.IncludedPatientResourcesReferencedByPatient) == 1 {
-		patient = &(*g.IncludedPatientResourcesReferencedByPatient)[0]
-	}
-	return
-}
-
-func (g *GuidanceResponsePlusRelatedResources) GetIncludedGroupResourceReferencedBySubject() (group *Group, err error) {
-	if g.IncludedGroupResourcesReferencedBySubject == nil {
-		err = errors.New("Included groups not requested")
-	} else if len(*g.IncludedGroupResourcesReferencedBySubject) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 group, but found %d", len(*g.IncludedGroupResourcesReferencedBySubject))
-	} else if len(*g.IncludedGroupResourcesReferencedBySubject) == 1 {
-		group = &(*g.IncludedGroupResourcesReferencedBySubject)[0]
-	}
-	return
-}
-
-func (g *GuidanceResponsePlusRelatedResources) GetIncludedPatientResourceReferencedBySubject() (patient *Patient, err error) {
-	if g.IncludedPatientResourcesReferencedBySubject == nil {
-		err = errors.New("Included patients not requested")
-	} else if len(*g.IncludedPatientResourcesReferencedBySubject) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*g.IncludedPatientResourcesReferencedBySubject))
-	} else if len(*g.IncludedPatientResourcesReferencedBySubject) == 1 {
-		patient = &(*g.IncludedPatientResourcesReferencedBySubject)[0]
-	}
-	return
-}
-
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
 	if g.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -207,7 +197,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDocumentManifestRes
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
 	if g.RevIncludedDocumentManifestResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -216,7 +206,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDocumentManifestRes
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath1() (consents []Consent, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath1() (consents []Consent, err error) {
 	if g.RevIncludedConsentResourcesReferencingDataPath1 == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
@@ -225,7 +215,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedConsentResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath2() (consents []Consent, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath2() (consents []Consent, err error) {
 	if g.RevIncludedConsentResourcesReferencingDataPath2 == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
@@ -234,7 +224,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedConsentResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesReferencingSuccessor() (measures []Measure, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingSuccessor() (measures []Measure, err error) {
 	if g.RevIncludedMeasureResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -243,7 +233,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDerivedfrom() (measures []Measure, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDerivedfrom() (measures []Measure, err error) {
 	if g.RevIncludedMeasureResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -252,7 +242,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesReferencingPredecessor() (measures []Measure, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingPredecessor() (measures []Measure, err error) {
 	if g.RevIncludedMeasureResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -261,7 +251,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesReferencingComposedof() (measures []Measure, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingComposedof() (measures []Measure, err error) {
 	if g.RevIncludedMeasureResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -270,7 +260,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath1() (measures []Measure, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath1() (measures []Measure, err error) {
 	if g.RevIncludedMeasureResourcesReferencingDependsonPath1 == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -279,7 +269,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath2() (measures []Measure, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath2() (measures []Measure, err error) {
 	if g.RevIncludedMeasureResourcesReferencingDependsonPath2 == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -288,7 +278,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMeasureResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
 	if g.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentReferences not requested")
 	} else {
@@ -297,7 +287,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDocumentReferenceRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
 	if g.RevIncludedContractResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -306,7 +296,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedContractResourcesRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedContractResourcesReferencingTermtopic() (contracts []Contract, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedContractResourcesReferencingTermtopic() (contracts []Contract, err error) {
 	if g.RevIncludedContractResourcesReferencingTermtopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -315,7 +305,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedContractResourcesRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
 	if g.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -324,7 +314,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
 	if g.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -333,7 +323,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPaymentNoticeResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
 	if g.RevIncludedImplementationGuideResourcesReferencingResource == nil {
 		err = errors.New("RevIncluded implementationGuides not requested")
 	} else {
@@ -342,7 +332,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedImplementationGuide
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingSuccessor() (serviceDefinitions []ServiceDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingSuccessor() (serviceDefinitions []ServiceDefinition, err error) {
 	if g.RevIncludedServiceDefinitionResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -351,7 +341,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDerivedfrom() (serviceDefinitions []ServiceDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDerivedfrom() (serviceDefinitions []ServiceDefinition, err error) {
 	if g.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -360,7 +350,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingPredecessor() (serviceDefinitions []ServiceDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingPredecessor() (serviceDefinitions []ServiceDefinition, err error) {
 	if g.RevIncludedServiceDefinitionResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -369,7 +359,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingComposedof() (serviceDefinitions []ServiceDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingComposedof() (serviceDefinitions []ServiceDefinition, err error) {
 	if g.RevIncludedServiceDefinitionResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -378,7 +368,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDependson() (serviceDefinitions []ServiceDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDependson() (serviceDefinitions []ServiceDefinition, err error) {
 	if g.RevIncludedServiceDefinitionResourcesReferencingDependson == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -387,7 +377,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedServiceDefinitionRe
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingPartof() (communications []Communication, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingPartof() (communications []Communication, err error) {
 	if g.RevIncludedCommunicationResourcesReferencingPartof == nil {
 		err = errors.New("RevIncluded communications not requested")
 	} else {
@@ -396,7 +386,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCommunicationResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
 	if g.RevIncludedCommunicationResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communications not requested")
 	} else {
@@ -405,7 +395,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCommunicationResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingSuccessor() (activityDefinitions []ActivityDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingSuccessor() (activityDefinitions []ActivityDefinition, err error) {
 	if g.RevIncludedActivityDefinitionResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -414,7 +404,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionR
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDerivedfrom() (activityDefinitions []ActivityDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDerivedfrom() (activityDefinitions []ActivityDefinition, err error) {
 	if g.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -423,7 +413,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionR
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingPredecessor() (activityDefinitions []ActivityDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingPredecessor() (activityDefinitions []ActivityDefinition, err error) {
 	if g.RevIncludedActivityDefinitionResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -432,7 +422,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionR
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingComposedof() (activityDefinitions []ActivityDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingComposedof() (activityDefinitions []ActivityDefinition, err error) {
 	if g.RevIncludedActivityDefinitionResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -441,7 +431,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionR
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath1() (activityDefinitions []ActivityDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath1() (activityDefinitions []ActivityDefinition, err error) {
 	if g.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -450,7 +440,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionR
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath2() (activityDefinitions []ActivityDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath2() (activityDefinitions []ActivityDefinition, err error) {
 	if g.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -459,7 +449,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedActivityDefinitionR
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedRequestGroupResourcesReferencingDefinition() (requestGroups []RequestGroup, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedRequestGroupResourcesReferencingDefinition() (requestGroups []RequestGroup, err error) {
 	if g.RevIncludedRequestGroupResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded requestGroups not requested")
 	} else {
@@ -468,7 +458,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedRequestGroupResourc
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingBasedon() (deviceRequests []DeviceRequest, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingBasedon() (deviceRequests []DeviceRequest, err error) {
 	if g.RevIncludedDeviceRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded deviceRequests not requested")
 	} else {
@@ -477,7 +467,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDeviceRequestResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingPriorrequest() (deviceRequests []DeviceRequest, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingPriorrequest() (deviceRequests []DeviceRequest, err error) {
 	if g.RevIncludedDeviceRequestResourcesReferencingPriorrequest == nil {
 		err = errors.New("RevIncluded deviceRequests not requested")
 	} else {
@@ -486,7 +476,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDeviceRequestResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingFocus() (messageHeaders []MessageHeader, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingFocus() (messageHeaders []MessageHeader, err error) {
 	if g.RevIncludedMessageHeaderResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded messageHeaders not requested")
 	} else {
@@ -495,7 +485,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedMessageHeaderResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntityref() (provenances []Provenance, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntityref() (provenances []Provenance, err error) {
 	if g.RevIncludedProvenanceResourcesReferencingEntityref == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -504,7 +494,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProvenanceResources
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if g.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -513,7 +503,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProvenanceResources
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
 	if g.RevIncludedTaskResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -522,7 +512,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedTaskResourcesRefere
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
 	if g.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -531,7 +521,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedTaskResourcesRefere
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
 	if g.RevIncludedTaskResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -540,7 +530,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedTaskResourcesRefere
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
 	if g.RevIncludedListResourcesReferencingItem == nil {
 		err = errors.New("RevIncluded lists not requested")
 	} else {
@@ -549,7 +539,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedListResourcesRefere
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingReplaces() (procedureRequests []ProcedureRequest, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingReplaces() (procedureRequests []ProcedureRequest, err error) {
 	if g.RevIncludedProcedureRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded procedureRequests not requested")
 	} else {
@@ -558,7 +548,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProcedureRequestRes
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingBasedon() (procedureRequests []ProcedureRequest, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingBasedon() (procedureRequests []ProcedureRequest, err error) {
 	if g.RevIncludedProcedureRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded procedureRequests not requested")
 	} else {
@@ -567,7 +557,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProcedureRequestRes
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesReferencingSuccessor() (libraries []Library, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingSuccessor() (libraries []Library, err error) {
 	if g.RevIncludedLibraryResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -576,7 +566,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDerivedfrom() (libraries []Library, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDerivedfrom() (libraries []Library, err error) {
 	if g.RevIncludedLibraryResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -585,7 +575,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesReferencingPredecessor() (libraries []Library, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingPredecessor() (libraries []Library, err error) {
 	if g.RevIncludedLibraryResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -594,7 +584,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesReferencingComposedof() (libraries []Library, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingComposedof() (libraries []Library, err error) {
 	if g.RevIncludedLibraryResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -603,7 +593,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDependson() (libraries []Library, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDependson() (libraries []Library, err error) {
 	if g.RevIncludedLibraryResourcesReferencingDependson == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -612,7 +602,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedLibraryResourcesRef
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCommunicationRequestResourcesReferencingBasedon() (communicationRequests []CommunicationRequest, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedCommunicationRequestResourcesReferencingBasedon() (communicationRequests []CommunicationRequest, err error) {
 	if g.RevIncludedCommunicationRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communicationRequests not requested")
 	} else {
@@ -621,7 +611,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCommunicationReques
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
 	if g.RevIncludedBasicResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded basics not requested")
 	} else {
@@ -630,7 +620,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedBasicResourcesRefer
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
 	if g.RevIncludedAuditEventResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
@@ -639,7 +629,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedAuditEventResources
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedConditionResourcesReferencingEvidencedetail() (conditions []Condition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedConditionResourcesReferencingEvidencedetail() (conditions []Condition, err error) {
 	if g.RevIncludedConditionResourcesReferencingEvidencedetail == nil {
 		err = errors.New("RevIncluded conditions not requested")
 	} else {
@@ -648,7 +638,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedConditionResourcesR
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
 	if g.RevIncludedCompositionResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -657,7 +647,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCompositionResource
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
 	if g.RevIncludedCompositionResourcesReferencingEntry == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -666,7 +656,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedCompositionResource
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
 	if g.RevIncludedDetectedIssueResourcesReferencingImplicated == nil {
 		err = errors.New("RevIncluded detectedIssues not requested")
 	} else {
@@ -675,7 +665,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedDetectedIssueResour
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
 	if g.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded questionnaireResponses not requested")
 	} else {
@@ -684,7 +674,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedQuestionnaireRespon
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
 	if g.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
@@ -693,7 +683,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedProcessResponseReso
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingSuccessor() (planDefinitions []PlanDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingSuccessor() (planDefinitions []PlanDefinition, err error) {
 	if g.RevIncludedPlanDefinitionResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -702,7 +692,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResou
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDerivedfrom() (planDefinitions []PlanDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDerivedfrom() (planDefinitions []PlanDefinition, err error) {
 	if g.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -711,7 +701,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResou
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingPredecessor() (planDefinitions []PlanDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingPredecessor() (planDefinitions []PlanDefinition, err error) {
 	if g.RevIncludedPlanDefinitionResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -720,7 +710,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResou
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingComposedof() (planDefinitions []PlanDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingComposedof() (planDefinitions []PlanDefinition, err error) {
 	if g.RevIncludedPlanDefinitionResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -729,7 +719,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResou
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath1() (planDefinitions []PlanDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath1() (planDefinitions []PlanDefinition, err error) {
 	if g.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1 == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -738,7 +728,7 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResou
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath2() (planDefinitions []PlanDefinition, err error) {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath2() (planDefinitions []PlanDefinition, err error) {
 	if g.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2 == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -747,30 +737,12 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedPlanDefinitionResou
 	return
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetIncludedResources() map[string]interface{} {
+func (g *GraphDefinitionPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if g.IncludedPatientResourcesReferencedByPatient != nil {
-		for idx := range *g.IncludedPatientResourcesReferencedByPatient {
-			rsc := (*g.IncludedPatientResourcesReferencedByPatient)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if g.IncludedGroupResourcesReferencedBySubject != nil {
-		for idx := range *g.IncludedGroupResourcesReferencedBySubject {
-			rsc := (*g.IncludedGroupResourcesReferencedBySubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if g.IncludedPatientResourcesReferencedBySubject != nil {
-		for idx := range *g.IncludedPatientResourcesReferencedBySubject {
-			rsc := (*g.IncludedPatientResourcesReferencedBySubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	return resourceMap
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
+func (g *GraphDefinitionPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if g.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *g.RevIncludedDocumentManifestResourcesReferencingContentref {
@@ -1141,26 +1113,8 @@ func (g *GuidanceResponsePlusRelatedResources) GetRevIncludedResources() map[str
 	return resourceMap
 }
 
-func (g *GuidanceResponsePlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
+func (g *GraphDefinitionPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if g.IncludedPatientResourcesReferencedByPatient != nil {
-		for idx := range *g.IncludedPatientResourcesReferencedByPatient {
-			rsc := (*g.IncludedPatientResourcesReferencedByPatient)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if g.IncludedGroupResourcesReferencedBySubject != nil {
-		for idx := range *g.IncludedGroupResourcesReferencedBySubject {
-			rsc := (*g.IncludedGroupResourcesReferencedBySubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if g.IncludedPatientResourcesReferencedBySubject != nil {
-		for idx := range *g.IncludedPatientResourcesReferencedBySubject {
-			rsc := (*g.IncludedPatientResourcesReferencedBySubject)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if g.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *g.RevIncludedDocumentManifestResourcesReferencingContentref {
 			rsc := (*g.RevIncludedDocumentManifestResourcesReferencingContentref)[idx]

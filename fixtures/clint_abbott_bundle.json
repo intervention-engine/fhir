@@ -33,7 +33,7 @@
       		}],
       		"text": "Office Visit"
       	}],
-      	"patient": {
+      	"subject": {
       		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
       	},
       	"period": {
@@ -58,7 +58,7 @@
       		}],
       		"text": "Office Visit"
       	}],
-      	"patient": {
+      	"subject": {
       		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
       	},
       	"period": {
@@ -83,7 +83,7 @@
       		}],
       		"text": "Office Visit"
       	}],
-      	"patient": {
+      	"subject": {
       		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
       	},
       	"period": {
@@ -108,7 +108,7 @@
       		}],
       		"text": "Office Visit"
       	}],
-      	"patient": {
+      	"subject": {
       		"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f2a"
       	},
       	"period": {

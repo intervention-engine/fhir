@@ -56,7 +56,7 @@
 		}],
 		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 	}],
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"period": {
@@ -81,7 +81,7 @@
 		}],
 		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 	}],
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"period": {
@@ -99,7 +99,7 @@
 		}],
 		"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 	}],
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"period": {
@@ -117,7 +117,7 @@
 		}],
 		"text": "Encounter, Performed: Alcohol and Drug Dependence Treatment (Code List: 2.16.840.1.113883.3.464.1003.106.12.1005)"
 	}],
-	"patient": {
+	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
 	"period": {
@@ -266,7 +266,7 @@
 	"subject": {
 		"reference": "Patient/4954037118555241963"
 	},
-	"encounter": {
+	"context": {
 		"reference": "Encounter/6648204100111387580"
 	},
 	"performer": [{
@@ -290,7 +290,7 @@
 		"start": "2011-11-01T08:16:40-04:00",
 		"end": "2011-11-01T11:03:20-04:00"
 	},
-	"encounter": {
+	"context": {
 		"reference": "Encounter/6648204100111387580"
 	},
 	"report": [{
@@ -487,7 +487,7 @@
 	"patient": {
 		"reference": "Patient/4954037118555241963"
 	},
-	"wasNotGiven": false,
+	"notGiven": false,
 	"reported": false
 }, {
   "resourceType": "ImagingStudy",
@@ -619,7 +619,7 @@
     "type": "rest-hook",
     "endpoint": "https://biliwatch.com/customers/mount-auburn-miu/on-result",
     "payload": "application/json",
-    "header": "Authorization: Bearer secret-token-abc-123"
+    "header": ["Authorization: Bearer secret-token-abc-123"]
   }
 }, {
   "resourceType": "Group",

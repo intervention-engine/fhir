@@ -92,41 +92,71 @@ type EnrollmentRequestPlus struct {
 }
 
 type EnrollmentRequestPlusRelatedResources struct {
-	IncludedPatientResourcesReferencedBySubject                 *[]Patient               `bson:"_includedPatientResourcesReferencedBySubject,omitempty"`
-	IncludedPatientResourcesReferencedByPatient                 *[]Patient               `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
-	IncludedOrganizationResourcesReferencedByOrganization       *[]Organization          `bson:"_includedOrganizationResourcesReferencedByOrganization,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingContentref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
-	RevIncludedDocumentManifestResourcesReferencingRelatedref   *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
-	RevIncludedConsentResourcesReferencingData                  *[]Consent               `bson:"_revIncludedConsentResourcesReferencingData,omitempty"`
-	RevIncludedDocumentReferenceResourcesReferencingRelatedref  *[]DocumentReference     `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
-	RevIncludedContractResourcesReferencingTtopic               *[]Contract              `bson:"_revIncludedContractResourcesReferencingTtopic,omitempty"`
-	RevIncludedContractResourcesReferencingSubject              *[]Contract              `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
-	RevIncludedContractResourcesReferencingTopic                *[]Contract              `bson:"_revIncludedContractResourcesReferencingTopic,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingRequest         *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingRequest,omitempty"`
-	RevIncludedPaymentNoticeResourcesReferencingResponse        *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponse,omitempty"`
-	RevIncludedImplementationGuideResourcesReferencingResource  *[]ImplementationGuide   `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
-	RevIncludedCommunicationResourcesReferencingBasedon         *[]Communication         `bson:"_revIncludedCommunicationResourcesReferencingBasedon,omitempty"`
-	RevIncludedMessageHeaderResourcesReferencingData            *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingData,omitempty"`
-	RevIncludedProvenanceResourcesReferencingEntity             *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingEntity,omitempty"`
-	RevIncludedProvenanceResourcesReferencingTarget             *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
-	RevIncludedTaskResourcesReferencingSubject                  *[]Task                  `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
-	RevIncludedTaskResourcesReferencingFocus                    *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
-	RevIncludedTaskResourcesReferencingBasedon                  *[]Task                  `bson:"_revIncludedTaskResourcesReferencingBasedon,omitempty"`
-	RevIncludedListResourcesReferencingItem                     *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
-	RevIncludedDiagnosticRequestResourcesReferencingReplaces    *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingReplaces,omitempty"`
-	RevIncludedDiagnosticRequestResourcesReferencingBasedon     *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingBasedon,omitempty"`
-	RevIncludedDiagnosticRequestResourcesReferencingDefinition  *[]DiagnosticRequest     `bson:"_revIncludedDiagnosticRequestResourcesReferencingDefinition,omitempty"`
-	RevIncludedDeviceUseRequestResourcesReferencingReplaces     *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingReplaces,omitempty"`
-	RevIncludedDeviceUseRequestResourcesReferencingBasedon      *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingBasedon,omitempty"`
-	RevIncludedDeviceUseRequestResourcesReferencingDefinition   *[]DeviceUseRequest      `bson:"_revIncludedDeviceUseRequestResourcesReferencingDefinition,omitempty"`
-	RevIncludedEnrollmentResponseResourcesReferencingRequest    *[]EnrollmentResponse    `bson:"_revIncludedEnrollmentResponseResourcesReferencingRequest,omitempty"`
-	RevIncludedBasicResourcesReferencingSubject                 *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
-	RevIncludedAuditEventResourcesReferencingEntity             *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
-	RevIncludedCompositionResourcesReferencingSubject           *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
-	RevIncludedCompositionResourcesReferencingEntry             *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
-	RevIncludedDetectedIssueResourcesReferencingImplicated      *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
-	RevIncludedQuestionnaireResponseResourcesReferencingSubject *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
-	RevIncludedProcessResponseResourcesReferencingRequest       *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
+	IncludedPatientResourcesReferencedBySubject                     *[]Patient               `bson:"_includedPatientResourcesReferencedBySubject,omitempty"`
+	IncludedPatientResourcesReferencedByPatient                     *[]Patient               `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
+	IncludedOrganizationResourcesReferencedByOrganization           *[]Organization          `bson:"_includedOrganizationResourcesReferencedByOrganization,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingContentref       *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
+	RevIncludedDocumentManifestResourcesReferencingRelatedref       *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
+	RevIncludedConsentResourcesReferencingDataPath1                 *[]Consent               `bson:"_revIncludedConsentResourcesReferencingDataPath1,omitempty"`
+	RevIncludedConsentResourcesReferencingDataPath2                 *[]Consent               `bson:"_revIncludedConsentResourcesReferencingDataPath2,omitempty"`
+	RevIncludedMeasureResourcesReferencingSuccessor                 *[]Measure               `bson:"_revIncludedMeasureResourcesReferencingSuccessor,omitempty"`
+	RevIncludedMeasureResourcesReferencingDerivedfrom               *[]Measure               `bson:"_revIncludedMeasureResourcesReferencingDerivedfrom,omitempty"`
+	RevIncludedMeasureResourcesReferencingPredecessor               *[]Measure               `bson:"_revIncludedMeasureResourcesReferencingPredecessor,omitempty"`
+	RevIncludedMeasureResourcesReferencingComposedof                *[]Measure               `bson:"_revIncludedMeasureResourcesReferencingComposedof,omitempty"`
+	RevIncludedMeasureResourcesReferencingDependsonPath1            *[]Measure               `bson:"_revIncludedMeasureResourcesReferencingDependsonPath1,omitempty"`
+	RevIncludedMeasureResourcesReferencingDependsonPath2            *[]Measure               `bson:"_revIncludedMeasureResourcesReferencingDependsonPath2,omitempty"`
+	RevIncludedDocumentReferenceResourcesReferencingRelatedref      *[]DocumentReference     `bson:"_revIncludedDocumentReferenceResourcesReferencingRelatedref,omitempty"`
+	RevIncludedContractResourcesReferencingSubject                  *[]Contract              `bson:"_revIncludedContractResourcesReferencingSubject,omitempty"`
+	RevIncludedContractResourcesReferencingTermtopic                *[]Contract              `bson:"_revIncludedContractResourcesReferencingTermtopic,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingRequest             *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingRequest,omitempty"`
+	RevIncludedPaymentNoticeResourcesReferencingResponse            *[]PaymentNotice         `bson:"_revIncludedPaymentNoticeResourcesReferencingResponse,omitempty"`
+	RevIncludedImplementationGuideResourcesReferencingResource      *[]ImplementationGuide   `bson:"_revIncludedImplementationGuideResourcesReferencingResource,omitempty"`
+	RevIncludedServiceDefinitionResourcesReferencingSuccessor       *[]ServiceDefinition     `bson:"_revIncludedServiceDefinitionResourcesReferencingSuccessor,omitempty"`
+	RevIncludedServiceDefinitionResourcesReferencingDerivedfrom     *[]ServiceDefinition     `bson:"_revIncludedServiceDefinitionResourcesReferencingDerivedfrom,omitempty"`
+	RevIncludedServiceDefinitionResourcesReferencingPredecessor     *[]ServiceDefinition     `bson:"_revIncludedServiceDefinitionResourcesReferencingPredecessor,omitempty"`
+	RevIncludedServiceDefinitionResourcesReferencingComposedof      *[]ServiceDefinition     `bson:"_revIncludedServiceDefinitionResourcesReferencingComposedof,omitempty"`
+	RevIncludedServiceDefinitionResourcesReferencingDependson       *[]ServiceDefinition     `bson:"_revIncludedServiceDefinitionResourcesReferencingDependson,omitempty"`
+	RevIncludedCommunicationResourcesReferencingPartof              *[]Communication         `bson:"_revIncludedCommunicationResourcesReferencingPartof,omitempty"`
+	RevIncludedCommunicationResourcesReferencingBasedon             *[]Communication         `bson:"_revIncludedCommunicationResourcesReferencingBasedon,omitempty"`
+	RevIncludedActivityDefinitionResourcesReferencingSuccessor      *[]ActivityDefinition    `bson:"_revIncludedActivityDefinitionResourcesReferencingSuccessor,omitempty"`
+	RevIncludedActivityDefinitionResourcesReferencingDerivedfrom    *[]ActivityDefinition    `bson:"_revIncludedActivityDefinitionResourcesReferencingDerivedfrom,omitempty"`
+	RevIncludedActivityDefinitionResourcesReferencingPredecessor    *[]ActivityDefinition    `bson:"_revIncludedActivityDefinitionResourcesReferencingPredecessor,omitempty"`
+	RevIncludedActivityDefinitionResourcesReferencingComposedof     *[]ActivityDefinition    `bson:"_revIncludedActivityDefinitionResourcesReferencingComposedof,omitempty"`
+	RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 *[]ActivityDefinition    `bson:"_revIncludedActivityDefinitionResourcesReferencingDependsonPath1,omitempty"`
+	RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 *[]ActivityDefinition    `bson:"_revIncludedActivityDefinitionResourcesReferencingDependsonPath2,omitempty"`
+	RevIncludedRequestGroupResourcesReferencingDefinition           *[]RequestGroup          `bson:"_revIncludedRequestGroupResourcesReferencingDefinition,omitempty"`
+	RevIncludedDeviceRequestResourcesReferencingBasedon             *[]DeviceRequest         `bson:"_revIncludedDeviceRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedDeviceRequestResourcesReferencingPriorrequest        *[]DeviceRequest         `bson:"_revIncludedDeviceRequestResourcesReferencingPriorrequest,omitempty"`
+	RevIncludedMessageHeaderResourcesReferencingFocus               *[]MessageHeader         `bson:"_revIncludedMessageHeaderResourcesReferencingFocus,omitempty"`
+	RevIncludedProvenanceResourcesReferencingEntityref              *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingEntityref,omitempty"`
+	RevIncludedProvenanceResourcesReferencingTarget                 *[]Provenance            `bson:"_revIncludedProvenanceResourcesReferencingTarget,omitempty"`
+	RevIncludedTaskResourcesReferencingSubject                      *[]Task                  `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
+	RevIncludedTaskResourcesReferencingFocus                        *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
+	RevIncludedTaskResourcesReferencingBasedon                      *[]Task                  `bson:"_revIncludedTaskResourcesReferencingBasedon,omitempty"`
+	RevIncludedListResourcesReferencingItem                         *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
+	RevIncludedProcedureRequestResourcesReferencingReplaces         *[]ProcedureRequest      `bson:"_revIncludedProcedureRequestResourcesReferencingReplaces,omitempty"`
+	RevIncludedProcedureRequestResourcesReferencingBasedon          *[]ProcedureRequest      `bson:"_revIncludedProcedureRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedEnrollmentResponseResourcesReferencingRequest        *[]EnrollmentResponse    `bson:"_revIncludedEnrollmentResponseResourcesReferencingRequest,omitempty"`
+	RevIncludedLibraryResourcesReferencingSuccessor                 *[]Library               `bson:"_revIncludedLibraryResourcesReferencingSuccessor,omitempty"`
+	RevIncludedLibraryResourcesReferencingDerivedfrom               *[]Library               `bson:"_revIncludedLibraryResourcesReferencingDerivedfrom,omitempty"`
+	RevIncludedLibraryResourcesReferencingPredecessor               *[]Library               `bson:"_revIncludedLibraryResourcesReferencingPredecessor,omitempty"`
+	RevIncludedLibraryResourcesReferencingComposedof                *[]Library               `bson:"_revIncludedLibraryResourcesReferencingComposedof,omitempty"`
+	RevIncludedLibraryResourcesReferencingDependson                 *[]Library               `bson:"_revIncludedLibraryResourcesReferencingDependson,omitempty"`
+	RevIncludedCommunicationRequestResourcesReferencingBasedon      *[]CommunicationRequest  `bson:"_revIncludedCommunicationRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedBasicResourcesReferencingSubject                     *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
+	RevIncludedAuditEventResourcesReferencingEntity                 *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
+	RevIncludedConditionResourcesReferencingEvidencedetail          *[]Condition             `bson:"_revIncludedConditionResourcesReferencingEvidencedetail,omitempty"`
+	RevIncludedCompositionResourcesReferencingSubject               *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
+	RevIncludedCompositionResourcesReferencingEntry                 *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingEntry,omitempty"`
+	RevIncludedDetectedIssueResourcesReferencingImplicated          *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
+	RevIncludedQuestionnaireResponseResourcesReferencingSubject     *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
+	RevIncludedProcessResponseResourcesReferencingRequest           *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
+	RevIncludedPlanDefinitionResourcesReferencingSuccessor          *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingSuccessor,omitempty"`
+	RevIncludedPlanDefinitionResourcesReferencingDerivedfrom        *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingDerivedfrom,omitempty"`
+	RevIncludedPlanDefinitionResourcesReferencingPredecessor        *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingPredecessor,omitempty"`
+	RevIncludedPlanDefinitionResourcesReferencingComposedof         *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingComposedof,omitempty"`
+	RevIncludedPlanDefinitionResourcesReferencingDependsonPath1     *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingDependsonPath1,omitempty"`
+	RevIncludedPlanDefinitionResourcesReferencingDependsonPath2     *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingDependsonPath2,omitempty"`
 }
 
 func (e *EnrollmentRequestPlusRelatedResources) GetIncludedPatientResourceReferencedBySubject() (patient *Patient, err error) {
@@ -180,11 +210,74 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDocumentManifestRe
 	return
 }
 
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedConsentResourcesReferencingData() (consents []Consent, err error) {
-	if e.RevIncludedConsentResourcesReferencingData == nil {
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath1() (consents []Consent, err error) {
+	if e.RevIncludedConsentResourcesReferencingDataPath1 == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
-		consents = *e.RevIncludedConsentResourcesReferencingData
+		consents = *e.RevIncludedConsentResourcesReferencingDataPath1
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath2() (consents []Consent, err error) {
+	if e.RevIncludedConsentResourcesReferencingDataPath2 == nil {
+		err = errors.New("RevIncluded consents not requested")
+	} else {
+		consents = *e.RevIncludedConsentResourcesReferencingDataPath2
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingSuccessor() (measures []Measure, err error) {
+	if e.RevIncludedMeasureResourcesReferencingSuccessor == nil {
+		err = errors.New("RevIncluded measures not requested")
+	} else {
+		measures = *e.RevIncludedMeasureResourcesReferencingSuccessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDerivedfrom() (measures []Measure, err error) {
+	if e.RevIncludedMeasureResourcesReferencingDerivedfrom == nil {
+		err = errors.New("RevIncluded measures not requested")
+	} else {
+		measures = *e.RevIncludedMeasureResourcesReferencingDerivedfrom
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingPredecessor() (measures []Measure, err error) {
+	if e.RevIncludedMeasureResourcesReferencingPredecessor == nil {
+		err = errors.New("RevIncluded measures not requested")
+	} else {
+		measures = *e.RevIncludedMeasureResourcesReferencingPredecessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingComposedof() (measures []Measure, err error) {
+	if e.RevIncludedMeasureResourcesReferencingComposedof == nil {
+		err = errors.New("RevIncluded measures not requested")
+	} else {
+		measures = *e.RevIncludedMeasureResourcesReferencingComposedof
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath1() (measures []Measure, err error) {
+	if e.RevIncludedMeasureResourcesReferencingDependsonPath1 == nil {
+		err = errors.New("RevIncluded measures not requested")
+	} else {
+		measures = *e.RevIncludedMeasureResourcesReferencingDependsonPath1
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath2() (measures []Measure, err error) {
+	if e.RevIncludedMeasureResourcesReferencingDependsonPath2 == nil {
+		err = errors.New("RevIncluded measures not requested")
+	} else {
+		measures = *e.RevIncludedMeasureResourcesReferencingDependsonPath2
 	}
 	return
 }
@@ -198,15 +291,6 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDocumentReferenceR
 	return
 }
 
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedContractResourcesReferencingTtopic() (contracts []Contract, err error) {
-	if e.RevIncludedContractResourcesReferencingTtopic == nil {
-		err = errors.New("RevIncluded contracts not requested")
-	} else {
-		contracts = *e.RevIncludedContractResourcesReferencingTtopic
-	}
-	return
-}
-
 func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
 	if e.RevIncludedContractResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded contracts not requested")
@@ -216,11 +300,11 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedContractResourcesR
 	return
 }
 
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedContractResourcesReferencingTopic() (contracts []Contract, err error) {
-	if e.RevIncludedContractResourcesReferencingTopic == nil {
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedContractResourcesReferencingTermtopic() (contracts []Contract, err error) {
+	if e.RevIncludedContractResourcesReferencingTermtopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
-		contracts = *e.RevIncludedContractResourcesReferencingTopic
+		contracts = *e.RevIncludedContractResourcesReferencingTermtopic
 	}
 	return
 }
@@ -252,6 +336,60 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedImplementationGuid
 	return
 }
 
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingSuccessor() (serviceDefinitions []ServiceDefinition, err error) {
+	if e.RevIncludedServiceDefinitionResourcesReferencingSuccessor == nil {
+		err = errors.New("RevIncluded serviceDefinitions not requested")
+	} else {
+		serviceDefinitions = *e.RevIncludedServiceDefinitionResourcesReferencingSuccessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDerivedfrom() (serviceDefinitions []ServiceDefinition, err error) {
+	if e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom == nil {
+		err = errors.New("RevIncluded serviceDefinitions not requested")
+	} else {
+		serviceDefinitions = *e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingPredecessor() (serviceDefinitions []ServiceDefinition, err error) {
+	if e.RevIncludedServiceDefinitionResourcesReferencingPredecessor == nil {
+		err = errors.New("RevIncluded serviceDefinitions not requested")
+	} else {
+		serviceDefinitions = *e.RevIncludedServiceDefinitionResourcesReferencingPredecessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingComposedof() (serviceDefinitions []ServiceDefinition, err error) {
+	if e.RevIncludedServiceDefinitionResourcesReferencingComposedof == nil {
+		err = errors.New("RevIncluded serviceDefinitions not requested")
+	} else {
+		serviceDefinitions = *e.RevIncludedServiceDefinitionResourcesReferencingComposedof
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDependson() (serviceDefinitions []ServiceDefinition, err error) {
+	if e.RevIncludedServiceDefinitionResourcesReferencingDependson == nil {
+		err = errors.New("RevIncluded serviceDefinitions not requested")
+	} else {
+		serviceDefinitions = *e.RevIncludedServiceDefinitionResourcesReferencingDependson
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingPartof() (communications []Communication, err error) {
+	if e.RevIncludedCommunicationResourcesReferencingPartof == nil {
+		err = errors.New("RevIncluded communications not requested")
+	} else {
+		communications = *e.RevIncludedCommunicationResourcesReferencingPartof
+	}
+	return
+}
+
 func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
 	if e.RevIncludedCommunicationResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communications not requested")
@@ -261,20 +399,101 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedCommunicationResou
 	return
 }
 
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingData() (messageHeaders []MessageHeader, err error) {
-	if e.RevIncludedMessageHeaderResourcesReferencingData == nil {
-		err = errors.New("RevIncluded messageHeaders not requested")
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingSuccessor() (activityDefinitions []ActivityDefinition, err error) {
+	if e.RevIncludedActivityDefinitionResourcesReferencingSuccessor == nil {
+		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
-		messageHeaders = *e.RevIncludedMessageHeaderResourcesReferencingData
+		activityDefinitions = *e.RevIncludedActivityDefinitionResourcesReferencingSuccessor
 	}
 	return
 }
 
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntity() (provenances []Provenance, err error) {
-	if e.RevIncludedProvenanceResourcesReferencingEntity == nil {
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDerivedfrom() (activityDefinitions []ActivityDefinition, err error) {
+	if e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom == nil {
+		err = errors.New("RevIncluded activityDefinitions not requested")
+	} else {
+		activityDefinitions = *e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingPredecessor() (activityDefinitions []ActivityDefinition, err error) {
+	if e.RevIncludedActivityDefinitionResourcesReferencingPredecessor == nil {
+		err = errors.New("RevIncluded activityDefinitions not requested")
+	} else {
+		activityDefinitions = *e.RevIncludedActivityDefinitionResourcesReferencingPredecessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingComposedof() (activityDefinitions []ActivityDefinition, err error) {
+	if e.RevIncludedActivityDefinitionResourcesReferencingComposedof == nil {
+		err = errors.New("RevIncluded activityDefinitions not requested")
+	} else {
+		activityDefinitions = *e.RevIncludedActivityDefinitionResourcesReferencingComposedof
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath1() (activityDefinitions []ActivityDefinition, err error) {
+	if e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 == nil {
+		err = errors.New("RevIncluded activityDefinitions not requested")
+	} else {
+		activityDefinitions = *e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath2() (activityDefinitions []ActivityDefinition, err error) {
+	if e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 == nil {
+		err = errors.New("RevIncluded activityDefinitions not requested")
+	} else {
+		activityDefinitions = *e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedRequestGroupResourcesReferencingDefinition() (requestGroups []RequestGroup, err error) {
+	if e.RevIncludedRequestGroupResourcesReferencingDefinition == nil {
+		err = errors.New("RevIncluded requestGroups not requested")
+	} else {
+		requestGroups = *e.RevIncludedRequestGroupResourcesReferencingDefinition
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingBasedon() (deviceRequests []DeviceRequest, err error) {
+	if e.RevIncludedDeviceRequestResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded deviceRequests not requested")
+	} else {
+		deviceRequests = *e.RevIncludedDeviceRequestResourcesReferencingBasedon
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingPriorrequest() (deviceRequests []DeviceRequest, err error) {
+	if e.RevIncludedDeviceRequestResourcesReferencingPriorrequest == nil {
+		err = errors.New("RevIncluded deviceRequests not requested")
+	} else {
+		deviceRequests = *e.RevIncludedDeviceRequestResourcesReferencingPriorrequest
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingFocus() (messageHeaders []MessageHeader, err error) {
+	if e.RevIncludedMessageHeaderResourcesReferencingFocus == nil {
+		err = errors.New("RevIncluded messageHeaders not requested")
+	} else {
+		messageHeaders = *e.RevIncludedMessageHeaderResourcesReferencingFocus
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntityref() (provenances []Provenance, err error) {
+	if e.RevIncludedProvenanceResourcesReferencingEntityref == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
-		provenances = *e.RevIncludedProvenanceResourcesReferencingEntity
+		provenances = *e.RevIncludedProvenanceResourcesReferencingEntityref
 	}
 	return
 }
@@ -324,56 +543,20 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedListResourcesRefer
 	return
 }
 
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingReplaces() (diagnosticRequests []DiagnosticRequest, err error) {
-	if e.RevIncludedDiagnosticRequestResourcesReferencingReplaces == nil {
-		err = errors.New("RevIncluded diagnosticRequests not requested")
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingReplaces() (procedureRequests []ProcedureRequest, err error) {
+	if e.RevIncludedProcedureRequestResourcesReferencingReplaces == nil {
+		err = errors.New("RevIncluded procedureRequests not requested")
 	} else {
-		diagnosticRequests = *e.RevIncludedDiagnosticRequestResourcesReferencingReplaces
+		procedureRequests = *e.RevIncludedProcedureRequestResourcesReferencingReplaces
 	}
 	return
 }
 
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingBasedon() (diagnosticRequests []DiagnosticRequest, err error) {
-	if e.RevIncludedDiagnosticRequestResourcesReferencingBasedon == nil {
-		err = errors.New("RevIncluded diagnosticRequests not requested")
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingBasedon() (procedureRequests []ProcedureRequest, err error) {
+	if e.RevIncludedProcedureRequestResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded procedureRequests not requested")
 	} else {
-		diagnosticRequests = *e.RevIncludedDiagnosticRequestResourcesReferencingBasedon
-	}
-	return
-}
-
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDiagnosticRequestResourcesReferencingDefinition() (diagnosticRequests []DiagnosticRequest, err error) {
-	if e.RevIncludedDiagnosticRequestResourcesReferencingDefinition == nil {
-		err = errors.New("RevIncluded diagnosticRequests not requested")
-	} else {
-		diagnosticRequests = *e.RevIncludedDiagnosticRequestResourcesReferencingDefinition
-	}
-	return
-}
-
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingReplaces() (deviceUseRequests []DeviceUseRequest, err error) {
-	if e.RevIncludedDeviceUseRequestResourcesReferencingReplaces == nil {
-		err = errors.New("RevIncluded deviceUseRequests not requested")
-	} else {
-		deviceUseRequests = *e.RevIncludedDeviceUseRequestResourcesReferencingReplaces
-	}
-	return
-}
-
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingBasedon() (deviceUseRequests []DeviceUseRequest, err error) {
-	if e.RevIncludedDeviceUseRequestResourcesReferencingBasedon == nil {
-		err = errors.New("RevIncluded deviceUseRequests not requested")
-	} else {
-		deviceUseRequests = *e.RevIncludedDeviceUseRequestResourcesReferencingBasedon
-	}
-	return
-}
-
-func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedDeviceUseRequestResourcesReferencingDefinition() (deviceUseRequests []DeviceUseRequest, err error) {
-	if e.RevIncludedDeviceUseRequestResourcesReferencingDefinition == nil {
-		err = errors.New("RevIncluded deviceUseRequests not requested")
-	} else {
-		deviceUseRequests = *e.RevIncludedDeviceUseRequestResourcesReferencingDefinition
+		procedureRequests = *e.RevIncludedProcedureRequestResourcesReferencingBasedon
 	}
 	return
 }
@@ -383,6 +566,60 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedEnrollmentResponse
 		err = errors.New("RevIncluded enrollmentResponses not requested")
 	} else {
 		enrollmentResponses = *e.RevIncludedEnrollmentResponseResourcesReferencingRequest
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingSuccessor() (libraries []Library, err error) {
+	if e.RevIncludedLibraryResourcesReferencingSuccessor == nil {
+		err = errors.New("RevIncluded libraries not requested")
+	} else {
+		libraries = *e.RevIncludedLibraryResourcesReferencingSuccessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDerivedfrom() (libraries []Library, err error) {
+	if e.RevIncludedLibraryResourcesReferencingDerivedfrom == nil {
+		err = errors.New("RevIncluded libraries not requested")
+	} else {
+		libraries = *e.RevIncludedLibraryResourcesReferencingDerivedfrom
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingPredecessor() (libraries []Library, err error) {
+	if e.RevIncludedLibraryResourcesReferencingPredecessor == nil {
+		err = errors.New("RevIncluded libraries not requested")
+	} else {
+		libraries = *e.RevIncludedLibraryResourcesReferencingPredecessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingComposedof() (libraries []Library, err error) {
+	if e.RevIncludedLibraryResourcesReferencingComposedof == nil {
+		err = errors.New("RevIncluded libraries not requested")
+	} else {
+		libraries = *e.RevIncludedLibraryResourcesReferencingComposedof
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDependson() (libraries []Library, err error) {
+	if e.RevIncludedLibraryResourcesReferencingDependson == nil {
+		err = errors.New("RevIncluded libraries not requested")
+	} else {
+		libraries = *e.RevIncludedLibraryResourcesReferencingDependson
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedCommunicationRequestResourcesReferencingBasedon() (communicationRequests []CommunicationRequest, err error) {
+	if e.RevIncludedCommunicationRequestResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded communicationRequests not requested")
+	} else {
+		communicationRequests = *e.RevIncludedCommunicationRequestResourcesReferencingBasedon
 	}
 	return
 }
@@ -401,6 +638,15 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedAuditEventResource
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
 		auditEvents = *e.RevIncludedAuditEventResourcesReferencingEntity
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedConditionResourcesReferencingEvidencedetail() (conditions []Condition, err error) {
+	if e.RevIncludedConditionResourcesReferencingEvidencedetail == nil {
+		err = errors.New("RevIncluded conditions not requested")
+	} else {
+		conditions = *e.RevIncludedConditionResourcesReferencingEvidencedetail
 	}
 	return
 }
@@ -450,6 +696,60 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedProcessResponseRes
 	return
 }
 
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingSuccessor() (planDefinitions []PlanDefinition, err error) {
+	if e.RevIncludedPlanDefinitionResourcesReferencingSuccessor == nil {
+		err = errors.New("RevIncluded planDefinitions not requested")
+	} else {
+		planDefinitions = *e.RevIncludedPlanDefinitionResourcesReferencingSuccessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDerivedfrom() (planDefinitions []PlanDefinition, err error) {
+	if e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom == nil {
+		err = errors.New("RevIncluded planDefinitions not requested")
+	} else {
+		planDefinitions = *e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingPredecessor() (planDefinitions []PlanDefinition, err error) {
+	if e.RevIncludedPlanDefinitionResourcesReferencingPredecessor == nil {
+		err = errors.New("RevIncluded planDefinitions not requested")
+	} else {
+		planDefinitions = *e.RevIncludedPlanDefinitionResourcesReferencingPredecessor
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingComposedof() (planDefinitions []PlanDefinition, err error) {
+	if e.RevIncludedPlanDefinitionResourcesReferencingComposedof == nil {
+		err = errors.New("RevIncluded planDefinitions not requested")
+	} else {
+		planDefinitions = *e.RevIncludedPlanDefinitionResourcesReferencingComposedof
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath1() (planDefinitions []PlanDefinition, err error) {
+	if e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1 == nil {
+		err = errors.New("RevIncluded planDefinitions not requested")
+	} else {
+		planDefinitions = *e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1
+	}
+	return
+}
+
+func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath2() (planDefinitions []PlanDefinition, err error) {
+	if e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2 == nil {
+		err = errors.New("RevIncluded planDefinitions not requested")
+	} else {
+		planDefinitions = *e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2
+	}
+	return
+}
+
 func (e *EnrollmentRequestPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if e.IncludedPatientResourcesReferencedBySubject != nil {
@@ -487,9 +787,51 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedConsentResourcesReferencingData != nil {
-		for idx := range *e.RevIncludedConsentResourcesReferencingData {
-			rsc := (*e.RevIncludedConsentResourcesReferencingData)[idx]
+	if e.RevIncludedConsentResourcesReferencingDataPath1 != nil {
+		for idx := range *e.RevIncludedConsentResourcesReferencingDataPath1 {
+			rsc := (*e.RevIncludedConsentResourcesReferencingDataPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedConsentResourcesReferencingDataPath2 != nil {
+		for idx := range *e.RevIncludedConsentResourcesReferencingDataPath2 {
+			rsc := (*e.RevIncludedConsentResourcesReferencingDataPath2)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingDependsonPath1 != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingDependsonPath1 {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingDependsonPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingDependsonPath2 != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingDependsonPath2 {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingDependsonPath2)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -499,21 +841,15 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedContractResourcesReferencingTtopic != nil {
-		for idx := range *e.RevIncludedContractResourcesReferencingTtopic {
-			rsc := (*e.RevIncludedContractResourcesReferencingTtopic)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if e.RevIncludedContractResourcesReferencingSubject != nil {
 		for idx := range *e.RevIncludedContractResourcesReferencingSubject {
 			rsc := (*e.RevIncludedContractResourcesReferencingSubject)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedContractResourcesReferencingTopic != nil {
-		for idx := range *e.RevIncludedContractResourcesReferencingTopic {
-			rsc := (*e.RevIncludedContractResourcesReferencingTopic)[idx]
+	if e.RevIncludedContractResourcesReferencingTermtopic != nil {
+		for idx := range *e.RevIncludedContractResourcesReferencingTermtopic {
+			rsc := (*e.RevIncludedContractResourcesReferencingTermtopic)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -535,21 +871,111 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingDependson != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingDependson {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingDependson)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedCommunicationResourcesReferencingPartof != nil {
+		for idx := range *e.RevIncludedCommunicationResourcesReferencingPartof {
+			rsc := (*e.RevIncludedCommunicationResourcesReferencingPartof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if e.RevIncludedCommunicationResourcesReferencingBasedon != nil {
 		for idx := range *e.RevIncludedCommunicationResourcesReferencingBasedon {
 			rsc := (*e.RevIncludedCommunicationResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedMessageHeaderResourcesReferencingData != nil {
-		for idx := range *e.RevIncludedMessageHeaderResourcesReferencingData {
-			rsc := (*e.RevIncludedMessageHeaderResourcesReferencingData)[idx]
+	if e.RevIncludedActivityDefinitionResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingSuccessor)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedProvenanceResourcesReferencingEntity != nil {
-		for idx := range *e.RevIncludedProvenanceResourcesReferencingEntity {
-			rsc := (*e.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+	if e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedRequestGroupResourcesReferencingDefinition != nil {
+		for idx := range *e.RevIncludedRequestGroupResourcesReferencingDefinition {
+			rsc := (*e.RevIncludedRequestGroupResourcesReferencingDefinition)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedDeviceRequestResourcesReferencingBasedon != nil {
+		for idx := range *e.RevIncludedDeviceRequestResourcesReferencingBasedon {
+			rsc := (*e.RevIncludedDeviceRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedDeviceRequestResourcesReferencingPriorrequest != nil {
+		for idx := range *e.RevIncludedDeviceRequestResourcesReferencingPriorrequest {
+			rsc := (*e.RevIncludedDeviceRequestResourcesReferencingPriorrequest)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMessageHeaderResourcesReferencingFocus != nil {
+		for idx := range *e.RevIncludedMessageHeaderResourcesReferencingFocus {
+			rsc := (*e.RevIncludedMessageHeaderResourcesReferencingFocus)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedProvenanceResourcesReferencingEntityref != nil {
+		for idx := range *e.RevIncludedProvenanceResourcesReferencingEntityref {
+			rsc := (*e.RevIncludedProvenanceResourcesReferencingEntityref)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -583,45 +1009,57 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedResources() map[st
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedDiagnosticRequestResourcesReferencingReplaces != nil {
-		for idx := range *e.RevIncludedDiagnosticRequestResourcesReferencingReplaces {
-			rsc := (*e.RevIncludedDiagnosticRequestResourcesReferencingReplaces)[idx]
+	if e.RevIncludedProcedureRequestResourcesReferencingReplaces != nil {
+		for idx := range *e.RevIncludedProcedureRequestResourcesReferencingReplaces {
+			rsc := (*e.RevIncludedProcedureRequestResourcesReferencingReplaces)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedDiagnosticRequestResourcesReferencingBasedon != nil {
-		for idx := range *e.RevIncludedDiagnosticRequestResourcesReferencingBasedon {
-			rsc := (*e.RevIncludedDiagnosticRequestResourcesReferencingBasedon)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDiagnosticRequestResourcesReferencingDefinition != nil {
-		for idx := range *e.RevIncludedDiagnosticRequestResourcesReferencingDefinition {
-			rsc := (*e.RevIncludedDiagnosticRequestResourcesReferencingDefinition)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDeviceUseRequestResourcesReferencingReplaces != nil {
-		for idx := range *e.RevIncludedDeviceUseRequestResourcesReferencingReplaces {
-			rsc := (*e.RevIncludedDeviceUseRequestResourcesReferencingReplaces)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDeviceUseRequestResourcesReferencingBasedon != nil {
-		for idx := range *e.RevIncludedDeviceUseRequestResourcesReferencingBasedon {
-			rsc := (*e.RevIncludedDeviceUseRequestResourcesReferencingBasedon)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDeviceUseRequestResourcesReferencingDefinition != nil {
-		for idx := range *e.RevIncludedDeviceUseRequestResourcesReferencingDefinition {
-			rsc := (*e.RevIncludedDeviceUseRequestResourcesReferencingDefinition)[idx]
+	if e.RevIncludedProcedureRequestResourcesReferencingBasedon != nil {
+		for idx := range *e.RevIncludedProcedureRequestResourcesReferencingBasedon {
+			rsc := (*e.RevIncludedProcedureRequestResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if e.RevIncludedEnrollmentResponseResourcesReferencingRequest != nil {
 		for idx := range *e.RevIncludedEnrollmentResponseResourcesReferencingRequest {
 			rsc := (*e.RevIncludedEnrollmentResponseResourcesReferencingRequest)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingDependson != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingDependson {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingDependson)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedCommunicationRequestResourcesReferencingBasedon != nil {
+		for idx := range *e.RevIncludedCommunicationRequestResourcesReferencingBasedon {
+			rsc := (*e.RevIncludedCommunicationRequestResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -634,6 +1072,12 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedResources() map[st
 	if e.RevIncludedAuditEventResourcesReferencingEntity != nil {
 		for idx := range *e.RevIncludedAuditEventResourcesReferencingEntity {
 			rsc := (*e.RevIncludedAuditEventResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedConditionResourcesReferencingEvidencedetail != nil {
+		for idx := range *e.RevIncludedConditionResourcesReferencingEvidencedetail {
+			rsc := (*e.RevIncludedConditionResourcesReferencingEvidencedetail)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -664,6 +1108,42 @@ func (e *EnrollmentRequestPlusRelatedResources) GetRevIncludedResources() map[st
 	if e.RevIncludedProcessResponseResourcesReferencingRequest != nil {
 		for idx := range *e.RevIncludedProcessResponseResourcesReferencingRequest {
 			rsc := (*e.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1 != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1 {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2 != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2 {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -702,9 +1182,51 @@ func (e *EnrollmentRequestPlusRelatedResources) GetIncludedAndRevIncludedResourc
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedConsentResourcesReferencingData != nil {
-		for idx := range *e.RevIncludedConsentResourcesReferencingData {
-			rsc := (*e.RevIncludedConsentResourcesReferencingData)[idx]
+	if e.RevIncludedConsentResourcesReferencingDataPath1 != nil {
+		for idx := range *e.RevIncludedConsentResourcesReferencingDataPath1 {
+			rsc := (*e.RevIncludedConsentResourcesReferencingDataPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedConsentResourcesReferencingDataPath2 != nil {
+		for idx := range *e.RevIncludedConsentResourcesReferencingDataPath2 {
+			rsc := (*e.RevIncludedConsentResourcesReferencingDataPath2)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingDependsonPath1 != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingDependsonPath1 {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingDependsonPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMeasureResourcesReferencingDependsonPath2 != nil {
+		for idx := range *e.RevIncludedMeasureResourcesReferencingDependsonPath2 {
+			rsc := (*e.RevIncludedMeasureResourcesReferencingDependsonPath2)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -714,21 +1236,15 @@ func (e *EnrollmentRequestPlusRelatedResources) GetIncludedAndRevIncludedResourc
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedContractResourcesReferencingTtopic != nil {
-		for idx := range *e.RevIncludedContractResourcesReferencingTtopic {
-			rsc := (*e.RevIncludedContractResourcesReferencingTtopic)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
 	if e.RevIncludedContractResourcesReferencingSubject != nil {
 		for idx := range *e.RevIncludedContractResourcesReferencingSubject {
 			rsc := (*e.RevIncludedContractResourcesReferencingSubject)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedContractResourcesReferencingTopic != nil {
-		for idx := range *e.RevIncludedContractResourcesReferencingTopic {
-			rsc := (*e.RevIncludedContractResourcesReferencingTopic)[idx]
+	if e.RevIncludedContractResourcesReferencingTermtopic != nil {
+		for idx := range *e.RevIncludedContractResourcesReferencingTermtopic {
+			rsc := (*e.RevIncludedContractResourcesReferencingTermtopic)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -750,21 +1266,111 @@ func (e *EnrollmentRequestPlusRelatedResources) GetIncludedAndRevIncludedResourc
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedServiceDefinitionResourcesReferencingDependson != nil {
+		for idx := range *e.RevIncludedServiceDefinitionResourcesReferencingDependson {
+			rsc := (*e.RevIncludedServiceDefinitionResourcesReferencingDependson)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedCommunicationResourcesReferencingPartof != nil {
+		for idx := range *e.RevIncludedCommunicationResourcesReferencingPartof {
+			rsc := (*e.RevIncludedCommunicationResourcesReferencingPartof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if e.RevIncludedCommunicationResourcesReferencingBasedon != nil {
 		for idx := range *e.RevIncludedCommunicationResourcesReferencingBasedon {
 			rsc := (*e.RevIncludedCommunicationResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedMessageHeaderResourcesReferencingData != nil {
-		for idx := range *e.RevIncludedMessageHeaderResourcesReferencingData {
-			rsc := (*e.RevIncludedMessageHeaderResourcesReferencingData)[idx]
+	if e.RevIncludedActivityDefinitionResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingSuccessor)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedProvenanceResourcesReferencingEntity != nil {
-		for idx := range *e.RevIncludedProvenanceResourcesReferencingEntity {
-			rsc := (*e.RevIncludedProvenanceResourcesReferencingEntity)[idx]
+	if e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 != nil {
+		for idx := range *e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 {
+			rsc := (*e.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedRequestGroupResourcesReferencingDefinition != nil {
+		for idx := range *e.RevIncludedRequestGroupResourcesReferencingDefinition {
+			rsc := (*e.RevIncludedRequestGroupResourcesReferencingDefinition)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedDeviceRequestResourcesReferencingBasedon != nil {
+		for idx := range *e.RevIncludedDeviceRequestResourcesReferencingBasedon {
+			rsc := (*e.RevIncludedDeviceRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedDeviceRequestResourcesReferencingPriorrequest != nil {
+		for idx := range *e.RevIncludedDeviceRequestResourcesReferencingPriorrequest {
+			rsc := (*e.RevIncludedDeviceRequestResourcesReferencingPriorrequest)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedMessageHeaderResourcesReferencingFocus != nil {
+		for idx := range *e.RevIncludedMessageHeaderResourcesReferencingFocus {
+			rsc := (*e.RevIncludedMessageHeaderResourcesReferencingFocus)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedProvenanceResourcesReferencingEntityref != nil {
+		for idx := range *e.RevIncludedProvenanceResourcesReferencingEntityref {
+			rsc := (*e.RevIncludedProvenanceResourcesReferencingEntityref)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -798,45 +1404,57 @@ func (e *EnrollmentRequestPlusRelatedResources) GetIncludedAndRevIncludedResourc
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedDiagnosticRequestResourcesReferencingReplaces != nil {
-		for idx := range *e.RevIncludedDiagnosticRequestResourcesReferencingReplaces {
-			rsc := (*e.RevIncludedDiagnosticRequestResourcesReferencingReplaces)[idx]
+	if e.RevIncludedProcedureRequestResourcesReferencingReplaces != nil {
+		for idx := range *e.RevIncludedProcedureRequestResourcesReferencingReplaces {
+			rsc := (*e.RevIncludedProcedureRequestResourcesReferencingReplaces)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
-	if e.RevIncludedDiagnosticRequestResourcesReferencingBasedon != nil {
-		for idx := range *e.RevIncludedDiagnosticRequestResourcesReferencingBasedon {
-			rsc := (*e.RevIncludedDiagnosticRequestResourcesReferencingBasedon)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDiagnosticRequestResourcesReferencingDefinition != nil {
-		for idx := range *e.RevIncludedDiagnosticRequestResourcesReferencingDefinition {
-			rsc := (*e.RevIncludedDiagnosticRequestResourcesReferencingDefinition)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDeviceUseRequestResourcesReferencingReplaces != nil {
-		for idx := range *e.RevIncludedDeviceUseRequestResourcesReferencingReplaces {
-			rsc := (*e.RevIncludedDeviceUseRequestResourcesReferencingReplaces)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDeviceUseRequestResourcesReferencingBasedon != nil {
-		for idx := range *e.RevIncludedDeviceUseRequestResourcesReferencingBasedon {
-			rsc := (*e.RevIncludedDeviceUseRequestResourcesReferencingBasedon)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if e.RevIncludedDeviceUseRequestResourcesReferencingDefinition != nil {
-		for idx := range *e.RevIncludedDeviceUseRequestResourcesReferencingDefinition {
-			rsc := (*e.RevIncludedDeviceUseRequestResourcesReferencingDefinition)[idx]
+	if e.RevIncludedProcedureRequestResourcesReferencingBasedon != nil {
+		for idx := range *e.RevIncludedProcedureRequestResourcesReferencingBasedon {
+			rsc := (*e.RevIncludedProcedureRequestResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	if e.RevIncludedEnrollmentResponseResourcesReferencingRequest != nil {
 		for idx := range *e.RevIncludedEnrollmentResponseResourcesReferencingRequest {
 			rsc := (*e.RevIncludedEnrollmentResponseResourcesReferencingRequest)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedLibraryResourcesReferencingDependson != nil {
+		for idx := range *e.RevIncludedLibraryResourcesReferencingDependson {
+			rsc := (*e.RevIncludedLibraryResourcesReferencingDependson)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedCommunicationRequestResourcesReferencingBasedon != nil {
+		for idx := range *e.RevIncludedCommunicationRequestResourcesReferencingBasedon {
+			rsc := (*e.RevIncludedCommunicationRequestResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -849,6 +1467,12 @@ func (e *EnrollmentRequestPlusRelatedResources) GetIncludedAndRevIncludedResourc
 	if e.RevIncludedAuditEventResourcesReferencingEntity != nil {
 		for idx := range *e.RevIncludedAuditEventResourcesReferencingEntity {
 			rsc := (*e.RevIncludedAuditEventResourcesReferencingEntity)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedConditionResourcesReferencingEvidencedetail != nil {
+		for idx := range *e.RevIncludedConditionResourcesReferencingEvidencedetail {
+			rsc := (*e.RevIncludedConditionResourcesReferencingEvidencedetail)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -879,6 +1503,42 @@ func (e *EnrollmentRequestPlusRelatedResources) GetIncludedAndRevIncludedResourc
 	if e.RevIncludedProcessResponseResourcesReferencingRequest != nil {
 		for idx := range *e.RevIncludedProcessResponseResourcesReferencingRequest {
 			rsc := (*e.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingSuccessor != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingSuccessor {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingSuccessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingPredecessor != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingPredecessor {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingPredecessor)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingComposedof != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingComposedof {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingComposedof)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1 != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1 {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2 != nil {
+		for idx := range *e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2 {
+			rsc := (*e.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

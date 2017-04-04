@@ -32,82 +32,125 @@ import (
 	"fmt"
 )
 
-type NamingSystem struct {
-	DomainResource `bson:",inline"`
-	Name           string                          `bson:"name,omitempty" json:"name,omitempty"`
-	Status         string                          `bson:"status,omitempty" json:"status,omitempty"`
-	Kind           string                          `bson:"kind,omitempty" json:"kind,omitempty"`
-	Date           *FHIRDateTime                   `bson:"date,omitempty" json:"date,omitempty"`
-	Publisher      string                          `bson:"publisher,omitempty" json:"publisher,omitempty"`
-	Contact        []ContactDetail                 `bson:"contact,omitempty" json:"contact,omitempty"`
-	Responsible    string                          `bson:"responsible,omitempty" json:"responsible,omitempty"`
-	Type           *CodeableConcept                `bson:"type,omitempty" json:"type,omitempty"`
-	Description    string                          `bson:"description,omitempty" json:"description,omitempty"`
-	UseContext     []UsageContext                  `bson:"useContext,omitempty" json:"useContext,omitempty"`
-	Jurisdiction   []CodeableConcept               `bson:"jurisdiction,omitempty" json:"jurisdiction,omitempty"`
-	Usage          string                          `bson:"usage,omitempty" json:"usage,omitempty"`
-	UniqueId       []NamingSystemUniqueIdComponent `bson:"uniqueId,omitempty" json:"uniqueId,omitempty"`
-	ReplacedBy     *Reference                      `bson:"replacedBy,omitempty" json:"replacedBy,omitempty"`
+type NutritionOrder struct {
+	DomainResource         `bson:",inline"`
+	Identifier             []Identifier                           `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status                 string                                 `bson:"status,omitempty" json:"status,omitempty"`
+	Patient                *Reference                             `bson:"patient,omitempty" json:"patient,omitempty"`
+	Encounter              *Reference                             `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	DateTime               *FHIRDateTime                          `bson:"dateTime,omitempty" json:"dateTime,omitempty"`
+	Orderer                *Reference                             `bson:"orderer,omitempty" json:"orderer,omitempty"`
+	AllergyIntolerance     []Reference                            `bson:"allergyIntolerance,omitempty" json:"allergyIntolerance,omitempty"`
+	FoodPreferenceModifier []CodeableConcept                      `bson:"foodPreferenceModifier,omitempty" json:"foodPreferenceModifier,omitempty"`
+	ExcludeFoodModifier    []CodeableConcept                      `bson:"excludeFoodModifier,omitempty" json:"excludeFoodModifier,omitempty"`
+	OralDiet               *NutritionOrderOralDietComponent       `bson:"oralDiet,omitempty" json:"oralDiet,omitempty"`
+	Supplement             []NutritionOrderSupplementComponent    `bson:"supplement,omitempty" json:"supplement,omitempty"`
+	EnteralFormula         *NutritionOrderEnteralFormulaComponent `bson:"enteralFormula,omitempty" json:"enteralFormula,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
-func (resource *NamingSystem) MarshalJSON() ([]byte, error) {
-	resource.ResourceType = "NamingSystem"
+func (resource *NutritionOrder) MarshalJSON() ([]byte, error) {
+	resource.ResourceType = "NutritionOrder"
 	// Dereferencing the pointer to avoid infinite recursion.
-	// Passing in plain old x (a pointer to NamingSystem), would cause this same
+	// Passing in plain old x (a pointer to NutritionOrder), would cause this same
 	// MarshallJSON function to be called again
 	return json.Marshal(*resource)
 }
 
-func (x *NamingSystem) GetBSON() (interface{}, error) {
-	x.ResourceType = "NamingSystem"
+func (x *NutritionOrder) GetBSON() (interface{}, error) {
+	x.ResourceType = "NutritionOrder"
 	// See comment in MarshallJSON to see why we dereference
 	return *x, nil
 }
 
-// The "namingSystem" sub-type is needed to avoid infinite recursion in UnmarshalJSON
-type namingSystem NamingSystem
+// The "nutritionOrder" sub-type is needed to avoid infinite recursion in UnmarshalJSON
+type nutritionOrder NutritionOrder
 
 // Custom unmarshaller to properly unmarshal embedded resources (represented as interface{})
-func (x *NamingSystem) UnmarshalJSON(data []byte) (err error) {
-	x2 := namingSystem{}
+func (x *NutritionOrder) UnmarshalJSON(data []byte) (err error) {
+	x2 := nutritionOrder{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Contained != nil {
 			for i := range x2.Contained {
 				x2.Contained[i] = MapToResource(x2.Contained[i], true)
 			}
 		}
-		*x = NamingSystem(x2)
+		*x = NutritionOrder(x2)
 		return x.checkResourceType()
 	}
 	return
 }
 
-func (x *NamingSystem) checkResourceType() error {
+func (x *NutritionOrder) checkResourceType() error {
 	if x.ResourceType == "" {
-		x.ResourceType = "NamingSystem"
-	} else if x.ResourceType != "NamingSystem" {
-		return errors.New(fmt.Sprintf("Expected resourceType to be NamingSystem, instead received %s", x.ResourceType))
+		x.ResourceType = "NutritionOrder"
+	} else if x.ResourceType != "NutritionOrder" {
+		return errors.New(fmt.Sprintf("Expected resourceType to be NutritionOrder, instead received %s", x.ResourceType))
 	}
 	return nil
 }
 
-type NamingSystemUniqueIdComponent struct {
+type NutritionOrderOralDietComponent struct {
+	BackboneElement      `bson:",inline"`
+	Type                 []CodeableConcept                         `bson:"type,omitempty" json:"type,omitempty"`
+	Schedule             []Timing                                  `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	Nutrient             []NutritionOrderOralDietNutrientComponent `bson:"nutrient,omitempty" json:"nutrient,omitempty"`
+	Texture              []NutritionOrderOralDietTextureComponent  `bson:"texture,omitempty" json:"texture,omitempty"`
+	FluidConsistencyType []CodeableConcept                         `bson:"fluidConsistencyType,omitempty" json:"fluidConsistencyType,omitempty"`
+	Instruction          string                                    `bson:"instruction,omitempty" json:"instruction,omitempty"`
+}
+
+type NutritionOrderOralDietNutrientComponent struct {
 	BackboneElement `bson:",inline"`
-	Type            string  `bson:"type,omitempty" json:"type,omitempty"`
-	Value           string  `bson:"value,omitempty" json:"value,omitempty"`
-	Preferred       *bool   `bson:"preferred,omitempty" json:"preferred,omitempty"`
-	Comment         string  `bson:"comment,omitempty" json:"comment,omitempty"`
-	Period          *Period `bson:"period,omitempty" json:"period,omitempty"`
+	Modifier        *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	Amount          *Quantity        `bson:"amount,omitempty" json:"amount,omitempty"`
 }
 
-type NamingSystemPlus struct {
-	NamingSystem                     `bson:",inline"`
-	NamingSystemPlusRelatedResources `bson:",inline"`
+type NutritionOrderOralDietTextureComponent struct {
+	BackboneElement `bson:",inline"`
+	Modifier        *CodeableConcept `bson:"modifier,omitempty" json:"modifier,omitempty"`
+	FoodType        *CodeableConcept `bson:"foodType,omitempty" json:"foodType,omitempty"`
 }
 
-type NamingSystemPlusRelatedResources struct {
-	IncludedNamingSystemResourcesReferencedByReplacedby             *[]NamingSystem          `bson:"_includedNamingSystemResourcesReferencedByReplacedby,omitempty"`
+type NutritionOrderSupplementComponent struct {
+	BackboneElement `bson:",inline"`
+	Type            *CodeableConcept `bson:"type,omitempty" json:"type,omitempty"`
+	ProductName     string           `bson:"productName,omitempty" json:"productName,omitempty"`
+	Schedule        []Timing         `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	Quantity        *Quantity        `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	Instruction     string           `bson:"instruction,omitempty" json:"instruction,omitempty"`
+}
+
+type NutritionOrderEnteralFormulaComponent struct {
+	BackboneElement           `bson:",inline"`
+	BaseFormulaType           *CodeableConcept                                      `bson:"baseFormulaType,omitempty" json:"baseFormulaType,omitempty"`
+	BaseFormulaProductName    string                                                `bson:"baseFormulaProductName,omitempty" json:"baseFormulaProductName,omitempty"`
+	AdditiveType              *CodeableConcept                                      `bson:"additiveType,omitempty" json:"additiveType,omitempty"`
+	AdditiveProductName       string                                                `bson:"additiveProductName,omitempty" json:"additiveProductName,omitempty"`
+	CaloricDensity            *Quantity                                             `bson:"caloricDensity,omitempty" json:"caloricDensity,omitempty"`
+	RouteofAdministration     *CodeableConcept                                      `bson:"routeofAdministration,omitempty" json:"routeofAdministration,omitempty"`
+	Administration            []NutritionOrderEnteralFormulaAdministrationComponent `bson:"administration,omitempty" json:"administration,omitempty"`
+	MaxVolumeToDeliver        *Quantity                                             `bson:"maxVolumeToDeliver,omitempty" json:"maxVolumeToDeliver,omitempty"`
+	AdministrationInstruction string                                                `bson:"administrationInstruction,omitempty" json:"administrationInstruction,omitempty"`
+}
+
+type NutritionOrderEnteralFormulaAdministrationComponent struct {
+	BackboneElement    `bson:",inline"`
+	Schedule           *Timing   `bson:"schedule,omitempty" json:"schedule,omitempty"`
+	Quantity           *Quantity `bson:"quantity,omitempty" json:"quantity,omitempty"`
+	RateSimpleQuantity *Quantity `bson:"rateSimpleQuantity,omitempty" json:"rateSimpleQuantity,omitempty"`
+	RateRatio          *Ratio    `bson:"rateRatio,omitempty" json:"rateRatio,omitempty"`
+}
+
+type NutritionOrderPlus struct {
+	NutritionOrder                     `bson:",inline"`
+	NutritionOrderPlusRelatedResources `bson:",inline"`
+}
+
+type NutritionOrderPlusRelatedResources struct {
+	IncludedPractitionerResourcesReferencedByProvider               *[]Practitioner          `bson:"_includedPractitionerResourcesReferencedByProvider,omitempty"`
+	IncludedPatientResourcesReferencedByPatient                     *[]Patient               `bson:"_includedPatientResourcesReferencedByPatient,omitempty"`
+	IncludedEncounterResourcesReferencedByEncounter                 *[]Encounter             `bson:"_includedEncounterResourcesReferencedByEncounter,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingContentref       *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingContentref,omitempty"`
 	RevIncludedDocumentManifestResourcesReferencingRelatedref       *[]DocumentManifest      `bson:"_revIncludedDocumentManifestResourcesReferencingRelatedref,omitempty"`
 	RevIncludedConsentResourcesReferencingDataPath1                 *[]Consent               `bson:"_revIncludedConsentResourcesReferencingDataPath1,omitempty"`
@@ -146,9 +189,11 @@ type NamingSystemPlusRelatedResources struct {
 	RevIncludedTaskResourcesReferencingSubject                      *[]Task                  `bson:"_revIncludedTaskResourcesReferencingSubject,omitempty"`
 	RevIncludedTaskResourcesReferencingFocus                        *[]Task                  `bson:"_revIncludedTaskResourcesReferencingFocus,omitempty"`
 	RevIncludedTaskResourcesReferencingBasedon                      *[]Task                  `bson:"_revIncludedTaskResourcesReferencingBasedon,omitempty"`
+	RevIncludedCarePlanResourcesReferencingActivityreference        *[]CarePlan              `bson:"_revIncludedCarePlanResourcesReferencingActivityreference,omitempty"`
 	RevIncludedListResourcesReferencingItem                         *[]List                  `bson:"_revIncludedListResourcesReferencingItem,omitempty"`
 	RevIncludedProcedureRequestResourcesReferencingReplaces         *[]ProcedureRequest      `bson:"_revIncludedProcedureRequestResourcesReferencingReplaces,omitempty"`
 	RevIncludedProcedureRequestResourcesReferencingBasedon          *[]ProcedureRequest      `bson:"_revIncludedProcedureRequestResourcesReferencingBasedon,omitempty"`
+	RevIncludedObservationResourcesReferencingBasedon               *[]Observation           `bson:"_revIncludedObservationResourcesReferencingBasedon,omitempty"`
 	RevIncludedLibraryResourcesReferencingSuccessor                 *[]Library               `bson:"_revIncludedLibraryResourcesReferencingSuccessor,omitempty"`
 	RevIncludedLibraryResourcesReferencingDerivedfrom               *[]Library               `bson:"_revIncludedLibraryResourcesReferencingDerivedfrom,omitempty"`
 	RevIncludedLibraryResourcesReferencingPredecessor               *[]Library               `bson:"_revIncludedLibraryResourcesReferencingPredecessor,omitempty"`
@@ -156,6 +201,7 @@ type NamingSystemPlusRelatedResources struct {
 	RevIncludedLibraryResourcesReferencingDependson                 *[]Library               `bson:"_revIncludedLibraryResourcesReferencingDependson,omitempty"`
 	RevIncludedCommunicationRequestResourcesReferencingBasedon      *[]CommunicationRequest  `bson:"_revIncludedCommunicationRequestResourcesReferencingBasedon,omitempty"`
 	RevIncludedBasicResourcesReferencingSubject                     *[]Basic                 `bson:"_revIncludedBasicResourcesReferencingSubject,omitempty"`
+	RevIncludedDiagnosticReportResourcesReferencingBasedon          *[]DiagnosticReport      `bson:"_revIncludedDiagnosticReportResourcesReferencingBasedon,omitempty"`
 	RevIncludedAuditEventResourcesReferencingEntity                 *[]AuditEvent            `bson:"_revIncludedAuditEventResourcesReferencingEntity,omitempty"`
 	RevIncludedConditionResourcesReferencingEvidencedetail          *[]Condition             `bson:"_revIncludedConditionResourcesReferencingEvidencedetail,omitempty"`
 	RevIncludedCompositionResourcesReferencingSubject               *[]Composition           `bson:"_revIncludedCompositionResourcesReferencingSubject,omitempty"`
@@ -163,7 +209,6 @@ type NamingSystemPlusRelatedResources struct {
 	RevIncludedDetectedIssueResourcesReferencingImplicated          *[]DetectedIssue         `bson:"_revIncludedDetectedIssueResourcesReferencingImplicated,omitempty"`
 	RevIncludedQuestionnaireResponseResourcesReferencingSubject     *[]QuestionnaireResponse `bson:"_revIncludedQuestionnaireResponseResourcesReferencingSubject,omitempty"`
 	RevIncludedProcessResponseResourcesReferencingRequest           *[]ProcessResponse       `bson:"_revIncludedProcessResponseResourcesReferencingRequest,omitempty"`
-	RevIncludedNamingSystemResourcesReferencingReplacedby           *[]NamingSystem          `bson:"_revIncludedNamingSystemResourcesReferencingReplacedby,omitempty"`
 	RevIncludedPlanDefinitionResourcesReferencingSuccessor          *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingSuccessor,omitempty"`
 	RevIncludedPlanDefinitionResourcesReferencingDerivedfrom        *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingDerivedfrom,omitempty"`
 	RevIncludedPlanDefinitionResourcesReferencingPredecessor        *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingPredecessor,omitempty"`
@@ -172,18 +217,40 @@ type NamingSystemPlusRelatedResources struct {
 	RevIncludedPlanDefinitionResourcesReferencingDependsonPath2     *[]PlanDefinition        `bson:"_revIncludedPlanDefinitionResourcesReferencingDependsonPath2,omitempty"`
 }
 
-func (n *NamingSystemPlusRelatedResources) GetIncludedNamingSystemResourceReferencedByReplacedby() (namingSystem *NamingSystem, err error) {
-	if n.IncludedNamingSystemResourcesReferencedByReplacedby == nil {
-		err = errors.New("Included namingsystems not requested")
-	} else if len(*n.IncludedNamingSystemResourcesReferencedByReplacedby) > 1 {
-		err = fmt.Errorf("Expected 0 or 1 namingSystem, but found %d", len(*n.IncludedNamingSystemResourcesReferencedByReplacedby))
-	} else if len(*n.IncludedNamingSystemResourcesReferencedByReplacedby) == 1 {
-		namingSystem = &(*n.IncludedNamingSystemResourcesReferencedByReplacedby)[0]
+func (n *NutritionOrderPlusRelatedResources) GetIncludedPractitionerResourceReferencedByProvider() (practitioner *Practitioner, err error) {
+	if n.IncludedPractitionerResourcesReferencedByProvider == nil {
+		err = errors.New("Included practitioners not requested")
+	} else if len(*n.IncludedPractitionerResourcesReferencedByProvider) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 practitioner, but found %d", len(*n.IncludedPractitionerResourcesReferencedByProvider))
+	} else if len(*n.IncludedPractitionerResourcesReferencedByProvider) == 1 {
+		practitioner = &(*n.IncludedPractitionerResourcesReferencedByProvider)[0]
 	}
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetIncludedPatientResourceReferencedByPatient() (patient *Patient, err error) {
+	if n.IncludedPatientResourcesReferencedByPatient == nil {
+		err = errors.New("Included patients not requested")
+	} else if len(*n.IncludedPatientResourcesReferencedByPatient) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 patient, but found %d", len(*n.IncludedPatientResourcesReferencedByPatient))
+	} else if len(*n.IncludedPatientResourcesReferencedByPatient) == 1 {
+		patient = &(*n.IncludedPatientResourcesReferencedByPatient)[0]
+	}
+	return
+}
+
+func (n *NutritionOrderPlusRelatedResources) GetIncludedEncounterResourceReferencedByEncounter() (encounter *Encounter, err error) {
+	if n.IncludedEncounterResourcesReferencedByEncounter == nil {
+		err = errors.New("Included encounters not requested")
+	} else if len(*n.IncludedEncounterResourcesReferencedByEncounter) > 1 {
+		err = fmt.Errorf("Expected 0 or 1 encounter, but found %d", len(*n.IncludedEncounterResourcesReferencedByEncounter))
+	} else if len(*n.IncludedEncounterResourcesReferencedByEncounter) == 1 {
+		encounter = &(*n.IncludedEncounterResourcesReferencedByEncounter)[0]
+	}
+	return
+}
+
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingContentref() (documentManifests []DocumentManifest, err error) {
 	if n.RevIncludedDocumentManifestResourcesReferencingContentref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -192,7 +259,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedDocumentManifestResourc
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedDocumentManifestResourcesReferencingRelatedref() (documentManifests []DocumentManifest, err error) {
 	if n.RevIncludedDocumentManifestResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentManifests not requested")
 	} else {
@@ -201,7 +268,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedDocumentManifestResourc
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath1() (consents []Consent, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath1() (consents []Consent, err error) {
 	if n.RevIncludedConsentResourcesReferencingDataPath1 == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
@@ -210,7 +277,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedConsentResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath2() (consents []Consent, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedConsentResourcesReferencingDataPath2() (consents []Consent, err error) {
 	if n.RevIncludedConsentResourcesReferencingDataPath2 == nil {
 		err = errors.New("RevIncluded consents not requested")
 	} else {
@@ -219,7 +286,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedConsentResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingSuccessor() (measures []Measure, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingSuccessor() (measures []Measure, err error) {
 	if n.RevIncludedMeasureResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -228,7 +295,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDerivedfrom() (measures []Measure, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDerivedfrom() (measures []Measure, err error) {
 	if n.RevIncludedMeasureResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -237,7 +304,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingPredecessor() (measures []Measure, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingPredecessor() (measures []Measure, err error) {
 	if n.RevIncludedMeasureResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -246,7 +313,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingComposedof() (measures []Measure, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingComposedof() (measures []Measure, err error) {
 	if n.RevIncludedMeasureResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -255,7 +322,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath1() (measures []Measure, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath1() (measures []Measure, err error) {
 	if n.RevIncludedMeasureResourcesReferencingDependsonPath1 == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -264,7 +331,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath2() (measures []Measure, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedMeasureResourcesReferencingDependsonPath2() (measures []Measure, err error) {
 	if n.RevIncludedMeasureResourcesReferencingDependsonPath2 == nil {
 		err = errors.New("RevIncluded measures not requested")
 	} else {
@@ -273,7 +340,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedMeasureResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedDocumentReferenceResourcesReferencingRelatedref() (documentReferences []DocumentReference, err error) {
 	if n.RevIncludedDocumentReferenceResourcesReferencingRelatedref == nil {
 		err = errors.New("RevIncluded documentReferences not requested")
 	} else {
@@ -282,7 +349,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedDocumentReferenceResour
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedContractResourcesReferencingSubject() (contracts []Contract, err error) {
 	if n.RevIncludedContractResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -291,7 +358,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedContractResourcesRefere
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedContractResourcesReferencingTermtopic() (contracts []Contract, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedContractResourcesReferencingTermtopic() (contracts []Contract, err error) {
 	if n.RevIncludedContractResourcesReferencingTermtopic == nil {
 		err = errors.New("RevIncluded contracts not requested")
 	} else {
@@ -300,7 +367,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedContractResourcesRefere
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingRequest() (paymentNotices []PaymentNotice, err error) {
 	if n.RevIncludedPaymentNoticeResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -309,7 +376,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesReferencingResponse() (paymentNotices []PaymentNotice, err error) {
 	if n.RevIncludedPaymentNoticeResourcesReferencingResponse == nil {
 		err = errors.New("RevIncluded paymentNotices not requested")
 	} else {
@@ -318,7 +385,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPaymentNoticeResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedImplementationGuideResourcesReferencingResource() (implementationGuides []ImplementationGuide, err error) {
 	if n.RevIncludedImplementationGuideResourcesReferencingResource == nil {
 		err = errors.New("RevIncluded implementationGuides not requested")
 	} else {
@@ -327,7 +394,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedImplementationGuideReso
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingSuccessor() (serviceDefinitions []ServiceDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingSuccessor() (serviceDefinitions []ServiceDefinition, err error) {
 	if n.RevIncludedServiceDefinitionResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -336,7 +403,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResour
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDerivedfrom() (serviceDefinitions []ServiceDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDerivedfrom() (serviceDefinitions []ServiceDefinition, err error) {
 	if n.RevIncludedServiceDefinitionResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -345,7 +412,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResour
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingPredecessor() (serviceDefinitions []ServiceDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingPredecessor() (serviceDefinitions []ServiceDefinition, err error) {
 	if n.RevIncludedServiceDefinitionResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -354,7 +421,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResour
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingComposedof() (serviceDefinitions []ServiceDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingComposedof() (serviceDefinitions []ServiceDefinition, err error) {
 	if n.RevIncludedServiceDefinitionResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -363,7 +430,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResour
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDependson() (serviceDefinitions []ServiceDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedServiceDefinitionResourcesReferencingDependson() (serviceDefinitions []ServiceDefinition, err error) {
 	if n.RevIncludedServiceDefinitionResourcesReferencingDependson == nil {
 		err = errors.New("RevIncluded serviceDefinitions not requested")
 	} else {
@@ -372,7 +439,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedServiceDefinitionResour
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingPartof() (communications []Communication, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingPartof() (communications []Communication, err error) {
 	if n.RevIncludedCommunicationResourcesReferencingPartof == nil {
 		err = errors.New("RevIncluded communications not requested")
 	} else {
@@ -381,7 +448,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedCommunicationResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedCommunicationResourcesReferencingBasedon() (communications []Communication, err error) {
 	if n.RevIncludedCommunicationResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communications not requested")
 	} else {
@@ -390,7 +457,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedCommunicationResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingSuccessor() (activityDefinitions []ActivityDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingSuccessor() (activityDefinitions []ActivityDefinition, err error) {
 	if n.RevIncludedActivityDefinitionResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -399,7 +466,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResou
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDerivedfrom() (activityDefinitions []ActivityDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDerivedfrom() (activityDefinitions []ActivityDefinition, err error) {
 	if n.RevIncludedActivityDefinitionResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -408,7 +475,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResou
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingPredecessor() (activityDefinitions []ActivityDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingPredecessor() (activityDefinitions []ActivityDefinition, err error) {
 	if n.RevIncludedActivityDefinitionResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -417,7 +484,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResou
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingComposedof() (activityDefinitions []ActivityDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingComposedof() (activityDefinitions []ActivityDefinition, err error) {
 	if n.RevIncludedActivityDefinitionResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -426,7 +493,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResou
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath1() (activityDefinitions []ActivityDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath1() (activityDefinitions []ActivityDefinition, err error) {
 	if n.RevIncludedActivityDefinitionResourcesReferencingDependsonPath1 == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -435,7 +502,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResou
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath2() (activityDefinitions []ActivityDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedActivityDefinitionResourcesReferencingDependsonPath2() (activityDefinitions []ActivityDefinition, err error) {
 	if n.RevIncludedActivityDefinitionResourcesReferencingDependsonPath2 == nil {
 		err = errors.New("RevIncluded activityDefinitions not requested")
 	} else {
@@ -444,7 +511,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedActivityDefinitionResou
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedRequestGroupResourcesReferencingDefinition() (requestGroups []RequestGroup, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedRequestGroupResourcesReferencingDefinition() (requestGroups []RequestGroup, err error) {
 	if n.RevIncludedRequestGroupResourcesReferencingDefinition == nil {
 		err = errors.New("RevIncluded requestGroups not requested")
 	} else {
@@ -453,7 +520,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedRequestGroupResourcesRe
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingBasedon() (deviceRequests []DeviceRequest, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingBasedon() (deviceRequests []DeviceRequest, err error) {
 	if n.RevIncludedDeviceRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded deviceRequests not requested")
 	} else {
@@ -462,7 +529,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedDeviceRequestResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingPriorrequest() (deviceRequests []DeviceRequest, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedDeviceRequestResourcesReferencingPriorrequest() (deviceRequests []DeviceRequest, err error) {
 	if n.RevIncludedDeviceRequestResourcesReferencingPriorrequest == nil {
 		err = errors.New("RevIncluded deviceRequests not requested")
 	} else {
@@ -471,7 +538,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedDeviceRequestResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingFocus() (messageHeaders []MessageHeader, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedMessageHeaderResourcesReferencingFocus() (messageHeaders []MessageHeader, err error) {
 	if n.RevIncludedMessageHeaderResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded messageHeaders not requested")
 	} else {
@@ -480,7 +547,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedMessageHeaderResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntityref() (provenances []Provenance, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingEntityref() (provenances []Provenance, err error) {
 	if n.RevIncludedProvenanceResourcesReferencingEntityref == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -489,7 +556,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedProvenanceResourcesRefe
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedProvenanceResourcesReferencingTarget() (provenances []Provenance, err error) {
 	if n.RevIncludedProvenanceResourcesReferencingTarget == nil {
 		err = errors.New("RevIncluded provenances not requested")
 	} else {
@@ -498,7 +565,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedProvenanceResourcesRefe
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedTaskResourcesReferencingSubject() (tasks []Task, err error) {
 	if n.RevIncludedTaskResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -507,7 +574,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedTaskResourcesReferencin
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedTaskResourcesReferencingFocus() (tasks []Task, err error) {
 	if n.RevIncludedTaskResourcesReferencingFocus == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -516,7 +583,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedTaskResourcesReferencin
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedTaskResourcesReferencingBasedon() (tasks []Task, err error) {
 	if n.RevIncludedTaskResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded tasks not requested")
 	} else {
@@ -525,7 +592,16 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedTaskResourcesReferencin
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedCarePlanResourcesReferencingActivityreference() (carePlans []CarePlan, err error) {
+	if n.RevIncludedCarePlanResourcesReferencingActivityreference == nil {
+		err = errors.New("RevIncluded carePlans not requested")
+	} else {
+		carePlans = *n.RevIncludedCarePlanResourcesReferencingActivityreference
+	}
+	return
+}
+
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedListResourcesReferencingItem() (lists []List, err error) {
 	if n.RevIncludedListResourcesReferencingItem == nil {
 		err = errors.New("RevIncluded lists not requested")
 	} else {
@@ -534,7 +610,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedListResourcesReferencin
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingReplaces() (procedureRequests []ProcedureRequest, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingReplaces() (procedureRequests []ProcedureRequest, err error) {
 	if n.RevIncludedProcedureRequestResourcesReferencingReplaces == nil {
 		err = errors.New("RevIncluded procedureRequests not requested")
 	} else {
@@ -543,7 +619,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedProcedureRequestResourc
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingBasedon() (procedureRequests []ProcedureRequest, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedProcedureRequestResourcesReferencingBasedon() (procedureRequests []ProcedureRequest, err error) {
 	if n.RevIncludedProcedureRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded procedureRequests not requested")
 	} else {
@@ -552,7 +628,16 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedProcedureRequestResourc
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingSuccessor() (libraries []Library, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedObservationResourcesReferencingBasedon() (observations []Observation, err error) {
+	if n.RevIncludedObservationResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded observations not requested")
+	} else {
+		observations = *n.RevIncludedObservationResourcesReferencingBasedon
+	}
+	return
+}
+
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingSuccessor() (libraries []Library, err error) {
 	if n.RevIncludedLibraryResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -561,7 +646,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDerivedfrom() (libraries []Library, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDerivedfrom() (libraries []Library, err error) {
 	if n.RevIncludedLibraryResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -570,7 +655,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingPredecessor() (libraries []Library, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingPredecessor() (libraries []Library, err error) {
 	if n.RevIncludedLibraryResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -579,7 +664,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingComposedof() (libraries []Library, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingComposedof() (libraries []Library, err error) {
 	if n.RevIncludedLibraryResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -588,7 +673,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDependson() (libraries []Library, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedLibraryResourcesReferencingDependson() (libraries []Library, err error) {
 	if n.RevIncludedLibraryResourcesReferencingDependson == nil {
 		err = errors.New("RevIncluded libraries not requested")
 	} else {
@@ -597,7 +682,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedLibraryResourcesReferen
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedCommunicationRequestResourcesReferencingBasedon() (communicationRequests []CommunicationRequest, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedCommunicationRequestResourcesReferencingBasedon() (communicationRequests []CommunicationRequest, err error) {
 	if n.RevIncludedCommunicationRequestResourcesReferencingBasedon == nil {
 		err = errors.New("RevIncluded communicationRequests not requested")
 	} else {
@@ -606,7 +691,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedCommunicationRequestRes
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedBasicResourcesReferencingSubject() (basics []Basic, err error) {
 	if n.RevIncludedBasicResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded basics not requested")
 	} else {
@@ -615,7 +700,16 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedBasicResourcesReferenci
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedDiagnosticReportResourcesReferencingBasedon() (diagnosticReports []DiagnosticReport, err error) {
+	if n.RevIncludedDiagnosticReportResourcesReferencingBasedon == nil {
+		err = errors.New("RevIncluded diagnosticReports not requested")
+	} else {
+		diagnosticReports = *n.RevIncludedDiagnosticReportResourcesReferencingBasedon
+	}
+	return
+}
+
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedAuditEventResourcesReferencingEntity() (auditEvents []AuditEvent, err error) {
 	if n.RevIncludedAuditEventResourcesReferencingEntity == nil {
 		err = errors.New("RevIncluded auditEvents not requested")
 	} else {
@@ -624,7 +718,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedAuditEventResourcesRefe
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedConditionResourcesReferencingEvidencedetail() (conditions []Condition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedConditionResourcesReferencingEvidencedetail() (conditions []Condition, err error) {
 	if n.RevIncludedConditionResourcesReferencingEvidencedetail == nil {
 		err = errors.New("RevIncluded conditions not requested")
 	} else {
@@ -633,7 +727,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedConditionResourcesRefer
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingSubject() (compositions []Composition, err error) {
 	if n.RevIncludedCompositionResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -642,7 +736,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedCompositionResourcesRef
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedCompositionResourcesReferencingEntry() (compositions []Composition, err error) {
 	if n.RevIncludedCompositionResourcesReferencingEntry == nil {
 		err = errors.New("RevIncluded compositions not requested")
 	} else {
@@ -651,7 +745,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedCompositionResourcesRef
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedDetectedIssueResourcesReferencingImplicated() (detectedIssues []DetectedIssue, err error) {
 	if n.RevIncludedDetectedIssueResourcesReferencingImplicated == nil {
 		err = errors.New("RevIncluded detectedIssues not requested")
 	} else {
@@ -660,7 +754,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedDetectedIssueResourcesR
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedQuestionnaireResponseResourcesReferencingSubject() (questionnaireResponses []QuestionnaireResponse, err error) {
 	if n.RevIncludedQuestionnaireResponseResourcesReferencingSubject == nil {
 		err = errors.New("RevIncluded questionnaireResponses not requested")
 	} else {
@@ -669,7 +763,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedQuestionnaireResponseRe
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedProcessResponseResourcesReferencingRequest() (processResponses []ProcessResponse, err error) {
 	if n.RevIncludedProcessResponseResourcesReferencingRequest == nil {
 		err = errors.New("RevIncluded processResponses not requested")
 	} else {
@@ -678,16 +772,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedProcessResponseResource
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedNamingSystemResourcesReferencingReplacedby() (namingSystems []NamingSystem, err error) {
-	if n.RevIncludedNamingSystemResourcesReferencingReplacedby == nil {
-		err = errors.New("RevIncluded namingSystems not requested")
-	} else {
-		namingSystems = *n.RevIncludedNamingSystemResourcesReferencingReplacedby
-	}
-	return
-}
-
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingSuccessor() (planDefinitions []PlanDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingSuccessor() (planDefinitions []PlanDefinition, err error) {
 	if n.RevIncludedPlanDefinitionResourcesReferencingSuccessor == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -696,7 +781,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResources
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDerivedfrom() (planDefinitions []PlanDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDerivedfrom() (planDefinitions []PlanDefinition, err error) {
 	if n.RevIncludedPlanDefinitionResourcesReferencingDerivedfrom == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -705,7 +790,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResources
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingPredecessor() (planDefinitions []PlanDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingPredecessor() (planDefinitions []PlanDefinition, err error) {
 	if n.RevIncludedPlanDefinitionResourcesReferencingPredecessor == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -714,7 +799,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResources
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingComposedof() (planDefinitions []PlanDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingComposedof() (planDefinitions []PlanDefinition, err error) {
 	if n.RevIncludedPlanDefinitionResourcesReferencingComposedof == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -723,7 +808,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResources
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath1() (planDefinitions []PlanDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath1() (planDefinitions []PlanDefinition, err error) {
 	if n.RevIncludedPlanDefinitionResourcesReferencingDependsonPath1 == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -732,7 +817,7 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResources
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath2() (planDefinitions []PlanDefinition, err error) {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedPlanDefinitionResourcesReferencingDependsonPath2() (planDefinitions []PlanDefinition, err error) {
 	if n.RevIncludedPlanDefinitionResourcesReferencingDependsonPath2 == nil {
 		err = errors.New("RevIncluded planDefinitions not requested")
 	} else {
@@ -741,18 +826,30 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedPlanDefinitionResources
 	return
 }
 
-func (n *NamingSystemPlusRelatedResources) GetIncludedResources() map[string]interface{} {
+func (n *NutritionOrderPlusRelatedResources) GetIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if n.IncludedNamingSystemResourcesReferencedByReplacedby != nil {
-		for idx := range *n.IncludedNamingSystemResourcesReferencedByReplacedby {
-			rsc := (*n.IncludedNamingSystemResourcesReferencedByReplacedby)[idx]
+	if n.IncludedPractitionerResourcesReferencedByProvider != nil {
+		for idx := range *n.IncludedPractitionerResourcesReferencedByProvider {
+			rsc := (*n.IncludedPractitionerResourcesReferencedByProvider)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if n.IncludedPatientResourcesReferencedByPatient != nil {
+		for idx := range *n.IncludedPatientResourcesReferencedByPatient {
+			rsc := (*n.IncludedPatientResourcesReferencedByPatient)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if n.IncludedEncounterResourcesReferencedByEncounter != nil {
+		for idx := range *n.IncludedEncounterResourcesReferencedByEncounter {
+			rsc := (*n.IncludedEncounterResourcesReferencedByEncounter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
 	return resourceMap
 }
 
-func (n *NamingSystemPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
+func (n *NutritionOrderPlusRelatedResources) GetRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
 	if n.RevIncludedDocumentManifestResourcesReferencingContentref != nil {
 		for idx := range *n.RevIncludedDocumentManifestResourcesReferencingContentref {
@@ -982,6 +1079,12 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedResources() map[string]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if n.RevIncludedCarePlanResourcesReferencingActivityreference != nil {
+		for idx := range *n.RevIncludedCarePlanResourcesReferencingActivityreference {
+			rsc := (*n.RevIncludedCarePlanResourcesReferencingActivityreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if n.RevIncludedListResourcesReferencingItem != nil {
 		for idx := range *n.RevIncludedListResourcesReferencingItem {
 			rsc := (*n.RevIncludedListResourcesReferencingItem)[idx]
@@ -997,6 +1100,12 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedResources() map[string]
 	if n.RevIncludedProcedureRequestResourcesReferencingBasedon != nil {
 		for idx := range *n.RevIncludedProcedureRequestResourcesReferencingBasedon {
 			rsc := (*n.RevIncludedProcedureRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if n.RevIncludedObservationResourcesReferencingBasedon != nil {
+		for idx := range *n.RevIncludedObservationResourcesReferencingBasedon {
+			rsc := (*n.RevIncludedObservationResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1042,6 +1151,12 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedResources() map[string]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if n.RevIncludedDiagnosticReportResourcesReferencingBasedon != nil {
+		for idx := range *n.RevIncludedDiagnosticReportResourcesReferencingBasedon {
+			rsc := (*n.RevIncludedDiagnosticReportResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if n.RevIncludedAuditEventResourcesReferencingEntity != nil {
 		for idx := range *n.RevIncludedAuditEventResourcesReferencingEntity {
 			rsc := (*n.RevIncludedAuditEventResourcesReferencingEntity)[idx]
@@ -1081,12 +1196,6 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedResources() map[string]
 	if n.RevIncludedProcessResponseResourcesReferencingRequest != nil {
 		for idx := range *n.RevIncludedProcessResponseResourcesReferencingRequest {
 			rsc := (*n.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if n.RevIncludedNamingSystemResourcesReferencingReplacedby != nil {
-		for idx := range *n.RevIncludedNamingSystemResourcesReferencingReplacedby {
-			rsc := (*n.RevIncludedNamingSystemResourcesReferencingReplacedby)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1129,11 +1238,23 @@ func (n *NamingSystemPlusRelatedResources) GetRevIncludedResources() map[string]
 	return resourceMap
 }
 
-func (n *NamingSystemPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
+func (n *NutritionOrderPlusRelatedResources) GetIncludedAndRevIncludedResources() map[string]interface{} {
 	resourceMap := make(map[string]interface{})
-	if n.IncludedNamingSystemResourcesReferencedByReplacedby != nil {
-		for idx := range *n.IncludedNamingSystemResourcesReferencedByReplacedby {
-			rsc := (*n.IncludedNamingSystemResourcesReferencedByReplacedby)[idx]
+	if n.IncludedPractitionerResourcesReferencedByProvider != nil {
+		for idx := range *n.IncludedPractitionerResourcesReferencedByProvider {
+			rsc := (*n.IncludedPractitionerResourcesReferencedByProvider)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if n.IncludedPatientResourcesReferencedByPatient != nil {
+		for idx := range *n.IncludedPatientResourcesReferencedByPatient {
+			rsc := (*n.IncludedPatientResourcesReferencedByPatient)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if n.IncludedEncounterResourcesReferencedByEncounter != nil {
+		for idx := range *n.IncludedEncounterResourcesReferencedByEncounter {
+			rsc := (*n.IncludedEncounterResourcesReferencedByEncounter)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1365,6 +1486,12 @@ func (n *NamingSystemPlusRelatedResources) GetIncludedAndRevIncludedResources() 
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if n.RevIncludedCarePlanResourcesReferencingActivityreference != nil {
+		for idx := range *n.RevIncludedCarePlanResourcesReferencingActivityreference {
+			rsc := (*n.RevIncludedCarePlanResourcesReferencingActivityreference)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if n.RevIncludedListResourcesReferencingItem != nil {
 		for idx := range *n.RevIncludedListResourcesReferencingItem {
 			rsc := (*n.RevIncludedListResourcesReferencingItem)[idx]
@@ -1380,6 +1507,12 @@ func (n *NamingSystemPlusRelatedResources) GetIncludedAndRevIncludedResources() 
 	if n.RevIncludedProcedureRequestResourcesReferencingBasedon != nil {
 		for idx := range *n.RevIncludedProcedureRequestResourcesReferencingBasedon {
 			rsc := (*n.RevIncludedProcedureRequestResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
+	if n.RevIncludedObservationResourcesReferencingBasedon != nil {
+		for idx := range *n.RevIncludedObservationResourcesReferencingBasedon {
+			rsc := (*n.RevIncludedObservationResourcesReferencingBasedon)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
@@ -1425,6 +1558,12 @@ func (n *NamingSystemPlusRelatedResources) GetIncludedAndRevIncludedResources() 
 			resourceMap[rsc.Id] = &rsc
 		}
 	}
+	if n.RevIncludedDiagnosticReportResourcesReferencingBasedon != nil {
+		for idx := range *n.RevIncludedDiagnosticReportResourcesReferencingBasedon {
+			rsc := (*n.RevIncludedDiagnosticReportResourcesReferencingBasedon)[idx]
+			resourceMap[rsc.Id] = &rsc
+		}
+	}
 	if n.RevIncludedAuditEventResourcesReferencingEntity != nil {
 		for idx := range *n.RevIncludedAuditEventResourcesReferencingEntity {
 			rsc := (*n.RevIncludedAuditEventResourcesReferencingEntity)[idx]
@@ -1464,12 +1603,6 @@ func (n *NamingSystemPlusRelatedResources) GetIncludedAndRevIncludedResources() 
 	if n.RevIncludedProcessResponseResourcesReferencingRequest != nil {
 		for idx := range *n.RevIncludedProcessResponseResourcesReferencingRequest {
 			rsc := (*n.RevIncludedProcessResponseResourcesReferencingRequest)[idx]
-			resourceMap[rsc.Id] = &rsc
-		}
-	}
-	if n.RevIncludedNamingSystemResourcesReferencingReplacedby != nil {
-		for idx := range *n.RevIncludedNamingSystemResourcesReferencingReplacedby {
-			rsc := (*n.RevIncludedNamingSystemResourcesReferencingReplacedby)[idx]
 			resourceMap[rsc.Id] = &rsc
 		}
 	}

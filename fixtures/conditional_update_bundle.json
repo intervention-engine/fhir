@@ -55,7 +55,7 @@
             "text":"Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
           }
         ],
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
@@ -85,7 +85,7 @@
             "text":"Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
           }
         ],
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
@@ -115,7 +115,7 @@
             "text":"Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
           }
         ],
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
@@ -145,7 +145,7 @@
             "text":"Encounter, Performed: Alcohol and Drug Dependence Treatment (Code List: 2.16.840.1.113883.3.464.1003.106.12.1005)"
           }
         ],
-        "patient":{
+        "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
         "period":{
@@ -300,7 +300,7 @@
         "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
-        "encounter":{
+        "context":{
           "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
@@ -339,7 +339,7 @@
           "start":"2011-11-01T08:16:40-04:00",
           "end":"2011-11-01T11:03:20-04:00"
         },
-        "encounter":{
+        "context":{
           "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "report":[
@@ -372,7 +372,7 @@
         "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
-        "encounter":{
+        "context":{
           "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
@@ -415,7 +415,7 @@
         "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
-        "encounter":{
+        "context":{
           "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
@@ -455,7 +455,7 @@
         "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
-        "encounter":{
+        "context":{
           "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{
@@ -495,7 +495,7 @@
         "subject":{
           "reference":"urn:uuid:e3c242ee-0f2a-4921-90bf-895c2c4da1f0"
         },
-        "encounter":{
+        "context":{
           "reference":"urn:uuid:3c1f4d74-0eda-47ea-a2fa-69ec474ddae6"
         },
         "effectivePeriod":{

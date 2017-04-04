@@ -49,6 +49,6 @@ type TimingRepeatComponent struct {
 	PeriodUnit      string         `bson:"periodUnit,omitempty" json:"periodUnit,omitempty"`
 	DayOfWeek       []string       `bson:"dayOfWeek,omitempty" json:"dayOfWeek,omitempty"`
 	TimeOfDay       []FHIRDateTime `bson:"timeOfDay,omitempty" json:"timeOfDay,omitempty"`
-	When            string         `bson:"when,omitempty" json:"when,omitempty"`
+	When            []string       `bson:"when,omitempty" json:"when,omitempty"`
 	Offset          *uint32        `bson:"offset,omitempty" json:"offset,omitempty"`
 }

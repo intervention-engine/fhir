@@ -56,7 +56,7 @@
 		}],
 		"text": "Office Visit"
 	}],
-	"patient": {
+	"subject": {
 		"reference": "cid:8374637118556222846"
 	},
 	"period": {
@@ -111,7 +111,7 @@
 		}],
 		"text": "Office Visit"
 	}],
-	"patient": {
+	"subject": {
 		"reference": "cid:8374637118556222846"
 	},
 	"period": {
@@ -128,7 +128,7 @@
 		}],
 		"text": "Office Visit"
 	}],
-	"patient": {
+	"subject": {
 		"reference": "cid:8374637118556222846"
 	},
 	"period": {

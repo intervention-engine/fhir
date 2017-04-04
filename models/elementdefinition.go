@@ -35,10 +35,10 @@ type ElementDefinition struct {
 	Slicing                     *ElementDefinitionSlicingComponent     `bson:"slicing,omitempty" json:"slicing,omitempty"`
 	Short                       string                                 `bson:"short,omitempty" json:"short,omitempty"`
 	Definition                  string                                 `bson:"definition,omitempty" json:"definition,omitempty"`
-	Comments                    string                                 `bson:"comments,omitempty" json:"comments,omitempty"`
+	Comment                     string                                 `bson:"comment,omitempty" json:"comment,omitempty"`
 	Requirements                string                                 `bson:"requirements,omitempty" json:"requirements,omitempty"`
 	Alias                       []string                               `bson:"alias,omitempty" json:"alias,omitempty"`
-	Min                         *int32                                 `bson:"min,omitempty" json:"min,omitempty"`
+	Min                         *uint32                                `bson:"min,omitempty" json:"min,omitempty"`
 	Max                         string                                 `bson:"max,omitempty" json:"max,omitempty"`
 	Base                        *ElementDefinitionBaseComponent        `bson:"base,omitempty" json:"base,omitempty"`
 	ContentReference            string                                 `bson:"contentReference,omitempty" json:"contentReference,omitempty"`
@@ -77,6 +77,7 @@ type ElementDefinition struct {
 	DefaultValueUnsignedInt     *uint32                                `bson:"defaultValueUnsignedInt,omitempty" json:"defaultValueUnsignedInt,omitempty"`
 	DefaultValueUri             string                                 `bson:"defaultValueUri,omitempty" json:"defaultValueUri,omitempty"`
 	MeaningWhenMissing          string                                 `bson:"meaningWhenMissing,omitempty" json:"meaningWhenMissing,omitempty"`
+	OrderMeaning                string                                 `bson:"orderMeaning,omitempty" json:"orderMeaning,omitempty"`
 	FixedAddress                *Address                               `bson:"fixedAddress,omitempty" json:"fixedAddress,omitempty"`
 	FixedAnnotation             *Annotation                            `bson:"fixedAnnotation,omitempty" json:"fixedAnnotation,omitempty"`
 	FixedAttachment             *Attachment                            `bson:"fixedAttachment,omitempty" json:"fixedAttachment,omitempty"`
@@ -174,17 +175,23 @@ type ElementDefinition struct {
 
 type ElementDefinitionSlicingComponent struct {
 	BackboneElement `bson:",inline"`
-	Discriminator   []string `bson:"discriminator,omitempty" json:"discriminator,omitempty"`
-	Description     string   `bson:"description,omitempty" json:"description,omitempty"`
-	Ordered         *bool    `bson:"ordered,omitempty" json:"ordered,omitempty"`
-	Rules           string   `bson:"rules,omitempty" json:"rules,omitempty"`
+	Discriminator   []ElementDefinitionSlicingDiscriminatorComponent `bson:"discriminator,omitempty" json:"discriminator,omitempty"`
+	Description     string                                           `bson:"description,omitempty" json:"description,omitempty"`
+	Ordered         *bool                                            `bson:"ordered,omitempty" json:"ordered,omitempty"`
+	Rules           string                                           `bson:"rules,omitempty" json:"rules,omitempty"`
+}
+
+type ElementDefinitionSlicingDiscriminatorComponent struct {
+	BackboneElement `bson:",inline"`
+	Type            string `bson:"type,omitempty" json:"type,omitempty"`
+	Path            string `bson:"path,omitempty" json:"path,omitempty"`
 }
 
 type ElementDefinitionBaseComponent struct {
 	BackboneElement `bson:",inline"`
-	Path            string `bson:"path,omitempty" json:"path,omitempty"`
-	Min             *int32 `bson:"min,omitempty" json:"min,omitempty"`
-	Max             string `bson:"max,omitempty" json:"max,omitempty"`
+	Path            string  `bson:"path,omitempty" json:"path,omitempty"`
+	Min             *uint32 `bson:"min,omitempty" json:"min,omitempty"`
+	Max             string  `bson:"max,omitempty" json:"max,omitempty"`
 }
 
 type ElementDefinitionTypeRefComponent struct {
@@ -258,4 +265,5 @@ type ElementDefinitionMappingComponent struct {
 	Identity        string `bson:"identity,omitempty" json:"identity,omitempty"`
 	Language        string `bson:"language,omitempty" json:"language,omitempty"`
 	Map             string `bson:"map,omitempty" json:"map,omitempty"`
+	Comment         string `bson:"comment,omitempty" json:"comment,omitempty"`
 }

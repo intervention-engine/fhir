@@ -31,7 +31,7 @@
 					}],
 					"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 				}],
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"period": {
@@ -56,7 +56,7 @@
 					}],
 					"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 				}],
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"period": {
@@ -81,7 +81,7 @@
 					}],
 					"text": "Encounter, Performed: Office Visit (Code List: 2.16.840.1.113883.3.464.1003.101.12.1001)"
 				}],
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"period": {
@@ -106,7 +106,7 @@
 					}],
 					"text": "Encounter, Performed: Alcohol and Drug Dependence Treatment (Code List: 2.16.840.1.113883.3.464.1003.106.12.1005)"
 				}],
-				"patient": {
+				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
 				"period": {
@@ -270,11 +270,10 @@
 					"start": "2011-11-01T08:16:40-04:00",
 					"end": "2011-11-01T08:16:40-04:00"
 				},
-				"status": "final",
 				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				},
-				"encounter": {
+				"context": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0b"
 				}
 			},
@@ -302,7 +301,7 @@
 					"start": "2011-11-01T08:16:40-04:00",
 					"end": "2011-11-01T11:03:20-04:00"
 				},
-				"encounter": {
+				"context": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0b"
 				},
 				"report": [{
@@ -374,7 +373,6 @@
 					"start": "2011-11-01T08:16:40-04:00",
 					"end": "2011-11-01T11:03:20-04:00"
 				},
-				"status": "final",
 				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				}
@@ -407,7 +405,6 @@
 					"start": "2011-11-01T08:16:40-04:00",
 					"end": "2011-11-01T11:03:20-04:00"
 				},
-				"status": "final",
 				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				}
@@ -440,7 +437,6 @@
 					"start": "2011-11-01T08:16:40-04:00",
 					"end": "2011-11-01T11:03:20-04:00"
 				},
-				"status": "final",
 				"subject": {
 					"reference": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e300945f0a"
 				}

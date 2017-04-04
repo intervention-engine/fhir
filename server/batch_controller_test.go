@@ -342,10 +342,10 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 	// Check patient references
 	patientID := responseBundle.Entry[0].Resource.(*models.Patient).Id
 	c.Assert(bson.IsObjectIdHex(patientID), Equals, true)
-	s.checkReference(c, responseBundle.Entry[1].Resource.(*models.Encounter).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[2].Resource.(*models.Encounter).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientID, "Patient")
-	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Encounter).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[1].Resource.(*models.Encounter).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[2].Resource.(*models.Encounter).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Subject, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Encounter).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[5].Resource.(*models.Condition).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[6].Resource.(*models.Condition).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[7].Resource.(*models.Condition).Subject, patientID, "Patient")
@@ -364,8 +364,8 @@ func (s *BatchControllerSuite) TestPostPatientBundle(c *C) {
 	// Check encounter references
 	encounterID := responseBundle.Entry[1].Resource.(*models.Encounter).Id
 	c.Assert(bson.IsObjectIdHex(encounterID), Equals, true)
-	s.checkReference(c, responseBundle.Entry[10].Resource.(*models.Observation).Encounter, encounterID, "Encounter")
-	s.checkReference(c, responseBundle.Entry[11].Resource.(*models.Procedure).Encounter, encounterID, "Encounter")
+	s.checkReference(c, responseBundle.Entry[10].Resource.(*models.Observation).Context, encounterID, "Encounter")
+	s.checkReference(c, responseBundle.Entry[11].Resource.(*models.Procedure).Context, encounterID, "Encounter")
 
 	// Check dx report references
 	dxReportID := responseBundle.Entry[12].Resource.(*models.DiagnosticReport).Id
@@ -782,7 +782,7 @@ func (s *BatchControllerSuite) TestAllSupportedMethodsBundle(c *C) {
 	// Check patient references
 	patientID := responseBundle.Entry[2].Resource.(*models.Patient).Id
 	c.Assert(bson.IsObjectIdHex(patientID), Equals, true)
-	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Patient, patientID, "Patient")
+	s.checkReference(c, responseBundle.Entry[3].Resource.(*models.Encounter).Subject, patientID, "Patient")
 	s.checkReference(c, responseBundle.Entry[4].Resource.(*models.Condition).Subject, patientID, "Patient")
 }
 

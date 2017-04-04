@@ -350,7 +350,7 @@ func (m *MongoSearchSuite) TestImmunizationNotGivenQueryObject(c *C) {
 	q := Query{"Immunization", "notgiven=false"}
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
-		"wasNotGiven": false,
+		"notGiven": false,
 	})
 }
 
@@ -665,12 +665,7 @@ func (m *MongoSearchSuite) TestPatientReverseChainedSearchPipelineObject(c *C) {
 			"foreignField": "subject.referenceid",
 			"as":           "_lookup0",
 		}},
-		bson.M{"$match": bson.M{
-			"$or": []bson.M{
-				bson.M{"_lookup0.component.code.coding.code": bson.RegEx{Pattern: "^1234-5$", Options: "i"}},
-				bson.M{"_lookup0.code.coding.code": bson.RegEx{Pattern: "^1234-5$", Options: "i"}},
-			},
-		}},
+		bson.M{"$match": bson.M{"_lookup0.code.coding.code": bson.RegEx{Pattern: "^1234-5$", Options: "i"}}},
 	})
 }
 
@@ -693,16 +688,10 @@ func (m *MongoSearchSuite) TestPatientReverseChainedSearchPipelineObjectWithOr(c
 		}},
 		bson.M{"$match": bson.M{
 			"$or": []bson.M{
-				bson.M{"$or": []bson.M{
-					bson.M{"_lookup0.component.code.coding.code": bson.RegEx{Pattern: "^1234-5$", Options: "i"}},
-					bson.M{"_lookup0.code.coding.code": bson.RegEx{Pattern: "^1234-5$", Options: "i"}},
-				}},
-				bson.M{"$or": []bson.M{
-					bson.M{"_lookup0.component.code.coding.code": bson.RegEx{Pattern: "^5678-9$", Options: "i"}},
-					bson.M{"_lookup0.code.coding.code": bson.RegEx{Pattern: "^5678-9$", Options: "i"}},
-				}},
-			},
-		}},
+				bson.M{"_lookup0.code.coding.code": bson.RegEx{Pattern: "^1234-5$", Options: "i"}},
+				bson.M{"_lookup0.code.coding.code": bson.RegEx{Pattern: "^5678-9$", Options: "i"}},
+			}},
+		},
 	})
 }
 
@@ -1712,25 +1701,10 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnit(c *C) {
 	q := Query{"Observation", "value-quantity=185||lbs"}
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
+		"valueQuantity.value": bson.M{"$gte": 184.5, "$lt": 185.5},
 		"$or": []bson.M{
-			bson.M{
-				"component": bson.M{
-					"$elemMatch": bson.M{
-						"valueQuantity.value": bson.M{"$gte": 184.5, "$lt": 185.5},
-						"$or": []bson.M{
-							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-						},
-					},
-				},
-			},
-			bson.M{
-				"valueQuantity.value": bson.M{"$gte": 184.5, "$lt": 185.5},
-				"$or": []bson.M{
-					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-				},
-			},
+			bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+			bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 		},
 	})
 }
@@ -1771,22 +1745,9 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndSystemAndCode(c
 	q := Query{"Observation", "value-quantity=185|http://unitsofmeasure.org|[lb_av]"}
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
-		"$or": []bson.M{
-			bson.M{
-				"component": bson.M{
-					"$elemMatch": bson.M{
-						"valueQuantity.value":  bson.M{"$gte": 184.5, "$lt": 185.5},
-						"valueQuantity.code":   bson.RegEx{Pattern: "^\\[lb_av\\]$", Options: "i"},
-						"valueQuantity.system": bson.RegEx{Pattern: "^http://unitsofmeasure\\.org$", Options: "i"},
-					},
-				},
-			},
-			bson.M{
-				"valueQuantity.value":  bson.M{"$gte": 184.5, "$lt": 185.5},
-				"valueQuantity.code":   bson.RegEx{Pattern: "^\\[lb_av\\]$", Options: "i"},
-				"valueQuantity.system": bson.RegEx{Pattern: "^http://unitsofmeasure\\.org$", Options: "i"},
-			},
-		},
+		"valueQuantity.value":  bson.M{"$gte": 184.5, "$lt": 185.5},
+		"valueQuantity.code":   bson.RegEx{Pattern: "^\\[lb_av\\]$", Options: "i"},
+		"valueQuantity.system": bson.RegEx{Pattern: "^http://unitsofmeasure\\.org$", Options: "i"},
 	})
 }
 
@@ -1794,27 +1755,13 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitLT(c *C) {
 	q := Query{"Observation", "value-quantity=lt186||lbs"}
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
+		"valueQuantity.value": bson.M{"$lt": float64(186)},
 		"$or": []bson.M{
-			bson.M{
-				"component": bson.M{
-					"$elemMatch": bson.M{
-						"valueQuantity.value": bson.M{"$lt": float64(186)},
-						"$or": []bson.M{
-							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-						},
-					},
-				},
-			},
-			bson.M{
-				"valueQuantity.value": bson.M{"$lt": float64(186)},
-				"$or": []bson.M{
-					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-				},
-			},
+			bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+			bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 		},
 	})
+
 	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
 	resultsVal := reflect.ValueOf(results).Elem()
@@ -1831,27 +1778,13 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitGT(c *C) {
 	q := Query{"Observation", "value-quantity=gt184||lbs"}
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
+		"valueQuantity.value": bson.M{"$gt": float64(184)},
 		"$or": []bson.M{
-			bson.M{
-				"component": bson.M{
-					"$elemMatch": bson.M{
-						"valueQuantity.value": bson.M{"$gt": float64(184)},
-						"$or": []bson.M{
-							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-						},
-					},
-				},
-			},
-			bson.M{
-				"valueQuantity.value": bson.M{"$gt": float64(184)},
-				"$or": []bson.M{
-					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-				},
-			},
+			bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+			bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 		},
 	})
+
 	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
 	resultsVal := reflect.ValueOf(results).Elem()
@@ -1868,27 +1801,13 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitLE(c *C) {
 	q := Query{"Observation", "value-quantity=le186||lbs"}
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
+		"valueQuantity.value": bson.M{"$lte": float64(186.5)},
 		"$or": []bson.M{
-			bson.M{
-				"component": bson.M{
-					"$elemMatch": bson.M{
-						"valueQuantity.value": bson.M{"$lte": float64(186.5)},
-						"$or": []bson.M{
-							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-						},
-					},
-				},
-			},
-			bson.M{
-				"valueQuantity.value": bson.M{"$lte": float64(186.5)},
-				"$or": []bson.M{
-					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-				},
-			},
+			bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+			bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 		},
 	})
+
 	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
 	resultsVal := reflect.ValueOf(results).Elem()
@@ -1905,27 +1824,13 @@ func (m *MongoSearchSuite) TestValueQuantityQueryObjectByValueAndUnitGE(c *C) {
 	q := Query{"Observation", "value-quantity=ge184||lbs"}
 	o := m.MongoSearcher.createQueryObject(q)
 	c.Assert(o, DeepEquals, bson.M{
+		"valueQuantity.value": bson.M{"$gte": float64(183.5)},
 		"$or": []bson.M{
-			bson.M{
-				"component": bson.M{
-					"$elemMatch": bson.M{
-						"valueQuantity.value": bson.M{"$gte": float64(183.5)},
-						"$or": []bson.M{
-							bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-							bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-						},
-					},
-				},
-			},
-			bson.M{
-				"valueQuantity.value": bson.M{"$gte": float64(183.5)},
-				"$or": []bson.M{
-					bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-					bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
-				},
-			},
+			bson.M{"valueQuantity.code": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
+			bson.M{"valueQuantity.unit": bson.RegEx{Pattern: "^lbs$", Options: "i"}},
 		},
 	})
+
 	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
 	resultsVal := reflect.ValueOf(results).Elem()
@@ -2629,36 +2534,26 @@ func (m *MongoSearchSuite) TestSortingOnParallelArrayPathsDoesntPanic(c *C) {
 }
 
 func (m *MongoSearchSuite) TestObservationCodeQueryOptionsForInclude(c *C) {
-	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:patient&_include=Observation:encounter"}
+	q := Query{"Observation", "code=http://loinc.org|17856-6&_include=Observation:subject&_include=Observation:context"}
 
 	// Make sure it doesn't somehow mess up the query object
 	obj := m.MongoSearcher.createQueryObject(q)
-	c.Assert(obj, DeepEquals, bson.M{"$or": []bson.M{
-		bson.M{
-			"component.code.coding": bson.M{
-				"$elemMatch": bson.M{
-					"system": bson.RegEx{Pattern: "^http://loinc\\.org$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^17856-6$", Options: "i"},
-				},
+	c.Assert(obj, DeepEquals, bson.M{
+		"code.coding": bson.M{
+			"$elemMatch": bson.M{
+				"system": bson.RegEx{Pattern: "^http://loinc\\.org$", Options: "i"},
+				"code":   bson.RegEx{Pattern: "^17856-6$", Options: "i"},
 			},
 		},
-		bson.M{
-			"code.coding": bson.M{
-				"$elemMatch": bson.M{
-					"system": bson.RegEx{Pattern: "^http://loinc\\.org$", Options: "i"},
-					"code":   bson.RegEx{Pattern: "^17856-6$", Options: "i"},
-				},
-			},
-		},
-	}})
+	})
 
 	// Check that the options are parsed correctly
 	opt := q.Options()
 	c.Assert(opt.Include, HasLen, 2)
 	c.Assert(opt.Include[0].Resource, Equals, "Observation")
-	c.Assert(opt.Include[0].Parameter.Name, Equals, "patient")
+	c.Assert(opt.Include[0].Parameter.Name, Equals, "subject")
 	c.Assert(opt.Include[1].Resource, Equals, "Observation")
-	c.Assert(opt.Include[1].Parameter.Name, Equals, "encounter")
+	c.Assert(opt.Include[1].Parameter.Name, Equals, "context")
 }
 
 func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
@@ -2673,7 +2568,7 @@ func (m *MongoSearchSuite) TestObservationCodeQueryForInclude(c *C) {
 	c.Assert(obs.Code.Coding, HasLen, 1)
 	c.Assert(obs.Code.Text, Equals, "Laboratory Test, Result: HbA1c Laboratory Test")
 	c.Assert(obs.Subject.ReferencedID, Equals, "4954037118555241963")
-	c.Assert(obs.Encounter.ReferencedID, Equals, "6648204100111387580")
+	c.Assert(obs.Context.ReferencedID, Equals, "6648204100111387580")
 
 	inclRevIncl := obs.GetIncludedAndRevIncludedResources()
 	c.Assert(inclRevIncl, HasLen, 2)
@@ -2838,7 +2733,7 @@ func (m *MongoSearchSuite) TestPatientGenderQueryForRevInclude(c *C) {
 	// Just ensure they are populated to some degree
 	for _, encounter := range encounters {
 		c.Assert(encounter.Id, NotNil)
-		c.Assert(encounter.Patient.ReferencedID, Equals, "4954037118555241963")
+		c.Assert(encounter.Subject.ReferencedID, Equals, "4954037118555241963")
 	}
 }
 
