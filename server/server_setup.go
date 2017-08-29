@@ -66,7 +66,7 @@ func (f *FHIRServer) Run(config Config) {
 		ar(f.Engine)
 	}
 
-	f.Engine.Run(":3001")
+	f.Engine.Run(":3002")
 }
 
 // AbortNonJSONRequests is middleware that responds to any request that Accepts a format
