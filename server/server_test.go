@@ -632,7 +632,7 @@ func (s *ServerSuite) TestEmbbeddedResourceIDsGetRetrievedCorrectly(c *C) {
 	c.Assert(resource["_id"], IsNil)
 }
 
-func (s *ServerSuite) TestContainedResourcesIDsAreCorrectButExtensionIsNot(c *C) {
+func (s *ServerSuite) TestContainedResources(c *C) {
 	res, err := postFixture(s.Server.URL, "Condition", "../fixtures/condition_with_contained_patient.json")
 	util.CheckErr(err)
 
@@ -659,10 +659,18 @@ func (s *ServerSuite) TestContainedResourcesIDsAreCorrectButExtensionIsNot(c *C)
 	c.Assert(len(containedMap["id"].(string)), Equals, 19)
 	c.Assert(containedMap["_id"], IsNil)
 
-	// But sadly, the extension in the patient is not
+	// the extension should be without internal fields like @context
 	extension := containedMap["extension"].([]interface{})[0]
 	extensionMap := extension.(map[string]interface{})
-	c.Assert(extensionMap["@context"], Not(IsNil))
+	c.Assert(extensionMap["@context"], IsNil)
+	c.Assert(extensionMap["url"], Equals, "http://hl7.org/fhir/StructureDefinition/us-core-race")
+
+	// the managingOrganization reference should be without internal fields like referenceid
+	managingOrganizationMap := containedMap["managingOrganization"].(map[string]interface{})
+	c.Assert(managingOrganizationMap["reference"], Equals, "Organization/1")
+	c.Assert(managingOrganizationMap["referenceid"], IsNil)
+	c.Assert(managingOrganizationMap["type"], IsNil)
+	c.Assert(managingOrganizationMap["external"], IsNil)
 
 	// Delete this entry
 	worker := s.MasterSession.GetWorkerSession()
