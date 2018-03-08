@@ -13,8 +13,6 @@ import (
 	"github.com/intervention-engine/fhir/search"
 )
 
-var fhirJSONContentType = []string{"application/json; application/fhir+json; charset=utf-8"}
-
 // ResourceController provides the necessary CRUD handlers for a given resource.
 type ResourceController struct {
 	Name   string
@@ -278,6 +276,8 @@ func responseURL(r *http.Request, config Config, paths ...string) *url.URL {
 type CustomJSONRenderer struct {
 	obj interface{}
 }
+
+var fhirJSONContentType = []string{"application/fhir+json; charset=utf-8"}
 
 func (u CustomJSONRenderer) Render(w http.ResponseWriter) (err error) {
 	data, err := json.Marshal(&u.obj)
