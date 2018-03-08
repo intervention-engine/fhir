@@ -48,8 +48,9 @@ func (s *MongoIndexesTestSuite) SetupSuite() {
 	s.Config.IndexConfigPath = "../fixtures/test_indexes.conf"
 
 	// Create a temporary directory for the test database
+	testDbDir := mongoTestDbDir()
 	var err error
-	err = os.Mkdir("./testdb", 0775)
+	err = os.Mkdir(testDbDir, 0775)
 
 	if err != nil {
 		panic(err)
@@ -57,7 +58,7 @@ func (s *MongoIndexesTestSuite) SetupSuite() {
 
 	// setup the mongo database
 	s.DBServer = &dbtest.DBServer{}
-	s.DBServer.SetPath("./testdb")
+	s.DBServer.SetPath(testDbDir)
 	s.initialSession = s.DBServer.Session()
 	s.MasterSession = NewMasterSession(s.initialSession, s.Config.DatabaseName)
 
@@ -78,14 +79,15 @@ func (s *MongoIndexesTestSuite) TearDownSuite() {
 	s.DBServer.Stop()
 
 	// remove the temporary database directory
+	testDbDir := mongoTestDbDir()
 	var err error
-	err = removeContents("./testdb")
+	err = removeContents(testDbDir)
 
 	if err != nil {
 		panic(err)
 	}
 
-	err = os.Remove("./testdb")
+	err = os.Remove(testDbDir)
 
 	if err != nil {
 		panic(err)
@@ -287,6 +289,14 @@ func indexInSlice(indexesSlice []mgo.Index, want mgo.Index) bool {
 		}
 	}
 	return false
+}
+
+func mongoTestDbDir() string {
+	testdbDir, haveEnv := os.LookupEnv("MONGO_TEST_DATA_DIR")
+	if !haveEnv {
+		testdbDir = "./testdb"
+	}
+	return testdbDir
 }
 
 func removeContents(dir string) error {
