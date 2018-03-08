@@ -24,8 +24,9 @@ func TestMiddlewareTestSuite(t *testing.T) {
 
 func (m *MiddlewareTestSuite) SetupSuite() {
 	// Create a temporary directory for the test database
+	testDbDir := mongoTestDbDir()
 	var err error
-	err = os.Mkdir("./testdb", 0775)
+	err = os.Mkdir(testDbDir, 0775)
 
 	if err != nil {
 		panic(err)
@@ -33,7 +34,7 @@ func (m *MiddlewareTestSuite) SetupSuite() {
 
 	// setup the mongo database
 	m.DBServer = &dbtest.DBServer{}
-	m.DBServer.SetPath("./testdb")
+	m.DBServer.SetPath(testDbDir)
 	m.MasterSession = NewMasterSession(m.DBServer.Session(), "fhir-test")
 
 	// Set gin to release mode (less verbose output)
@@ -46,14 +47,15 @@ func (m *MiddlewareTestSuite) TearDownSuite() {
 	m.DBServer.Stop()
 
 	// remove the temporary database directory
+	testDbDir := mongoTestDbDir()
 	var err error
-	err = removeContents("./testdb")
+	err = removeContents(testDbDir)
 
 	if err != nil {
 		panic(err)
 	}
 
-	err = os.Remove("./testdb")
+	err = os.Remove(testDbDir)
 
 	if err != nil {
 		panic(err)
