@@ -97,7 +97,7 @@ func (b *BatchController) Post(c *gin.Context) {
 			entry.FullUrl = responseURL(c.Request, b.Config, entry.Request.Url, id).String()
 		} else if entry.Request.Method == "PUT" && isConditional(entry) {
 			// We need to process conditionals referencing temp IDs in a second pass, so skip them here
-			if strings.Contains(entry.Request.Url, "urn:uuid:") || strings.Contains(entry.Request.Url, "urn%3Auuid%3A") {
+			if hasTempID(entry.Request.Url) {
 				continue
 			}
 
@@ -119,7 +119,7 @@ func (b *BatchController) Post(c *gin.Context) {
 				entry.Request.Url = re.ReplaceAllString(entry.Request.Url, "${1}"+ref.Reference+"${3}")
 			}
 
-			if strings.Contains(entry.Request.Url, "urn:uuid:") || strings.Contains(entry.Request.Url, "urn%3Auuid%3A") {
+			if hasTempID(entry.Request.Url) {
 				c.AbortWithError(http.StatusNotImplemented,
 					errors.New("Cannot resolve conditionals referencing other conditionals"))
 				return
@@ -314,6 +314,21 @@ func isConditional(entry *models.BundleEntryComponent) bool {
 		return false
 	}
 	return !strings.Contains(entry.Request.Url, "/") || strings.Contains(entry.Request.Url, "?")
+}
+
+func hasTempID(str string) bool {
+
+	// do not match URLs like Patient?identifier=urn:oid:0.1.2.3.4.5.6.7|urn:uuid:6002c2ab-9571-4db7-9a79-87163475b071
+	tempIdRegexp := regexp.MustCompile("([=,])(urn:uuid:|urn%3Auuid%3A)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(&|,|$)")
+	matches := tempIdRegexp.MatchString(str)
+
+	// hasPrefix := strings.HasPrefix(str, "urn:uuid:") || strings.HasPrefix(str, "urn%3Auuid%3A")
+	// contains := strings.Contains(str, "urn:uuid:") || strings.Contains(str, "urn%3Auuid%3A")
+	// if matches != contains {
+		// fmt.Printf("re != contains (re = %t): %s\n", matches, str)
+	// }
+
+	return matches
 }
 
 // Support sorting by request method, as defined in the spec

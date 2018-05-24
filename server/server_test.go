@@ -476,6 +476,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 	req.Header.Add("Content-Type", "application/json")
 	util.CheckErr(err)
 	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
 
 	c.Assert(res.StatusCode, Equals, 200)
 	patientCollection := worker.DB().C("patients")
@@ -491,6 +492,39 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
 	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
 }
+
+func (s *ServerSuite) TestConditionalUpdatePatientUUIDIdentifier(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	testPatient := s.insertPatientFromFixture("../fixtures/patient-example-uuid-identifier.json")
+
+	data, err := os.Open("../fixtures/patient-example-uuid-identifier-update.json")
+	util.CheckErr(err)
+	defer data.Close()
+	req, err := http.NewRequest("POST", s.Server.URL+"/", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 200)
+	patientCollection := worker.DB().C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 2) // update should not have created a new patient (2nd patient is from SetUpTest)
+	patient := models.Patient{}
+	err = patientCollection.FindId(testPatient.Id).One(&patient)
+	util.CheckErr(err)
+	c.Assert(patient.Name[0].Given[0], Equals, "Donny") // patient should have been modified
+	c.Assert(patient.Meta, NotNil)
+	c.Assert(patient.Meta.LastUpdated, NotNil)
+	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+
+
 
 func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
 
@@ -508,6 +542,7 @@ func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
 	req.Header.Add("Content-Type", "application/json")
 	util.CheckErr(err)
 	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
 
 	// Should return an HTTP 412 Precondition Failed
 	c.Assert(res.StatusCode, Equals, 412)
@@ -547,6 +582,7 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	req, err := http.NewRequest("DELETE", s.Server.URL+"/Patient/"+createdPatientID, nil)
 	util.CheckErr(err)
 	res, err = http.DefaultClient.Do(req)
+	util.CheckErr(err)
 
 	c.Assert(res.StatusCode, Equals, 204)
 	patientCollection := worker.DB().C("patients")
