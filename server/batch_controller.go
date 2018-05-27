@@ -71,6 +71,10 @@ func (b *BatchController) Post(c *gin.Context) {
 				c.AbortWithError(http.StatusBadRequest, errors.New("Batch PUT must have a resource body"))
 				return
 			}
+			if !strings.Contains(bundle.Entry[i].Request.Url, "/") && !strings.Contains(bundle.Entry[i].Request.Url, "?") {
+				c.AbortWithError(http.StatusBadRequest, errors.New("Batch PUT url must have an id or a condition"))
+				return
+		}
 		}
 		entries[i] = &bundle.Entry[i]
 	}
@@ -81,20 +85,52 @@ func (b *BatchController) Post(c *gin.Context) {
 	// references to reference the new ID.
 	refMap := make(map[string]models.Reference)
 	newIDs := make([]string, len(entries))
+	createStatus := make([]string, len(entries))
 	for i, entry := range entries {
 		if entry.Request.Method == "POST" {
-			// Create a new ID and add it to the reference map
-			id := bson.NewObjectId().Hex()
+
+			id := ""
+			
+			if len(entry.Request.IfNoneExist) > 0 {
+				// Conditional Create
+				query := search.Query{Resource: entry.Request.Url, Query: entry.Request.IfNoneExist}
+				existingIds, err := b.DAL.FindIDs(query)
+				if err != nil {
+					c.AbortWithError(http.StatusInternalServerError, err)
+					return
+				}
+
+				if len(existingIds) == 0 {
+					createStatus[i] = "201"
+				} else if len(existingIds) == 1 {
+					createStatus[i] = "200"
+					id = existingIds[0]
+				} else if len(existingIds) > 1 {
+					createStatus[i] = "412" // HTTP 412 - Precondition Failed
+				}
+			} else {
+				// Unconditional create
+				createStatus[i] = "201"
+			}
+
+			if createStatus[i] == "201" {
+				// Create a new ID
+				id = bson.NewObjectId().Hex()
 			newIDs[i] = id
+			}
+
+			if len(id) > 0 {
+				// Add id to the reference map
 			refMap[entry.FullUrl] = models.Reference{
 				Reference:    entry.Request.Url + "/" + id,
 				Type:         entry.Request.Url,
 				ReferencedID: id,
 				External:     new(bool),
 			}
-
 			// Rewrite the FullUrl using the new ID
 			entry.FullUrl = responseURL(c.Request, b.Config, entry.Request.Url, id).String()
+			}
+
 		} else if entry.Request.Method == "PUT" && isConditional(entry) {
 			// We need to process conditionals referencing temp IDs in a second pass, so skip them here
 			if hasTempID(entry.Request.Url) {
@@ -166,18 +202,50 @@ func (b *BatchController) Post(c *gin.Context) {
 				Status: "204",
 			}
 		case "POST":
+
+			entry.Response = &models.BundleEntryResponseComponent{
+				Status:   createStatus[i],
+				Location: entry.FullUrl,
+			}
+
+			if createStatus[i] == "201" {
+				// creating
 			if err := b.DAL.PostWithID(newIDs[i], entry.Resource); err != nil {
 				c.AbortWithError(http.StatusInternalServerError, err)
 				return
 			}
-			entry.Request = nil
-			entry.Response = &models.BundleEntryResponseComponent{
-				Status:   "201",
-				Location: entry.FullUrl,
+				if meta, ok := models.GetResourceMeta(entry.Resource); ok {
+					entry.Response.LastModified = meta.LastUpdated
+				}
+			} else if createStatus[i] == "200" {
+				// have one existing resource
+				components := strings.Split(entry.FullUrl, "/")
+				existingId := components[len(components)-1]
+
+				existingResource, err := b.DAL.Get(existingId, entry.Request.Url)
+				if err != nil {
+					c.AbortWithError(http.StatusInternalServerError, err)
+					return
 			}
-			if meta, ok := models.GetResourceMeta(entry.Resource); ok {
+				entry.Resource = existingResource
+				if meta, ok := models.GetResourceMeta(existingResource); ok {
+					if meta != nil && meta.LastUpdated != nil {
 				entry.Response.LastModified = meta.LastUpdated
 			}
+				}
+			} else if createStatus[i] == "412" {
+				entry.Response.Outcome = &models.OperationOutcome{
+					Issue: []models.OperationOutcomeIssueComponent{
+						models.OperationOutcomeIssueComponent{
+							Severity: "warning",
+							Code:     "duplicate",
+							Diagnostics: "search criteria were not selective enough",
+						},
+					},
+				}
+			}
+			entry.Request = nil
+
 		case "PUT":
 			// Because we pre-process conditional PUTs, we know this is always a normal PUT operation
 			entry.FullUrl = responseURL(c.Request, b.Config, entry.Request.Url).String()

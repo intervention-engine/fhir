@@ -134,7 +134,17 @@ func (rc *ResourceController) CreateHandler(c *gin.Context) {
 		return
 	}
 
-	id, err := rc.DAL.Post(resource)
+	// check for conditional create
+	ifNoneExist := c.GetHeader("If-None-Exist")
+	var httpStatus int
+	var id string
+	if len(ifNoneExist) > 0 {
+		query := search.Query{Resource: rc.Name, Query: ifNoneExist}
+		httpStatus, id, resource, err = rc.DAL.ConditionalPost(query, resource)
+	} else {
+		httpStatus = http.StatusCreated
+		id, err = rc.DAL.Post(resource)
+	}
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -144,8 +154,10 @@ func (rc *ResourceController) CreateHandler(c *gin.Context) {
 	c.Set("Resource", rc.Name)
 	c.Set("Action", "create")
 
-	c.Header("Location", responseURL(c.Request, rc.Config, rc.Name, id).String())
-	c.Render(http.StatusCreated, CustomJSONRenderer{resource})
+	if len(id) > 0 {
+		c.Header("Location", responseURL(c.Request, rc.Config, rc.Name, id).String())
+	}
+	c.Render(httpStatus, CustomJSONRenderer{resource})
 }
 
 // UpdateHandler handles requests to update a resource having a given ID.  If the resource with that ID does not

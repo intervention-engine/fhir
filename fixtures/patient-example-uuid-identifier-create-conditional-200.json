@@ -1,0 +1,53 @@
+{
+    "resourceType": "Bundle",
+    "id": "bundle-transaction",
+    "type": "transaction",
+    "entry": [
+        {
+            "fullUrl": "urn:uuid:61ebe359-bfdc-4613-8bf2-c5e3009a5d12",
+            "resource": {
+                "resourceType": "Patient",
+                "text": {
+                    "status": "generated",
+                    "div": "<div>\n      <p>Patient Donald DUCK @ Acme Healthcare, Inc. MR = urn:uuid:6002c2ab-9571-4db7-9a79-87163475b071</p>\n    </div>"
+                },
+                "identifier": [
+                    {
+                        "use": "usual",
+                        "label": "MRN",
+                        "system": "urn:oid:0.1.2.3.4.5.6.7",
+                        "value": "urn:uuid:6002c2ab-9571-4db7-9a79-87163475b071"
+                    }
+                ],
+                "name": [
+                    {
+                        "use": "official",
+                        "family": "Duck",
+                        "given": [
+                            "Donny"
+                        ]
+                    }
+                ],
+                "gender": "male",
+                "managingOrganization": {
+                    "reference": "Organization/1",
+                    "display": "ACME Healthcare, Inc"
+                },
+                "link": [
+                    {
+                        "other": {
+                            "reference": "Patient/pat2"
+                        },
+                        "type": "seealso"
+                    }
+                ],
+                "active": true
+            },
+            "request": {
+                "method": "POST",
+                "url": "Patient",
+                "ifNoneExist": "identifier=urn:oid:0.1.2.3.4.5.6.7|urn:uuid:6002c2ab-9571-4db7-9a79-87163475b071"
+            }
+        }
+    ]
+}
