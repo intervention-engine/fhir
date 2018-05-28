@@ -800,16 +800,16 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageHeaderDestinat
 
 func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageHeaderDestination(c *C) {
 	q := Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/fhir"}
-	mq := m.MongoSearcher.CreateQuery(q)
-	num, err := mq.Count()
+	results, _, err := m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 1)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
 
 	q = Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/foo"}
-	mq = m.MongoSearcher.CreateQuery(q)
-	num, err = mq.Count()
+	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
-	c.Assert(num, Equals, 0)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
 }
 
 // Test date searches on DateTime / Period
