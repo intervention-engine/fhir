@@ -274,8 +274,7 @@ func responseURL(r *http.Request, config Config, paths ...string) *url.URL {
 // CustomJSONRenderer replaces gin's default JSON renderer and ensures
 // that the special characters "<", ">", and "&" are not escaped after the
 // the JSON is marshaled. Escaping these special HTML characters is the default
-// behavior of Go's json.Marshal(). It also ensures that the improperly unmarshaled
-// "_id" field in contained resources gets converted correctly to "id".
+// behavior of Go's json.Marshal().
 type CustomJSONRenderer struct {
 	obj interface{}
 }
