@@ -36,11 +36,11 @@ func (rc *ResourceController) IndexHandler(c *gin.Context) {
 		if r := recover(); r != nil {
 			switch x := r.(type) {
 			case *search.Error:
-				c.Render(x.HTTPStatus, CustomJSONRenderer{x.OperationOutcome})
+				c.Render(x.HTTPStatus, CustomFhirRenderer{x.OperationOutcome, c})
 				return
 			default:
 				outcome := models.NewOperationOutcome("fatal", "exception", "")
-				c.Render(http.StatusInternalServerError, CustomJSONRenderer{outcome})
+				c.Render(http.StatusInternalServerError, CustomFhirRenderer{outcome, c})
 				return
 			}
 		}
@@ -58,7 +58,7 @@ func (rc *ResourceController) IndexHandler(c *gin.Context) {
 	c.Set("Resource", rc.Name)
 	c.Set("Action", "search")
 
-	c.Render(http.StatusOK, CustomJSONRenderer{bundle})
+	c.Render(http.StatusOK, CustomFhirRenderer{bundle, c})
 }
 
 // LoadResource uses the resource id in the request to get a resource from the DataAccessLayer and store it in the
@@ -87,7 +87,7 @@ func (rc *ResourceController) ShowHandler(c *gin.Context) {
 		c.Status(http.StatusNotFound)
 		return
 	}
-	c.Render(http.StatusOK, CustomJSONRenderer{resource})
+	c.Render(http.StatusOK, CustomFhirRenderer{resource, c})
 }
 
 // EverythingHandler handles requests for everything related to a Patient or Encounter resource.
@@ -96,11 +96,11 @@ func (rc *ResourceController) EverythingHandler(c *gin.Context) {
 		if r := recover(); r != nil {
 			switch x := r.(type) {
 			case *search.Error:
-				c.Render(x.HTTPStatus, CustomJSONRenderer{x.OperationOutcome})
+				c.Render(x.HTTPStatus, CustomFhirRenderer{x.OperationOutcome, c})
 				return
 			default:
 				outcome := models.NewOperationOutcome("fatal", "exception", "")
-				c.Render(http.StatusInternalServerError, CustomJSONRenderer{outcome})
+				c.Render(http.StatusInternalServerError, CustomFhirRenderer{outcome, c})
 				return
 			}
 		}
@@ -121,7 +121,7 @@ func (rc *ResourceController) EverythingHandler(c *gin.Context) {
 	c.Set("Resource", rc.Name)
 	c.Set("Action", "search")
 
-	c.Render(http.StatusOK, CustomJSONRenderer{bundle})
+	c.Render(http.StatusOK, CustomFhirRenderer{bundle, c})
 }
 
 // CreateHandler handles requests to create a new resource instance, assigning it a new ID.
@@ -130,7 +130,7 @@ func (rc *ResourceController) CreateHandler(c *gin.Context) {
 	err := FHIRBind(c, resource)
 	if err != nil {
 		oo := models.NewOperationOutcome("fatal", "exception", err.Error())
-		c.Render(http.StatusBadRequest, CustomJSONRenderer{oo})
+		c.Render(http.StatusBadRequest, CustomFhirRenderer{oo, c})
 		return
 	}
 
@@ -157,7 +157,7 @@ func (rc *ResourceController) CreateHandler(c *gin.Context) {
 	if len(id) > 0 {
 		c.Header("Location", responseURL(c.Request, rc.Config, rc.Name, id).String())
 	}
-	c.Render(httpStatus, CustomJSONRenderer{resource})
+	c.Render(httpStatus, CustomFhirRenderer{resource, c})
 }
 
 // UpdateHandler handles requests to update a resource having a given ID.  If the resource with that ID does not
@@ -167,7 +167,7 @@ func (rc *ResourceController) UpdateHandler(c *gin.Context) {
 	err := FHIRBind(c, resource)
 	if err != nil {
 		oo := models.NewOperationOutcome("fatal", "exception", err.Error())
-		c.Render(http.StatusBadRequest, CustomJSONRenderer{oo})
+		c.Render(http.StatusBadRequest, CustomFhirRenderer{oo, c})
 		return
 	}
 
@@ -183,10 +183,10 @@ func (rc *ResourceController) UpdateHandler(c *gin.Context) {
 	c.Header("Location", responseURL(c.Request, rc.Config, rc.Name, c.Param("id")).String())
 	if createdNew {
 		c.Set("Action", "create")
-		c.Render(http.StatusCreated, CustomJSONRenderer{resource})
+		c.Render(http.StatusCreated, CustomFhirRenderer{resource, c})
 	} else {
 		c.Set("Action", "update")
-		c.Render(http.StatusOK, CustomJSONRenderer{resource})
+		c.Render(http.StatusOK, CustomFhirRenderer{resource, c})
 	}
 }
 
@@ -199,7 +199,7 @@ func (rc *ResourceController) ConditionalUpdateHandler(c *gin.Context) {
 	err := FHIRBind(c, resource)
 	if err != nil {
 		oo := models.NewOperationOutcome("fatal", "exception", err.Error())
-		c.Render(http.StatusBadRequest, CustomJSONRenderer{oo})
+		c.Render(http.StatusBadRequest, CustomFhirRenderer{oo, c})
 		return
 	}
 
@@ -218,10 +218,10 @@ func (rc *ResourceController) ConditionalUpdateHandler(c *gin.Context) {
 	c.Header("Location", responseURL(c.Request, rc.Config, rc.Name, id).String())
 	if createdNew {
 		c.Set("Action", "create")
-		c.Render(http.StatusCreated, CustomJSONRenderer{resource})
+		c.Render(http.StatusCreated, CustomFhirRenderer{resource, c})
 	} else {
 		c.Set("Action", "update")
-		c.Render(http.StatusOK, CustomJSONRenderer{resource})
+		c.Render(http.StatusOK, CustomFhirRenderer{resource, c})
 	}
 }
 
@@ -281,33 +281,55 @@ func responseURL(r *http.Request, config Config, paths ...string) *url.URL {
 	return &responseURL
 }
 
-// CustomJSONRenderer replaces gin's default JSON renderer and ensures
+// CustomFhirRenderer replaces gin's default JSON renderer and ensures
 // that the special characters "<", ">", and "&" are not escaped after the
 // the JSON is marshaled. Escaping these special HTML characters is the default
 // behavior of Go's json.Marshal().
-type CustomJSONRenderer struct {
+// It also outputs XML if that is required
+type CustomFhirRenderer struct {
 	obj interface{}
+	c   *gin.Context
 }
 
 var fhirJSONContentType = []string{"application/fhir+json; charset=utf-8"}
+var fhirXMLContentType = []string{"application/fhir+xml; charset=utf-8"}
 
-func (u CustomJSONRenderer) Render(w http.ResponseWriter) (err error) {
+func (u CustomFhirRenderer) Render(w http.ResponseWriter) (err error) {
+
+	if u.obj == nil {
+		w.Write([]byte(""))
+		return
+	}
+
 	data, err := json.Marshal(&u.obj)
 	if err != nil {
 		return
 	}
 
-	// Replace the escaped characters in the data
-	data = bytes.Replace(data, []byte("\\u003c"), []byte("<"), -1)
-	data = bytes.Replace(data, []byte("\\u003e"), []byte(">"), -1)
-	data = bytes.Replace(data, []byte("\\u0026"), []byte("&"), -1)
+	if u.c.GetBool("SendXML") {
+		converterInt := u.c.MustGet("FhirFormatConverter")
+		converter := converterInt.(*FhirFormatConverter)
+		var xml string
+		xml, err = converter.JsonToXml(string(data))
+		if err != nil {
+			fmt.Printf("ERROR: JsonToXml failed for data: %+v %s\n", u.obj, string(data))
+			return
+		}
+		writeContentType(w, fhirXMLContentType)
+		_, err = w.Write([]byte(xml))
+	} else {
+		// Replace the escaped characters in the data
+		data = bytes.Replace(data, []byte("\\u003c"), []byte("<"), -1)
+		data = bytes.Replace(data, []byte("\\u003e"), []byte(">"), -1)
+		data = bytes.Replace(data, []byte("\\u0026"), []byte("&"), -1)
 
-	writeContentType(w, fhirJSONContentType)
-	_, err = w.Write(data)
+		writeContentType(w, fhirJSONContentType)
+		_, err = w.Write(data)
+	}
 	return
 }
 
-func (u CustomJSONRenderer) WriteContentType(w http.ResponseWriter) {
+func (u CustomFhirRenderer) WriteContentType(w http.ResponseWriter) {
 	writeContentType(w, fhirJSONContentType)
 }
 

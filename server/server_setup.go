@@ -65,7 +65,12 @@ func NewServer(config Config) *FHIRServer {
 		ValidateHeaders: false,
 	}))
 
-	server.Engine.Use(AbortNonJSONRequestsMiddleware)
+	if config.EnableXML {
+		server.Engine.Use(EnableXmlToJsonConversionMiddleware())
+		server.Engine.Use(AbortNonFhirXMLorJSONRequestsMiddleware)
+	} else {
+		server.Engine.Use(AbortNonJSONRequestsMiddleware)
+	}
 
 	if config.ReadOnly {
 		server.Engine.Use(ReadOnlyMiddleware)

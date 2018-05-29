@@ -285,7 +285,13 @@ func (b *BatchController) Post(c *gin.Context) {
 	// Send the response
 
 	c.Header("Access-Control-Allow-Origin", "*")
-	c.JSON(http.StatusOK, bundle)
+	if c.GetBool("SendXML") {
+		converterInt := c.MustGet("FhirFormatConverter")
+		converter := converterInt.(*FhirFormatConverter)
+		converter.SendXML(bundle, c)
+	} else {
+		c.JSON(http.StatusOK, bundle)
+	}
 }
 
 func (b *BatchController) resolveConditionalPut(request *http.Request, entryIndex int, entry *models.BundleEntryComponent, newIDs []string, refMap map[string]models.Reference) error {

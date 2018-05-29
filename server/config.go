@@ -56,6 +56,9 @@ type Config struct {
 	// mode any HTTP verb other than GET, HEAD or OPTIONS is rejected.
 	ReadOnly bool
 
+	// Enables requests and responses using FHIR XML MIME-types
+	EnableXML bool
+
 	// Debug toggles debug-level logging.
 	Debug bool
 }
