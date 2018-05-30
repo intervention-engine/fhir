@@ -51,6 +51,7 @@ func NewServer(config Config) *FHIRServer {
 
 	if config.Debug {
 		gin.SetMode(gin.DebugMode)
+		gin.DisableConsoleColor()
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
