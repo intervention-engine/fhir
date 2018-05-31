@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	. "gopkg.in/check.v1"
-	"github.com/eug48/fhir/models"
+	"github.com/intervention-engine/fhir/models"
 )
 
 type FormatConversionSuite struct {
