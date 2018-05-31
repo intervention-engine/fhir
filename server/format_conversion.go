@@ -44,7 +44,7 @@ func NewFhirFormatConverter() *FhirFormatConverter {
 func (c *FhirFormatConverter) XmlToJson(xml string) (json string, err error) {
 
 	c.runtime.Set("strXML", c.runtime.ToValue(xml))
-	jsonVal, err := c.runtime.RunString("JSON.stringify(fhir.xmlToObj(strXML), null, 4);")
+	jsonVal, err := c.runtime.RunString("fhir.xmlToJson(strXML);")
 	if err != nil {
 		return
 	}

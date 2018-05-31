@@ -1,0 +1,28 @@
+{
+  "status": "final",
+  "meta": {
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "8302-2"
+      }
+    ]
+  },
+  "valueQuantity": {
+    "unit": "cm",
+    "system": "http://unitsofmeasure.org",
+    "value": 170
+  },
+  "subject": {
+    "reference": "urn:uuid:547448f0-3292-4c93-a1b9-c55c65a710c7"
+  },
+  "resourceType": "Observation"
+}
