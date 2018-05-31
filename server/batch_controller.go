@@ -36,7 +36,16 @@ func (b *BatchController) Post(c *gin.Context) {
 	bundle := &models.Bundle{}
 	err := FHIRBind(c, bundle)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		outcome := &models.OperationOutcome{
+			Issue: []models.OperationOutcomeIssueComponent{
+				models.OperationOutcomeIssueComponent{
+					Severity: "fatal", // fatal means "The issue caused the action to fail, and no further checking could be performed."
+					Code:     "structure",
+					Diagnostics: err.Error(),
+				},
+			},
+		}
+		c.AbortWithStatusJSON(http.StatusBadRequest, outcome)
 		return
 	}
 

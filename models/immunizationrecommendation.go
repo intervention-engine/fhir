@@ -63,7 +63,10 @@ func (x *ImmunizationRecommendation) UnmarshalJSON(data []byte) (err error) {
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Contained != nil {
 			for i := range x2.Contained {
-				x2.Contained[i] = MapToResource(x2.Contained[i], true)
+				x2.Contained[i], err = MapToResource(x2.Contained[i], true)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		*x = ImmunizationRecommendation(x2)

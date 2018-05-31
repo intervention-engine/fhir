@@ -51,7 +51,10 @@ func (x *ContainedResources) SetBSON(raw bson.Raw) (err error) {
 	if err = raw.Unmarshal(x2); err == nil {
 		if x != nil {
 			for i := range *x {
-				(*x)[i] = BSONMapToResource((*x)[i].(bson.M), true)
+				(*x)[i], err = BSONMapToResource((*x)[i].(bson.M), true)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}

@@ -60,7 +60,8 @@ func (m *MongoSearchSuite) SetUpSuite(c *C) {
 	util.CheckErr(err)
 
 	for _, resourceMap := range maps {
-		r := models.MapToResource(resourceMap, true)
+		r, err := models.MapToResource(resourceMap, true)
+		util.CheckErr(err)
 		collection := models.PluralizeLowerResourceName(reflect.TypeOf(r).Elem().Name())
 		util.CheckErr(db.C(collection).Insert(r))
 	}

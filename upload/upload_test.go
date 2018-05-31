@@ -89,7 +89,8 @@ func (s *UploadSuite) TestPostToFHIRServer(c *C) {
 
 	fhirmodels := make([]interface{}, 0, len(maps))
 	for _, resourceMap := range maps {
-		r := models.MapToResource(resourceMap, true)
+		r, err := models.MapToResource(resourceMap, true)
+		util.CheckErr(err)
 		fhirmodels = append(fhirmodels, r)
 	}
 

@@ -129,7 +129,7 @@ func (rc *ResourceController) CreateHandler(c *gin.Context) {
 	resource := models.NewStructForResourceName(rc.Name)
 	err := FHIRBind(c, resource)
 	if err != nil {
-		oo := models.NewOperationOutcome("fatal", "exception", err.Error())
+		oo := models.NewOperationOutcome("fatal", "structure", err.Error())
 		c.Render(http.StatusBadRequest, CustomFhirRenderer{oo, c})
 		return
 	}
@@ -166,7 +166,7 @@ func (rc *ResourceController) UpdateHandler(c *gin.Context) {
 	resource := models.NewStructForResourceName(rc.Name)
 	err := FHIRBind(c, resource)
 	if err != nil {
-		oo := models.NewOperationOutcome("fatal", "exception", err.Error())
+		oo := models.NewOperationOutcome("fatal", "structure", err.Error())
 		c.Render(http.StatusBadRequest, CustomFhirRenderer{oo, c})
 		return
 	}
@@ -198,7 +198,7 @@ func (rc *ResourceController) ConditionalUpdateHandler(c *gin.Context) {
 	resource := models.NewStructForResourceName(rc.Name)
 	err := FHIRBind(c, resource)
 	if err != nil {
-		oo := models.NewOperationOutcome("fatal", "exception", err.Error())
+		oo := models.NewOperationOutcome("fatal", "structure", err.Error())
 		c.Render(http.StatusBadRequest, CustomFhirRenderer{oo, c})
 		return
 	}
