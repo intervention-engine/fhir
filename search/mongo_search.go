@@ -1,11 +1,13 @@
 package search
 
 import (
+	"runtime"
 	"crypto/md5"
 	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
+	"path"
 
 	"strconv"
 
@@ -1111,12 +1113,28 @@ func (m *MongoSearcher) createOrQueryObject(o *OrParam) bson.M {
 	}
 }
 
+var showOpOutcomeDiagnostics = true
+func DisableOperationOutcomeDiagnosticsFileLine() { // e.g. for testing OperationOutcomes
+	showOpOutcomeDiagnostics = false
+}
+func getOpOutcomeDiagnostics() string {
+	if showOpOutcomeDiagnostics {
+		_, file, line, _ := runtime.Caller(3)
+		return fmt.Sprintf ("%s:%d", path.Base(file), line)
+	} else {
+		return ""
+	}
+}
+
+
 func createOpOutcome(severity, code, detailsCode, detailsDisplay string) *models.OperationOutcome {
+
 	outcome := &models.OperationOutcome{
 		Issue: []models.OperationOutcomeIssueComponent{
 			models.OperationOutcomeIssueComponent{
 				Severity: severity,
 				Code:     code,
+				Diagnostics: getOpOutcomeDiagnostics(),
 			},
 		},
 	}

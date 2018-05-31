@@ -188,6 +188,32 @@ func (dal *mongoDataAccessLayer) Post(resource interface{}) (id string, err erro
 	return
 }
 
+func (dal *mongoDataAccessLayer) ConditionalPost(query search.Query, resource interface{}) (httpStatus int, id string, outputResource interface{}, err error) {
+	existingIds, err := dal.FindIDs(query)
+	if err != nil {
+		return
+	}
+
+	if len(existingIds) == 0 {
+		httpStatus = 201
+		id = bson.NewObjectId().Hex()
+		err = convertMongoErr(dal.PostWithID(id, resource))
+		if err != nil {
+			outputResource = resource
+		}
+
+	} else if len(existingIds) == 1 {
+		httpStatus = 200
+		id = existingIds[0]
+		outputResource, err = dal.Get(id, query.Resource)
+
+	} else if len(existingIds) > 1 {
+		httpStatus = 412
+	}
+
+	return
+}
+
 func (dal *mongoDataAccessLayer) PostWithID(id string, resource interface{}) error {
 	bsonID, err := convertIDToBsonID(id)
 	if err != nil {

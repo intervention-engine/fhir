@@ -26,10 +26,37 @@
 
 package models
 
+import (
+	"gopkg.in/mgo.v2/bson"
+)
+
+type ContainedResources []interface{}
+
 type DomainResource struct {
 	Resource          `bson:",inline"`
-	Text              *Narrative    `bson:"text,omitempty" json:"text,omitempty"`
-	Contained         []interface{} `bson:"contained,omitempty" json:"contained,omitempty"`
-	Extension         []Extension   `bson:"extension,omitempty" json:"extension,omitempty"`
-	ModifierExtension []Extension   `bson:"modifierExtension,omitempty" json:"modifierExtension,omitempty"`
+	Text              *Narrative         `bson:"text,omitempty" json:"text,omitempty"`
+	Contained         ContainedResources `bson:"contained,omitempty" json:"contained,omitempty"`
+	Extension         []Extension        `bson:"extension,omitempty" json:"extension,omitempty"`
+	ModifierExtension []Extension        `bson:"modifierExtension,omitempty" json:"modifierExtension,omitempty"`
+}
+
+// Convert contained resources from map[string]interfac{} to specific types.
+// Custom marshalling methods on those types will then hide internal fields
+// like @context and referenceid.
+func (x *ContainedResources) SetBSON(raw bson.Raw) (err error) {
+
+	// alias type to avoid infinite loop when calling Unmarshal
+	type containedResources ContainedResources
+	x2 := (*containedResources)(x)
+	if err = raw.Unmarshal(x2); err == nil {
+		if x != nil {
+			for i := range *x {
+				(*x)[i], err = BSONMapToResource((*x)[i].(bson.M), true)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return
 }

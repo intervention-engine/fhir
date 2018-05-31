@@ -14,6 +14,8 @@ type DataAccessLayer interface {
 	Get(id, resourceType string) (result interface{}, err error)
 	// Post creates a resource instance, returning its new ID.
 	Post(resource interface{}) (id string, err error)
+	// ConditionalPost creates a resource if the query finds no matches
+	ConditionalPost(query search.Query, resource interface{}) (httpStatus int, id string, outputResource interface{}, err error)
 	// PostWithID creates a resource instance with the given ID.
 	PostWithID(id string, resource interface{}) error
 	// Put creates or updates a resource instance with the given ID.

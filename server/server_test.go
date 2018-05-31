@@ -318,6 +318,103 @@ func (s *ServerSuite) TestCreatePatient(c *C) {
 	s.checkCreatedPatient(createdPatientID, c)
 }
 
+func (s *ServerSuite) TestCreatePatient987(c *C) {
+	data, err := os.Open("../fixtures/patient-example-MRN-987.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	res, err := http.Post(s.Server.URL+"/Patient", "application/json", data)
+	util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 201)
+	splitLocation := strings.Split(res.Header["Location"][0], "/")
+	createdPatientID := splitLocation[len(splitLocation)-1]
+	s.checkCreatedPatient(createdPatientID, c)
+}
+
+func (s *ServerSuite) TestCreatePatientConditionalCreated(c *C) {
+	data, err := os.Open("../fixtures/patient-example-b.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", s.Server.URL+"/Patient", data); util.CheckErr(err)
+	req.Header.Add("If-None-Exist", "identifier=urn:oid:0.1.2.3.4.5.6.7|123")
+	req.Header.Add("Content-Type", "application/json")
+	res, err := client.Do(req); util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 201)
+	splitLocation := strings.Split(res.Header["Location"][0], "/")
+	createdPatientID := splitLocation[len(splitLocation)-1]
+	s.checkCreatedPatient(createdPatientID, c)
+	s.checkPatientCount(2, c) // 1st patient from SetUpTest
+}
+
+func (s *ServerSuite) TestCreatePatientConditionalCreated2(c *C) {
+	s.TestCreatePatient(c)
+	s.TestCreatePatient987(c)
+
+	data, err := os.Open("../fixtures/patient-example-b.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", s.Server.URL+"/Patient", data); util.CheckErr(err)
+	req.Header.Add("If-None-Exist", "identifier=urn:oid:0.1.2.3.4.5.6.7|123")
+	req.Header.Add("Content-Type", "application/json")
+	res, err := client.Do(req); util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 201)
+	splitLocation := strings.Split(res.Header["Location"][0], "/")
+	createdPatientID := splitLocation[len(splitLocation)-1]
+	s.checkCreatedPatient(createdPatientID, c)
+	s.checkPatientCount(4, c) // 1st patient from SetUpTest
+}
+
+func (s *ServerSuite) TestCreatePatientConditionalExists(c *C) {
+	s.checkPatientCount(1, c) // 1st patient from SetUpTest
+	s.TestCreatePatient(c)
+	s.checkPatientCount(2, c)
+	s.TestCreatePatient987(c)
+	s.checkPatientCount(3, c)
+
+	data, err := os.Open("../fixtures/patient-example-b.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", s.Server.URL+"/Patient", data); util.CheckErr(err)
+	req.Header.Add("If-None-Exist", "identifier=urn:oid:0.1.2.3.4.5.6.7|987")
+	req.Header.Add("Content-Type", "application/json")
+	res, err := client.Do(req); util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 200)
+	splitLocation := strings.Split(res.Header["Location"][0], "/")
+	createdPatientID := splitLocation[len(splitLocation)-1]
+	s.checkCreatedPatient(createdPatientID, c)
+
+	s.checkPatientCount(3, c)
+}
+
+func (s *ServerSuite) TestCreatePatientConditionalMultiple(c *C) {
+	s.TestCreatePatient987(c)
+	s.TestCreatePatient987(c)
+
+	data, err := os.Open("../fixtures/patient-example-b.json")
+	util.CheckErr(err)
+	defer data.Close()
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", s.Server.URL+"/Patient", data); util.CheckErr(err)
+	req.Header.Add("If-None-Exist", "identifier=urn:oid:0.1.2.3.4.5.6.7|987")
+	req.Header.Add("Content-Type", "application/json")
+	res, err := client.Do(req); util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 412)
+	c.Assert(res.Header["Location"], IsNil)
+	s.checkPatientCount(3, c)
+}
+
 func (s *ServerSuite) TestCreatePatientByPut(c *C) {
 	data, err := os.Open("../fixtures/patient-example-b.json")
 	util.CheckErr(err)
@@ -349,6 +446,15 @@ func (s *ServerSuite) checkCreatedPatient(createdPatientID string, c *C) {
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
 	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+func (s *ServerSuite) checkPatientCount(expected int, c *C) {
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	patientCollection := worker.DB().C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, expected)
 }
 
 func (s *ServerSuite) TestGetConditionsWithIncludes(c *C) {
@@ -476,6 +582,7 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 	req.Header.Add("Content-Type", "application/json")
 	util.CheckErr(err)
 	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
 
 	c.Assert(res.StatusCode, Equals, 200)
 	patientCollection := worker.DB().C("patients")
@@ -490,6 +597,208 @@ func (s *ServerSuite) TestConditionalUpdatePatientOneMatch(c *C) {
 	c.Assert(patient.Meta.LastUpdated, NotNil)
 	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
 	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+
+func (s *ServerSuite) TestBatchConditionalUpdatePatientUUIDIdentifier(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	testPatient := s.insertPatientFromFixture("../fixtures/patient-example-uuid-identifier.json")
+
+	data, err := os.Open("../fixtures/patient-example-uuid-identifier-update.json")
+	util.CheckErr(err)
+	defer data.Close()
+	req, err := http.NewRequest("POST", s.Server.URL+"/", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+
+	c.Assert(res.StatusCode, Equals, 200)
+	patientCollection := worker.DB().C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 2) // update should not have created a new patient (2nd patient is from SetUpTest)
+	patient := models.Patient{}
+	err = patientCollection.FindId(testPatient.Id).One(&patient)
+	util.CheckErr(err)
+	c.Assert(patient.Name[0].Given[0], Equals, "Donny") // patient should have been modified
+	c.Assert(patient.Meta, NotNil)
+	c.Assert(patient.Meta.LastUpdated, NotNil)
+	c.Assert(patient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	c.Assert(time.Since(patient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+
+func (s *ServerSuite) TestBatchCreate(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	testPatient := s.insertPatientFromFixture("../fixtures/patient-example-uuid-identifier.json")
+
+	data, err := os.Open("../fixtures/patient-example-uuid-identifier-create.json")
+	util.CheckErr(err)
+	defer data.Close()
+	req, err := http.NewRequest("POST", s.Server.URL+"/", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+	c.Assert(res.StatusCode, Equals, 200)
+	resBody, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+	resBundle := &models.Bundle{}
+	err = json.Unmarshal(resBody, resBundle)
+	util.CheckErr(err)
+	c.Assert(*resBundle.Total, Equals, uint32(1))
+	c.Assert(resBundle.Entry[0].Response.Status, Equals, "201")
+
+	patientCollection := worker.DB().C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 3) // update should have created a new patient (1nd patient is from SetUpTest)
+	existingPatient := models.Patient{}
+	err = patientCollection.FindId(testPatient.Id).One(&existingPatient)
+	util.CheckErr(err)
+	c.Assert(existingPatient.Name[0].Given[0], Equals, "Donald") // patient should not have been modified
+	c.Assert(existingPatient.Meta, IsNil)
+
+	newPatientIdPos := strings.LastIndex(resBundle.Entry[0].Response.Location, "/")
+	newPatientId := resBundle.Entry[0].Response.Location[newPatientIdPos+1:]
+	newPatient := models.Patient{}
+	err = patientCollection.FindId(newPatientId).One(&newPatient)
+	util.CheckErr(err)
+	c.Assert(newPatient.Name[0].Given[0], Equals, "Donny")
+	c.Assert(newPatient.Meta, NotNil)
+	c.Assert(newPatient.Meta.LastUpdated, NotNil)
+	c.Assert(newPatient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	c.Assert(time.Since(newPatient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+
+func (s *ServerSuite) TestBatchCreateConditional200(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	testPatient := s.insertPatientFromFixture("../fixtures/patient-example-uuid-identifier.json")
+
+	// should do nothing
+	data, err := os.Open("../fixtures/patient-example-uuid-identifier-create-conditional-200.json")
+	util.CheckErr(err)
+	defer data.Close()
+	req, err := http.NewRequest("POST", s.Server.URL+"/", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+	c.Assert(res.StatusCode, Equals, 200)
+	resBody, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+	resBundle := &models.Bundle{}
+	err = json.Unmarshal(resBody, resBundle)
+	util.CheckErr(err)
+	c.Assert(*resBundle.Total, Equals, uint32(1))
+	c.Assert(resBundle.Entry[0].Response.Status, Equals, "200")
+
+	patientCollection := worker.DB().C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 2) // update should not have created a new patient (1nd patient is from SetUpTest)
+	existingPatient := models.Patient{}
+	err = patientCollection.FindId(testPatient.Id).One(&existingPatient)
+	util.CheckErr(err)
+	c.Assert(existingPatient.Name[0].Given[0], Equals, "Donald") // patient should not have been modified
+	c.Assert(existingPatient.Meta, IsNil)
+}
+
+func (s *ServerSuite) TestBatchCreateConditional201(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	testPatient := s.insertPatientFromFixture("../fixtures/patient-example-uuid-identifier.json")
+
+	data, err := os.Open("../fixtures/patient-example-uuid-identifier-create-conditional-201.json")
+	util.CheckErr(err)
+	defer data.Close()
+	req, err := http.NewRequest("POST", s.Server.URL+"/", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+	c.Assert(res.StatusCode, Equals, 200)
+	resBody, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+	resBundle := &models.Bundle{}
+	err = json.Unmarshal(resBody, resBundle)
+	util.CheckErr(err)
+	c.Assert(*resBundle.Total, Equals, uint32(1))
+	c.Assert(resBundle.Entry[0].Response.Status, Equals, "201")
+
+	patientCollection := worker.DB().C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 3) // update should have created a new patient (1nd patient is from SetUpTest)
+	existingPatient := models.Patient{}
+	err = patientCollection.FindId(testPatient.Id).One(&existingPatient)
+	util.CheckErr(err)
+	c.Assert(existingPatient.Name[0].Given[0], Equals, "Donald") // patient should not have been modified
+	c.Assert(existingPatient.Meta, IsNil)
+
+	newPatientIdPos := strings.LastIndex(resBundle.Entry[0].Response.Location, "/")
+	newPatientId := resBundle.Entry[0].Response.Location[newPatientIdPos+1:]
+	newPatient := models.Patient{}
+	err = patientCollection.FindId(newPatientId).One(&newPatient)
+	util.CheckErr(err)
+	c.Assert(newPatient.Name[0].Given[0], Equals, "Donny")
+	c.Assert(newPatient.Meta, NotNil)
+	c.Assert(newPatient.Meta.LastUpdated, NotNil)
+	c.Assert(newPatient.Meta.LastUpdated.Precision, Equals, models.Precision(models.Timestamp))
+	c.Assert(time.Since(newPatient.Meta.LastUpdated.Time).Minutes() < float64(1), Equals, true)
+}
+
+func (s *ServerSuite) TestBatchCreateConditional412(c *C) {
+
+	worker := s.MasterSession.GetWorkerSession()
+	defer worker.Close()
+
+	testPatient1 := s.insertPatientFromFixture("../fixtures/patient-example-uuid-identifier.json")
+	testPatient2 := s.insertPatientFromFixture("../fixtures/patient-example-uuid-identifier.json")
+
+	// should do nothing
+	data, err := os.Open("../fixtures/patient-example-uuid-identifier-create-conditional-200.json")
+	util.CheckErr(err)
+	defer data.Close()
+	req, err := http.NewRequest("POST", s.Server.URL+"/", data)
+	req.Header.Add("Content-Type", "application/json")
+	util.CheckErr(err)
+	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
+	c.Assert(res.StatusCode, Equals, 200)
+	resBody, err := ioutil.ReadAll(res.Body)
+	util.CheckErr(err)
+	resBundle := &models.Bundle{}
+	err = json.Unmarshal(resBody, resBundle)
+	util.CheckErr(err)
+	c.Assert(*resBundle.Total, Equals, uint32(1))
+	c.Assert(resBundle.Entry[0].Response.Status, Equals, "412")
+
+	patientCollection := worker.DB().C("patients")
+	count, err := patientCollection.Count()
+	util.CheckErr(err)
+	c.Assert(count, Equals, 3) // update should not have created a new patient (1nd patient is from SetUpTest)
+	existingPatient1 := models.Patient{}
+	err = patientCollection.FindId(testPatient1.Id).One(&existingPatient1)
+	util.CheckErr(err)
+	c.Assert(existingPatient1.Name[0].Given[0], Equals, "Donald") // patient should not have been modified
+	c.Assert(existingPatient1.Meta, IsNil)
+
+	existingPatient2 := models.Patient{}
+	err = patientCollection.FindId(testPatient2.Id).One(&existingPatient2)
+	util.CheckErr(err)
+	c.Assert(existingPatient2.Name[0].Given[0], Equals, "Donald") // patient should not have been modified
+	c.Assert(existingPatient2.Meta, IsNil)
 }
 
 func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
@@ -508,6 +817,7 @@ func (s *ServerSuite) TestConditionalUpdateMultipleMatches(c *C) {
 	req.Header.Add("Content-Type", "application/json")
 	util.CheckErr(err)
 	res, err := http.DefaultClient.Do(req)
+	util.CheckErr(err)
 
 	// Should return an HTTP 412 Precondition Failed
 	c.Assert(res.StatusCode, Equals, 412)
@@ -547,6 +857,7 @@ func (s *ServerSuite) TestDeletePatient(c *C) {
 	req, err := http.NewRequest("DELETE", s.Server.URL+"/Patient/"+createdPatientID, nil)
 	util.CheckErr(err)
 	res, err = http.DefaultClient.Do(req)
+	util.CheckErr(err)
 
 	c.Assert(res.StatusCode, Equals, 204)
 	patientCollection := worker.DB().C("patients")
@@ -632,7 +943,7 @@ func (s *ServerSuite) TestEmbbeddedResourceIDsGetRetrievedCorrectly(c *C) {
 	c.Assert(resource["_id"], IsNil)
 }
 
-func (s *ServerSuite) TestContainedResourcesIDsAreCorrectButExtensionIsNot(c *C) {
+func (s *ServerSuite) TestContainedResources(c *C) {
 	res, err := postFixture(s.Server.URL, "Condition", "../fixtures/condition_with_contained_patient.json")
 	util.CheckErr(err)
 
@@ -659,10 +970,18 @@ func (s *ServerSuite) TestContainedResourcesIDsAreCorrectButExtensionIsNot(c *C)
 	c.Assert(len(containedMap["id"].(string)), Equals, 19)
 	c.Assert(containedMap["_id"], IsNil)
 
-	// But sadly, the extension in the patient is not
+	// the extension should be without internal fields like @context
 	extension := containedMap["extension"].([]interface{})[0]
 	extensionMap := extension.(map[string]interface{})
-	c.Assert(extensionMap["@context"], Not(IsNil))
+	c.Assert(extensionMap["@context"], IsNil)
+	c.Assert(extensionMap["url"], Equals, "http://hl7.org/fhir/StructureDefinition/us-core-race")
+
+	// the managingOrganization reference should be without internal fields like referenceid
+	managingOrganizationMap := containedMap["managingOrganization"].(map[string]interface{})
+	c.Assert(managingOrganizationMap["reference"], Equals, "Organization/1")
+	c.Assert(managingOrganizationMap["referenceid"], IsNil)
+	c.Assert(managingOrganizationMap["type"], IsNil)
+	c.Assert(managingOrganizationMap["external"], IsNil)
 
 	// Delete this entry
 	worker := s.MasterSession.GetWorkerSession()

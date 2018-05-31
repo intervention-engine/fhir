@@ -27,16 +27,40 @@ type Simple struct {
 func (s *FDSuite) TestFHIRDateTime(c *check.C) {
 	simple := &Simple{}
 
-	data := []byte("{ \"foo\": [\"1991-02-01T10:00:00-05:00\", \"1992-02-01\", \"1993-02-01T10:00:00-05:00\"]}")
+	data := []byte("{ \"foo\": [\"1991-02-01T10:00:00-05:00\", \"1992-02-01\", \"1993-02-01T10:00:00-05:00\", \"1992-06\", \"03:04:05\"]}")
 	err := json.Unmarshal(data, &simple)
 	util.CheckErr(err)
 
-	c.Assert(simple.Foo, check.HasLen, 3)
+	c.Assert(simple.Foo, check.HasLen, 5)
 	loc, err := time.LoadLocation("America/New_York")
+
 	c.Assert(simple.Foo[0].Time.Equal(time.Date(1991, time.February, 1, 10, 0, 0, 0, loc)), check.Equals, true)
 	c.Assert(simple.Foo[0].Precision, check.Equals, Precision(Timestamp))
+
 	c.Assert(simple.Foo[1].Time.Equal(time.Date(1992, time.February, 1, 0, 0, 0, 0, time.Local)), check.Equals, true)
 	c.Assert(simple.Foo[1].Precision, check.Equals, Precision(Date))
+
 	c.Assert(simple.Foo[2].Time.Equal(time.Date(1993, time.February, 1, 10, 0, 0, 0, loc)), check.Equals, true)
 	c.Assert(simple.Foo[2].Precision, check.Equals, Precision(Timestamp))
+
+	c.Assert(simple.Foo[3].Time.Equal(time.Date(1992, time.June, 1, 0, 0, 0, 0, time.Local)), check.Equals, true)
+	c.Assert(simple.Foo[3].Precision, check.Equals, Precision(YearMonth))
+
+	c.Assert(simple.Foo[4].Time.Equal(time.Date(0, time.January, 1, 03, 04, 05, 0, time.Local)), check.Equals, true)
+	c.Assert(simple.Foo[4].Precision, check.Equals, Precision(Time))
+
+	foo0, err := json.Marshal(simple.Foo[0])
+	c.Assert(string(foo0), check.Equals, "\"1991-02-01T10:00:00-05:00\"")
+
+	foo1, err := json.Marshal(simple.Foo[1])
+	c.Assert(string(foo1), check.Equals, "\"1992-02-01\"")
+
+	foo2, err := json.Marshal(simple.Foo[2])
+	c.Assert(string(foo2), check.Equals, "\"1993-02-01T10:00:00-05:00\"")
+
+	foo3, err := json.Marshal(simple.Foo[3])
+	c.Assert(string(foo3), check.Equals, "\"1992-06\"")
+
+	foo4, err := json.Marshal(simple.Foo[4])
+	c.Assert(string(foo4), check.Equals, "\"03:04:05\"")
 }

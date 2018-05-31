@@ -24,1897 +24,1897 @@ func GetResourceMeta(resource interface{}) (meta *Meta, ok bool) {
 
 // When FHIR JSON is unmarshalled, types that are interface{} just get unmarshaled to map[string]interface{}.
 // This function converts that unmarshaled map to a specific resource type.
-func MapToResource(resourceMap interface{}, asPointer bool) interface{} {
+func MapToResource(resourceMap interface{}, asPointer bool) (interface{}, error) {
 	b, _ := json.Marshal(&resourceMap)
 	m := resourceMap.(map[string]interface{})
 	t := m["resourceType"]
 	switch t {
 	case "Account":
 		x := Account{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ActivityDefinition":
 		x := ActivityDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AdverseEvent":
 		x := AdverseEvent{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AllergyIntolerance":
 		x := AllergyIntolerance{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Appointment":
 		x := Appointment{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AppointmentResponse":
 		x := AppointmentResponse{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AuditEvent":
 		x := AuditEvent{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Basic":
 		x := Basic{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Binary":
 		x := Binary{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "BodySite":
 		x := BodySite{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Bundle":
 		x := Bundle{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CapabilityStatement":
 		x := CapabilityStatement{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CarePlan":
 		x := CarePlan{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CareTeam":
 		x := CareTeam{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ChargeItem":
 		x := ChargeItem{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Claim":
 		x := Claim{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ClaimResponse":
 		x := ClaimResponse{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ClinicalImpression":
 		x := ClinicalImpression{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CodeSystem":
 		x := CodeSystem{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Communication":
 		x := Communication{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CommunicationRequest":
 		x := CommunicationRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CompartmentDefinition":
 		x := CompartmentDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Composition":
 		x := Composition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ConceptMap":
 		x := ConceptMap{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Condition":
 		x := Condition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Consent":
 		x := Consent{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Contract":
 		x := Contract{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Coverage":
 		x := Coverage{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DataElement":
 		x := DataElement{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DetectedIssue":
 		x := DetectedIssue{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Device":
 		x := Device{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceComponent":
 		x := DeviceComponent{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceMetric":
 		x := DeviceMetric{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceRequest":
 		x := DeviceRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceUseStatement":
 		x := DeviceUseStatement{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DiagnosticReport":
 		x := DiagnosticReport{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DocumentManifest":
 		x := DocumentManifest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DocumentReference":
 		x := DocumentReference{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EligibilityRequest":
 		x := EligibilityRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EligibilityResponse":
 		x := EligibilityResponse{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Encounter":
 		x := Encounter{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Endpoint":
 		x := Endpoint{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EnrollmentRequest":
 		x := EnrollmentRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EnrollmentResponse":
 		x := EnrollmentResponse{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EpisodeOfCare":
 		x := EpisodeOfCare{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ExpansionProfile":
 		x := ExpansionProfile{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ExplanationOfBenefit":
 		x := ExplanationOfBenefit{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "FamilyMemberHistory":
 		x := FamilyMemberHistory{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Flag":
 		x := Flag{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Goal":
 		x := Goal{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "GraphDefinition":
 		x := GraphDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Group":
 		x := Group{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "GuidanceResponse":
 		x := GuidanceResponse{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "HealthcareService":
 		x := HealthcareService{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImagingManifest":
 		x := ImagingManifest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImagingStudy":
 		x := ImagingStudy{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Immunization":
 		x := Immunization{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImmunizationRecommendation":
 		x := ImmunizationRecommendation{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImplementationGuide":
 		x := ImplementationGuide{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Library":
 		x := Library{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Linkage":
 		x := Linkage{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "List":
 		x := List{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Location":
 		x := Location{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Measure":
 		x := Measure{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MeasureReport":
 		x := MeasureReport{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Media":
 		x := Media{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Medication":
 		x := Medication{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationAdministration":
 		x := MedicationAdministration{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationDispense":
 		x := MedicationDispense{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationRequest":
 		x := MedicationRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationStatement":
 		x := MedicationStatement{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MessageDefinition":
 		x := MessageDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MessageHeader":
 		x := MessageHeader{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "NamingSystem":
 		x := NamingSystem{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "NutritionOrder":
 		x := NutritionOrder{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Observation":
 		x := Observation{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "OperationDefinition":
 		x := OperationDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "OperationOutcome":
 		x := OperationOutcome{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Organization":
 		x := Organization{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Parameters":
 		x := Parameters{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Patient":
 		x := Patient{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PaymentNotice":
 		x := PaymentNotice{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PaymentReconciliation":
 		x := PaymentReconciliation{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Person":
 		x := Person{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PlanDefinition":
 		x := PlanDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Practitioner":
 		x := Practitioner{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PractitionerRole":
 		x := PractitionerRole{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Procedure":
 		x := Procedure{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ProcedureRequest":
 		x := ProcedureRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ProcessRequest":
 		x := ProcessRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ProcessResponse":
 		x := ProcessResponse{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Provenance":
 		x := Provenance{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Questionnaire":
 		x := Questionnaire{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "QuestionnaireResponse":
 		x := QuestionnaireResponse{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ReferralRequest":
 		x := ReferralRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "RelatedPerson":
 		x := RelatedPerson{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "RequestGroup":
 		x := RequestGroup{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ResearchStudy":
 		x := ResearchStudy{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ResearchSubject":
 		x := ResearchSubject{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "RiskAssessment":
 		x := RiskAssessment{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Schedule":
 		x := Schedule{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "SearchParameter":
 		x := SearchParameter{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Sequence":
 		x := Sequence{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ServiceDefinition":
 		x := ServiceDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Slot":
 		x := Slot{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Specimen":
 		x := Specimen{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "StructureDefinition":
 		x := StructureDefinition{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "StructureMap":
 		x := StructureMap{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Subscription":
 		x := Subscription{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Substance":
 		x := Substance{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "SupplyDelivery":
 		x := SupplyDelivery{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "SupplyRequest":
 		x := SupplyRequest{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Task":
 		x := Task{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "TestReport":
 		x := TestReport{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "TestScript":
 		x := TestScript{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ValueSet":
 		x := ValueSet{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "VisionPrescription":
 		x := VisionPrescription{}
-		json.Unmarshal(b, &x)
+		err := json.Unmarshal(b, &x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 
 	}
-	return nil
+	return nil, nil
 }
 
 // When bson objects from the database get unmarshaled, types that are interface{}
 // just get unmarshaled to map[string]interface{}. This function converts that unmarshaled
 // bson.M map to a specific resource type.
-func BSONMapToResource(bsonMap bson.M, asPointer bool) interface{} {
+func BSONMapToResource(bsonMap bson.M, asPointer bool) (interface{}, error) {
 	data, _ := bson.Marshal(bsonMap)
 	raw := bson.Raw{3, data}
 	t := bsonMap["resourceType"]
 	switch t {
 	case "Account":
 		x := Account{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ActivityDefinition":
 		x := ActivityDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AdverseEvent":
 		x := AdverseEvent{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AllergyIntolerance":
 		x := AllergyIntolerance{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Appointment":
 		x := Appointment{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AppointmentResponse":
 		x := AppointmentResponse{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "AuditEvent":
 		x := AuditEvent{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Basic":
 		x := Basic{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Binary":
 		x := Binary{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "BodySite":
 		x := BodySite{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Bundle":
 		x := Bundle{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CapabilityStatement":
 		x := CapabilityStatement{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CarePlan":
 		x := CarePlan{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CareTeam":
 		x := CareTeam{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ChargeItem":
 		x := ChargeItem{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Claim":
 		x := Claim{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ClaimResponse":
 		x := ClaimResponse{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ClinicalImpression":
 		x := ClinicalImpression{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CodeSystem":
 		x := CodeSystem{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Communication":
 		x := Communication{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CommunicationRequest":
 		x := CommunicationRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "CompartmentDefinition":
 		x := CompartmentDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Composition":
 		x := Composition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ConceptMap":
 		x := ConceptMap{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Condition":
 		x := Condition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Consent":
 		x := Consent{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Contract":
 		x := Contract{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Coverage":
 		x := Coverage{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DataElement":
 		x := DataElement{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DetectedIssue":
 		x := DetectedIssue{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Device":
 		x := Device{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceComponent":
 		x := DeviceComponent{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceMetric":
 		x := DeviceMetric{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceRequest":
 		x := DeviceRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DeviceUseStatement":
 		x := DeviceUseStatement{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DiagnosticReport":
 		x := DiagnosticReport{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DocumentManifest":
 		x := DocumentManifest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "DocumentReference":
 		x := DocumentReference{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EligibilityRequest":
 		x := EligibilityRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EligibilityResponse":
 		x := EligibilityResponse{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Encounter":
 		x := Encounter{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Endpoint":
 		x := Endpoint{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EnrollmentRequest":
 		x := EnrollmentRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EnrollmentResponse":
 		x := EnrollmentResponse{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "EpisodeOfCare":
 		x := EpisodeOfCare{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ExpansionProfile":
 		x := ExpansionProfile{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ExplanationOfBenefit":
 		x := ExplanationOfBenefit{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "FamilyMemberHistory":
 		x := FamilyMemberHistory{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Flag":
 		x := Flag{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Goal":
 		x := Goal{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "GraphDefinition":
 		x := GraphDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Group":
 		x := Group{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "GuidanceResponse":
 		x := GuidanceResponse{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "HealthcareService":
 		x := HealthcareService{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImagingManifest":
 		x := ImagingManifest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImagingStudy":
 		x := ImagingStudy{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Immunization":
 		x := Immunization{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImmunizationRecommendation":
 		x := ImmunizationRecommendation{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ImplementationGuide":
 		x := ImplementationGuide{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Library":
 		x := Library{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Linkage":
 		x := Linkage{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "List":
 		x := List{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Location":
 		x := Location{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Measure":
 		x := Measure{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MeasureReport":
 		x := MeasureReport{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Media":
 		x := Media{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Medication":
 		x := Medication{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationAdministration":
 		x := MedicationAdministration{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationDispense":
 		x := MedicationDispense{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationRequest":
 		x := MedicationRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MedicationStatement":
 		x := MedicationStatement{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MessageDefinition":
 		x := MessageDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "MessageHeader":
 		x := MessageHeader{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "NamingSystem":
 		x := NamingSystem{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "NutritionOrder":
 		x := NutritionOrder{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Observation":
 		x := Observation{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "OperationDefinition":
 		x := OperationDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "OperationOutcome":
 		x := OperationOutcome{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Organization":
 		x := Organization{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Parameters":
 		x := Parameters{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Patient":
 		x := Patient{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PaymentNotice":
 		x := PaymentNotice{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PaymentReconciliation":
 		x := PaymentReconciliation{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Person":
 		x := Person{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PlanDefinition":
 		x := PlanDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Practitioner":
 		x := Practitioner{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "PractitionerRole":
 		x := PractitionerRole{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Procedure":
 		x := Procedure{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ProcedureRequest":
 		x := ProcedureRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ProcessRequest":
 		x := ProcessRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ProcessResponse":
 		x := ProcessResponse{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Provenance":
 		x := Provenance{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Questionnaire":
 		x := Questionnaire{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "QuestionnaireResponse":
 		x := QuestionnaireResponse{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ReferralRequest":
 		x := ReferralRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "RelatedPerson":
 		x := RelatedPerson{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "RequestGroup":
 		x := RequestGroup{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ResearchStudy":
 		x := ResearchStudy{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ResearchSubject":
 		x := ResearchSubject{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "RiskAssessment":
 		x := RiskAssessment{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Schedule":
 		x := Schedule{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "SearchParameter":
 		x := SearchParameter{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Sequence":
 		x := Sequence{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ServiceDefinition":
 		x := ServiceDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Slot":
 		x := Slot{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Specimen":
 		x := Specimen{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "StructureDefinition":
 		x := StructureDefinition{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "StructureMap":
 		x := StructureMap{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Subscription":
 		x := Subscription{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Substance":
 		x := Substance{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "SupplyDelivery":
 		x := SupplyDelivery{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "SupplyRequest":
 		x := SupplyRequest{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "Task":
 		x := Task{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "TestReport":
 		x := TestReport{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "TestScript":
 		x := TestScript{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "ValueSet":
 		x := ValueSet{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 	case "VisionPrescription":
 		x := VisionPrescription{}
-		raw.Unmarshal(&x)
+		err := raw.Unmarshal(&x)
 		if asPointer {
-			return &x
+			return &x, err
 		} else {
-			return x
+			return x, err
 		}
 
 	}
-	return nil
+	return nil, nil
 }

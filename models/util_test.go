@@ -18,7 +18,9 @@ func (s *UtilSuite) TestUnmarshalJSON(c *check.C) {
 	t := make(map[string]interface{})
 	c.Assert(i, check.FitsTypeOf, t)
 
-	r, ok := MapToResource(i, false).(Condition)
+	obj, err := MapToResource(i, false)
+	c.Assert(err, check.IsNil)
+	r, ok := obj.(Condition)
 	c.Assert(ok, check.Equals, true)
 	c.Assert(r.Subject.Reference, check.Equals, "https://example.com/base/Patient/4954037118555241963")
 	c.Assert(r.Code.Coding, check.HasLen, 3)

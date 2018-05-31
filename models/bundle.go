@@ -104,7 +104,10 @@ func (x *BundleEntryComponent) UnmarshalJSON(data []byte) (err error) {
 	x2 := bundleEntryComponent{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Resource != nil {
-			x2.Resource = MapToResource(x2.Resource, true)
+			x2.Resource, err = MapToResource(x2.Resource, true)
+			if err != nil {
+				return err
+			}
 		}
 		*x = BundleEntryComponent(x2)
 	}
@@ -118,7 +121,10 @@ func (x *BundleEntryComponent) SetBSON(raw bson.Raw) (err error) {
 	x2 := bundleEntryComponent{}
 	if err = raw.Unmarshal(&x2); err == nil {
 		if x2.Resource != nil {
-			x2.Resource = BSONMapToResource(x2.Resource.(bson.M), true)
+			x2.Resource, err = BSONMapToResource(x2.Resource.(bson.M), true)
+			if err != nil {
+				return err
+			}
 		}
 		*x = BundleEntryComponent(x2)
 	}
@@ -158,7 +164,10 @@ func (x *BundleEntryResponseComponent) UnmarshalJSON(data []byte) (err error) {
 	x2 := bundleEntryResponseComponent{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Outcome != nil {
-			x2.Outcome = MapToResource(x2.Outcome, true)
+			x2.Outcome, err = MapToResource(x2.Outcome, true)
+			if err != nil {
+				return err
+			}
 		}
 		*x = BundleEntryResponseComponent(x2)
 	}
@@ -172,7 +181,10 @@ func (x *BundleEntryResponseComponent) SetBSON(raw bson.Raw) (err error) {
 	x2 := bundleEntryResponseComponent{}
 	if err = raw.Unmarshal(&x2); err == nil {
 		if x2.Outcome != nil {
-			x2.Outcome = BSONMapToResource(x2.Outcome.(bson.M), true)
+			x2.Outcome, err = BSONMapToResource(x2.Outcome.(bson.M), true)
+			if err != nil {
+				return err
+			}
 		}
 		*x = BundleEntryResponseComponent(x2)
 	}

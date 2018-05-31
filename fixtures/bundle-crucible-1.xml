@@ -1,0 +1,124 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<Bundle xmlns="http://hl7.org/fhir">
+  <type value="transaction"/>
+  <entry>
+    <fullUrl value="urn:uuid:547448f0-3292-4c93-a1b9-c55c65a710c7"/>
+    <resource>
+      <Patient>
+        <meta>
+          <tag>
+            <system value="http://projectcrucible.org"/>
+            <code value="testdata"/>
+          </tag>
+        </meta>
+        <identifier>
+          <use value="official"/>
+          <system value="http://projectcrucible.org"/>
+          <value value="1527658235"/>
+        </identifier>
+        <name>
+          <use value="official"/>
+          <text value="Transaction Crucible"/>
+          <family value="Crucible"/>
+          <given value="Transaction"/>
+        </name>
+      </Patient>
+    </resource>
+    <request>
+      <method value="POST"/>
+      <url value="Patient"/>
+    </request>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:1e7132a0-57e7-4f36-9e5c-d170ac73be88"/>
+    <resource>
+      <Observation>
+        <meta>
+          <tag>
+            <system value="http://projectcrucible.org"/>
+            <code value="testdata"/>
+          </tag>
+        </meta>
+        <status value="final"/>
+        <code>
+          <coding>
+            <system value="http://loinc.org"/>
+            <code value="8302-2"/>
+          </coding>
+        </code>
+        <subject>
+          <reference value="urn:uuid:547448f0-3292-4c93-a1b9-c55c65a710c7"/>
+        </subject>
+        <valueQuantity>
+          <value value="170"/>
+          <unit value="cm"/>
+          <system value="http://unitsofmeasure.org"/>
+        </valueQuantity>
+      </Observation>
+    </resource>
+    <request>
+      <method value="POST"/>
+      <url value="Observation"/>
+    </request>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:3ab925ed-01b7-423c-817d-ea6622717cc3"/>
+    <resource>
+      <Observation>
+        <meta>
+          <tag>
+            <system value="http://projectcrucible.org"/>
+            <code value="testdata"/>
+          </tag>
+        </meta>
+        <status value="final"/>
+        <code>
+          <coding>
+            <system value="http://loinc.org"/>
+            <code value="3141-9"/>
+          </coding>
+        </code>
+        <subject>
+          <reference value="urn:uuid:547448f0-3292-4c93-a1b9-c55c65a710c7"/>
+        </subject>
+        <valueQuantity>
+          <value value="200"/>
+          <unit value="kg"/>
+          <system value="http://unitsofmeasure.org"/>
+        </valueQuantity>
+      </Observation>
+    </resource>
+    <request>
+      <method value="POST"/>
+      <url value="Observation"/>
+    </request>
+  </entry>
+  <entry>
+    <fullUrl value="urn:uuid:10c4484a-f74a-4477-ae29-6448cd7b88e4"/>
+    <resource>
+      <Condition>
+        <meta>
+          <tag>
+            <system value="http://projectcrucible.org"/>
+            <code value="testdata"/>
+          </tag>
+        </meta>
+        <verificationStatus value="confirmed"/>
+        <code>
+          <coding>
+            <system value="http://snomed.info/sct"/>
+            <code value="414915002"/>
+          </coding>
+        </code>
+        <subject>
+          <reference value="urn:uuid:547448f0-3292-4c93-a1b9-c55c65a710c7"/>
+        </subject>
+      </Condition>
+    </resource>
+    <request>
+      <method value="POST"/>
+      <url value="Condition"/>
+    </request>
+  </entry>
+</Bundle>

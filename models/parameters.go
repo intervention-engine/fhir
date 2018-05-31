@@ -123,7 +123,10 @@ func (x *ParametersParameterComponent) UnmarshalJSON(data []byte) (err error) {
 	x2 := parametersParameterComponent{}
 	if err = json.Unmarshal(data, &x2); err == nil {
 		if x2.Resource != nil {
-			x2.Resource = MapToResource(x2.Resource, true)
+			x2.Resource, err = MapToResource(x2.Resource, true)
+			if err != nil {
+				return err
+			}
 		}
 		*x = ParametersParameterComponent(x2)
 	}
@@ -137,7 +140,10 @@ func (x *ParametersParameterComponent) SetBSON(raw bson.Raw) (err error) {
 	x2 := parametersParameterComponent{}
 	if err = raw.Unmarshal(&x2); err == nil {
 		if x2.Resource != nil {
-			x2.Resource = BSONMapToResource(x2.Resource.(bson.M), true)
+			x2.Resource, err = BSONMapToResource(x2.Resource.(bson.M), true)
+			if err != nil {
+				return err
+			}
 		}
 		*x = ParametersParameterComponent(x2)
 	}

@@ -18,6 +18,42 @@ func (s *SearchPTSuite) SetUpSuite(c *C) {
 }
 
 /******************************************************************************
+ * PARAMETER NAMES
+ ******************************************************************************/
+
+func (s *SearchPTSuite) TestSimpleName(c *C) {
+	param, modifier, postfix := ParseParamNameModifierAndPostFix("foo")
+
+	c.Assert(param, Equals, "foo")
+	c.Assert(modifier, Equals, "")
+	c.Assert(postfix, Equals, "")
+}
+
+func (s *SearchPTSuite) TestSimpleNameWithModifier(c *C) {
+	param, modifier, postfix := ParseParamNameModifierAndPostFix("foo:Bar")
+
+	c.Assert(param, Equals, "foo")
+	c.Assert(modifier, Equals, "Bar")
+	c.Assert(postfix, Equals, "")
+}
+
+func (s *SearchPTSuite) TestSimpleNameWithPostfix(c *C) {
+	param, modifier, postfix := ParseParamNameModifierAndPostFix("foo.baz")
+
+	c.Assert(param, Equals, "foo")
+	c.Assert(modifier, Equals, "")
+	c.Assert(postfix, Equals, "baz")
+}
+
+func (s *SearchPTSuite) TestSimpleNameWithModifierAndPostfix(c *C) {
+	param, modifier, postfix := ParseParamNameModifierAndPostFix("foo:Bar.baz")
+
+	c.Assert(param, Equals, "foo")
+	c.Assert(modifier, Equals, "Bar")
+	c.Assert(postfix, Equals, "baz")
+}
+
+/******************************************************************************
  * COMPOSITE
  ******************************************************************************/
 

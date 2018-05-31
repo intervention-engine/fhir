@@ -39,6 +39,8 @@ func (m *MongoSearchSuite) SetUpSuite(c *C) {
 	m.EST = time.FixedZone("EST", -5*60*60)
 	m.Local, _ = time.LoadLocation("Local")
 
+	DisableOperationOutcomeDiagnosticsFileLine()
+
 	//turnOnDebugLog()
 
 	// Set up the database
@@ -58,7 +60,8 @@ func (m *MongoSearchSuite) SetUpSuite(c *C) {
 	util.CheckErr(err)
 
 	for _, resourceMap := range maps {
-		r := models.MapToResource(resourceMap, true)
+		r, err := models.MapToResource(resourceMap, true)
+		util.CheckErr(err)
 		collection := models.PluralizeLowerResourceName(reflect.TypeOf(r).Elem().Name())
 		util.CheckErr(db.C(collection).Insert(r))
 	}
@@ -780,6 +783,30 @@ func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageDestination(c *C) {
 	c.Assert(resultsVal.Len(), Equals, 1)
 
 	q = Query{"Bundle", "message.destination-uri=http://acme.com/ehr/foo"}
+	results, _, err = m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal = reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 0)
+}
+
+// These tests ensure that a modifier works with a chained search
+func (m *MongoSearchSuite) TestBundleReferenceQueryObjectByMessageHeaderDestination(c *C) {
+	q := Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/fhir"}
+	o := m.MongoSearcher.createQueryObject(q)
+	c.Assert(o, DeepEquals, bson.M{
+		"entry.0.resource.resourceType":         "MessageHeader",
+		"entry.0.resource.destination.endpoint": "http://acme.com/ehr/fhir",
+	})
+}
+
+func (m *MongoSearchSuite) TestBundleReferenceQueryByMessageHeaderDestination(c *C) {
+	q := Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/fhir"}
+	results, _, err := m.MongoSearcher.Search(q)
+	util.CheckErr(err)
+	resultsVal := reflect.ValueOf(results).Elem()
+	c.Assert(resultsVal.Len(), Equals, 1)
+
+	q = Query{"Bundle", "message:MessageHeader.destination-uri=http://acme.com/ehr/foo"}
 	results, _, err = m.MongoSearcher.Search(q)
 	util.CheckErr(err)
 	resultsVal = reflect.ValueOf(results).Elem()
