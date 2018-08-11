@@ -33,19 +33,26 @@ import (
 )
 
 type Appointment struct {
-	DomainResource  `bson:",inline"`
-	Identifier      []Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Status          string                            `bson:"status,omitempty" json:"status,omitempty"`
-	Type            *CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
-	Reason          *CodeableConcept                  `bson:"reason,omitempty" json:"reason,omitempty"`
-	Priority        *uint32                           `bson:"priority,omitempty" json:"priority,omitempty"`
-	Description     string                            `bson:"description,omitempty" json:"description,omitempty"`
-	Start           *FHIRDateTime                     `bson:"start,omitempty" json:"start,omitempty"`
-	End             *FHIRDateTime                     `bson:"end,omitempty" json:"end,omitempty"`
-	MinutesDuration *uint32                           `bson:"minutesDuration,omitempty" json:"minutesDuration,omitempty"`
-	Slot            []Reference                       `bson:"slot,omitempty" json:"slot,omitempty"`
-	Comment         string                            `bson:"comment,omitempty" json:"comment,omitempty"`
-	Participant     []AppointmentParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	DomainResource        `bson:",inline"`
+	Identifier            []Identifier                      `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Status                string                            `bson:"status,omitempty" json:"status,omitempty"`
+	ServiceCategory       *CodeableConcept                  `bson:"serviceCategory,omitempty" json:"serviceCategory,omitempty"`
+	ServiceType           *CodeableConcepts                 `bson:"serviceType,omitempty" json:"serviceType,omitempty"`
+	Specialty             *CodeableConcepts                 `bson:"specialty,omitempty" json:"specialty,omitempty"`
+	Type                  *CodeableConcept                  `bson:"type,omitempty" json:"type,omitempty"`
+	AppointmentType       *CodeableConcepts                 `bson:"appointmentType,omitempty" json:"appointmentType,omitempty"`
+	Indication            []Reference                       `bson:"indication,omitempty" json:"indication,omitempty"`
+	Priority              *uint32                           `bson:"priority,omitempty" json:"priority,omitempty"`
+	SupportingInformation []Reference                       `bson:"supportingInformation,omitempty" json:"supportingInformation,omitempty"`
+	Description           string                            `bson:"description,omitempty" json:"description,omitempty"`
+	Start                 *FHIRDateTime                     `bson:"start,omitempty" json:"start,omitempty"`
+	End                   *FHIRDateTime                     `bson:"end,omitempty" json:"end,omitempty"`
+	MinutesDuration       *uint32                           `bson:"minutesDuration,omitempty" json:"minutesDuration,omitempty"`
+	Slot                  []Reference                       `bson:"slot,omitempty" json:"slot,omitempty"`
+	Comment               string                            `bson:"comment,omitempty" json:"comment,omitempty"`
+	IncomingReferral      []Reference                       `bson:"incomingReferral,omitempty" json:"incomingReferral,omitempty"`
+	Participant           []AppointmentParticipantComponent `bson:"participant,omitempty" json:"participant,omitempty"`
+	RequestPeriod         []Period                          `bson:"requestPeriod,omitempty" json:"requestPeriod,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
