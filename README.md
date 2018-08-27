@@ -1,7 +1,7 @@
 Intervention Engine FHIR Server [![Build Status](https://travis-ci.org/intervention-engine/fhir.svg?branch=master)](https://travis-ci.org/intervention-engine/fhir)[![GoDoc](https://godoc.org/github.com/intervention-engine/fhir?status.svg)](https://godoc.org/github.com/intervention-engine/fhir)
 ===================================================================================================================================================================
 
-**NOTE: This project is not under active development. Others have forked and continue work on the code. If you would like your fork addred/removed from this list, please file an issue.**
+**NOTE: This project is not under active development. Others have forked and continue work on the code. If you would like your fork added/removed from this list, please file an issue.**
 
 Active Forks
 * https://github.com/eug48/fhir
