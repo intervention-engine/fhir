@@ -41,7 +41,7 @@ type Bundle struct {
 	Signature *Signature            `bson:"signature,omitempty" json:"signature,omitempty"`
 }
 
-type BundleEntryComponents []BundleEntryComponent
+type BundleEntryComponents []QuestionnaireResponse
 
 // Custom marshaller to add the resourceType property, as required by the specification
 func (resource *Bundle) MarshalJSON() ([]byte, error) {
