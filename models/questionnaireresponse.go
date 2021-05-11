@@ -34,15 +34,15 @@ import (
 
 type QuestionnaireResponse struct {
 	DomainResource `bson:",inline"`
-	Identifier     *Identifier                          `bson:"identifier,omitempty" json:"identifier,omitempty"`
-	Questionnaire  *Reference                           `bson:"questionnaire,omitempty" json:"questionnaire,omitempty"`
-	Status         string                               `bson:"status,omitempty" json:"status,omitempty"`
-	Subject        *Reference                           `bson:"subject,omitempty" json:"subject,omitempty"`
-	Author         *Reference                           `bson:"author,omitempty" json:"author,omitempty"`
-	Authored       *FHIRDateTime                        `bson:"authored,omitempty" json:"authored,omitempty"`
-	Source         *Reference                           `bson:"source,omitempty" json:"source,omitempty"`
-	Encounter      *Reference                           `bson:"encounter,omitempty" json:"encounter,omitempty"`
-	Group          *QuestionnaireResponseGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
+	Identifier     *Identifier                         `bson:"identifier,omitempty" json:"identifier,omitempty"`
+	Questionnaire  *Reference                          `bson:"questionnaire,omitempty" json:"questionnaire,omitempty"`
+	Status         string                              `bson:"status,omitempty" json:"status,omitempty"`
+	Subject        *Reference                          `bson:"subject,omitempty" json:"subject,omitempty"`
+	Author         *Reference                          `bson:"author,omitempty" json:"author,omitempty"`
+	Authored       *FHIRDateTime                       `bson:"authored,omitempty" json:"authored,omitempty"`
+	Source         *Reference                          `bson:"source,omitempty" json:"source,omitempty"`
+	Encounter      *Reference                          `bson:"encounter,omitempty" json:"encounter,omitempty"`
+	Item           *QuestionnaireResponseItemComponent `bson:"item,omitempty" json:"item,omitempty"`
 }
 
 // Custom marshaller to add the resourceType property, as required by the specification
@@ -87,15 +87,17 @@ func (x *QuestionnaireResponse) checkResourceType() error {
 	return nil
 }
 
-type QuestionnaireResponseGroupComponent struct {
+type QuestionnaireResponseItemComponent struct {
 	BackboneElement `bson:",inline"`
-	LinkId          string                                   `bson:"linkId,omitempty" json:"linkId,omitempty"`
-	Title           string                                   `bson:"title,omitempty" json:"title,omitempty"`
-	Text            string                                   `bson:"text,omitempty" json:"text,omitempty"`
-	Subject         *Reference                               `bson:"subject,omitempty" json:"subject,omitempty"`
-	Group           []QuestionnaireResponseGroupComponent    `bson:"group,omitempty" json:"group,omitempty"`
-	Question        []QuestionnaireResponseQuestionComponent `bson:"question,omitempty" json:"question,omitempty"`
+	LinkId          string                                         `bson:"linkId,omitempty" json:"linkId,omitempty"`
+	Title           string                                         `bson:"title,omitempty" json:"title,omitempty"`
+	Text            string                                         `bson:"text,omitempty" json:"text,omitempty"`
+	Subject         *Reference                                     `bson:"subject,omitempty" json:"subject,omitempty"`
+	Item            QuestionnaireResponseItemComponents            `bson:"item,omitempty" json:"item,omitempty"`
+	Answer          []QuestionnaireResponseQuestionAnswerComponent `bson:"answer,omitempty" json:"answer,omitempty"`
 }
+
+type QuestionnaireResponseItemComponents []QuestionnaireResponseItemComponent
 
 type QuestionnaireResponseQuestionComponent struct {
 	BackboneElement `bson:",inline"`
