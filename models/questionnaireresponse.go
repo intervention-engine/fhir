@@ -106,20 +106,20 @@ type QuestionnaireResponseQuestionComponent struct {
 
 type QuestionnaireResponseQuestionAnswerComponent struct {
 	BackboneElement `bson:",inline"`
-	ValueBoolean    *bool                                `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
-	ValueDecimal    *float64                             `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
-	ValueInteger    *int32                               `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
-	ValueDate       *FHIRDateTime                        `bson:"valueDate,omitempty" json:"valueDate,omitempty"`
-	ValueDateTime   *FHIRDateTime                        `bson:"valueDateTime,omitempty" json:"valueDateTime,omitempty"`
-	ValueInstant    *FHIRDateTime                        `bson:"valueInstant,omitempty" json:"valueInstant,omitempty"`
-	ValueTime       *FHIRDateTime                        `bson:"valueTime,omitempty" json:"valueTime,omitempty"`
-	ValueString     string                               `bson:"valueString,omitempty" json:"valueString,omitempty"`
-	ValueUri        string                               `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
-	ValueAttachment *Attachment                          `bson:"valueAttachment,omitempty" json:"valueAttachment,omitempty"`
-	ValueCoding     *Coding                              `bson:"valueCoding,omitempty" json:"valueCoding,omitempty"`
-	ValueQuantity   *Quantity                            `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
-	ValueReference  *Reference                           `bson:"valueReference,omitempty" json:"valueReference,omitempty"`
-	Group           []QuestionnaireResponseItemComponent `bson:"group,omitempty" json:"group,omitempty"`
+	ValueBoolean    *bool                                 `bson:"valueBoolean,omitempty" json:"valueBoolean,omitempty"`
+	ValueDecimal    *float64                              `bson:"valueDecimal,omitempty" json:"valueDecimal,omitempty"`
+	ValueInteger    *int32                                `bson:"valueInteger,omitempty" json:"valueInteger,omitempty"`
+	ValueDate       *FHIRDateTime                         `bson:"valueDate,omitempty" json:"valueDate,omitempty"`
+	ValueDateTime   *FHIRDateTime                         `bson:"valueDateTime,omitempty" json:"valueDateTime,omitempty"`
+	ValueInstant    *FHIRDateTime                         `bson:"valueInstant,omitempty" json:"valueInstant,omitempty"`
+	ValueTime       *FHIRDateTime                         `bson:"valueTime,omitempty" json:"valueTime,omitempty"`
+	ValueString     string                                `bson:"valueString,omitempty" json:"valueString,omitempty"`
+	ValueUri        string                                `bson:"valueUri,omitempty" json:"valueUri,omitempty"`
+	ValueAttachment *Attachment                           `bson:"valueAttachment,omitempty" json:"valueAttachment,omitempty"`
+	ValueCoding     *Coding                               `bson:"valueCoding,omitempty" json:"valueCoding,omitempty"`
+	ValueQuantity   *Quantity                             `bson:"valueQuantity,omitempty" json:"valueQuantity,omitempty"`
+	ValueReference  *Reference                            `bson:"valueReference,omitempty" json:"valueReference,omitempty"`
+	Group           []QuestionnaireResponseGroupComponent `bson:"group,omitempty" json:"group,omitempty"`
 }
 
 type QuestionnaireResponsePlus struct {
