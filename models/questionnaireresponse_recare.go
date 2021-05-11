@@ -1,6 +1,6 @@
 package models
 
-type Meta struct {
+type Meta_Recare struct {
 	LastUpdated string `json:"lastUpdated,omitempty"`
 }
 
@@ -12,26 +12,26 @@ type Link []struct {
 type QuestionnaireResponses struct {
 	Entry        QuestionnaireEntry `json:"entry,omitempty"`
 	ID           *string            `json:"id,omitempty"`
-	Meta         *Meta              `json:"meta,omitempty"`
+	Meta         *Meta_Recare       `json:"meta,omitempty"`
 	Type         *string            `json:"type,omitempty"`
 	Total        *int               `json:"total,omitempty"`
 	ResourceType *string            `json:"resourceType,omitempty"`
 	Link         Link               `json:"link,omitempty"`
 }
 
-type Identifier struct {
+type Identifier_Recare struct {
 	System *string `json:"system,omitempty"`
 	Value  *string `json:"value,omitempty"`
 }
 
 type Resource struct {
-	ResourceType  *string           `json:"resourceType,omitempty"`
-	ID            *string           `json:"id,omitempty"`
-	Identifier    *Identifier       `json:"identifier,omitempty"`
-	Status        *string           `json:"status,omitempty"`
-	Authored      *string           `json:"authored,omitempty"`
-	Questionnaire string            `json:"questionnaire,omitempty"`
-	Item          QuestionnaireItem `json:"item,omitempty"`
+	ResourceType  *string            `json:"resourceType,omitempty"`
+	ID            *string            `json:"id,omitempty"`
+	Identifier    *Identifier_Recare `json:"identifier,omitempty"`
+	Status        *string            `json:"status,omitempty"`
+	Authored      *string            `json:"authored,omitempty"`
+	Questionnaire string             `json:"questionnaire,omitempty"`
+	Item          QuestionnaireItem  `json:"item,omitempty"`
 }
 
 type QuestionnaireEntry []struct {
